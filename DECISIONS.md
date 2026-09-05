@@ -968,6 +968,31 @@ folder was written by the audit or the pass. S-10 and S-13 were not re-run after
 pass: the pass touched no engine or content file, and both were green on this content
 earlier the same day.
 
+**[2026-09-04] PUBLISHED — the live state.** Repository
+`https://github.com/JasonHuang24/TGTL` (public), first commit `cdfcfce` on `main`
+(263 files; `node_modules`, `.next`, `out`, `screenshots` and the tsbuildinfo files
+ignored). Pages source: GitHub Actions (`build_type: workflow`), deploy run
+`https://github.com/JasonHuang24/TGTL/actions/runs/33932608591`, build and deploy both
+green on the first run. **Live: `https://jasonhchronicles.com/TGTL/`**, served by
+`GitHub.com` with gzip; the custom domain was inherited from the owner's user-site
+repository as expected and no DNS was touched. Verified on the live site, not on a
+local serve: all 57 routes in both editions, both themes and at 320px with zero console
+errors and zero 4xx (228 + 114 loads); 201 requests across six pages and one play
+interaction with **zero off-origin requests** (gate 9's spirit); S-9's browser half,
+120 audits, green; the footer stamp and `noindex` on every page; the redirect stubs
+refresh to `/TGTL/…`; `/TGTL/does-not-exist/` returns 404 with the site's 404 page;
+`_next/` chunks serve (so `.nojekyll` took); the quick exit is a real anchor to
+weather.com; the help-now page says "last checked 2026-09-04". The browser gate script
+was not pointed at the live URL because it selects root-relative hrefs (recorded
+above); it was green on this exact commit's root build. Throttled profile against the
+live, gzipped site (1.6 Mbps, 150 ms, 4× CPU): `/` LCP 0.9 s; `/timeline` LCP 0.35 s,
+interactive 1.5 s (the 2.2 MB document arrives as about 200 KB); `/play` LCP 1.3 s —
+the preview-size concern in the audit's criterion 9 does not materialise over gzip.
+One setting left as Pages created it: HTTPS is not enforced (`http://` also serves the
+site rather than redirecting), matching the owner's VMSS project site; turning it on is
+one API call and the owner's decision. The Node 20 deprecation annotations on the
+actions are GitHub's, not the build's.
+
 
 ---
 
