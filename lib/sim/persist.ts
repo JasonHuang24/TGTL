@@ -14,7 +14,15 @@
  *   - Caps are stated beside the erase control, not enforced invisibly.
  */
 
-import { readString, writeString, removeKey } from "@/lib/storage";
+import {
+  readString,
+  removeKey,
+  writeVerified,
+  quarantineValue,
+  quarantineKeyFor,
+  worseStatus,
+  type SaveStatus,
+} from "@/lib/storage";
 import { serialize, deserialize, type LoadResult } from "@/lib/sim/campaign";
 import { makeSave } from "@/lib/sim/forks";
 import type { ForkRecord, NamedSave, SimState } from "@/content/sim/schema";
@@ -44,6 +52,19 @@ export const CAP_NOTE = `This device keeps up to ${SAVE_CAP} named runs and ${FO
 
 type SaveIndex = { ref: string; label: string; savedAtLabel: string; engineVersion: string; contentVersion: string }[];
 
+/**
+ * N-226 — a `LoadResult` that also says which of the seven states happened.
+ * `LoadResult` itself lives in `lib/sim/campaign.ts`, which this version does not
+ * touch (6.0 §2.1), so the status rides on an intersection declared here.
+ */
+export type LoadReport = LoadResult & { status: SaveStatus };
+
+/**
+ * Read JSON, and QUARANTINE an unparseable original rather than returning the
+ * fallback over the top of it (N-226). The original bytes stay where they are;
+ * a copy goes to `<key>.quarantine`, which `ALL_STORAGE_KEYS` derives and the
+ * erase control clears.
+ */
 function readJSON<T>(key: string, fallback: T): T {
   const raw = readString(key);
   if (!raw) return fallback;
@@ -51,28 +72,35 @@ function readJSON<T>(key: string, fallback: T): T {
     const parsed = JSON.parse(raw) as T;
     return parsed ?? fallback;
   } catch {
+    quarantineValue(key, raw);
     return fallback;
   }
 }
 
-function writeJSON(key: string, value: unknown): boolean {
+function writeJSON(key: string, value: unknown): SaveStatus {
+  let text: string;
   try {
-    writeString(key, JSON.stringify(value));
-    return true;
+    text = JSON.stringify(value);
   } catch {
-    return false;
+    return "blocked";
   }
+  return writeVerified(key, text);
 }
 
 export function listSaves(): SaveIndex {
   return readJSON<SaveIndex>(SIM_KEYS.saves + ":index", []);
 }
 
-export function saveRun(state: SimState, label: string, savedAtLabel: string): NamedSave {
+/**
+ * N-226 — the return carries the STATUS the write actually produced. A run that
+ * was written but could not be indexed is not "saved" either: the reader would
+ * not find it again, so the worse of the two halves is what is reported.
+ */
+export function saveRun(state: SimState, label: string, savedAtLabel: string): NamedSave & { status: SaveStatus } {
   const save = makeSave(state, label, savedAtLabel);
   // The run itself is written FIRST, so a quota failure on the index can never
   // eat the run (the 3.0 discipline, carried forward).
-  writeJSON(`${SIM_KEYS.saves}:${save.ref}`, save);
+  const runStatus = writeJSON(`${SIM_KEYS.saves}:${save.ref}`, save);
   const index = listSaves().filter((s) => s.ref !== save.ref);
   const next = [
     { ref: save.ref, label, savedAtLabel, engineVersion: save.engineVersion, contentVersion: save.contentVersion },
@@ -80,23 +108,37 @@ export function saveRun(state: SimState, label: string, savedAtLabel: string): N
   ];
   const kept = next.slice(0, SAVE_CAP);
   for (const dropped of next.slice(SAVE_CAP)) removeKey(`${SIM_KEYS.saves}:${dropped.ref}`);
-  writeJSON(SIM_KEYS.saves + ":index", kept);
-  return save;
+  const indexStatus = writeJSON(SIM_KEYS.saves + ":index", kept);
+  return { ...save, status: worseStatus(runStatus, indexStatus) };
 }
 
-export function loadSave(ref: string): LoadResult {
-  const raw = readString(`${SIM_KEYS.saves}:${ref}`);
-  if (!raw) return { ok: false, reason: "unreadable", detail: "That saved run is no longer on this device." };
+export function loadSave(ref: string): LoadReport {
+  const key = `${SIM_KEYS.saves}:${ref}`;
+  const raw = readString(key);
+  if (!raw)
+    return { ok: false, reason: "unreadable", detail: "That saved run is no longer on this device.", status: "blocked" };
+  let save: NamedSave;
   try {
-    const save = JSON.parse(raw) as NamedSave;
-    return deserialize(JSON.stringify(save.state));
+    save = JSON.parse(raw) as NamedSave;
   } catch {
-    return { ok: false, reason: "unreadable", detail: "That saved run could not be read." };
+    // The original is kept aside under its own name, not overwritten (N-226).
+    quarantineValue(key, raw);
+    return {
+      ok: false,
+      reason: "unreadable",
+      detail:
+        "That saved run could not be read. It has been kept aside under its own name rather than overwritten, and nothing has been deleted.",
+      status: "malformed-quarantined",
+    };
   }
+  const result = deserialize(JSON.stringify(save.state));
+  if (result.ok) return { ...result, status: "saved" };
+  return { ...result, status: result.reason === "unreadable" ? "blocked" : "unresumable" };
 }
 
 export function deleteSave(ref: string): void {
   removeKey(`${SIM_KEYS.saves}:${ref}`);
+  removeKey(quarantineKeyFor(`${SIM_KEYS.saves}:${ref}`));
   writeJSON(SIM_KEYS.saves + ":index", listSaves().filter((s) => s.ref !== ref));
 }
 
@@ -104,21 +146,21 @@ export function deleteSave(ref: string): void {
    The active run
    ========================================================================= */
 
-export function writeActive(state: SimState): void {
-  try {
-    writeString(SIM_KEYS.active, serialize(state));
-  } catch {
-    /* quota: the named saves are the durable copy */
-  }
+export function writeActive(state: SimState): SaveStatus {
+  return writeVerified(SIM_KEYS.active, serialize(state));
 }
 
-export function readActive(): LoadResult | null {
+export function readActive(): LoadReport | null {
   const raw = readString(SIM_KEYS.active);
-  return raw ? deserialize(raw) : null;
+  if (!raw) return null;
+  const result = deserialize(raw);
+  if (result.ok) return { ...result, status: "saved" };
+  return { ...result, status: result.reason === "unreadable" ? "blocked" : "unresumable" };
 }
 
 export function clearActive(): void {
   removeKey(SIM_KEYS.active);
+  removeKey(quarantineKeyFor(SIM_KEYS.active));
 }
 
 /* =========================================================================
@@ -204,9 +246,17 @@ export function eraseLegacyRun(): void {
 
 /** Erase everything this simulation has ever written on this device. */
 export function eraseAll(): void {
-  for (const s of listSaves()) removeKey(`${SIM_KEYS.saves}:${s.ref}`);
-  removeKey(SIM_KEYS.saves + ":index");
-  removeKey(SIM_KEYS.active);
-  removeKey(SIM_KEYS.forks);
-  removeKey(SIM_KEYS.parses);
+  // Every key this module writes, and the quarantine copy derived from each one
+  // (N-226) — the erase control still clears everything, §7.1.
+  const keys = [
+    ...listSaves().map((s) => `${SIM_KEYS.saves}:${s.ref}`),
+    SIM_KEYS.saves + ":index",
+    SIM_KEYS.active,
+    SIM_KEYS.forks,
+    SIM_KEYS.parses,
+  ];
+  for (const k of keys) {
+    removeKey(k);
+    removeKey(quarantineKeyFor(k));
+  }
 }

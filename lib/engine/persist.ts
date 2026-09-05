@@ -5,7 +5,15 @@
  * nothing about a run appears in a URL.
  */
 
-import { STORAGE_KEYS, readString, writeString, removeKey } from "@/lib/storage";
+import {
+  STORAGE_KEYS,
+  readString,
+  removeKey,
+  writeVerified,
+  quarantineValue,
+  quarantineKeyFor,
+  type SaveStatus,
+} from "@/lib/storage";
 import { serializeRun, deserializeRun } from "@/lib/engine/run";
 import { CURRENT_RUN_VERSION, type RunState } from "@/content/play/schema";
 import type { ParseSummary } from "@/lib/engine/run";
@@ -23,8 +31,9 @@ export type ParseRecord = {
   savedAtLabel: string;
 };
 
-export function saveRun(state: RunState): void {
-  writeString(STORAGE_KEYS.playRun, serializeRun(state));
+/** N-226 — the write is read back, and says which of the seven states happened. */
+export function saveRun(state: RunState): SaveStatus {
+  return writeVerified(STORAGE_KEYS.playRun, serializeRun(state));
 }
 
 export function loadRun(): RunState | null {
@@ -34,6 +43,7 @@ export function loadRun(): RunState | null {
 
 export function clearRun(): void {
   removeKey(STORAGE_KEYS.playRun);
+  removeKey(quarantineKeyFor(STORAGE_KEYS.playRun));
 }
 
 export function hasActiveRun(): boolean {
@@ -47,6 +57,9 @@ export function loadArchive(): ParseRecord[] {
     const parsed = JSON.parse(raw) as ParseRecord[];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
+    // N-226: keep the unreadable original under its quarantine key rather than
+    // letting the next archive write silently overwrite it.
+    quarantineValue(STORAGE_KEYS.playArchive, raw);
     return [];
   }
 }
@@ -59,21 +72,17 @@ export function loadArchive(): ParseRecord[] {
 export function archiveParse(record: ParseRecord): ParseRecord[] {
   const existing = loadArchive();
   const next = [record, ...existing].slice(0, ARCHIVE_CAP);
-  try {
-    writeString(STORAGE_KEYS.playArchive, JSON.stringify(next));
-  } catch {
-    // Quota: retain only the newest few rather than losing the write entirely.
-    try {
-      writeString(STORAGE_KEYS.playArchive, JSON.stringify(next.slice(0, 5)));
-    } catch {
-      /* give up silently; the live run is untouched */
-    }
+  if (writeVerified(STORAGE_KEYS.playArchive, JSON.stringify(next)) !== "saved") {
+    // Full or refused: retain only the newest few rather than losing the write
+    // entirely. Still verified — a shorter list that did not land is not saved.
+    writeVerified(STORAGE_KEYS.playArchive, JSON.stringify(next.slice(0, 5)));
   }
   return next;
 }
 
 export function clearArchive(): void {
   removeKey(STORAGE_KEYS.playArchive);
+  removeKey(quarantineKeyFor(STORAGE_KEYS.playArchive));
 }
 
 
@@ -96,9 +105,10 @@ export type ArcSave = {
   raw: string;
 };
 
-export type ArcLoadResult =
+export type ArcLoadResult = { status: SaveStatus } & (
   | { ok: true; state: RunState }
-  | { ok: false; reason: "unreadable" | "stale-version"; detail: string };
+  | { ok: false; reason: "unreadable" | "stale-version"; detail: string }
+);
 
 /** Stable per (seed, phase) so re-saving the same point replaces rather than piles up. */
 function arcRef(state: RunState): string {
@@ -115,50 +125,59 @@ export function listArcSaves(): ArcSave[] {
     const parsed = JSON.parse(raw) as ArcSave[];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
+    // N-226: an unreadable list is kept aside under its own name, so the next
+    // save does not overwrite the only copy of what was there.
+    quarantineValue(STORAGE_KEYS.playSaves, raw);
     return [];
   }
 }
 
-export function saveArcRun(state: RunState, label: string, savedAtLabel: string): ArcSave {
+/** N-226 — the return carries the status the verified write actually produced. */
+export function saveArcRun(state: RunState, label: string, savedAtLabel: string): ArcSave & { status: SaveStatus } {
   const save: ArcSave = { ref: arcRef(state), label, savedAtLabel, runVersion: state.version, raw: serializeRun(state) };
   const next = [save, ...listArcSaves().filter((s) => s.ref !== save.ref)].slice(0, ARC_SAVE_CAP);
-  try {
-    writeString(STORAGE_KEYS.playSaves, JSON.stringify(next));
-  } catch {
-    try {
-      writeString(STORAGE_KEYS.playSaves, JSON.stringify(next.slice(0, 2)));
-    } catch {
-      /* quota: the live run is untouched, which is the thing that matters */
-    }
+  let status = writeVerified(STORAGE_KEYS.playSaves, JSON.stringify(next));
+  if (status !== "saved") {
+    // Out of room: keep the newest few rather than losing the write entirely —
+    // and report what the second attempt actually did, never "saved" on faith.
+    status = writeVerified(STORAGE_KEYS.playSaves, JSON.stringify(next.slice(0, 2)));
   }
-  return save;
+  return { ...save, status };
 }
 
 export function loadArcSave(ref: string): ArcLoadResult {
   const save = listArcSaves().find((s) => s.ref === ref);
-  if (!save) return { ok: false, reason: "unreadable", detail: "That saved life is no longer on this device." };
+  if (!save)
+    return { ok: false, reason: "unreadable", detail: "That saved life is no longer on this device.", status: "blocked" };
   if (save.runVersion !== CURRENT_RUN_VERSION)
     return {
       ok: false,
       reason: "stale-version",
       detail:
         "This life was saved by an earlier version of the simulation. The rules it was played under have changed, so resuming it would not be the same run you left — it cannot be continued. Nothing has been deleted; you can remove it here whenever you like.",
+      status: "unresumable",
     };
   const state = deserializeRun(save.raw);
-  if (!state) return { ok: false, reason: "unreadable", detail: "That saved life could not be read." };
-  return { ok: true, state };
+  if (!state) {
+    quarantineValue(STORAGE_KEYS.playSaves, save.raw);
+    return {
+      ok: false,
+      reason: "unreadable",
+      detail:
+        "That saved life could not be read. It has been kept aside under its own name rather than overwritten, and nothing has been deleted.",
+      status: "malformed-quarantined",
+    };
+  }
+  return { ok: true, state, status: "saved" };
 }
 
 export function deleteArcSave(ref: string): ArcSave[] {
   const next = listArcSaves().filter((s) => s.ref !== ref);
-  try {
-    writeString(STORAGE_KEYS.playSaves, JSON.stringify(next));
-  } catch {
-    /* nothing to do; the list is unchanged on disk */
-  }
+  writeVerified(STORAGE_KEYS.playSaves, JSON.stringify(next));
   return next;
 }
 
 export function clearArcSaves(): void {
   removeKey(STORAGE_KEYS.playSaves);
+  removeKey(quarantineKeyFor(STORAGE_KEYS.playSaves));
 }

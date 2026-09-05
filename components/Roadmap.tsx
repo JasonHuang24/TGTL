@@ -78,10 +78,14 @@ export function Roadmap() {
           ))}
         </div>
       </div>
+      {/* N-160 (C-5). The old note said "this lens changes no claims", which left
+          the reader to decide whether the guide had checked and found nothing. It
+          had not checked. Say which it is. */}
       {sexLens !== "shared" && (
         <p className="roadmap-lens-note">
-          This lens changes no claims. The windows below are common to everyone; a version with
-          verified sex-linked differences would require research this preview does not assert.
+          No sex-linked difference has been researched for the windows on this map. That is an absence of
+          research and not a finding that there is none, so this control changes nothing below it — and it
+          will keep changing nothing until a sourced difference exists.
         </p>
       )}
 

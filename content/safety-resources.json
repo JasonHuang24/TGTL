@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "verifiedOn": "2026-08-26",
   "verificationScope": "Official or authoritative primary service pages were checked for the contact details shown.",
+  "notLive": "Nothing on the site imports this file. content/hotlines.ts is the single live fixture and the only place a rendered number comes from. This file is kept because DECISIONS.md and records/consolidation-register.md name it; N-260 (2026-09-04) split its combined United Kingdom and Republic of Ireland region into the five separate services those nations actually run, so that a stale duplicate cannot contradict the fixture if anything ever reads it.",
   "regions": [
     {
       "id": "safety-us",
@@ -40,8 +41,8 @@
       }
     },
     {
-      "id": "safety-uk-ireland",
-      "region": "United Kingdom and Republic of Ireland",
+      "id": "safety-england",
+      "region": "England",
       "emergency": "999 or 112",
       "crisis": {
         "name": "Samaritans",
@@ -51,11 +52,89 @@
         "sourceType": "Authoritative crisis service"
       },
       "abuse": {
-        "name": "National Domestic Abuse Helpline (England)",
-        "contact": "Call 0808 2000 247; UK nation-specific services are linked from GOV.UK",
+        "name": "National Domestic Abuse Helpline",
+        "contact": "Call 0808 2000 247",
+        "availability": "24 hours, free",
         "url": "https://www.gov.uk/guidance/domestic-abuse-how-to-get-help",
-        "sourceType": "Government directory and official helpline"
+        "sourceType": "Government guidance page, which lists this line under England"
       }
+    },
+    {
+      "id": "safety-scotland",
+      "region": "Scotland",
+      "emergency": "999 or 112",
+      "crisis": {
+        "name": "Samaritans",
+        "contact": "Call 116 123",
+        "availability": "Free, day or night",
+        "url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/",
+        "sourceType": "Authoritative crisis service"
+      },
+      "abuse": {
+        "name": "Scotland's Domestic Abuse and Forced Marriage Helpline",
+        "contact": "Call 0800 027 1234",
+        "availability": "24 hours",
+        "url": "https://sdafmh.org.uk/",
+        "sourceType": "The service's own site"
+      }
+    },
+    {
+      "id": "safety-wales",
+      "region": "Wales",
+      "emergency": "999 or 112",
+      "crisis": {
+        "name": "Samaritans",
+        "contact": "Call 116 123",
+        "availability": "Free, day or night",
+        "url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/",
+        "sourceType": "Authoritative crisis service"
+      },
+      "abuse": {
+        "name": "Live Fear Free",
+        "contact": "Call 0808 80 10 800",
+        "availability": "24 hours",
+        "url": "https://www.gov.wales/live-fear-free/contact-live-fear-free",
+        "sourceType": "Welsh Government, which funds and publishes the service"
+      }
+    },
+    {
+      "id": "safety-northern-ireland",
+      "region": "Northern Ireland",
+      "emergency": "999 or 112",
+      "crisis": {
+        "name": "Samaritans",
+        "contact": "Call 116 123",
+        "availability": "Free, day or night",
+        "url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/",
+        "sourceType": "Authoritative crisis service"
+      },
+      "abuse": {
+        "name": "Domestic and Sexual Abuse Helpline",
+        "contact": "Call 0808 802 1414",
+        "availability": "24 hours",
+        "url": "https://dsahelpline.org/",
+        "sourceType": "The service's own site"
+      }
+    },
+    {
+      "id": "safety-ireland",
+      "region": "Republic of Ireland",
+      "emergency": "112 or 999",
+      "crisis": {
+        "name": "Samaritans",
+        "contact": "Call 116 123",
+        "availability": "Free, day or night",
+        "url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/",
+        "sourceType": "Authoritative crisis service"
+      },
+      "abuse": {
+        "name": "Women's Aid National Freephone Helpline",
+        "contact": "Call 1800 341 900",
+        "availability": "24 hours, free",
+        "url": "https://www.womensaid.ie/",
+        "sourceType": "The national women's aid service's own site"
+      },
+      "emergencySource": "https://www2.hse.ie/emergencies/when-to-call-112-or-999/"
     },
     {
       "id": "safety-australia",

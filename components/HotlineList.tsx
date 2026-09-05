@@ -1,4 +1,4 @@
-import type { Hotline } from "@/content/hotlines";
+import { hotlineRegions, type Hotline } from "@/content/hotlines";
 
 function contactHref(contact: string): string | null {
   if (contact.startsWith("findahelpline")) return "https://findahelpline.com/";
@@ -33,10 +33,14 @@ export function HotlineList({ hotlines }: { hotlines: Hotline[] }) {
             </span>
             <span className="hotline-detail">
               <span className="hotline-label">{h.label}</span>
-              <span className="hotline-regions">
-                {h.regions}
+              {/* N-260 (C-4): the region label is DERIVED from `coverage`, so it
+                  can never be wider than the nations anybody verified. */}
+              <span className="hotline-regions" data-coverage={h.coverage.join("|")}>
+                {hotlineRegions(h)}
                 {h.availability ? ` · ${h.availability}` : ""}
               </span>
+              {/* Reviewer amendment (batch 1): the fixture's `note` field was never rendered. */}
+              {h.note ? <span className="hotline-regions">{h.note}</span> : null}
             </span>
           </li>
         );

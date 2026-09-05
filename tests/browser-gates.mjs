@@ -668,6 +668,44 @@ async function labTo(page, opts = {}) {
   }
 }
 
+/* ============================================================
+   C-3 (N-191): every option whose action carries a switching cost renders it
+   on the card, in the existing campaign walk.
+   ============================================================
+   Forty-three authored sentences about what changing your mind costs have been
+   linted for voice since 4.0 and displayed by nothing. This asserts they reach a
+   reader: on the allocate screen, at least one card renders
+   [data-sim-switching-cost] with real text, and NO card renders an empty one.
+
+   Proven red by renaming the attribute in components/sim/CampaignApp.tsx — the
+   run with the plant is in DECISIONS.md §8 under batch 1.
+   ============================================================ */
+{
+  const details = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await campaignTo(page, "allocate");
+  const found = await page.evaluate(() =>
+    [...document.querySelectorAll(".sim-action-grid [data-sim-switching-cost]")].map((el) =>
+      (el.textContent || "").trim(),
+    ),
+  );
+  const cards = await page.locator(".sim-action-grid > li").count();
+  const problems = [];
+  if (!found.length)
+    problems.push(
+      `allocate screen: ${cards} action cards rendered and NOT ONE [data-sim-switching-cost] among them — the switching cost is authored, linted, and reaching no reader`,
+    );
+  const blank = found.filter((t) => t.length < 12);
+  if (blank.length) problems.push(`${blank.length} switching-cost element(s) rendered with no sentence in them`);
+  if (!problems.length)
+    details.push(
+      `allocate screen: ${found.length} of ${cards} action cards render their switching cost; e.g. "${found[0].slice(0, 90)}…"`,
+    );
+  await ctx.close();
+  record(3, "C-3 (N-191): the action card renders its switching cost", problems.length === 0, problems.length ? problems : details);
+}
+
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */
 {
   const { runTimelineBrowserGateSafe } = await import("./timeline-browser-gate.mjs");

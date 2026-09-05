@@ -48,6 +48,7 @@ import {
   deleteArcSave,
   ARC_SAVE_CAP_NOTE,
 } from "@/lib/engine/persist";
+import { SAVE_STATUS_WORDS } from "@/lib/storage";
 import { ACTS, END_OF_LIFE } from "@/content/play/acts";
 import { CARD_BY_ID } from "@/content/play/cards";
 import { BEATS } from "@/content/play/beats";
@@ -159,8 +160,16 @@ export function Playthrough() {
                 // way to get it back — §2.3.7's named saves are the fifth
                 // sanctioned §3.2 delta and were the one that did not land.
                 const a = ACTS[pendingResume.act];
-                saveArcRun(pendingResume, a ? `A life, at ${a.title}` : "A life, before it started", "kept when you started another");
+                const kept = saveArcRun(pendingResume, a ? `A life, at ${a.title}` : "A life, before it started", "kept when you started another");
                 setArcSaves(listArcSaves());
+                // N-226 / C-1: this button promises to keep the life you are
+                // leaving before it clears the run. If the write did not read
+                // back, say so — and do NOT clear the run on top of it.
+                if (kept.status !== "saved") {
+                  setArcNotice(`The life you were in was not kept. ${SAVE_STATUS_WORDS[kept.status]} It is still here; nothing has been cleared.`);
+                  return;
+                }
+                setArcNotice(null);
                 clearRun();
                 startNew();
               }}
@@ -204,7 +213,9 @@ export function Playthrough() {
           const a = ACTS[run.act];
           const save = saveArcRun(run, a ? `A life, at ${a.title}` : "A life, before it started", "saved from the bar");
           setArcSaves(listArcSaves());
-          setArcNotice(`Saved as "${save.label}".`);
+          // N-226 / C-1: the status the write RETURNED, in words. A status that
+          // is not `saved` is never rendered as saved.
+          setArcNotice(save.status === "saved" ? `Saved as "${save.label}".` : SAVE_STATUS_WORDS[save.status]);
         }}
       />
       {arcNotice ? (

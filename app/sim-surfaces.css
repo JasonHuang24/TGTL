@@ -722,6 +722,24 @@
   font-size: 0.84rem;
   color: var(--sim-mixed);
 }
+/* N-191 — the switching cost, beside the opportunity note it belongs with.
+   A neutral token: this is a fact about the move, not a warning against it. */
+.sim-card-switching {
+  margin: 0;
+  display: grid;
+  gap: 0.1rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--sim-ink);
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--sim-line);
+}
+.sim-card-switching-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
 .sim-option-list {
   list-style: none;
   margin: 0.6rem 0 0;
@@ -834,6 +852,31 @@
 .sim-recovery-why {
   color: var(--sim-muted);
   font-size: 0.84rem;
+}
+/* N-190 — the diagnostic reading of a failure, in the explain drawer, with the
+   tied recovery route inside the same block. One border, one region: the two are
+   not separable in the layout any more than they are in the markup (C-2). */
+.sim-drawer-failure {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  background: var(--sim-sunk);
+}
+.sim-failure-modes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.sim-failure-modes li {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--sim-ink);
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--sim-line);
 }
 
 /* The beat's reduced frame (§5.1): no chips, no strip, no card face. */

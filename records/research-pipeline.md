@@ -1674,3 +1674,81 @@ sources they rest on and, where the fix removed timing, replacing what it remove
   `notes` field states.
 
 Every window in this batch is an age band the source names, and nothing wider.
+
+---
+
+## Consolidation batch 1 (2026-09-04) — N-260 helpline coverage
+
+Written by hand, like the `p5-fixpass` section above, because this batch was run by a build
+agent under a brief rather than by a fan-out of authoring agents. Every URL below was
+**fetched during this batch**, on 2026-09-04. Excerpts are at most twenty-five words and are
+what the page returned. Nothing here was typed from memory or from a prototype's record:
+`tgtl-chatgptsol5-6-2.0/SAFETY_SOURCES.md` raised the England claim, and a prototype is a
+claim to re-source, never a source (blueprint 6.0 §4).
+
+The row: `content/hotlines.ts` labelled `0808 2000 247` as `regions: "United Kingdom"`. It is
+England's line, and Ireland is not in the United Kingdom.
+
+### The retrievals
+
+| # | URL | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|
+| 1 | https://www.nationaldahelpline.org.uk/ | The number and its availability. **It does not state which nation it serves** — the question the label turns on is not answered on the service's own front page. | "Call for free and in confidence, 24 hours a day: 0808 2000 247." |
+| 2 | https://www.gov.uk/guidance/domestic-abuse-how-to-get-help | That `0808 2000 247` is listed under **England**, and that Scotland, Wales and Northern Ireland each have their own line. This is the source of the correction. | "England · Refuge's National Domestic Abuse Helpline · 0808 2000 247" |
+| 3 | https://sdafmh.org.uk/ | **Scotland's** line, its number and availability. | "Support is available 24 hours a day, 7 days a week on Scotland's Domestic Abuse and Forced Marriage Helpline. 0800 027 1234" |
+| 4 | https://www.gov.wales/live-fear-free/contact-live-fear-free | **Wales**'s line, its number and availability, on the Welsh Government's own site. | "Call: 0808 80 10 800" · "Available 24 hours a day 7 days a week." |
+| 5 | https://www.gov.wales/live-fear-free/about-live-fear-free-helpline | The same Welsh number, on a second Welsh Government page — fetched because source 2 disagrees with source 4 (see the conflict below). | "Call 0808 8010 800" |
+| 6 | https://dsahelpline.org/ | **Northern Ireland**'s line, its number, its scope and its availability. | "The Domestic and Sexual Abuse Helpline provides information, advice and support to those impacted by domestic and sexual abuse across Northern Ireland." · "Call us for FREE 0808 802 1414" |
+| 7 | https://www.womensaid.ie/ | **Ireland**'s national freephone helpline and its availability. Ireland had no abuse line in the fixture at all. | "1800 341 900 — 24h National Freephone Helpline" |
+| 8 | https://www2.hse.ie/emergencies/when-to-call-112-or-999/ | That **999** reaches the emergency services in **Ireland** — the check `DECISIONS.md` §7 recorded as not separately done. | "Always call 112 or 999 if someone is seriously ill or injured and their life is at risk." |
+| 9 | https://112.ie/what-is-112/ | The same, from Ireland's Emergency Call Answering Service. | "In Ireland, 112 and 999 exist equally and run in parallel." |
+| 10 | https://988.ca/ | That **9-8-8** is **Canada**'s crisis line — the other check `DECISIONS.md` §7 recorded as not separately done. | "Call or Text 9-8-8" · "24/7/365 Crisis Support" · "A safe space to talk, 24 hours a day, every day of the year." |
+| 11 | https://www.canada.ca/en/public-health/services/health-promotion/stop-family-violence/services.html | That **9-1-1** is the emergency number in **Canada**, on a Government of Canada page. | "If you're in immediate danger or need urgent medical support, call 9-1-1." |
+| 12 | https://www.samaritans.org/how-we-can-help/contact-samaritan/ | That `116 123` is free from any phone and that the service spans **the UK and Ireland**, which is what its existing two-nation label rests on. | "Call us free any time, from any phone, on 116 123." · "more than 200 branches and locations across the UK and Ireland" |
+
+### A conflict between two official sources, recorded rather than resolved silently
+
+Source 2 (GOV.UK) prints the Welsh helpline as **0808 80 10 100**. Sources 4 and 5 (GOV.WALES,
+the Welsh Government, which funds and publishes the service) print **0808 80 10 800**. Both
+were re-fetched and asked for the digits specifically; the disagreement is on the pages, not in
+the reading. The fixture carries **0808 80 10 800**, on the ground that the government that runs
+the service is the better source for its own number and that two of its pages agree with each
+other. This is a judgement call and it is the one entry in this batch a reviewer should check
+before the label ships to readers.
+
+### The reviewer's tie-break (Fable 5.1, 2026-09-04)
+
+Re-fetched sources 2 and 4 independently: the disagreement is on the pages (GOV.UK
+"0808 80 10 100"; GOV.WALES "Call: 0808 80 10 800"). A third official source was then
+fetched — the organisation that operates the line for the Welsh Government:
+
+| # | URL | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|
+| 13 | https://welshwomensaid.org.uk/ | Welsh Women's Aid, which runs Live Fear Free, prints the same number as GOV.WALES. Three official pages against one; the fixture's **0808 80 10 800** stands. GOV.UK's digit is treated as that page's error and is not carried. | "Telephone: 0808 80 10 800" · "24 hours 7days a week confidential advice & support." |
+
+### What could not be established, and what was done about it
+
+- **gov.ie, garda.ie, citizensinformation.ie and crtc.gc.ca all returned 403 or 404** to this
+  batch's fetches. Ireland's emergency number and Canada's emergency number were established
+  from other official pages instead (sources 8, 9, 11); nothing was taken from memory.
+- **No source was sought or found for a sex-linked difference in the map's windows** (N-160).
+  That row states the absence rather than filling it, so it carries no retrieval.
+
+### What the batch changed
+
+- `content/hotlines.ts`: `Hotline` gains `coverage: Nation[]`; `regions` is **derived** from it by
+  `regionsLabel()` and is no longer a stored string, so a label cannot drift wider than the
+  coverage anyone verified. "United Kingdom" is printed only when all four of its nations are
+  covered.
+- `hotline-uk-dv` becomes `hotline-england-dv`, `coverage: ["England"]`, sourced to the GOV.UK
+  page that states the nation. Four lines join it: `hotline-scotland-dv`, `hotline-wales-dv`,
+  `hotline-ni-dv` and `hotline-ireland-dv`, each covering one nation, each with its own
+  `sourceUrl` and `lastVerified: "2026-09-04"`.
+- `HOTLINE_LAST_VERIFIED` was **not moved**. It already reads 2026-09-04 from the publish pass,
+  and this batch re-checked twelve pages, not every record — so the date cannot distinguish what
+  was re-checked today from what was not. This section is where that distinction lives.
+- `content/safety-resources.json` (imported by nothing) had its combined
+  "United Kingdom and Republic of Ireland" region split into the same five nations, so a file
+  nothing reads cannot contradict the fixture if anything ever reads it.
+- C-4 asserts both halves in `tests/consolidation-gates.ts`, and is proven red by a plant in
+  `tests/falsify-walls.sh`.

@@ -46,6 +46,7 @@ import { computeParse, BRIDGE_FRAME } from "@/lib/sim/parse";
 import { createFork, replayFork } from "@/lib/sim/forks";
 import { CAMPAIGN_CONTENT_NOTE } from "@/content/sim/methodology-copy";
 import { readActive, writeActive, clearActive, saveRun, listSaves, loadSave, deleteSave, listForks, writeFork, syncForkSuffix, deleteFork, eraseAll, CAP_NOTE } from "@/lib/sim/persist";
+import { SAVE_STATUS_WORDS } from "@/lib/storage";
 import { presetsInOrder, SEASON_COUNT, CAMPAIGN_LABEL, ACTION_BY_ID } from "@/content/sim/registry";
 import { profileRender } from "@/content/sim/profile";
 import {
@@ -100,7 +101,9 @@ export function CampaignApp() {
   // which §3.9 asks for and three surfaces promise — was permanently empty.
   const [pendingRevision, setPendingRevision] = useState<PrioritySet | null>(null);
   const [eventResponses, setEventResponses] = useState<CommittedEventResponse[]>([]);
-  const [explain, setExplain] = useState<ResolvedItem | null>(null);
+  // N-190: the drawer needs the failure's TIED RECOVERY ROUTE as well as the item,
+  // because the failure-mode reading may never render without it (C-2).
+  const [explain, setExplain] = useState<{ item: ResolvedItem; tie?: RecoveryTie } | null>(null);
   const [beatSkipped, setBeatSkipped] = useState(false);
   const [saves, setSaves] = useState(() => [] as ReturnType<typeof listSaves>);
   const [notice, setNotice] = useState<string | null>(null);
@@ -207,15 +210,23 @@ export function CampaignApp() {
         <CampaignHeader
           run={run}
           onExit={() => {
-            if (run) writeActive(run);
-            setNotice("Paused. This campaign is on this device and it will wait indefinitely.");
+            // N-226: the pause notice used to promise the device had kept it,
+            // whatever the write actually did. It reports the status now.
+            const status = run ? writeActive(run) : "memory-only";
+            setNotice(
+              status === "saved"
+                ? "Paused. This campaign is on this device and it will wait indefinitely."
+                : `Paused, but not kept. ${SAVE_STATUS_WORDS[status]}`,
+            );
           }}
           onSave={() => {
             if (!run) return;
             const label = seasonLabel(run.seasonIndex);
-            saveRun(run, `${CAMPAIGN_LABEL} — age ${label.age}`, `${label.half} of ${label.year}`);
+            const result = saveRun(run, `${CAMPAIGN_LABEL} — age ${label.age}`, `${label.half} of ${label.year}`);
             setSaves(listSaves());
-            setNotice("Saved to this device.");
+            // N-226 / C-1: the status the write RETURNED, in words. A status that
+            // is not `saved` is never rendered as saved.
+            setNotice(SAVE_STATUS_WORDS[result.status]);
           }}
         />
       ) : null}
@@ -333,8 +344,12 @@ export function CampaignApp() {
             setSaves(listSaves());
 
             commit(state);
+            // N-226 / C-1: "was saved first" is a claim about a write. It is only
+            // made when the write read back.
             setNotice(
-              `Branched. The run you were in was saved first, as "${parentSave.label}", and it is untouched — this is a new line from the same point.`,
+              parentSave.status === "saved"
+                ? `Branched. The run you were in was saved first, as "${parentSave.label}", and it is untouched — this is a new line from the same point.`
+                : `Branched, and the run you were in was NOT kept. ${SAVE_STATUS_WORDS[parentSave.status]} This branch is a new line from the same point, and it is here only while the page is open.`,
             );
           }}
         />
@@ -387,7 +402,7 @@ export function CampaignApp() {
         <ConsequencesScreen
           run={run}
           result={stage.result}
-          onExplain={setExplain}
+          onExplain={(item, tie) => setExplain({ item, tie })}
           onContinue={() => {
             if (run.phase === "parse" || run.seasonIndex >= SEASON_COUNT) setStage({ t: "parse" });
             else setStage({ t: "briefing" });
@@ -397,7 +412,7 @@ export function CampaignApp() {
 
       {stage.t === "parse" && run && <ParseScreen run={run} />}
 
-      {explain ? <ExplainDrawer item={explain} onClose={() => setExplain(null)} /> : null}
+      {explain ? <ExplainDrawer item={explain.item} tie={explain.tie} onClose={() => setExplain(null)} /> : null}
     </div>
   );
 
@@ -1086,6 +1101,16 @@ function ActionCard({
       <CardFace family={a.family} title={a.label} selected={chosen} eyebrow={costWords(entry)} as="div">
         {a.scene ? <p className="sim-card-scene">{a.scene}</p> : null}
         {a.contract.opportunityNote ? <p className="sim-card-cost">{a.contract.opportunityNote}</p> : null}
+        {/* N-191 (C-3). Forty-three authored sentences about what changing your
+            mind costs, linted for voice since 4.0 and displayed by nothing.
+            Beside the opportunity note, because they are the same kind of fact:
+            what this move costs that is not in its price. */}
+        {a.contract.switchingCost ? (
+          <p className="sim-card-switching" data-sim-switching-cost>
+            <span className="sim-card-switching-eyebrow">If you change your mind</span>
+            {a.contract.switchingCost}
+          </p>
+        ) : null}
         {!entry.affordable ? (
           <p className="sim-card-blocked">
             Not affordable this season{entry.reason ? ` — ${entry.reason}` : ""}.
@@ -1242,7 +1267,7 @@ function ConsequencesScreen({
 }: {
   run: SimState;
   result: SeasonResult;
-  onExplain: (i: ResolvedItem) => void;
+  onExplain: (i: ResolvedItem, tie?: RecoveryTie) => void;
   onContinue: () => void;
 }) {
   return (
@@ -1262,7 +1287,11 @@ function ConsequencesScreen({
               >
                 <p className="sim-result-line">{item.line}</p>
                 {item.invalidatedNote ? <p className="sim-result-invalid">{item.invalidatedNote}</p> : null}
-                <button type="button" className="sim-ghost-btn" onClick={() => onExplain(item)}>
+                <button
+                  type="button"
+                  className="sim-ghost-btn"
+                  onClick={() => onExplain(item, result.recoveryTies.find((t) => t.failedId === item.id))}
+                >
                   Why this happened
                 </button>
               </CardFace>
@@ -1346,7 +1375,15 @@ function RecoveryTies({ ties }: { ties: RecoveryTie[] }) {
    The explain drawer (§3.10, §7.2 readRef)
    ========================================================================= */
 
-function ExplainDrawer({ item, onClose }: { item: ResolvedItem; onClose: () => void }) {
+function ExplainDrawer({
+  item,
+  tie,
+  onClose,
+}: {
+  item: ResolvedItem;
+  tie?: RecoveryTie;
+  onClose: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current?.focus();
@@ -1356,6 +1393,11 @@ function ExplainDrawer({ item, onClose }: { item: ResolvedItem; onClose: () => v
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // N-190. Only a failure has a failure mode to read, and only an ACTION carries
+  // the authored lines (an event has no `failureModes` field in the schema).
+  const failureModes = item.failure ? (ACTION_BY_ID[item.id]?.failureModes ?? []) : [];
+  const tiedRoutes = (tie?.routes ?? []).filter((r) => r.tied);
 
   return (
     <div className="sim-drawer" role="dialog" aria-modal="true" aria-label="Why this happened">
@@ -1381,6 +1423,39 @@ function ExplainDrawer({ item, onClose }: { item: ResolvedItem; onClose: () => v
           These are the factors that actually went into the resolution — computed from what the model used, not
           written afterwards. A factor that is not listed did not contribute.
         </p>
+
+        {/* N-190 (C-2). The authored failure modes are the DIAGNOSTIC reading of
+            what went wrong — the difference between "that did not work" and "that
+            did not work because the thing you needed was a prerequisite you did
+            not have". They render beside the attribution split, and beside the
+            tied recovery route, NEVER instead of it: the guard below requires a
+            tied route to exist, and both live in one section so C-2 can see that
+            they cannot be separated. The recovery-tie rule itself (schema
+            `recoveryRefs` / `noRecoveryTie`, S-3) is unchanged. */}
+        {failureModes.length > 0 && tiedRoutes.length > 0 ? (
+          <section className="sim-drawer-failure">
+            <h4 className="sim-instrument-title">What this kind of failure usually is</h4>
+            <ul className="sim-failure-modes">
+              {failureModes.map((f, i) => (
+                <li key={i} data-sim-failure-mode>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <h4 className="sim-instrument-title">Ways on from here</h4>
+            <ul className="sim-recovery-list">
+              {tiedRoutes.slice(0, 3).map((r, i) => (
+                <li key={i} data-sim-recovery-route>
+                  <span className="sim-recovery-label">
+                    {r.actionLabel} · {r.optionLabel}
+                  </span>
+                  <span className="sim-recovery-why">{r.why}</span>
+                  {r.supportLink ? <Link href={r.supportLink}>the route it names</Link> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         {item.evidenceLabel ? (
           <p className="sim-evidence">

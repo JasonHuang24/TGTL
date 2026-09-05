@@ -182,6 +182,111 @@ fi
 rm -f "$CBAK" "$HBAK" "$CREF" "$HREF"
 fi
 
+# ============================================================================
+# CONSOLIDATION WALLS (6.0 blueprint §8) — the C suite's "probe" gates.
+#
+# Same discipline again: plant a REAL violation in the file the gate actually
+# reads, require the named C-gate to go red AND to name the record, route or line
+# the plant went into, restore, and verify byte-identity by sha256. A C-gate
+# without a proven red is not a gate (§0.3).
+#
+# Batch 1 lands C-2 (N-190), C-4 (N-260) and C-5 (N-160). C-1 (N-226) and C-3
+# (N-191) are "record" gates: C-1's proven red is tests/save-status-harness.ts run
+# against the pre-N-226 code, C-3's is the browser assertion with its data
+# attribute renamed. Both are pasted into DECISIONS.md §8 under this batch.
+#
+# The C suite reads out/, so these probes are skipped (loudly) without a build.
+# ============================================================================
+
+echo
+echo "---- consolidation walls ----"
+
+if [ ! -d "out" ]; then
+  echo "SKIP      consolidation probes — out/ not built (run npm run build first)"
+  FAILED=1
+else
+
+# $1 name  $2 gate id (e.g. C-4)  $3 target file  $4 find  $5 replace  $6 witness
+c_probe () {
+  local name="$1" gate="$2" target="$3" find="$4" repl="$5" witness="$6"
+  local bak before after out evidence
+  bak="$(mktemp)"
+  cp "$target" "$bak"
+  before="$(sha256sum "$target" | cut -d' ' -f1)"
+  if ! grep -qF "$find" "$target"; then
+    echo "RED FLAG  $name — anchor not present in $target; the probe proved nothing"
+    FAILED=1
+    cp "$bak" "$target"
+    rm -f "$bak"
+    return
+  fi
+  python3 - "$target" "$find" "$repl" <<'PY'
+import io,sys
+p,f,r=sys.argv[1],sys.argv[2],sys.argv[3]
+s=io.open(p,encoding='utf-8').read()
+io.open(p,'w',encoding='utf-8').write(s.replace(f,r,1))
+PY
+  out="$(node --experimental-strip-types tests/consolidation-gates.ts 2>&1)"
+  evidence="$(echo "$out" | grep -F "$witness" | head -1)"
+  if echo "$out" | grep -q "\[FAIL\] Gate $gate:" && [ -n "$evidence" ]; then
+    echo "ok        $name"
+    echo "$evidence" | sed 's/^/            /'
+  elif echo "$out" | grep -q "\[FAIL\] Gate $gate:"; then
+    echo "RED FLAG  $name — $gate failed, but NOT on the plant ($witness):"
+    echo "$out" | grep -A 2 "\[FAIL\] Gate $gate:" | tail -2 | sed 's/^/            /'
+    FAILED=1
+  else
+    echo "RED FLAG  $name — planted violation did NOT make $gate fail"
+    FAILED=1
+  fi
+  cp "$bak" "$target"
+  after="$(sha256sum "$target" | cut -d' ' -f1)"
+  rm -f "$bak"
+  if [ "$before" != "$after" ]; then
+    echo "!!!! RESTORE FAILED — $target $before != $after"
+    exit 2
+  fi
+}
+
+# C-2 (N-190) — take the tied recovery route out of the drawer, keep the diagnosis.
+c_probe "C-2 · a failure mode rendered without its tied recovery route" "C-2" \
+  "components/sim/CampaignApp.tsx" \
+  '<li key={i} data-sim-recovery-route>' \
+  '<li key={i}>' \
+  "a failure mode renders with NO tied recovery route"
+
+# C-2 again — both still render, but the block no longer requires the tie to exist,
+# so a failure mode would render alone the moment the tie came back empty.
+c_probe "C-2 · the failure block no longer guarded on the tie" "C-2" \
+  "components/sim/CampaignApp.tsx" \
+  '{failureModes.length > 0 && tiedRoutes.length > 0 ? (' \
+  '{failureModes.length > 0 ? (' \
+  'to have anything in it'
+
+# C-4 (N-260) — the England line widened to a nation that runs its own service.
+c_probe "C-4 · an abuse line covering a nation another service covers" "C-4" \
+  "content/hotlines.ts" \
+  'coverage: ["England"],' \
+  'coverage: ["England", "Scotland"],' \
+  "hotline-england-dv"
+
+# C-4 again — the derivation itself re-widened, so an England-only line prints
+# "United Kingdom": the exact defect the row exists to fix.
+c_probe "C-4 · the derived label re-widened to United Kingdom" "C-4" \
+  "content/hotlines.ts" \
+  'const allUk = UK_NATIONS.every((n) => coverage.includes(n));' \
+  'const allUk = UK_NATIONS.some((n) => coverage.includes(n));' \
+  'says United Kingdom while covering only [England]'
+
+# C-5 (N-160) — an unsourced difference in the stage content under one lens.
+c_probe "C-5 · unsourced stage content under the female lens" "C-5" \
+  "components/Roadmap.tsx" \
+  'stage.gameLabel : stage.label}</h2>' \
+  'stage.gameLabel : stage.label}</h2>{sexLens === "female" ? <p>This window opens earlier.</p> : null}' \
+  "branches on the sex lens with no data-source"
+
+fi
+
 echo
 [ "$FAILED" -eq 0 ] && echo "all wall lints went red on a planted violation" || echo "at least one wall lint did not catch its plant"
 exit "$FAILED"

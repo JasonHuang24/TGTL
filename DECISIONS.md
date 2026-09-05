@@ -1055,6 +1055,74 @@ blueprint §8 reporting N/A until the batch that gives it a subject; `npm run
 gates:consolidation` joins `gates:all`. The runner prints `Gate C-N:` so the falsify
 probes can name a gate without colliding with the T suite's numbering.
 
+### Batch 1 — fix first (N-226, N-190, N-191, N-260, N-160) — built by Opus, reviewed by Fable 5.1
+
+**[2026-09-04] BATCH 0'S SERVED HALF, recorded here as promised:** on the untouched branch,
+`node tests/browser-gates.mjs` ALL BROWSER GATES PASS (gates 0, 4–9, 14), `tests/s9-ui.mjs`
+120 audits clean, `tests/timeline-screenshots.mjs` 40 captures.
+
+**What landed.** `lib/storage.ts` gains `writeVerified` (write, read back, compare) and the
+seven `SaveStatus` states with reader-facing words; `lib/sim/persist.ts` and
+`lib/engine/persist.ts` return the status of every save, quarantine an unreadable original
+under `<key>.quarantine` instead of overwriting it, and clear the quarantines on erase;
+`STORAGE_KEYS` is unchanged at thirteen (C-1 asserts it). The campaign and arc save notices
+render the returned status; the arc's "Keep this one and start another" no longer clears a
+run whose keep-write did not read back — a live data-loss path, closed. The explain drawer
+renders an action's `failureModes` beside its tied recovery route, guarded on both (C-2);
+the action card renders `switchingCost` beside the opportunity note (C-3). The hotline
+fixture stores `coverage: Nation[]` and DERIVES its region label (C-4); the abuse group is
+five one-nation lines (England, Scotland, Wales, Northern Ireland, Ireland), each sourced
+to a page fetched in this batch; Ireland's 999 and Canada's 988 and 911 — the two checks
+§7 recorded as not separately done — are now sourced (retrievals 8–11). The map's lens
+note says the sex lens is unresearched, not a null finding (C-5).
+
+**Sent back:** nothing. The batch passed review as built; three reviewer amendments below.
+
+**Reviewer amendments (recorded, not delegated).** (1) The batch found GOV.UK and
+GOV.WALES disagreeing on the Welsh helpline digit and chose the Welsh Government's; I
+re-fetched both, confirmed the disagreement is on the pages, and fetched a third official
+source — Welsh Women's Aid, which operates the line — which agrees with GOV.WALES
+(`records/research-pipeline.md`, retrieval 13). Three against one; **0808 80 10 800**
+stands. (2) `hotline-988`'s label is the US service's name while its coverage includes
+Canada; a `note` naming Canada's 9-8-8 Suicide Crisis Helpline was added, sourced to
+retrieval 10. (3) The fixture's `note` field turned out never to render; `HotlineList`
+now renders it, reusing the existing region class — no new CSS.
+
+**Findings, recorded rather than fixed.** (a) The seventy-two failure-mode records
+reach readers less often than the register implies: a 48-season walk across six runs
+landed only *event* failures, and `SimEvent` carries no `failureModes` field. Adding one
+is new content and a schema delta outside blueprint §7.1, so it was not done; a candidate
+for the register, not for this version. (b) C-2's rendered half is not asserted — the
+drawer is client-only and no walk reaches an action failure deterministically; the source
+half plus engine-level evidence stands in, and the limitation is named in the gate.
+(c) `content/safety-resources.json` (imported by nothing) was brought into line rather than
+deleted, because three records name it by path; the owner may still delete it. (d) The
+register's counts were off by inspection: 72 records carry 178 failure-mode lines; 43
+campaign actions carry a switching cost (the register said 42 and 47 in two places).
+(e) `HOTLINE_LAST_VERIFIED` was not moved: it already reads 2026-09-04 and this batch
+re-checked twelve pages, not every record; the pipeline section carries the distinction.
+(f) `loadArcSave` reports `blocked` for a save that is simply absent — the honest word
+would be an eighth state that the blueprint does not have; left, noted for 6.1.
+
+**Proven red, then green (record gates).** C-1: `tests/save-status-harness.ts` run against
+the pre-N-226 code failed 16 of 18 cases ("no status on the returned value"); with
+`| "migrated"` deleted the gate named the missing state and the count of six; green after.
+C-3: with `data-sim-switching-cost` renamed, the browser gate reported "31 action cards
+rendered and NOT ONE [data-sim-switching-cost] among them"; green after with 8 of 31
+cards rendering one. C-2, C-4 (two plants each) and C-5 are probes in
+`tests/falsify-walls.sh`, red on plant, restores byte-identical.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7,
+Life Arc 8, sandbox 12 + invention gate, timeline 15, C suite 5 substantive + 46 N/A —
+all PASS; falsify 14 of 14 (3 sandbox, 6 timeline, 5 consolidation) red on plant, all
+restores byte-identical; browser gates ALL PASS incl. the new C-3; S-9 120 audits clean.
+`gates:balance`/`gates:pileup` not run (no engine or pool file touched). Browser walk:
+`/threshold` renders the five nation lines with derived labels; `/map` under the Female
+lens renders the new note and identical stage content.
+
+**The five hashes:** unchanged from batch 0 (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`,
+`77f1151c…`, `24526d37…`).
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0
