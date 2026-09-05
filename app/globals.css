@@ -676,10 +676,14 @@ main {
 .mentor-note-body p:first-child {
   margin-top: 0;
 }
+/* S-9 (6.0): --muted on the note's sunk background measures 4.37:1, under the
+   4.5:1 floor. The reading surfaces were outside S-9's browser half until 6.0
+   added them, which is how a live contrast defect on every mentor note stayed
+   invisible. --ink-soft on the same background clears it. */
 .mentor-note-provenance {
   margin: 0.6rem 0 0;
   font-size: 0.78rem;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-style: italic;
 }
 
@@ -706,6 +710,248 @@ main {
   font-size: 1.05rem;
 }
 
+/* ---- N-036: a plan SHAPE rendered as a note under the plans. Not ranked,
+   because it is not chosen and competes with nothing. ---- */
+.guidance-shape-note h3 {
+  margin-top: 0;
+}
+.guidance-shape-cost {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---- N-320: typed cross-links. The relation reads before the link text, the
+   why-line under it, so a reader knows what a click will do for them first. ---- */
+.next-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.55rem;
+  row-gap: 0.1rem;
+}
+.next-step-relation {
+  grid-row: 1;
+  align-self: baseline;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.12rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-sunk);
+  white-space: nowrap;
+}
+.next-step > a {
+  grid-row: 1;
+  grid-column: 2;
+}
+.next-step-why {
+  grid-row: 2;
+  grid-column: 2;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---- N-322: the system tag row at the head of a situation or topic page.
+   Never rendered on a set-down route (the route record carries no `systems`). ---- */
+.system-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+}
+.system-tags-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.system-tag {
+  padding: 0.14rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+}
+
+/* ---- N-045: one step of a decision sequence, with the system it belongs to. ---- */
+.pathway-step {
+  margin: 2rem 0 0;
+}
+.pathway-step > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.pathway-step-num {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.pathway-step-primary {
+  margin: -0.2rem 0 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.pathway-step-primary-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+}
+
+/* ---- N-326: the game-vocabulary marker. Game Guide only, and never on a
+   set-down route — both decided in components/Term.tsx, not here. ---- */
+.term--marked {
+  font-family: var(--sans);
+  font-variant: small-caps;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--accent-deep);
+}
+
+/* ---- N-005: the quiet "What is this?" line under the book pair. Not a door:
+   no card, no border, no arrow — every door is a commitment and this is not. ---- */
+.entrance-what {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--atlas-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.entrance-what:hover,
+.entrance-what:focus-visible {
+  color: var(--atlas-ink);
+}
+
+/* ---- N-111: the concept index table. Scrolls inside its own box so the page
+   body never scrolls sideways (the 320px gate). ---- */
+.concept-table-wrap {
+  overflow-x: auto;
+  margin: 1.4rem 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+.concept-table {
+  border-collapse: collapse;
+  min-width: 42rem;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+}
+.concept-table th,
+.concept-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+.concept-table thead th {
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  position: sticky;
+  top: 0;
+}
+.concept-table tbody th {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  white-space: nowrap;
+}
+.concept-cell-gloss {
+  display: block;
+  color: var(--ink-soft);
+  margin-top: 0.15rem;
+}
+.concept-cell-empty {
+  color: var(--muted);
+}
+
+/* ---- N-321: the single-home invariant, said to the reader on every topic
+   route rather than only enforced in the build. ---- */
+.single-home-note {
+  margin: 2.2rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---- N-023: the set-down "getting through today" list. Plain, roomy, and
+   carrying no analytical chrome at all. ---- */
+.today-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0;
+  display: grid;
+  gap: 1rem;
+}
+.today-list li {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+.today-list strong {
+  display: block;
+}
+
+/* ---- N-046 / N-047: the horizon ladder and the worked board example. ---- */
+.horizon-ladder,
+.worked-board {
+  margin: 1.2rem 0;
+}
+.horizon-ladder dt,
+.worked-board dt {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.9rem;
+}
+.horizon-ladder dd,
+.worked-board dd {
+  margin: 0.25rem 0 0;
+}
+
+/* ---- N-008: the ordered reading path at the foot of /orientation. ---- */
+.reading-path {
+  margin: 1.2rem 0;
+  padding-left: 1.4rem;
+}
+.reading-path li {
+  margin: 0.7rem 0;
+}
+.reading-path-why {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 .crisis-note {
   margin: 1.4rem 0;
   padding: 0.9rem 1.1rem;
@@ -720,6 +966,13 @@ main {
   color: var(--muted);
   font-size: 0.95rem;
   font-style: italic;
+}
+/* N-023: the quiet line under triage's two questions, for the reader who has
+   nothing left to spend on answering either of them. */
+.triage-nothing-left {
+  margin: 0.6rem 0 1.2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 /* ---- Set-down calm treatment (§4.2) ---- */
@@ -771,6 +1024,13 @@ main {
 }
 
 /* ---- Threshold / hotlines (§5.1) ---- */
+/* N-023: one quiet line for the reader who is not in danger and simply has
+   nothing left today. Outside the number groups, above them. */
+.threshold-today-line {
+  margin: -1rem 0 2rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
 .threshold-lede {
   font-family: var(--serif);
   font-size: 1.24rem;
@@ -1115,8 +1375,9 @@ main {
 .door-help .door-go {
   color: var(--help);
 }
+/* N-002: the stance now sits ABOVE the doors title rather than under the grid. */
 .doors-privacy {
-  margin: 1.4rem 0 0;
+  margin: 0 0 1.2rem;
   text-align: center;
   color: var(--muted);
   font-size: 0.86rem;
@@ -1246,6 +1507,23 @@ main {
   color: var(--muted);
   font-size: 0.9rem;
 }
+/* N-012: a result says what kind of thing it is — a whole page, a section
+   inside one, or one of the timeline's milestone pages. */
+.search-kind {
+  display: inline-block;
+  margin-right: 0.45rem;
+  padding: 0.08rem 0.36rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
 .search-empty {
   color: var(--muted);
   font-style: italic;
@@ -1338,6 +1616,126 @@ main {
   margin: 0.6rem 0 0 !important;
   font-size: 0.95rem !important;
   color: var(--muted) !important;
+}
+
+/* ---- 6.0 batch 6 (group K): the register apparatus ----
+   No new tokens and no new families: the disanalogy meta line, the planned
+   cards, the revision note and the perishable stamp all reuse the existing
+   type scale, the existing surfaces and --ink-soft (the AA-safe muted token
+   batch 4 moved the mentor provenance line to). */
+.known-break-n {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  color: var(--ink-soft);
+  margin-right: 0.5rem;
+}
+.known-break-meta {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  margin: 0 0 0.5rem;
+}
+.known-break-fix,
+.known-break-inherited {
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+}
+.known-break-inherited-label,
+.retraction-label,
+.revision-note-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.known-breaks-key {
+  font-size: 0.95rem;
+}
+.model-break {
+  margin: 1.6rem 0;
+}
+.model-break-cite {
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+}
+.retractions-empty {
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.retractions-register {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0;
+}
+.retraction-entry {
+  margin: 1rem 0;
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.revision-note {
+  margin: 1.6rem 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--line-strong);
+  font-size: 0.95rem;
+}
+.page-perishable {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.behaviour-label-line {
+  font-size: 0.95rem;
+}
+.planned-section {
+  margin: 2rem 0;
+}
+.planned-lead {
+  font-size: 0.95rem;
+}
+.planned-cards {
+  list-style: none;
+  margin: 1.2rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+.planned-card {
+  display: block;
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+.planned-badge {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  margin-right: 0.5rem;
+}
+.planned-card-line {
+  display: block;
+  margin-top: 0.5rem;
+}
+.planned-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+.nine-ways li {
+  margin: 0.5rem 0;
 }
 .reset-control {
   margin-top: 0.8rem;
@@ -1990,12 +2388,36 @@ legend {
 }
 .lane-row {
   display: grid;
+  /* N-077 — six cells now: name, note, example, then minimum / alternative /
+     stop on a second row of the same card, so the three that keep a lane from
+     becoming a stick sit together rather than being read as more examples. */
   grid-template-columns: 10rem 1fr 1.2fr;
   gap: 0.8rem;
   padding: 0.8rem 1rem;
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+}
+.lane-minimum,
+.lane-alternative,
+.lane-stop {
+  grid-column: 2 / -1;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  border-top: 1px dotted var(--line);
+  padding-top: 0.4rem;
+}
+.lane-minimum {
+  grid-column: 1 / -1;
+}
+.lane-cell-label {
+  display: inline-block;
+  min-width: 6.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
 }
 .lane-name {
   font-family: var(--serif);
@@ -2722,7 +3144,8 @@ legend {
   color: var(--muted);
 }
 
-.topics-timeline-link {
+.topics-timeline-link,
+.topics-concepts-link {
   margin-block: 1.25rem;
   color: var(--ink-soft);
 }
@@ -2784,4 +3207,532 @@ legend {
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+/* =========================================================================
+   6.0 CONSOLIDATION, batch 3 — the reading layer's two additions.
+   ========================================================================= */
+
+/* N-235 · the reading-to-play entry. A link at the end of a page, deliberately
+   quiet: no button, no accent fill, nothing that reads as a call to action. */
+.try-in-play {
+  margin: 1.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.try-in-play-note {
+  color: var(--muted);
+}
+
+/* N-366 · the agency word on the map's early stages. */
+.stage-agency {
+  margin: 0 0 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+.stage-agency-word {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stage-agency-note {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* =========================================================================
+   6.0 batch 5 — board, logs, guidance, position, history.
+   Tokens only; no new colour is introduced and no meaning is carried by
+   colour alone (every state below also changes text, weight, or decoration).
+   ========================================================================= */
+
+/* N-064, N-066, N-075, N-411 · the procedure beside a board question. */
+.board-step-help {
+  margin: 0.7rem 0 0.9rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--paper-sunk);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.board-step-help-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.board-step-help-list {
+  margin: 0 0 0.5rem;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.board-step-help-note,
+.board-step-help-warning {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.board-step-help-warning {
+  border-top: 1px dotted var(--line-strong);
+  padding-top: 0.45rem;
+}
+
+/* N-073 · the borderline note on a reading. */
+.board-borderline-note,
+.guidance-borderline-note {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--line-strong);
+  padding-left: 0.7rem;
+  margin: 0 0 0.8rem;
+}
+
+/* N-072 (C-36) · rejection, honoured in the rendering. The struck state is
+   never carried by colour alone — the text is struck through and dimmed. */
+.board-reject {
+  margin-top: 0.7rem;
+  background: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.board-reject:hover {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.board-reject[aria-pressed="true"] {
+  border-style: dashed;
+  font-weight: 700;
+}
+.board-reject-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.board-reading-result.is-rejected > p,
+.board-reading-result.is-rejected > a,
+.plan-card.is-rejected > h3,
+.plan-card.is-rejected > .plan-summary,
+.plan-card.is-rejected > .plan-favors,
+.sheet-layer.is-rejected > h3,
+.sheet-layer.is-rejected > .sheet-layer-what,
+.sheet-layer.is-rejected > .sheet-layer-examples,
+.sheet-layer.is-rejected > .sheet-layer-confused {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.plan-card.is-rejected .plan-rank {
+  text-decoration: line-through;
+}
+.board-reading-none,
+.sheet-none-fit,
+.guidance-none-fit {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+
+/* N-080 (C-39) · the disclosure header above every ranking. */
+.disclosure-scope {
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+.disclosure-scope dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.disclosure-scope dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.disclosure-rules {
+  margin: 0.4rem 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+/* N-084, N-089, N-093, N-094, N-095 · closing and framing panels. */
+.guidance-next-move-line,
+.guidance-pivot-line,
+.logs-pivot-line {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.guidance-moves-line {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.no-winner {
+  margin: 1.4rem 0 0;
+  padding: 1rem 1.1rem;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.no-winner-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+}
+.no-winner-lead {
+  margin: 0 0 0.7rem;
+  color: var(--ink-soft);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.no-winner-sides {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.no-winner-sides dt {
+  font-weight: 700;
+}
+.no-winner-sides dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.no-winner-note {
+  margin: 0.8rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dotted var(--line-strong);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+/* On the dark instrument panels the tier board sits in. */
+.tier-board .no-winner {
+  background: var(--atlas-raised);
+  border-color: var(--atlas-line);
+  color: var(--atlas-ink);
+}
+.tier-board .no-winner-lead,
+.tier-board .no-winner-sides dd,
+.tier-board .no-winner-note {
+  color: var(--atlas-muted);
+}
+
+/* N-408 · the scorecard taxonomy, read and never selected. */
+.scorecard-list {
+  margin: 0.6rem 0 0.8rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.scorecard-list dt {
+  font-weight: 700;
+}
+.scorecard-list dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* N-074 (C-37), N-078, N-371, N-075 · the logs. */
+.logs-export {
+  margin: 1.4rem 0 0.6rem;
+  padding: 1rem 1.1rem;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.logs-export-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+.logs-export-text {
+  display: block;
+  margin-top: 0.8rem;
+}
+.logs-export-text span {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.logs-export-text textarea {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.log-empty,
+.logs-debt-note,
+.logs-alignment-question {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.log-empty {
+  padding: 0.7rem 0.9rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+.logs-debt-note {
+  border-left: 3px solid var(--caution);
+  padding-left: 0.75rem;
+}
+
+/* N-091 · the daily plan says what it is not. */
+.plan-separation {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.8rem;
+  color: var(--ink-soft);
+}
+
+/* N-399, N-403, N-405, N-127 · the character sheet's layers. */
+.sheet-layer-list {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.8rem;
+}
+.sheet-layer {
+  padding: 0.8rem 0.9rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.sheet-layer h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+.sheet-layer p {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.sheet-layer-examples,
+.sheet-layer-confused {
+  color: var(--atlas-muted);
+}
+.sheet-layer-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.sheet-need-state,
+.not-a-stat-close {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px dotted var(--atlas-line);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.stat-population {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--atlas-muted);
+}
+.stat-population-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* N-150 (C-42) · the position note, wherever it re-resolves. */
+.position-note {
+  margin: 1.1rem 0;
+  padding: 0.85rem 1rem;
+  background: var(--paper-sunk);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.position-note-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.position-note-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.position-note-provenance {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+/* N-176 · official rules, practical effects, rollout — three parallel panels. */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 0.9rem 0;
+}
+.rules-panel {
+  padding: 0.85rem 0.95rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.rules-panel h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+.rules-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.rules-panel p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.rules-grid-note {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--atlas-muted);
+}
+
+/* N-170, N-171, N-172 · the ruleset header and the objective switch. */
+.tier-ruleset {
+  margin: 0.8rem 0 1rem;
+  padding: 0.9rem 1rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.tier-ruleset dl {
+  margin: 0.6rem 0 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.tier-ruleset dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--atlas-muted);
+}
+.tier-ruleset dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.tier-objective-select {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.tier-factor-weights {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+.tier-weight-word {
+  font-weight: 700;
+}
+.tier-row-item.is-empty-tier {
+  opacity: 0.85;
+}
+.tier-empty-ruling {
+  font-style: italic;
+}
+
+@media (max-width: 40rem) {
+  .rules-grid {
+    grid-template-columns: 1fr;
+  }
+  .lane-row {
+    grid-template-columns: 1fr;
+  }
+  .lane-minimum,
+  .lane-alternative,
+  .lane-stop {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================================
+   N-074 (C-37) — PRINT.
+   =========================================================================
+   The second way a decision record outlives the cache, and the one that needs
+   no clipboard permission. Everything that is chrome, navigation, or a control
+   is removed; what remains is the reader's own records, on paper, in ink that
+   does not depend on a theme. Nothing here is sent anywhere: a print is a
+   local operation, and this stylesheet is the whole of it.
+   ========================================================================= */
+@media print {
+  :root {
+    --paper: #ffffff;
+    --paper-raised: #ffffff;
+    --paper-sunk: #ffffff;
+    --ink: #000000;
+    --ink-soft: #222222;
+    --muted: #444444;
+    --atlas: #ffffff;
+    --atlas-raised: #ffffff;
+    --atlas-ink: #000000;
+    --atlas-muted: #333333;
+    --atlas-line: #999999;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  .site-header,
+  .site-footer,
+  .site-nav,
+  .quick-exit,
+  .preference-bar,
+  .next-steps,
+  .logs-export-controls,
+  .logs-reset,
+  .log-form,
+  .log-remove,
+  .board-reject,
+  .reset-button,
+  .try-in-play,
+  .search-form {
+    display: none !important;
+  }
+  .log-list,
+  .log-entry,
+  .panel,
+  .logs-export {
+    break-inside: avoid;
+    border-color: #999999;
+    background: #ffffff;
+  }
+  .prose-page,
+  .instrument-page {
+    max-width: none;
+    padding: 0;
+  }
 }

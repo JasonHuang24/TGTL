@@ -73,7 +73,28 @@
   --sim-accent: var(--atlas-accent);
   /* the ink that sits ON the accent — tokenised so no surface writes a literal */
   --sim-on-accent: #10202b;
-  /* semantic instrument colours (the six canonical instruments, §4.1) */
+  /* semantic instrument colours (the six canonical instruments, §4.1)
+     -----------------------------------------------------------------
+     N-233, THE COLOUR RULE (6.0 §3.9, C-19). No token pair may encode outcome
+     valence as green/red across a resolution.
+
+     The no-worth-score wall is enforced in words, in numbers and in totals, and
+     colour is the one channel nothing linted. A saturated green on `strong` and a
+     saturated red on `failure` would reintroduce the score silently: it would tell
+     a reader that one band of a life went RIGHT and another went WRONG, on a screen
+     whose entire text is written to refuse that reading. "Mixed consequences should
+     look mixed."
+
+     So these three are deliberately low-chroma and warm: --sim-poor is a
+     terracotta, not a signal red, and --sim-good is a muted sage, not a signal
+     green. C-19 measures it rather than trusting it — it reads every token these
+     band classes actually use out of the stylesheets, converts them, and fails if a
+     green-hued token and a red-hued token sit on the two ends of one resolution
+     with either at signal strength. The margin is wide (see the gate's own output),
+     which is the point: this is a design decision with room in it, not a value
+     tuned to sit just under a threshold. Changing one of these to a traffic-light
+     colour is the plant that proves the gate.
+     ----------------------------------------------------------------- */
   --sim-good: #7cc39b;
   --sim-mixed: #d6b06a;
   --sim-poor: #d98a7a;

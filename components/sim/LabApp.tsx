@@ -125,6 +125,23 @@ export function LabApp() {
             <span className="sim-lab-lesson-label">what this axis teaches</span> {LAB_AXIS_LESSON[comparison.axis]}
           </p>
 
+          {/* N-225 (C-22). What the fork cannot settle, BEFORE the branches.
+              The comparison below looks decisive — two columns, a computed
+              difference list, a reading. These are the facts outside the model
+              that would actually decide it, and no branch on this screen contains
+              any of them. Rendered above the columns because after them is too
+              late: by then the screen has already made its case. */}
+          <section className="sim-panel sim-lab-unknowns" aria-label="What this cannot settle">
+            <h4 className="sim-instrument-title">What this cannot settle</h4>
+            <ul className="sim-plain-list">
+              {comparison.situation.unknowns.map((u, i) => (
+                <li key={i} data-sim-lab-unknown>
+                  {u}
+                </li>
+              ))}
+            </ul>
+          </section>
+
           <div className="sim-lab-columns">
             {[comparison.left, comparison.right].map((branch) => (
               <div key={branch.id} className="sim-lab-column">
@@ -210,6 +227,23 @@ export function LabApp() {
               <p className="sim-panel-empty">Nothing separated them. That is a result, not a bug.</p>
             )}
             <p className="sim-panel-note">{comparison.reading}</p>
+            {/* N-224. WHEN A COMPARISON STOPS BEING CONTROLLED — as a standing
+                note, because in this Lab it never does.
+                `compare()` builds both branches in one call, from one content
+                version, holding every input identical except the named axis
+                (S-1 asserts exactly that: choice-vary differs in one step, the
+                other two axes in none). So there is no state of this screen where
+                a "these two are not comparable" warning would be TRUE, and
+                rendering it conditionally would mean rendering it never. What is
+                worth saying is the condition itself: the reader is about to carry
+                this habit to comparisons that are not built this way — two
+                branches saved months apart, or read back after the content
+                changed — and those are the ones the sentence is about. */}
+            <p className="sim-panel-note" data-sim-lab-control-note>
+              Both branches were run just now, from the same content, holding everything identical except the one
+              thing named above — which is what makes this comparison controlled. Different ages or versions are
+              not controlled experiments. Each explanation keeps its original version.
+            </p>
           </section>
 
           <p className="sim-no-prediction">{comparison.noPrediction}</p>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HOTLINE_GROUPS, HOTLINE_LAST_VERIFIED } from "@/content/hotlines";
 import { HotlineList } from "@/components/HotlineList";
+import { RevisionNote } from "@/components/primitives";
 
 export const metadata: Metadata = {
   title: "If you need help now",
@@ -24,6 +25,12 @@ export default function ThresholdPage() {
         This page has phone numbers on it and nothing else. There is no framework here, no analysis,
         and nothing to read first.
       </p>
+      {/* N-023 — one line, near the top and outside the number groups, for the
+          reader who is not in danger and simply has nothing left tonight. */}
+      <p className="threshold-today-line">
+        If it is not an emergency and you simply have nothing left today,{" "}
+        <Link href="/situations/getting-through-today">there is a short page for that</Link>.
+      </p>
 
       {HOTLINE_GROUPS.map((group) => (
         <section key={group.id} className="hotline-group" aria-labelledby={`h-${group.id}`}>
@@ -37,12 +44,24 @@ export default function ThresholdPage() {
       <section className="hotline-group" id="privacy" aria-labelledby="h-privacy">
         <h2 id="h-privacy">If someone might see this screen</h2>
         <ul className="privacy-list">
-          <li>Use a private or incognito window, or a device that is not yours.</li>
+          <li>
+            A private or incognito window can keep this page out of the history on this device. That
+            is all it does.
+          </li>
+          <li>
+            It does not hide what you do from software installed on the device, from the network you
+            are on, from an employer or a school, or from the logs kept by an account you are signed
+            in to. If the device or the account is shared, assume the record is shared too.
+          </li>
+          <li>
+            A device that is not yours &mdash; a library computer, a friend&rsquo;s phone &mdash; is
+            usually safer than any setting on a device someone else can reach.
+          </li>
+          <li>Phone calls appear on bills. Text and web chat frequently do not.</li>
           <li>
             Most domestic-abuse services have a page about covering your tracks online. It is worth
             ten minutes and it is more thorough than anything we would write here.
           </li>
-          <li>Phone calls appear on bills. Text and web chat frequently do not.</li>
         </ul>
       </section>
 
@@ -54,6 +73,24 @@ export default function ThresholdPage() {
         </a>{" "}
         is maintained and verified continuously, which this page is not.
       </p>
+
+      {/*
+       * N-291 (6.0 §3.11, C-47) — THE NO-SILENT-FIX RULE, applied to the one page a
+       * logged correction has actually changed.
+       *
+       * A silent fix converts a reader's correction into the editors' foresight.
+       * The numbers on this page were re-checked and five stale source addresses
+       * were replaced; that is recorded in the register, and until now the page it
+       * happened to said nothing about it.
+       *
+       * PLACEMENT IS DELIBERATE AND IS NOT THE RULE'S DEFAULT. The rule says the
+       * top of a changed page. This page's whole doctrine is phone numbers first
+       * and nothing to read before them, so the note sits with the verification
+       * sentence — the one paragraph on the page that is already about exactly
+       * this — rather than above the numbers. Recorded in the batch report as a
+       * judgement call, not a quiet exception.
+       */}
+      <RevisionNote correctionId="cor-hotline-verified" />
 
       <p className="threshold-footer-links">
         <Link href="/threshold/supporting-someone">If you are trying to help someone else</Link> ·{" "}

@@ -22,8 +22,15 @@ import {
   EVIDENCE_LABEL_TEXT,
   SCREENING_LINE,
   VARIATION_LINE,
+  ROUTE_GRADE_WORD,
+  ROUTE_GRADE_MEANING,
+  SOURCE_TIMING_LABEL,
+  SOURCE_TIMING_MEANING,
+  routeText,
+  routeGrade,
   type Milestone,
   type Branch,
+  type BranchRoute,
 } from "@/content/timeline/schema";
 import { windowText } from "@/content/timeline/select";
 import {
@@ -124,7 +131,7 @@ function BranchBlock({
 }) {
   const head = headings[name] ?? { title: name, question: "" };
   const costs = (b as { costs?: string[] }).costs ?? [];
-  const routes = (b as { routes?: string[] }).routes ?? [];
+  const routes = (b as { routes?: BranchRoute[] }).routes ?? [];
   return (
     <section className="tl-branch">
       <h3>{head.title}</h3>
@@ -147,9 +154,26 @@ function BranchBlock({
               {/* §5.7 (T-4): recovery sits beside every cost, in the same view. */}
               <h4>{quiet ? "Where the routes are" : "Routes from here"}</h4>
               <ul>
-                {routes.map((r, i) => (
-                  <li key={i}>{r}</li>
-                ))}
+                {/* N-379 — the grade renders as the WORD beside the route, so a
+                    route that is technically true and practically expensive
+                    says so rather than reading as an open door. */}
+                {routes.map((r, i) => {
+                  const grade = routeGrade(r);
+                  return (
+                    <li key={i}>
+                      {grade && (
+                        <span
+                          className="tl-route-grade"
+                          data-tl-route-grade={grade}
+                          title={ROUTE_GRADE_MEANING[grade]}
+                        >
+                          {ROUTE_GRADE_WORD[grade]}
+                        </span>
+                      )}
+                      {routeText(r)}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ) : null}
@@ -338,9 +362,25 @@ export default async function MilestonePage({ params }: { params: Promise<{ id: 
                         — {s.publisher}.{" "}
                         <span className="tl-stamp" {...{ [ATTR_STAMP]: s.id }}>
                           data {s.dataYear} · published {s.publicationYear} · checked {s.retrievedOn}
+                          {/* N-386 — a source looking back says so beside its own stamp. */}
+                          {s.timing === "retrospective" && (
+                            <>
+                              {" · "}
+                              <span
+                                className="tl-source-timing"
+                                data-tl-source-timing="retrospective"
+                                title={SOURCE_TIMING_MEANING.retrospective}
+                              >
+                                {SOURCE_TIMING_LABEL.retrospective}
+                              </span>
+                            </>
+                          )}
                         </span>
                       </p>
                       <p className="tl-stamp">What it measured: {s.measures}</p>
+                      {s.timing === "retrospective" && (
+                        <p className="tl-stamp">{SOURCE_TIMING_MEANING.retrospective}</p>
+                      )}
                     </div>
                   );
                 })}

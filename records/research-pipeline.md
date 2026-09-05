@@ -1674,3 +1674,190 @@ sources they rest on and, where the fix removed timing, replacing what it remove
   `notes` field states.
 
 Every window in this batch is an age band the source names, and nothing wider.
+
+---
+
+## Consolidation batch 1 (2026-09-04) — N-260 helpline coverage
+
+Written by hand, like the `p5-fixpass` section above, because this batch was run by a build
+agent under a brief rather than by a fan-out of authoring agents. Every URL below was
+**fetched during this batch**, on 2026-09-04. Excerpts are at most twenty-five words and are
+what the page returned. Nothing here was typed from memory or from a prototype's record:
+`tgtl-chatgptsol5-6-2.0/SAFETY_SOURCES.md` raised the England claim, and a prototype is a
+claim to re-source, never a source (blueprint 6.0 §4).
+
+The row: `content/hotlines.ts` labelled `0808 2000 247` as `regions: "United Kingdom"`. It is
+England's line, and Ireland is not in the United Kingdom.
+
+### The retrievals
+
+| # | URL | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|
+| 1 | https://www.nationaldahelpline.org.uk/ | The number and its availability. **It does not state which nation it serves** — the question the label turns on is not answered on the service's own front page. | "Call for free and in confidence, 24 hours a day: 0808 2000 247." |
+| 2 | https://www.gov.uk/guidance/domestic-abuse-how-to-get-help | That `0808 2000 247` is listed under **England**, and that Scotland, Wales and Northern Ireland each have their own line. This is the source of the correction. | "England · Refuge's National Domestic Abuse Helpline · 0808 2000 247" |
+| 3 | https://sdafmh.org.uk/ | **Scotland's** line, its number and availability. | "Support is available 24 hours a day, 7 days a week on Scotland's Domestic Abuse and Forced Marriage Helpline. 0800 027 1234" |
+| 4 | https://www.gov.wales/live-fear-free/contact-live-fear-free | **Wales**'s line, its number and availability, on the Welsh Government's own site. | "Call: 0808 80 10 800" · "Available 24 hours a day 7 days a week." |
+| 5 | https://www.gov.wales/live-fear-free/about-live-fear-free-helpline | The same Welsh number, on a second Welsh Government page — fetched because source 2 disagrees with source 4 (see the conflict below). | "Call 0808 8010 800" |
+| 6 | https://dsahelpline.org/ | **Northern Ireland**'s line, its number, its scope and its availability. | "The Domestic and Sexual Abuse Helpline provides information, advice and support to those impacted by domestic and sexual abuse across Northern Ireland." · "Call us for FREE 0808 802 1414" |
+| 7 | https://www.womensaid.ie/ | **Ireland**'s national freephone helpline and its availability. Ireland had no abuse line in the fixture at all. | "1800 341 900 — 24h National Freephone Helpline" |
+| 8 | https://www2.hse.ie/emergencies/when-to-call-112-or-999/ | That **999** reaches the emergency services in **Ireland** — the check `DECISIONS.md` §7 recorded as not separately done. | "Always call 112 or 999 if someone is seriously ill or injured and their life is at risk." |
+| 9 | https://112.ie/what-is-112/ | The same, from Ireland's Emergency Call Answering Service. | "In Ireland, 112 and 999 exist equally and run in parallel." |
+| 10 | https://988.ca/ | That **9-8-8** is **Canada**'s crisis line — the other check `DECISIONS.md` §7 recorded as not separately done. | "Call or Text 9-8-8" · "24/7/365 Crisis Support" · "A safe space to talk, 24 hours a day, every day of the year." |
+| 11 | https://www.canada.ca/en/public-health/services/health-promotion/stop-family-violence/services.html | That **9-1-1** is the emergency number in **Canada**, on a Government of Canada page. | "If you're in immediate danger or need urgent medical support, call 9-1-1." |
+| 12 | https://www.samaritans.org/how-we-can-help/contact-samaritan/ | That `116 123` is free from any phone and that the service spans **the UK and Ireland**, which is what its existing two-nation label rests on. | "Call us free any time, from any phone, on 116 123." · "more than 200 branches and locations across the UK and Ireland" |
+
+### A conflict between two official sources, recorded rather than resolved silently
+
+Source 2 (GOV.UK) prints the Welsh helpline as **0808 80 10 100**. Sources 4 and 5 (GOV.WALES,
+the Welsh Government, which funds and publishes the service) print **0808 80 10 800**. Both
+were re-fetched and asked for the digits specifically; the disagreement is on the pages, not in
+the reading. The fixture carries **0808 80 10 800**, on the ground that the government that runs
+the service is the better source for its own number and that two of its pages agree with each
+other. This is a judgement call and it is the one entry in this batch a reviewer should check
+before the label ships to readers.
+
+### The reviewer's tie-break (Fable 5.1, 2026-09-04)
+
+Re-fetched sources 2 and 4 independently: the disagreement is on the pages (GOV.UK
+"0808 80 10 100"; GOV.WALES "Call: 0808 80 10 800"). A third official source was then
+fetched — the organisation that operates the line for the Welsh Government:
+
+| # | URL | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|
+| 13 | https://welshwomensaid.org.uk/ | Welsh Women's Aid, which runs Live Fear Free, prints the same number as GOV.WALES. Three official pages against one; the fixture's **0808 80 10 800** stands. GOV.UK's digit is treated as that page's error and is not carried. | "Telephone: 0808 80 10 800" · "24 hours 7days a week confidential advice & support." |
+
+### What could not be established, and what was done about it
+
+- **gov.ie, garda.ie, citizensinformation.ie and crtc.gc.ca all returned 403 or 404** to this
+  batch's fetches. Ireland's emergency number and Canada's emergency number were established
+  from other official pages instead (sources 8, 9, 11); nothing was taken from memory.
+- **No source was sought or found for a sex-linked difference in the map's windows** (N-160).
+  That row states the absence rather than filling it, so it carries no retrieval.
+
+### What the batch changed
+
+- `content/hotlines.ts`: `Hotline` gains `coverage: Nation[]`; `regions` is **derived** from it by
+  `regionsLabel()` and is no longer a stored string, so a label cannot drift wider than the
+  coverage anyone verified. "United Kingdom" is printed only when all four of its nations are
+  covered.
+- `hotline-uk-dv` becomes `hotline-england-dv`, `coverage: ["England"]`, sourced to the GOV.UK
+  page that states the nation. Four lines join it: `hotline-scotland-dv`, `hotline-wales-dv`,
+  `hotline-ni-dv` and `hotline-ireland-dv`, each covering one nation, each with its own
+  `sourceUrl` and `lastVerified: "2026-09-04"`.
+- `HOTLINE_LAST_VERIFIED` was **not moved**. It already reads 2026-09-04 from the publish pass,
+  and this batch re-checked twelve pages, not every record — so the date cannot distinguish what
+  was re-checked today from what was not. This section is where that distinction lives.
+- `content/safety-resources.json` (imported by nothing) had its combined
+  "United Kingdom and Republic of Ireland" region split into the same five nations, so a file
+  nothing reads cannot contradict the fixture if anything ever reads it.
+- C-4 asserts both halves in `tests/consolidation-gates.ts`, and is proven red by a plant in
+  `tests/falsify-walls.sh`.
+
+## Consolidation batch 4 (2026-09-05) — N-025 burnout construct
+
+The row: `/situations/burnout` describes burnout in three parts — exhaustion, mental
+distance or cynicism, and reduced efficacy. That description is a research construct, and
+**a name is the strongest claim a page can make short of a number**: it says somebody
+measured this. The archive carries the construct attributed and unsourced, which is a
+claim to re-source and never a source (blueprint §4, T-1). So the page had two permitted
+outcomes: attribute it with a page fetched during this build, or render the three words as
+the site's own description with nobody's name on them and say so. One page was fetched, so
+the first applies.
+
+*(The brief anticipated this section under the date 2026-09-04; the fetch happened on
+2026-09-05 and the heading carries the true retrieval date.)*
+
+### The retrieval
+
+| # | URL | Retrieved | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|---|
+| 14 | https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases | 2026-09-05 | The World Health Organization's own description of burn-out in ICD-11, its three dimensions, and — the part the page leans on hardest — that it is classified as an **occupational phenomenon and not a medical condition**. | "Burn-out is a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully managed." (18 words) |
+
+The three dimensions as the same page states them: *"feelings of energy depletion or
+exhaustion"*; *"increased mental distance from one's job, or feelings of negativism or
+cynicism related to one's job"*; *"reduced professional efficacy"*. Each is under twenty-five
+words and each is quoted rather than paraphrased into an assertion of our own.
+
+### What the page does with it, and what it does not
+
+- `app/situations/burnout/page.tsx` attributes the description to the World Health
+  Organization **by name**, states the classification honestly (an occupational phenomenon,
+  not a medical condition, so the page identifies nothing about anybody), and carries an
+  `EvidenceDrawer` with `status: "researched"` naming this retrieval and its date.
+- **No digit appears anywhere on that page.** The onset is slow and the recovery is long, and
+  neither is given a number, because no number was read on a fetched page. The four root
+  causes in step three are the site's own carve and are labelled as such in the drawer, not
+  attributed to anyone.
+- One thing the source does not cover is stated as ours: sustained caring for someone
+  produces the same shape as reliably as paid work does, which an *occupational* framing has
+  nothing to say about. That sentence is the site's judgement standing beside the quotation,
+  and it is marked as such rather than folded in behind the attribution.
+
+### The gate this row leaves behind
+
+**C-29** reads every `app/situations/*/page.tsx` and refuses any of a closed list of construct
+attributions — `Maslach`, `MBI`, `ICD-11`, `ICD-10`, `DSM-5`, `DSM-IV`, `WHO`, the two
+spellings of *World Health Organization*, and both spellings of *Kübler-Ross* — unless the
+same page renders an evidence record whose status is `researched`. It is proven red by
+planting `Maslach` into the breakup page, which carries no such record. The list is short and
+extensible on purpose: a name that is not on it is not thereby allowed, it is only not yet
+caught, and the register is where one gets added.
+
+---
+
+## Consolidation batch 5 (2026-09-04) — N-386 source timing
+
+**No fetch was made for this batch, and none was needed.** N-386 adds a field to sources
+that already exist in the pool and were already fetched, quoted and verified — it records
+*when the source was speaking*, which is a property of the page as it was already read.
+Nothing in this batch changes a figure, an excerpt, a `retrievedOn`, a record's timing or a
+record's prose. The compiler was re-run and the compiled diff is two lines.
+
+### The rule
+
+`Source` gains `timing?: "contemporaneous" | "retrospective"`, and the compiler **requires**
+it on every source cited by a `cultural-expectation` record (and on no other source, because
+that is the channel where the failure happens). T-9's `measures` discipline is extended to it
+— extended, not relaxed: the `measures` requirement is untouched and this sits beside it. The
+rule is written into `content/timeline/AUTHORING.md` §7A.
+
+The reason is the one the master brief names: a later reflection about what people used to
+expect is evidence about **how the past is perceived now**, and not direct evidence of the
+expectation. Nostalgia is the source most likely to be cited about an earlier expectation and
+the least likely to be true. Retrospective sources stay usable and are **labelled rather than
+excluded** — the word renders beside the source's own stamp so a reader can discount it.
+
+### Every source this batch stamped, and why
+
+The pool holds twenty `cultural-expectation` records. Eighteen of them cite no source at all —
+they are `heard` quotations under the standing line *"an expectation is a thing said to you,
+not a fact about you"*, which is the channel working as designed. **Two** records cite a
+source between them, and those two sources are the whole of this batch.
+
+| source | cited by | stamped | reasoning |
+|---|---|---|---|
+| `src-medicare-eligibility-age` | `ms-heard-retirement-timing` | `contemporaneous` | The recorded excerpt is a present-tense statement of a currently-in-force rule, published by the body that administers the programme, on that programme's own page: *"Medicare is health insurance for people 65 or older…"*. It is not a recollection of a past rule and makes no claim about what anybody used to expect; it is the rule, stated by its administrator, read during the build window. |
+| `src-eeoc-adea-age-forty` | `ms-heard-too-late-to-switch` | `contemporaneous` | The excerpt is the enforcing agency's own present-tense statement of the coverage of a statute currently in force: *"The Age Discrimination in Employment Act (ADEA) forbids age discrimination against people who are age 40 or older."* **This is the batch's one judgement call and it is recorded as such:** the record's `publicationYear` and `dataYear` are both 1967, which is the statute's year rather than the page's, so the stamp could be read as a modern page looking back at an old law. It is not treated that way here, because what the source is being cited *for* is the protection as it stands now — the page states a live rule, not a memory of one — and `contemporaneous` describes the relationship between the source and the claim it supports rather than the age of the underlying statute. A reviewer who reads it the other way should change one word in `content/timeline/batches/p2-cultural-expectations.json`; nothing else in the build depends on it. |
+
+Neither is `retrospective`, so nothing new renders on any surface in this build. The rendering
+half of the row is built and currently has no subject: `SourceStamp` in
+`components/timeline/YearCard.tsx` and the source list on `app/timeline/[id]/page.tsx` both
+render `data-tl-source-timing="retrospective"` and the word beside the stamp when the field is
+set, and T-9 reports the retrospective count so the first retrospective citation authored
+after this batch is visible in the gate output rather than silent.
+
+### What was edited, exactly
+
+The pipeline has **no source-override mechanism** — a second batch file declaring a source id
+that already exists is a hard `duplicate source id` error in
+`tools/timeline-build-content.mjs`. So no new batch file was created, and the minimum was
+edited in place instead:
+
+- `content/timeline/batches/p2-cultural-expectations.json`, line 14 — `"timing":
+  "contemporaneous",` added to `src-medicare-eligibility-age`.
+- `content/timeline/batches/p2-cultural-expectations.json`, line 28 — `"timing":
+  "contemporaneous",` added to `src-eeoc-adea-age-forty`.
+
+Two lines. No other field of either source, and no milestone in the file, was touched. The
+compiled diff after `npm run content:timeline` is the corresponding two lines in
+`content/timeline/generated/sources.ts` and nothing else.

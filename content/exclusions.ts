@@ -19,6 +19,44 @@
  *   carries skippable/reducedFrame/realPageLink and renders quiet (§7.2).
  */
 
+/* =============================================================================
+   DOCTRINE — N-268 (6.0 §5.5)
+   =============================================================================
+   A favourable reading never overrides a safety route. Every instrument that
+   orders, ranks or reads — the board, guidance, the tier board, any comparison —
+   checks the crisis route before the ordering runs.
+
+   This is a rule about instruments, not a change to the lists below. The lists
+   say WHAT may be played; this says what an instrument must do before it says
+   anything at all. `content/board.ts` has had the shape since 3.0 (CRISIS_CHIPS
+   render first, as plain links, and are never rated or folded into the reading);
+   6.0 states it as the site-wide rule the other instruments inherit, and C-8
+   asserts the order in source for each of them.
+
+   The failure it prevents is specific: a reader tells an instrument that someone
+   is hurting them, and the instrument weighs it. A safety route is not an input.
+   ============================================================================= */
+
+/* =============================================================================
+   DOCTRINE — N-253 (6.0 §5.4): PRESENTATION WALLS FOR ANY FUTURE GRAPHICAL
+   LAYER.
+   =============================================================================
+   No scene layer exists. These are written before one does, so the first scene
+   inherits them rather than arguing with them. The lists below are untouched by
+   this text: they govern WHETHER content is playable; this governs how a
+   transition out of play, and any depiction at all, is allowed to look.
+
+   - A safety transition replaces the scene with calm, plain help. It never
+     animates damage or failure, and it is not a cutscene.
+   - Health renders through capacity, symptoms, support, access and
+     accommodation — never through grotesque visuals.
+   - Discrimination and systemic exclusion are never rendered as character
+     debuffs. They are properties of a ruleset, not of a person.
+   - Parenthood and childlessness are never scored.
+   - Appearance never determines worth.
+   - Colour never encodes a verdict (N-233).
+   ============================================================================= */
+
 /** Domains within the crisis tier — for lint reporting. */
 export const CRISIS_TIER: Record<string, string[]> = {
   "self-harm-suicide": [

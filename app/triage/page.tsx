@@ -30,11 +30,20 @@ const BRANCHES: Branch[] = [
     ],
   },
   {
+    // N-021 (6.0 §3.3) — routed by the STRUCTURE of the demand rather than its
+    // subject, because structure is what transfers: paperwork, one high-stakes
+    // occasion, somebody else to look after, and a decision that cannot be
+    // undone have almost nothing in common as topics and completely different
+    // moves. This branch used to offer an index and the board — a menu, which
+    // the doctrine forbids for help-now and which read thin here besides.
+    // Every option lands on a complete page (G-05); still two questions at most.
     id: "demanded",
     label: "Something is being demanded of me",
     options: [
-      { href: "/situations", label: "Show me the situations, so I can find the nearest one" },
-      { href: "/character/board", label: "Help me lay the whole thing out first" },
+      { href: "/situations/job-loss#clocks", label: "Paperwork I do not understand, with a deadline on it" },
+      { href: "/character/board", label: "One high-stakes thing I have to get through" },
+      { href: "/topics/relationships#load", label: "Someone else needs looking after" },
+      { href: "/guidance", label: "A decision I cannot take back" },
     ],
   },
   {
@@ -73,6 +82,20 @@ export default function TriagePage() {
       </p>
 
       <p className="triage-prompt">Choose the closest.</p>
+
+      {/* N-089 — one calm line under the two questions, in the register of a
+          set-down route: no analysis, no apparatus, no game word. */}
+      <p className="triage-cheapest-question" data-cheapest-question>
+        And if none of this is urgent and you are only stuck: choose the cheapest question whose answer
+        could change what you do. Ask it before promising anything more.
+      </p>
+
+      {/* N-023 — the quiet line, under the questions rather than above them, for
+          the reader who does not have the capacity to answer either. */}
+      <p className="triage-nothing-left">
+        If you have nothing left tonight, <Link href="/situations/getting-through-today">start here
+        instead</Link>. It is six things and then it stops.
+      </p>
 
       <div className="triage-branches">
         <Link className="triage-direct" href="/situations/being-hurt">

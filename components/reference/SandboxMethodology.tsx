@@ -12,7 +12,19 @@ import { PILEUP_RULES, MAX_NEGATIVE_ARRIVALS, MAX_CHANCE_ARRIVALS, MAX_COMPANION
 import { SATISFACTION_DISCLOSURE } from "@/lib/sim/satisfaction";
 import { DOMAIN_SERVES } from "@/content/sim/domains";
 import { PRIORITY_KEYS, PRIORITY_LABEL } from "@/content/sim/schema";
-import { ATTRIBUTION_LABEL, BUDGET_LABEL, ATTRIBUTION_CATEGORIES, SEASON_COUNT_NOTE, FLEET_POLICY_COUNT_WORD } from "@/content/sim/methodology-copy";
+import {
+  ATTRIBUTION_LABEL,
+  BUDGET_LABEL,
+  ATTRIBUTION_CATEGORIES,
+  SEASON_COUNT_NOTE,
+  FLEET_POLICY_COUNT_WORD,
+  LAB_CURATION_TOOL,
+  LAB_CURATION_CRITERIA,
+  LAB_CURATION_DISCLOSURE,
+  LAB_CURATION_LIMIT,
+  RANDOMNESS_LINE,
+  RANDOMNESS_CONTRACT,
+} from "@/content/sim/methodology-copy";
 import { CAMPAIGN_LABEL, SEASON_COUNT, ACTIONS, EVENTS, COMPANIONS, PRESETS } from "@/content/sim/registry";
 import { LAB_SITUATIONS } from "@/content/sim/lab/situations";
 
@@ -201,6 +213,45 @@ export function SandboxMethodology() {
         The same six categories appear on the whole-run look-back at age thirty. There are{" "}
         {ATTRIBUTION_CATEGORIES.length} of them and there is no seventh.
       </p>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* N-234 (6.0 §3.9). The mechanism was complete and proven; the sentence
+          that says what it is FOR was never written down. */}
+      <h3 id="seeded-randomness">Seeded randomness, and what it stands for</h3>
+      <p>
+        <strong>{RANDOMNESS_LINE}</strong> Every draw in this simulation is a pure function of the run&rsquo;s
+        draw-seed and the coordinates of the thing being resolved — which season, which occurrence, which
+        record. There is no stream and no hidden generator, so nothing about a run can be perturbed by
+        re-rendering it, resuming it, or opening the explain drawer. Four things follow, and they are the
+        whole contract:
+      </p>
+      <ul>
+        {RANDOMNESS_CONTRACT.map((line, i) => (
+          <li key={i}>{line}</li>
+        ))}
+      </ul>
+      <p>
+        A draw is not a verdict on the decision that met it. That is why the model shows you the range a
+        move sets before you commit, and reports afterwards where inside the range it landed, as two
+        separate facts.
+      </p>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* N-195 (C-13). The one place a thumb was put on the scale, disclosed. */}
+      <h3 id="lab-curation">The Decision Lab&rsquo;s seeds, and how they were chosen</h3>
+      <p>{LAB_CURATION_DISCLOSURE}</p>
+      <p>
+        <code>{LAB_CURATION_TOOL}</code>
+      </p>
+      <p>It searches on two criteria, and both are curation decisions rather than physics:</p>
+      <ul>
+        {LAB_CURATION_CRITERIA.map((c) => (
+          <li key={c.name}>
+            <strong>{c.name}</strong> — {c.detail}
+          </li>
+        ))}
+      </ul>
+      <p>{LAB_CURATION_LIMIT}</p>
 
       {/* ---------------------------------------------------------------- */}
       <h3 id="balance">How the balance was probed</h3>

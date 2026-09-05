@@ -17,8 +17,29 @@
  * all. The panel only claims what someone wrote down.
  */
 
+/**
+ * N-214 (6.0 §2.3.3) — THE FOURTH STATE, "narrowing".
+ *
+ * Three states forced every door into a lie or a different lie. Most doors do not
+ * slam: they get harder every season they go unused, and the honest word for that
+ * is neither "still recoverable" (which says the ground has not moved) nor
+ * "closed" (which says it is over). The four doors carrying it below are the ones
+ * whose own authored labels already describe exactly that — a search that stopped,
+ * a plan that stopped being a plan, a question that got quieter, a course paused
+ * rather than finished. No label was rewritten to fit the state.
+ *
+ * WHAT IT IS NOT, and this is a limit worth stating: it is DECLARED, not derived.
+ * A door that becomes narrowing after some number of seasons unused would need the
+ * run to carry how long each flag has gone untouched, and `SimState` does not, so
+ * that is not built (6.0 §7.1 lists no such field; inventing one is the thing the
+ * readiness rule forbids). What is declared is the flag's own meaning.
+ *
+ * COLOUR (C-18). "narrowing" never renders in the open state's token. `--sim-good`
+ * on a door that is getting harder would be the exact defect the three-state panel
+ * was fixed for, one state further along.
+ */
 export type DoorMeaning =
-  | { label: string; state: "opened" | "closed" | "still recoverable" }
+  | { label: string; state: "opened" | "closed" | "still recoverable" | "narrowing" }
   | { skip: true; why: string };
 
 export const DOOR_MEANING: Record<string, DoorMeaning> = {
@@ -67,11 +88,11 @@ export const DOOR_MEANING: Record<string, DoorMeaning> = {
   "declined-lead": { skip: true, why: "a choice to stay on the tools rather than run the team; reads as either affirmation or ceiling depending on the run, so neither state is reliably true" },
   "deferred-care": { label: "care you have not been able to book", state: "still recoverable" },
   "deferred-course": { label: "a course that turned into a withdrawal", state: "closed" },
-  "deferred-enrollment": { label: "the school question, still open and quieter", state: "still recoverable" },
+  "deferred-enrollment": { label: "the school question, still open and quieter", state: "narrowing" },
   "deposit-saved": { label: "a deposit already saved for the next place", state: "opened" },
   "diane-offer-open": { label: "a parent's help, offered and still there", state: "opened" },
   "disclosed-capacity": { label: "you say what you can carry, up front", state: "opened" },
-  "drifting-at-home": { label: "moving out has stopped being a plan", state: "still recoverable" },
+  "drifting-at-home": { label: "moving out has stopped being a plan", state: "narrowing" },
   "employed": { skip: true, why: "a bare fact about the situation rather than a door; the specific work flags carry what was actually gained" },
   "ended-it": { label: "a relationship you ended yourself", state: "opened" },
   "enrolled-degree": { label: "a place on a degree course", state: "opened" },
@@ -188,14 +209,14 @@ export const DOOR_MEANING: Record<string, DoorMeaning> = {
   "speciality-shrinking": { label: "the work you perfected is now a checkbox", state: "closed" },
   "stayed-in": { label: "something you almost quit, and kept", state: "opened" },
   "still-looking": { skip: true, why: "a state of the job hunt during one season, not something that is now true of the character" },
-  "stopped-looking": { label: "the job search that quietly stopped", state: "still recoverable" },
+  "stopped-looking": { label: "the job search that quietly stopped", state: "narrowing" },
   "street-arrangement": { label: "neighbors you lend to and borrow from", state: "opened" },
   "strong-delivery-record": { label: "work shipped with your name on it", state: "opened" },
   "survived-restructure": { skip: true, why: "the flag means the seat was kept, which is continuity rather than a route the character can now reach; the same band narrows the remit and costs energy, and that loss carries no flag of its own, so no single state is honest" },
   "taking-the-match": { label: "a pension your employer pays into", state: "opened" },
   "tax-owed": { label: "money still owed to the tax office", state: "closed" },
   "tenancy-on-record": { label: "a written record with your landlord", state: "opened" },
-  "term-deferred": { label: "a course paused rather than finished", state: "still recoverable" },
+  "term-deferred": { label: "a course paused rather than finished", state: "narrowing" },
   "terms-written": { label: "the bills split in writing before moving in", state: "opened" },
   "thin-file": { label: "no credit history behind your name", state: "still recoverable" },
   "tied-to-employer": { label: "you cannot leave without repaying what they spent", state: "still recoverable" },
@@ -212,8 +233,13 @@ export const DOOR_MEANING: Record<string, DoorMeaning> = {
 };
 
 /** The note that renders under each state. Same voice as the rest of the parse. */
-export const DOOR_NOTE: Record<"opened" | "closed" | "still recoverable", string> = {
+export const DOOR_NOTE: Record<"opened" | "closed" | "still recoverable" | "narrowing", string> = {
   opened: "This is available to you now and was not at eighteen.",
-  closed: "This one shut, or narrowed, somewhere in these years. Naming it is not the same as regretting it.",
+  // "or narrowed" came out of this line when narrowing became a state of its own:
+  // a door that shut and a door that got harder are different facts, and saying
+  // both under one heading was the three-state panel making do.
+  closed: "This one shut somewhere in these years. Naming it is not the same as regretting it.",
   "still recoverable": "This went against you and it is not finished. Thirty is not a closing time.",
+  narrowing:
+    "This did not shut. It gets harder the longer it goes unused, which is how most doors actually close — slowly, and without a moment you could point at.",
 };

@@ -5,12 +5,17 @@ import {
   PageHeader,
   Callout,
   MentorNote,
+  PathwayStep,
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
+  ModelBreak,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
+import { PositionNote } from "@/components/PositionNote";
+import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
   title: "Losing a job",
@@ -32,11 +37,16 @@ export default function JobLossPage() {
         eyebrow="Situation · a decision sequence"
         title="Losing a job"
         intro="A job is not one thing. It is an income, a daily structure, a set of people you saw without arranging to, a legible answer to what you do, and a quiet source of standing — and losing it removes entries from several parts of your life on the same day. Treating that as one problem is what makes it feel unmanageable."
+        systems={ROUTE_BY_PATH["/situations/job-loss"]?.systems}
       />
 
       <MechanicAnchor ids={["variance", "recovery"]} />
 
-      <h2>The first days: find the clocks</h2>
+      {/* N-045 — the four phases this page already had, each now naming the
+          system it belongs to, so a reader mid-crisis knows which instrument to
+          pick up for THIS step instead of holding the whole map at once. The
+          prose is unchanged; only the chrome around it is new. */}
+      <PathwayStep n={1} title="The first days: find the clocks" primary="money" id="clocks">
       <p>
         In the first days, almost the only thing worth doing is finding the things that run on someone
         else&rsquo;s clock — anything with a signature or a deadline attached. Those are urgent. Most
@@ -75,7 +85,38 @@ export default function JobLossPage() {
         you, into the void, without the referrals that actually work.
       </p>
 
-      <h2>Stabilization: two injuries on two clocks</h2>
+      {/* N-046 — the horizon ladder. The page was editorially strong and hard
+          to act from in the first hour; someone who has just been let go can
+          hold three horizons, and the last rung is the one that restores a
+          rhythm rather than adding a task. No digit, and no claim about any
+          jurisdiction's deadlines — those are the clocks above, and they are
+          local. */}
+      <h3 id="three-horizons">Three horizons, if you want the short version</h3>
+      <dl className="horizon-ladder">
+        <dt>The first day</dt>
+        <dd>
+          Write down what was said, by whom, and when, while it is fresh. Keep lawful copies of your own
+          records and anything you are entitled to hold. Sign nothing you do not understand, however
+          urgent the room feels. Then tell one person, out loud.
+        </dd>
+        <dt>The first days</dt>
+        <dd>
+          Find the dates above and put each one somewhere you will see it. Work out the runway — what is
+          coming in, what is going out, how long that lasts. Ask about anything continuing that has an
+          election deadline. Decline every large decision that is not one of these.
+        </dd>
+        <dt>The first two weeks</dt>
+        <dd>
+          Tell the handful of people who might actually know something, with a specific ask rather than
+          an announcement. Get one honest read on the severance terms if there are any. And put a shape
+          back on the week — a fixed start, a fixed finish, one standing arrangement with other people
+          that is neither the search nor the household. The rhythm is not a reward for having done the
+          rest; it is what the rest runs on.
+        </dd>
+      </dl>
+      </PathwayStep>
+
+      <PathwayStep n={2} title="Stabilization: two injuries on two clocks" primary="health">
       <p>
         Once the deadlines are handled, resist the large decisions for a couple of weeks. Do not move
         cities, sell investments, take the first offer to end the fear, deliver relationship ultimatums,
@@ -94,6 +135,17 @@ export default function JobLossPage() {
         <em>and</em> name the other thing; confusing them makes both worse.
       </p>
 
+      {/* N-150 (C-42) — the runway arithmetic above is the same arithmetic for
+          everybody and means something completely different depending on what
+          sits under it. */}
+      <PositionNote
+        notes={{
+          yes: "With a floor beneath a serious failure, the runway you just worked out is longer than the number says, and that changes what to do with it: you can afford to decline the first offer that ends the fear, and taking the fortnight before any large decision is genuinely available to you. The risk from here is not ruin; it is accepting something too quickly because the uncertainty is unpleasant.",
+          no: "Without a floor beneath a serious failure, the runway is the whole picture and the advice to wait a fortnight has to bend around that. What still holds: the deadline-bearing items above come first, because a missed election window costs real money you will need. What changes: income sooner outranks income better, taking something interim is not a concession, and claiming everything you are entitled to claim is the single highest-return use of this week.",
+          unsure: "Whether there is a floor beneath a serious failure changes what your runway means more than the figure itself does. It decides whether the fortnight before large decisions is available to you, and it is worth settling before deciding anything on the strength of the arithmetic above.",
+        }}
+      />
+
       <MentorNote provenance="editorial-synthesis">
         <p>
           A layoff is selected mostly by cost centre, tenure band, salary, your manager&rsquo;s own
@@ -104,7 +156,9 @@ export default function JobLossPage() {
         </p>
       </MentorNote>
 
-      <h2>What this was, mechanically</h2>
+      </PathwayStep>
+
+      <h2 id="what-this-was">What this was, mechanically</h2>
       <p>
         This is the place to state the doctrine plainly, because it is doing real work here.{" "}
         <Term k="variance" define /> is not an excuse; it is an accurate description. Skill sets the
@@ -117,12 +171,22 @@ export default function JobLossPage() {
         board.
       </p>
 
-      <h2>The search as a system</h2>
+      <PathwayStep n={3} title="The search as a system" primary="party">
       <p>
         Hiring is an information problem, and the version of it you can act on is mostly about who knows
         what you can do. That is why network beats broadcast: most positions are still found through
         weak ties, not through the front door of an application portal. It is also the cruellest part,
         because shame suppresses asking at exactly the moment asking has its highest return.
+      </p>
+      {/* N-130 — the missing HOW, beside the trunk's existing "asking is a skill". */}
+      <p>
+        What separates an ask that works from one that does not is almost entirely how completable it
+        is: &ldquo;do you know anyone hiring for this specific thing?&rdquo; hands the other person an
+        action they can finish in a minute, where &ldquo;keep me in mind&rdquo; hands them a standing
+        obligation with no end and no way to discharge it — which is why it is the one everybody sends
+        and the one nothing comes back from.{" "}
+        <Link href="/topics/relationships#asking-for-help">The craft of the ask</Link> is a page of its
+        own.
       </p>
       <p>Two structural habits do most of the work:</p>
       <ul>
@@ -155,7 +219,9 @@ export default function JobLossPage() {
         <Link href="/character/logs">There is a place to keep that kind of record.</Link>
       </p>
 
-      <h2>Recovery routes</h2>
+      </PathwayStep>
+
+      <PathwayStep n={4} title="Recovery routes" primary="work">
       <p>
         There are routes back from here, and they belong beside every hard fact rather than as an
         afterthought. Convert a specific skill into its adjacent, more general form — the part of your
@@ -175,8 +241,19 @@ export default function JobLossPage() {
           scale a page like this works at.
         </p>
       </Callout>
+      {/* N-280 (§3.11, C-45) — the floor callout has always ended by admitting that
+          the fix is above the scale of a page. That admission is a named break in
+          this site's frame, so it cites the entry rather than making the point
+          again in local words. */}
+      <ModelBreak n={1}>
+        The sentence above about policy and enforcement is not a throwaway. It is this whole
+        instrument reaching its edge: it takes one person as its subject, and the move that would
+        change the hardest version of this is one nobody makes alone.
+      </ModelBreak>
 
-      <h2>What this touches</h2>
+      </PathwayStep>
+
+      <h2 id="what-this-touches">What this touches</h2>
       <p>
         A single shock becomes several when its fast edges are missed, so it helps to see the whole map
         at once. The cheap places to intervene are the fast ones:
@@ -205,12 +282,63 @@ export default function JobLossPage() {
         </li>
       </ul>
 
+      {/* N-047 — the board, filled in for this situation. A tool shown already
+          worked through is understood; the same tool linked to as an empty form
+          usually does not get opened. These are one plausible reader's answers,
+          not a template to match. */}
+      <h2 id="the-board-filled-in">The board, filled in for this</h2>
+      <p>
+        <Link href="/character/board">The guided pressure reading</Link> asks six questions in an order.
+        Here is what one person&rsquo;s answers looked like a fortnight after a layoff — illustrative,
+        and worth reading for the shape rather than the content, because the interesting part is that
+        the binding row turned out not to be the money.
+      </p>
+      <dl className="worked-board">
+        <dt>Pressure</dt>
+        <dd>
+          &ldquo;I have to take the first offer that comes or I will never get back to where I was.&rdquo;
+        </dd>
+        <dt>What binds</dt>
+        <dd>
+          Not the money, yet — there is a few months of runway. What binds is capacity: sleep has gone,
+          and every decision made in the last week has had to be made twice.
+        </dd>
+        <dt>Wall or door</dt>
+        <dd>
+          &ldquo;Nobody hires at my level in this city&rdquo; was assumed and not checked. Two
+          conversations found out it was a door. Cheap to test, and it had been treated as a wall for
+          three weeks.
+        </dd>
+        <dt>Still want it</dt>
+        <dd>
+          Half. The role was fine and the field had stopped being interesting some time before the
+          layoff, which is worth knowing before optimising the route back into it.
+        </dd>
+        <dt>Conflict</dt>
+        <dd>
+          Wanting to move quickly and wanting to change direction pull opposite ways. Both are real;
+          there is no arrangement that satisfies both, so one of them gets chosen deliberately.
+        </dd>
+        {/* The board's sixth row is "resources and moves"; the label follows it
+            rather than the shorter word, which is now a Game Guide term (N-322)
+            and may not be hardcoded in a component (gate 3). */}
+        <dt>Resources and moves</dt>
+        <dd>
+          The runway, one former colleague who owes nothing and would help anyway, and a skill that
+          transfers further than it looks. Checked last, on purpose.
+        </dd>
+      </dl>
+
       <NextSteps>
-        <NextStep href="/topics/money">Money and slack — the runway arithmetic, and why the buffer matters.</NextStep>
-        <NextStep href="/topics/work">Education and career — standing, credentials, and changing direction.</NextStep>
-        <NextStep href="/guidance">Choosing a path — if the next move is a real decision.</NextStep>
-        <NextStep href="/character/logs">Keep a record of what you knew, before the outcome arrives.</NextStep>
+        <NextStep href="/topics/money" relation="explains" why="The runway arithmetic this page keeps pointing at, worked through where it lives.">Money and slack — the runway arithmetic, and why the buffer matters.</NextStep>
+        <NextStep href="/topics/work" relation="see-also" why="Standing, credentials and direction — for when the search stops being about this week.">Education and career — standing, credentials, and changing direction.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="If the next move is a real decision rather than a task with a deadline on it.">Choosing a path — if the next move is a real decision.</NextStep>
+        <NextStep href="/character/logs" relation="protects" why="Writing down what you knew now is what stops hindsight rewriting it into a mistake.">Keep a record of what you knew, before the outcome arrives.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/lab">the Decision Lab has a run at getting hired, forked and compared.</TryInPlay>
 
       <EvidenceDrawer
         record={{

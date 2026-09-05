@@ -30,12 +30,13 @@
  * draws of lib/sim/rng — never in render, resume, or an explain detour.
  */
 
-import { type GaugeKey } from "@/content/bands";
+import { type GaugeKey, OUTCOME_BAND_LABEL, OUTCOME_BAND_RANK } from "@/content/bands";
 import { drawFor, selectionDraw, weightedIndex } from "@/lib/sim/rng";
 import { applyEffects, applyAll, isDeeplyDepleted, isHighLoad } from "@/lib/sim/effects";
 import { resolve, outcomeLine, type Resolution } from "@/lib/sim/resolve";
 import { classify, renderable } from "@/lib/sim/attribution";
-import { insert as queueInsert, step as queueStep, type QueueStep } from "@/lib/sim/queue";
+import { insert as queueInsert, step as queueStep, numberWord, type QueueStep } from "@/lib/sim/queue";
+import { domainsServe } from "@/content/sim/domains";
 import {
   deriveBudget,
   emptyBudget,
@@ -60,6 +61,7 @@ import {
   SEASON_COUNT,
   beatPlacements,
 } from "@/content/sim/registry";
+import { PRIORITY_KEYS, PRIORITY_LABEL, BUDGET_CURRENCIES, BUDGET_LABEL, EVIDENCE_MEANING } from "@/content/sim/schema";
 import type {
   ActionCost,
   Budget,
@@ -276,6 +278,202 @@ export function floorReport(state: SimState, remaining: Budget): FloorReport {
       missing.length ? "MISSING " + missing.join(", ") : "complete"
     }`,
   };
+}
+
+/* =========================================================================
+   THE PURE PREVIEW (N-212, 6.0 §3.9, §7.1) — what a choice would touch,
+   without touching it.
+   =========================================================================
+   The allocate screen has always shown affordability and cost chips. What it has
+   never had is a "read the decision before you make it" surface: which parts of a
+   life this would move, whether it sets something going that lands in a later
+   season, and what that something is. Sol's `decision-preview` had one; the trunk
+   did not.
+
+   The reason this is a named exported function rather than a few lines inside the
+   component is the gate. C-16 proves the preview cannot have written anything —
+   `JSON.stringify(state)` before equals after, the persisted key is untouched, the
+   draw cursor has not moved — and an assertion needs something to call. So:
+
+     - it takes the state and an option id and returns words;
+     - it consumes NO randomness (there is no `drawFor`, `selectionDraw` or
+       `freshSeed` reachable from here) and therefore cannot advance a cursor;
+     - it touches no storage (this module imports none);
+     - it builds a new object and never assigns into `state`.
+
+   `Preview.domains` is deliberately expressed in the PLAYER's vocabulary — the
+   ten priority labels, through the same `domainsServe` map the parse and the
+   balance probe read — rather than the internal domain tags. A preview that named
+   `institutions` and `long-horizon` would be a preview of the schema.
+   ========================================================================= */
+
+export type Preview = {
+  /** Which of the ten priorities this option's card serves, in their own words. */
+  domains: string[];
+  /** Whether committing this can put something on the consequence queue. */
+  queues: boolean;
+  /** What would be waiting, in words. Empty when nothing is queued. */
+  waits: string[];
+  /** Whether the season's budget can carry the cost at all. */
+  affordable: boolean;
+};
+
+/** option id → the action that owns it. Built once; the pool is static. */
+let OPTION_OWNER: Map<string, SimAction> | null = null;
+function optionOwner(optionId: string): SimAction | undefined {
+  if (!OPTION_OWNER) {
+    OPTION_OWNER = new Map();
+    for (const a of ACTIONS) for (const o of a.options) OPTION_OWNER.set(o.id, a);
+  }
+  return OPTION_OWNER.get(optionId);
+}
+
+/**
+ * PURE. Reads the action, the option and the state; returns words; writes nothing.
+ * Rendered by `CampaignApp` in an `aria-live="polite"` pane on focus or hover of
+ * an option, under the line "Previewing changes nothing." — which C-16 is what
+ * makes true rather than reassuring.
+ */
+export function previewAction(state: SimState, optionId: string): Preview {
+  const action = optionOwner(optionId);
+  if (!action) return { domains: [], queues: false, waits: [], affordable: false };
+  const option = action.options.find((o) => o.id === optionId);
+
+  const serves = domainsServe(action.domains);
+  const domains = PRIORITY_KEYS.filter((k) => serves.includes(k)).map((k) => PRIORITY_LABEL[k]);
+
+  // What waits: the record's own delayed effects, filtered to the bands THIS
+  // option can actually land, plus a standing commitment's own future seasons.
+  // Nothing here is a probability and nothing here is uncertain — the queue holds
+  // only what has already been set going (§3.5).
+  const waits = waitsFor(action, option);
+
+  return {
+    domains,
+    queues: waits.length > 0,
+    waits,
+    affordable: isAffordable(deriveBudget(state), action.contract.costs),
+  };
+}
+
+function dueWord(seasons: number): string {
+  if (seasons <= 0) return "this season";
+  if (seasons === 1) return "next season";
+  return `in ${numberWord(seasons)} seasons`;
+}
+
+/**
+ * What an option would set going, in words. Shared by the preview pane and the
+ * response contract's "what waits" field so the two cannot say different things
+ * about the same card.
+ */
+function waitsFor(record: SimAction | SimEvent, option: SimOption | undefined): string[] {
+  const bands = new Set((option?.bands ?? []).map((b) => b.name));
+  const out: string[] = [];
+  for (const d of record.delayedEffects ?? []) {
+    if (d.onBands && !d.onBands.some((b) => bands.has(b))) continue;
+    out.push(`${d.label} — ${"seasons" in d.due ? `lands ${dueWord(d.due.seasons)}` : `waiting on ${plain(d.due.condition)}`}`);
+  }
+  const standing = "standing" in record ? record.standing : undefined;
+  if (standing)
+    out.push(
+      `this is a standing commitment: it keeps taking its upkeep for ${numberWord(standing.seasons)} seasons, and lapses visibly if a season cannot pay it`,
+    );
+  return out;
+}
+
+/* =========================================================================
+   THE FIVE-FIELD RESPONSE CONTRACT (N-211, 6.0 §3.9) — on every response,
+   before commitment.
+   =========================================================================
+   The trunk's card already carried cost chips, reversibility, an opportunity note
+   and — on endurance options only — a support link. What it never carried on every
+   option was the way back. "If it goes badly" on the endurance options alone is a
+   game that lets a reader gamble everywhere else; on every option it is a guidebook
+   that shows the route out before the jump.
+
+   NO CONTENT IS AUTHORED HERE. Every field is READ off records that already carry
+   it — the costs, the delayed effects, the option's own reversibility chip, the
+   recovery tie the schema and S-3 have required since 4.0, and the evidence label.
+   The only new strings are the two sanctioned UI phrases below, which are
+   microcopy for the two cases the records deliberately do not describe: a record
+   that declares `noRecoveryTie`, and a card with nothing queued.
+
+   `ifItGoesBadly` resolves in the order the doctrine sets:
+     1. `noRecoveryTie` — the card where another person refuses, withdraws or
+        leaves. There is no failure band and no route out, BY DESIGN (§3.7), and
+        rendering one would put somebody's "no" on the board as a problem to solve.
+     2. the authored tie — `recoveryRefs`, plus the record's own recovery- or
+        endurance-flagged options. This is what S-3 verifies and what the gates
+        count; the always-available floor route is never counted as the tie.
+     3. neither — then the honest answer is the worst band this option can land
+        and the floor route, LABELLED as the floor route, exactly as the
+        consequences screen already labels it.
+   ========================================================================= */
+
+export const CONTRACT_FIELD_NAMES = ["capacity", "what waits", "reversibility", "if it goes badly", "evidence"] as const;
+export type ContractFieldName = (typeof CONTRACT_FIELD_NAMES)[number];
+export type ContractField = { name: ContractFieldName; value: string };
+
+/**
+ * The sanctioned phrase for a record that declares `noRecoveryTie` — the case
+ * where there is nothing to recover from because nothing here is the character's
+ * setback. Written once, here, rather than per record: the per-record `reason` is
+ * addressed to the author and the verifier, not to the player.
+ */
+export const NO_RECOVERY_TIE_PHRASE =
+  "Nothing on this card can go badly in a way you would need a route out of. Where it goes another way, that is somebody else's decision, and it is not a setback with a way back from it.";
+
+/** The sanctioned phrase for a card that queues nothing. */
+export const NOTHING_WAITS_PHRASE = "Nothing on this one is set going for a later season.";
+
+function costPhrase(costs: ActionCost): string {
+  const parts: string[] = [];
+  for (const c of BUDGET_CURRENCIES) {
+    const v = costs[c] ?? 0;
+    if (v > 0) parts.push(`${numberWord(v)} of ${BUDGET_LABEL[c]}`);
+  }
+  return parts.join(", ");
+}
+
+/** The way back from this record's failure, in the doctrine's own order. */
+export function ifItGoesBadly(record: SimAction | SimEvent, option: SimOption | undefined, state?: SimState): string {
+  if (record.noRecoveryTie) return NO_RECOVERY_TIE_PHRASE;
+  const tied = authoredRecoveryRoutesFor(record.id, state).filter((r) => r.tied);
+  if (tied.length)
+    return `The way back: ${tied
+      .slice(0, 2)
+      .map((r) => `${r.actionLabel} — ${lowerFirst(r.optionLabel)}`)
+      .join("; ")}.`;
+  const worst = [...(option?.bands ?? [])].sort((a, b) => OUTCOME_BAND_RANK[b.name] - OUTCOME_BAND_RANK[a.name])[0];
+  const floor = recoveryRoutesFor(record.id, state).find((r) => !r.tied);
+  const worstWord = worst ? OUTCOME_BAND_LABEL[worst.name] : "mixed";
+  return floor
+    ? `The hardest this lands is “${worstWord}”, and nothing is tied to it in particular. As after anything: ${lowerFirst(floor.actionLabel)} — ${lowerFirst(floor.optionLabel)}.`
+    : `The hardest this lands is “${worstWord}”.`;
+}
+
+/**
+ * The five fields, in the fixed order, for one selectable response. The NAMES are
+ * not the executor's to choose (§11 LITERAL); the layout around them is.
+ */
+export function responseContract(record: SimAction | SimEvent, option: SimOption, state?: SimState): ContractField[] {
+  const isAction = "contract" in record;
+  const pips = isAction ? costPhrase((record as SimAction).contract.costs) : "";
+  const chipCosts = option.chips.costs.join(", ");
+  const capacity =
+    pips && chipCosts
+      ? `${pips} — ${chipCosts}`
+      : pips || chipCosts || "nothing from this season's budget: this arrived, and answering it is free";
+  const waits = waitsFor(record, option);
+  const label = isAction ? (record as SimAction).contract.evidenceLabel : (record as SimEvent).evidenceLabel;
+  return [
+    { name: "capacity", value: capacity },
+    { name: "what waits", value: waits.length ? waits.join(" · ") : NOTHING_WAITS_PHRASE },
+    { name: "reversibility", value: option.chips.reversibility },
+    { name: "if it goes badly", value: ifItGoesBadly(record, option, state) },
+    { name: "evidence", value: `${label} — ${EVIDENCE_MEANING[label]}` },
+  ];
 }
 
 /* =========================================================================

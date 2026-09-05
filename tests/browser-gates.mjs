@@ -17,12 +17,21 @@ import { chromium } from "playwright";
 import { mkdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { preserveThenClear, restorePreserved, readLibrary } from "./lib-preserve.mjs";
 
 const BASE = process.argv[2] || "http://localhost:4321";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SHOTS = join(ROOT, "screenshots");
 /** A finished 24-season run, so the closing screen can be captured and audited. */
 const FINISHED_CAMPAIGN = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/finished-campaign.json"), "utf8"));
+/**
+ * A run PAUSED ON A QUIET SEASON (tools/make-quiet-season-fixture.ts), so N-194's
+ * compressed flow can be reached. The control renders only where the briefing's
+ * own `quiet` flag is true and there is a previous allocation to offer back;
+ * whether a hand-driven walk arrives at one depends on the seeds, so the state is
+ * built by the engine and loaded like any resumed run.
+ */
+const QUIET_SEASON = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/quiet-season.json"), "utf8"));
 mkdirSync(SHOTS, { recursive: true });
 
 /** The 31 reader routes (stubs /orientation and /roadmap excluded from the walk). */
@@ -33,6 +42,10 @@ const ROUTES = [
   "/situations/depression", "/situations/being-hurt", "/guidance", "/guidance/daily-plan",
   "/character", "/character/board", "/character/logs", "/topics", "/topics/money", "/topics/health",
   "/topics/relationships", "/topics/work", "/history", "/methodology", "/threshold",
+  // 6.0 §3.1 — the five routes the consolidation adds join the walk: console
+  // cleanliness, 320px, local-only and the keyboard path to Help-now.
+  "/orientation", "/situations/burnout", "/situations/breakup",
+  "/situations/getting-through-today", "/topics/concepts",
   "/threshold/supporting-someone",
   // 5.0 §8 — the timeline joins the route walk (console, 320px, local-only, keyboard).
   "/timeline",
@@ -55,12 +68,17 @@ async function click(page, text, scope = "") {
   return false;
 }
 
+/**
+ * N-306 (C-51) — RECORD BEFORE CLEARING, AND PUT IT BACK.
+ *
+ * This used to delete every `tgtl:play*` and `tgtl:sim2*` key outright. Harmless
+ * against an ephemeral context, destructive the first time anyone points the
+ * suite at a browser profile with a named-save library in it. The clear now
+ * snapshots first; `restorePreserved` puts the reader's own state back before the
+ * context that held it is closed.
+ */
 async function clearPlayState(page) {
-  await page.evaluate(() => {
-    try {
-      for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:play") || k.startsWith("tgtl:sim2")) localStorage.removeItem(k);
-    } catch {}
-  });
+  await preserveThenClear(page, ["tgtl:play", "tgtl:sim2"]);
 }
 
 /* ============================================================
@@ -257,6 +275,7 @@ async function labTo(page, opts = {}) {
       const url = page.url();
       if (/tgtl%3A|tgtl:|board=|guidance=|log=|play=|sim2/.test(url)) urlLeaks.push(url);
     }
+    await restorePreserved(page);
     await ctx.close();
   }
   record(
@@ -265,9 +284,192 @@ async function labTo(page, opts = {}) {
     consoleErrors.length === 0,
     consoleErrors.length ? consoleErrors.slice(0, 10) : [`Zero console errors across ${ROUTES.length * 2} page loads, including all three play modes.`],
   );
-  const localOk = offOrigin.length === 0 && urlLeaks.length === 0;
-  record(9, "Local-only at runtime (no off-origin loads; no state in URL)", localOk,
-    localOk ? ["No off-origin requests on load or interaction; no stored value in any URL, in any mode."] : [...offOrigin.slice(0, 6), ...urlLeaks.slice(0, 6)]);
+
+  /*
+   * N-150 (C-42), gate 9's extension — THE POSITION NEVER REACHES A URL.
+   *
+   * Until this version the reader's position was written by one page and read by
+   * the same page. It is now shared state that five more pages re-resolve prose
+   * from, which means it travels: a reader sets it once and then walks the site
+   * with it. So the walk is done for real — set it through the control, then
+   * navigate every page that renders a note — and every URL landed on is checked
+   * for the key and for its value. A stored value that reaches a URL has left the
+   * device, whatever the page believes about itself.
+   */
+  const posDetails = [];
+  {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    const seen = [];
+    page.on("framenavigated", () => seen.push(page.url()));
+    await page.goto(BASE + "/map/credential-decision", { waitUntil: "networkidle" });
+    // Set it through the control, not by writing storage: the control is what a
+    // reader touches, and a handler is where a URL write would be added.
+    await page.locator('.position-controls input[name="floor"]').first().click();
+    await page.locator('.position-controls input[name="dependents"]').last().click();
+    await sleep(160);
+    const stored = await page.evaluate(() => {
+      try {
+        return localStorage.getItem("tgtl:credential-position");
+      } catch {
+        return null;
+      }
+    });
+    if (!stored) posDetails.push("the position control wrote nothing to tgtl:credential-position — the walk proved nothing");
+    for (const route of ["/map/launch", "/topics/work", "/topics/money", "/situations/job-loss", "/guidance", "/map/credential-decision"]) {
+      await page.goto(BASE + route, { waitUntil: "networkidle" });
+      seen.push(page.url());
+      // The note has to have re-resolved from the shared value, or the row did
+      // not ship — a URL-clean feature that does not work is not a pass. Two
+      // routes are exempt and for different reasons: /map/credential-decision
+      // hosts the CONTROL and its own per-path notes rather than a PositionNote,
+      // and /guidance's note is on the second step of a walkthrough that has to
+      // be walked to. Both are covered by C-42's source assertion instead.
+      if (route !== "/guidance" && route !== "/map/credential-decision") {
+        const noteCount = await page.locator("[data-position-note]").count();
+        if (noteCount === 0) posDetails.push(`${route}: renders no position note, so the shared position reaches nothing there (N-150)`);
+      }
+    }
+    for (const u of seen) {
+      if (/credential-position|tgtl%3A|tgtl:/.test(u)) urlLeaks.push(`position in URL: ${u}`);
+      for (const v of ["floor=", "dependents=", "debt=", "position="]) if (u.includes(v)) urlLeaks.push(`position in URL: ${u}`);
+    }
+    const stillThere = await page.evaluate(() => {
+      try {
+        return localStorage.getItem("tgtl:credential-position");
+      } catch {
+        return null;
+      }
+    });
+    if (stored && stillThere !== stored) posDetails.push("the position did not survive navigation, so it is not shared state (N-150)");
+    if (posDetails.length === 0)
+      posDetails.push(`the position was set through the control, survived ${seen.length} navigations, re-resolved a note on every page that carries one, and reached no URL`);
+    await restorePreserved(page);
+    await ctx.close();
+  }
+
+  const localOk = offOrigin.length === 0 && urlLeaks.length === 0 && !posDetails.some((d) => d.includes("N-150") || d.includes("proved nothing"));
+  record(9, "Local-only at runtime (no off-origin loads; no state in URL; N-150's position included)", localOk,
+    localOk
+      ? ["No off-origin requests on load or interaction; no stored value in any URL, in any mode.", ...posDetails]
+      : [...offOrigin.slice(0, 6), ...urlLeaks.slice(0, 6), ...posDetails]);
+}
+
+/* ============================================================
+   C-37 (N-074): the export path issues no network request.
+   ============================================================
+   2.0's KNOWN_LIMITATIONS named the cost — the decision record is most useful
+   years later, which is exactly the horizon over which browser storage does not
+   survive — and did nothing about it, because doing something looked like
+   breaking local-only. It does not, and this is the assertion that keeps that
+   true: a record is written, the copy control is pressed, and the wire is
+   watched while it happens. Zero requests, and the URL identical before and
+   after.
+
+   Proven red by planting a fetch into the copy handler.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext({ permissions: ["clipboard-read", "clipboard-write"] });
+  const page = await ctx.newPage();
+  /*
+   * WHAT IS ACTUALLY BEING ASSERTED, and why it is not "zero requests".
+   *
+   * Next's router prefetches the routes a page links to, on its own schedule,
+   * to same-origin static files (`/_next/…`, `…/index.txt?_rsc=…`). Those are
+   * the framework fetching its own export and they are not this row's subject —
+   * an assertion of literal silence would be red on a timer rather than on a
+   * breach, which is the fastest way to get a gate deleted.
+   *
+   * The property that matters is that NOTHING THE READER WROTE LEAVES THE
+   * DEVICE. So: no off-origin request of any kind, no request with a body, no
+   * request whose URL carries any of the record's own words, and every
+   * same-origin request accounted for as a router prefetch of the static export.
+   * A fetch planted in the copy handler fails all three of the first tests.
+   */
+  const requests = [];
+  page.on("request", (req) => requests.push({ method: req.method(), url: req.url(), data: req.postData() }));
+  const isPrefetch = (u) => /\/_next\//.test(u) || /[?&]_rsc=/.test(u);
+
+  await page.goto(BASE + "/character/logs", { waitUntil: "networkidle" });
+
+  // A real record, entered the way a reader enters one.
+  await page.locator(".log-form").first().locator("input").first().fill("Taking the role in Manchester");
+  await page.locator(".log-form").first().locator("textarea").first().fill("What I knew at the time.");
+  await page.locator(".log-form").first().locator('button[type="submit"]').click();
+  await sleep(200);
+  if ((await page.locator(".log-entry").count()) === 0) problems.push("/character/logs: the decision record did not save, so the export had nothing to export");
+
+  const urlBefore = page.url();
+  requests.length = 0; // everything up to here is the page loading itself
+  await page.locator("[data-copy-out]").click();
+  await sleep(400);
+  const urlAfter = page.url();
+
+  const SECRET_WORDS = ["Manchester", "What%20I%20knew", "What+I+knew", "Knew"];
+  for (const r of requests) {
+    const off = !r.url.startsWith(BASE);
+    if (off) problems.push(`/character/logs: the copy control issued an OFF-ORIGIN request — ${r.method} ${r.url}. Nothing leaves the device (N-074, gate 9).`);
+    if (r.data) problems.push(`/character/logs: the copy control issued a request with a body — ${r.method} ${r.url}. The record is not sent anywhere (N-074).`);
+    if (SECRET_WORDS.some((w) => r.url.includes(w)))
+      problems.push(`/character/logs: a request URL carries the reader's own record text — ${r.url} (N-074).`);
+    if (!off && !isPrefetch(r.url))
+      problems.push(
+        `/character/logs: the copy control issued a same-origin request that is not a router prefetch of the static ` +
+          `export — ${r.method} ${r.url}. Nothing here should be talking to anything (N-074).`,
+      );
+  }
+  if (problems.length === 0)
+    details.push(
+      `the copy control issued ${requests.length} request(s), every one of them a same-origin router prefetch of the static export ` +
+        `(${requests.length === 0 ? "none at all" : "no off-origin request, no request body, and nothing from the record in any URL"})`,
+    );
+  if (urlBefore !== urlAfter) problems.push(`/character/logs: the copy control changed the URL (${urlBefore} → ${urlAfter}); nothing enters a URL (N-074)`);
+  else details.push(`the URL is unchanged by the copy (${urlAfter})`);
+
+  // It has to actually copy something, or the gate is guarding an inert button.
+  const copied = await page.evaluate(async () => {
+    try {
+      return await navigator.clipboard.readText();
+    } catch {
+      return null;
+    }
+  });
+  if (copied === null) details.push("the clipboard could not be read back in this context; the fallback path is asserted instead");
+  else if (!copied.includes("Manchester")) problems.push("/character/logs: the copy control copied nothing containing the record just written");
+  else details.push(`the clipboard holds the reader's own record as plain text (${copied.split("\n").length} lines)`);
+
+  // The fallback: shown on request, read-only, and never read back.
+  requests.length = 0;
+  await page.locator("[data-copy-show]").click();
+  await sleep(200);
+  const box = page.locator("[data-copy-text]");
+  if ((await box.count()) === 0) problems.push("/character/logs: no plain-text fallback is offered for a browser that refuses the clipboard (N-074)");
+  else {
+    // The DOM property, not the attribute: `readonly` is a boolean attribute and
+    // getAttribute returns the empty string for it, which is falsy — a check
+    // written that way fails on a read-only box and would have been "fixed" by
+    // relaxing it.
+    const ro = await box.first().evaluate((el) => el.readOnly === true);
+    if (!ro) problems.push("/character/logs: the plain-text fallback is editable — it would be an input the site could interpret (S-6)");
+    else details.push("the plain-text fallback renders read-only");
+    for (const r of requests)
+      if (!r.url.startsWith(BASE) || r.data)
+        problems.push(`/character/logs: showing the plain text issued ${r.method} ${r.url}`);
+  }
+
+  // And the print stylesheet is real, not just present.
+  await page.emulateMedia({ media: "print" });
+  await sleep(120);
+  const chromeVisible = await page.locator(".log-form").first().isVisible().catch(() => false);
+  if (chromeVisible) problems.push("/character/logs: the entry form still renders under print media — a printed record should carry no controls (N-074)");
+  else details.push("under print media the entry forms and controls are gone and the records remain");
+  await page.emulateMedia({ media: "screen" });
+
+  await restorePreserved(page);
+  await ctx.close();
+  record(137, "C-37 (N-074): the copy-out and print paths touch no network and no URL", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ============================================================
@@ -311,8 +513,14 @@ async function labTo(page, opts = {}) {
   } else details.push("campaign: a run in progress is offered back, never silently resumed or lost");
 
   await page.goto(BASE + "/methodology", { waitUntil: "networkidle" });
-  await page.locator('button:has-text("Reset everything this site remembers")').first().click();
+  // N-227: the reset control ARMS on the first press and erases on the second.
+  // Gate 6 pressed once and asserted the keys were gone, so it would have gone
+  // red on the arm-then-confirm the row adds; the extension is here, and the
+  // assertion that ONE press does NOT erase is gate 127's.
+  await page.locator(".reset-button").first().click();
   await sleep(160);
+  await page.locator(".reset-button").first().click();
+  await sleep(200);
   const leftover = await page.evaluate(() =>
     Object.keys(localStorage).filter((k) => /board|logs|guidance|roadmap|credential|daily|play/.test(k)),
   );
@@ -320,6 +528,7 @@ async function labTo(page, opts = {}) {
     ok = false;
     details.push(`reset: leftover ${leftover.join(", ")}`);
   } else details.push("reset: board/logs/guidance/play state cleared");
+  await restorePreserved(page);
   await ctx.close();
   record(6, "State preservation + reset", ok, details);
 }
@@ -344,6 +553,7 @@ async function labTo(page, opts = {}) {
   await campaignTo(page, "allocate");
   const badPlay = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   if (badPlay) overflow.push("/play/campaign (allocate): horizontal overflow at 320px");
+  await restorePreserved(page);
   await ctx.close();
   record(8, `Responsive: no horizontal body scroll at 320px (${ROUTES.length} routes + the allocate screen)`, overflow.length === 0,
     overflow.length ? overflow : [`All ${ROUTES.length} routes clean at 320px, including the allocate screen with every instrument rendered.`]);
@@ -380,6 +590,7 @@ async function labTo(page, opts = {}) {
     ok = false;
     details.push("keyboard: could not reach Threshold from the entrance");
   } else details.push("keyboard: Help-now focusable on all eight sampled routes including all three play modes; reached Threshold by keyboard");
+  await restorePreserved(page);
   await ctx.close();
   record(7, "Keyboard: Help-now reachable everywhere", ok, details);
 }
@@ -545,6 +756,7 @@ async function labTo(page, opts = {}) {
     if (cols === 2 && noPrediction && axisSwitched)
       details.push("S-4: one Lab comparison completed keyboard-only, both branches rendered, the axis switched by Enter and the comparison re-rendered, no-prediction line present.");
   }
+  await restorePreserved(page);
   await ctx.close();
   record(4, "S-4 · Keyboard: a full season, a fork, a Lab comparison; Help-now in every state", ok, details);
 }
@@ -613,6 +825,7 @@ async function labTo(page, opts = {}) {
       await shoot(page, `arc-creation-${suffix}`);
       await arcTo(page, "parse");
       await shoot(page, `arc-parse-${suffix}`);
+      await restorePreserved(page);
       await ctx.close();
     }
   }
@@ -666,6 +879,500 @@ async function labTo(page, opts = {}) {
           ],
     );
   }
+}
+
+/* ============================================================
+   C-3 (N-191): every option whose action carries a switching cost renders it
+   on the card, in the existing campaign walk.
+   ============================================================
+   Forty-three authored sentences about what changing your mind costs have been
+   linted for voice since 4.0 and displayed by nothing. This asserts they reach a
+   reader: on the allocate screen, at least one card renders
+   [data-sim-switching-cost] with real text, and NO card renders an empty one.
+
+   Proven red by renaming the attribute in components/sim/CampaignApp.tsx — the
+   run with the plant is in DECISIONS.md §8 under batch 1.
+   ============================================================ */
+{
+  const details = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await campaignTo(page, "allocate");
+  const found = await page.evaluate(() =>
+    [...document.querySelectorAll(".sim-action-grid [data-sim-switching-cost]")].map((el) =>
+      (el.textContent || "").trim(),
+    ),
+  );
+  const cards = await page.locator(".sim-action-grid > li").count();
+  const problems = [];
+  if (!found.length)
+    problems.push(
+      `allocate screen: ${cards} action cards rendered and NOT ONE [data-sim-switching-cost] among them — the switching cost is authored, linted, and reaching no reader`,
+    );
+  const blank = found.filter((t) => t.length < 12);
+  if (blank.length) problems.push(`${blank.length} switching-cost element(s) rendered with no sentence in them`);
+  if (!problems.length)
+    details.push(
+      `allocate screen: ${found.length} of ${cards} action cards render their switching cost; e.g. "${found[0].slice(0, 90)}…"`,
+    );
+  await restorePreserved(page);
+  await ctx.close();
+  record(3, "C-3 (N-191): the action card renders its switching cost", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-6 (N-263): double-Escape leaves EVERY set-down route.
+   ============================================================
+   The reader who most needs the quick exit may not be able to reach or aim at a
+   button. Two Escape presses inside the window run the same navigation the
+   visible "Leave this page" control runs — and on four of the seven set-down
+   routes there IS no visible control, so this is the only exit there.
+
+   The route list is read out of content/routes.ts (every record with
+   intensity: "down"), NOT out of the rendered pages and NOT from the handler, so
+   a plant that quietly drops a route from the handler cannot also drop it from
+   the test.
+
+   The exit is a real navigation to a third-party site, so it is intercepted at
+   the network layer and aborted: the assertion is that the page tried to leave
+   for the exit target, and nothing off-origin is actually fetched.
+
+   Proven red by narrowing the handler's guard to skip one route — the run with
+   the plant is in DECISIONS.md §8 under batch 2.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const routesSrc = readFileSync(join(ROOT, "content/routes.ts"), "utf8");
+  const SETDOWN = routesSrc
+    .split('path: "')
+    .slice(1)
+    .map((c) => [c.slice(0, c.indexOf('"')), /intensity:\s*"(\w+)"/.exec(c)])
+    .filter(([, m]) => m && m[1] === "down")
+    .map(([p]) => p);
+  if (!SETDOWN.length) problems.push("content/routes.ts: no set-down route found; the gate has no subject");
+
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  let leftFor = null;
+  // Fulfilled locally rather than aborted: the navigation still happens (which is
+  // the thing being asserted) but nothing is fetched off-origin, and the page does
+  // not land on an error document that races the next goto.
+  await page.route("**/*", (r) => {
+    const u = r.request().url();
+    if (u.startsWith(BASE) || u.startsWith("data:") || u.startsWith("blob:")) return r.continue();
+    leftFor = u;
+    return r.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>intercepted</title>" });
+  });
+  const doubleEscape = async (route) => {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        await page.goto(BASE + route, { waitUntil: "domcontentloaded" });
+        await sleep(160);
+        leftFor = null;
+        await page.keyboard.press("Escape");
+        await page.keyboard.press("Escape");
+        await sleep(360);
+        return leftFor;
+      } catch {
+        await sleep(240);
+      }
+    }
+    problems.push(`${route}: could not be walked — the gate proved nothing about this route`);
+    return null;
+  };
+  for (const route of SETDOWN) {
+    if (!(await doubleEscape(route)))
+      problems.push(`${route}: two Escape presses did not leave the page — this route has no keyboard quick exit`);
+  }
+  // And the gesture must NOT fire on a route that is not set-down: a page-initiated
+  // jump off-site is sanctioned only where the reader may need to hide the screen.
+  const stray = await doubleEscape("/topics");
+  if (stray) problems.push(`/topics: double-Escape left the page from a route that is not set-down (${stray})`);
+  await restorePreserved(page);
+  await ctx.close();
+  if (!problems.length)
+    details.push(
+      `double-Escape leaves all ${SETDOWN.length} set-down routes (${SETDOWN.join(", ")}) and does not fire on /topics`,
+    );
+  record(106, "C-6 (N-263): double-Escape exits every set-down route", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-14 (N-204): every season screen carries its origin's face motif.
+   ============================================================
+   Each preset declares a distinct `face` and it was used at exactly one place —
+   the selection card. After `startPreset` the origin never appeared again, not
+   even its label, so five unequal starting positions converged into one screen by
+   season two, and the campaign's central doctrine (position is not something the
+   character did) had nothing on screen to carry it.
+
+   THE SPEC'S OWN TEST is that a screenshot is attributable to its origin WITHOUT
+   the preset name in the header, so this asserts both halves: the motif is there
+   at every sampled turn and carries the right face, and the preset's name is not.
+
+   Sampled at three DIFFERENT turns, plus the allocate screen and the look-back,
+   because "renders on turn one" is exactly the defect. Proven red by rendering it
+   only on turn one — the run with that plant is in DECISIONS.md §8 under batch 3.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  // The face the first preset declares, read out of the content rather than
+  // written here, so a content change cannot leave the gate asserting a stale one.
+  const presetsSrc = readFileSync(join(ROOT, "content/sim/campaign/presets.ts"), "utf8");
+  const expectedFace = /face:\s*"(\w+)"/.exec(presetsSrc)?.[1] ?? null;
+  const presetLabel = /label:\s*"([^"]+)"/.exec(presetsSrc)?.[1] ?? null;
+  if (!expectedFace) problems.push("content/sim/campaign/presets.ts: could not read the first preset's face, so the gate has nothing to compare against");
+
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await campaignTo(page, "briefing");
+
+  const seen = [];
+  for (let turn = 1; turn <= 3; turn++) {
+    const motif = page.locator("[data-sim-origin-face]").first();
+    if (!(await motif.count())) {
+      problems.push(`season ${turn}: the season chrome carries no origin motif — after the selection card the origin disappears and every start looks the same`);
+      break;
+    }
+    const face = await motif.getAttribute("data-sim-origin-face");
+    const svg = await motif.locator("svg").count();
+    const season = (await page.locator(".sim-header-facts").innerText().catch(() => "")).replace(/\s+/g, " ");
+    seen.push(`turn ${turn}: face "${face}", ${svg} motif drawn`);
+    if (face !== expectedFace) problems.push(`season ${turn}: the chrome renders the "${face}" face where this origin declares "${expectedFace}"`);
+    if (!svg) problems.push(`season ${turn}: the origin element is present but draws nothing`);
+    if (presetLabel && season.includes(presetLabel))
+      problems.push(`season ${turn}: the header prints the preset name "${presetLabel}" — the motif exists so that it does not have to`);
+    if (turn === 3) break;
+    // Advance a season: allocate one thing, resolve, answer whatever arrives.
+    await click(page, "Allocate the season");
+    const onAllocate = await page.locator("[data-sim-origin-face]").count();
+    if (turn === 1 && !onAllocate) problems.push("the allocate screen carries no origin motif");
+    await click(page, "How you would do it", ".sim-action-grid");
+    await click(page, "Commit this", ".sim-option-list");
+    await click(page, "Resolve the season");
+    for (let i = 0; i < 8; i++) {
+      if (await page.locator(".sim-result-list").count()) break;
+      if (await page.locator(".sim-beat-inner").count()) {
+        await click(page, "Go on", ".sim-beat-inner");
+        continue;
+      }
+      if (!(await click(page, "Do this", ".sim-option-list"))) break;
+    }
+    if (!(await click(page, "On to the next season"))) {
+      problems.push(`could not advance past season ${turn}, so fewer than three turns were sampled`);
+      break;
+    }
+    await sleep(200);
+  }
+  if (seen.length < 3) problems.push(`only ${seen.length} turn(s) sampled; the assertion is about turns AFTER the first`);
+
+  // And the look-back at the end of the run, which is a season screen too.
+  await campaignParseTo(page);
+  if (!(await page.locator("[data-sim-origin-face]").count())) problems.push("the look-back carries no origin motif");
+  await restorePreserved(page);
+  await ctx.close();
+  if (!problems.length) details.push(`${seen.join(" · ")}; the allocate screen and the look-back carry it too, and the preset's name is nowhere in the header`);
+  record(114, "C-14 (N-204): every season screen carries its origin motif", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-12 / S-4 extension (N-194): the compressed season flow is a real control,
+   reachable and operable by keyboard, and it commits.
+   ============================================================
+   S-4 requires the campaign's control vocabulary to be keyboard-complete. The
+   repeat control joins it: it is a real <button>, it can be focused and activated
+   by Enter, and doing so COMMITS the season rather than opening a confirmation
+   somewhere else. The delta briefing that goes with it must also be a delta —
+   the full briefing is offered, not imposed, and nothing is hidden behind it.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/play/campaign", { waitUntil: "domcontentloaded" });
+  await sleep(220);
+  await clearPlayState(page);
+  await page.evaluate((f) => {
+    try {
+      localStorage.setItem(f.key, f.value);
+    } catch {}
+  }, QUIET_SEASON);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await sleep(400);
+  if (await page.locator(".sim-gate").count()) await click(page, "Pick it back up", ".sim-gate");
+  await sleep(300);
+
+  const control = page.locator("[data-sim-repeat-last]").first();
+  if (!(await control.count())) {
+    problems.push(
+      "a quiet season with a previous allocation offers no [data-sim-repeat-last] control — §3.4b's compressed flow is the answer to twenty-four full briefings and it is not on the screen",
+    );
+  } else {
+    const tag = await control.evaluate((el) => el.tagName);
+    if (tag !== "BUTTON") problems.push(`the repeat control is a <${tag.toLowerCase()}>, so it is not in the keyboard order as a control`);
+    if (!(await page.locator(".sim-briefing-delta").count())) problems.push("the compressed briefing renders no delta panel");
+    const fullShown = await page.locator(".sim-briefing-grid:not([hidden])").count();
+    if (fullShown) problems.push("the compressed briefing still renders the full briefing grid, so nothing was compressed");
+    if (!(await page.locator(".sim-briefing-delta button", { hasText: "Show the full briefing" }).count()))
+      problems.push("the compressed briefing offers no way back to the full one — the delta must be an offer, not a removal");
+
+    const before = await page.locator(".sim-header-facts").innerText();
+    await control.focus();
+    const focused = await page.evaluate(() => document.activeElement?.tagName);
+    if (focused !== "BUTTON") problems.push("the repeat control could not take keyboard focus");
+    await page.keyboard.press("Enter");
+    await sleep(400);
+    // The season must actually have gone somewhere: either straight to its
+    // consequences, or to an arrival or a beat on the way, exactly as a
+    // hand-built allocation would.
+    for (let i = 0; i < 8; i++) {
+      if (await page.locator(".sim-result-list").count()) break;
+      if (await page.locator(".sim-beat-inner").count()) {
+        await click(page, "Go on", ".sim-beat-inner");
+        continue;
+      }
+      if (!(await click(page, "Do this", ".sim-option-list"))) break;
+    }
+    const resolved = await page.locator(".sim-result-list > li").count();
+    if (!resolved) problems.push("activating the repeat control by keyboard did not resolve the season");
+    const after = await page.locator(".sim-header-facts").innerText();
+    if (before === after && resolved) problems.push("the season resolved but the header did not advance");
+    if (resolved) details.push(`the repeat control took focus, activated on Enter, and committed a season of ${resolved} outcome(s) through the same path as a hand allocation`);
+  }
+  await restorePreserved(page);
+  await ctx.close();
+  record(112, "C-12 / S-4 (N-194): the repeat-last-season control is keyboard-reachable and commits", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   The erase-control gate, extended (N-227): arm, then confirm.
+   ============================================================
+   A single press that erases everything is a mis-tap away from a loss the site
+   cannot undo, and the reader was never told what survives. Both halves are
+   asserted: ONE press must NOT erase, and the armed state must say what is about
+   to go, what is not, and that this cannot be undone by the Guidebook.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+
+  // (a) The site-wide reset on /methodology.
+  await page.goto(BASE + "/guidance", { waitUntil: "networkidle" });
+  await page.locator(".weight-buttons").first().locator("button").nth(3).click();
+  await page.goto(BASE + "/methodology", { waitUntil: "networkidle" });
+  // By class, not by text: the label CHANGES when the control arms, which is the
+  // thing being asserted, so a text-matched locator stops matching the element it
+  // is about half way through the assertion.
+  const reset = page.locator(".reset-button").first();
+  await reset.click();
+  await sleep(160);
+  const stillThere = await page.evaluate(() => Object.keys(localStorage).filter((k) => /guidance/.test(k)).length);
+  if (!stillThere) problems.push("/methodology: ONE press of the reset control erased. Arm-then-confirm exists because that press is a mis-tap away from a loss the site cannot undo (N-227).");
+  const armedText = (await page.locator("[data-sim-armed-consequence]").innerText().catch(() => "")) || "";
+  if (!armedText.includes("cannot be undone by the Guidebook"))
+    problems.push('/methodology: the armed state does not say "This cannot be undone by the Guidebook." — the precise, non-overclaiming phrasing the row names');
+  if (armedText.length < 60) problems.push("/methodology: the armed state does not say what is about to go and what survives");
+  const label = await reset.innerText();
+  if (!/press again/i.test(label)) problems.push(`/methodology: the armed control still reads "${label.trim()}" rather than telling the reader a second press is what erases`);
+  await reset.click();
+  await sleep(200);
+  const cleared = await page.evaluate(() => Object.keys(localStorage).filter((k) => /guidance|board|logs|daily/.test(k)).length);
+  if (cleared) problems.push(`/methodology: the second press did not erase (${cleared} keys left)`);
+  else details.push("/methodology: one press arms and says what goes, what survives, and that this cannot be undone by the Guidebook; the second press erases");
+
+  // (b) The campaign's branch delete, which carries the sibling-branch line.
+  await campaignTo(page, "briefing");
+  await click(page, "Branch from here");
+  await sleep(200);
+  await page.goto(BASE + "/play/campaign", { waitUntil: "domcontentloaded" });
+  await sleep(300);
+  if (await page.locator(".sim-gate").count()) await click(page, "Start a different one", ".sim-gate");
+  await click(page, "Take a starting position");
+  await sleep(200);
+  // The FORKS list specifically. The parent save is labelled "…, before
+  // branching", so a text match on "branch" finds the save and asserts the wrong
+  // control's wording — which is what it did on the first run of this gate.
+  const branchDelete = page
+    .locator(".sim-save-list li", { hasText: "a branch of another line" })
+    .locator("button", { hasText: "Delete" })
+    .first();
+  if (!(await branchDelete.count())) {
+    details.push("no branch was listed on this walk, so the sibling-branch wording was checked in source only");
+    const src = readFileSync(join(ROOT, "components/sim/CampaignApp.tsx"), "utf8");
+    if (!src.includes("SIBLING_BRANCH_LINE")) problems.push("components/sim/CampaignApp.tsx: the branch delete does not carry the sibling-branch line");
+  } else {
+    await branchDelete.click();
+    await sleep(160);
+    const t = (await page.locator("[data-sim-armed-consequence]").first().innerText().catch(() => "")) || "";
+    if (!t.includes("parent or sibling branches remain separate"))
+      problems.push("the branch delete's armed state does not say that the parent or sibling branches remain separate");
+    if (!t.includes("cannot be undone by the Guidebook")) problems.push("the branch delete's armed state does not carry the cannot-be-undone line");
+    if (!problems.length) details.push("the branch delete arms and states that the parent or sibling branches remain separate");
+  }
+  await restorePreserved(page);
+  await ctx.close();
+  record(127, "C / N-227: erasing arms first, and the armed state says what survives", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-43 / C-44 (N-170, N-171, N-172): the tier board's switch, live.
+   ============================================================
+   The rendered half the C suite cannot read. The board is a client component
+   whose objective defaults to era power, so the exported HTML shows one board
+   and the whole claim of these rows is about what happens when a reader changes
+   it. Watching the same five positions reorder is the demonstration; a switch
+   that produced the same letters would teach the opposite of the lesson.
+
+   Three things are asserted here and nowhere else: the letters actually move,
+   the ruleset header moves with them (so it can never describe the previous
+   question), and the objective that refuses its top tier renders that refusal
+   with the evidence label that justifies it.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/history", { waitUntil: "networkidle" });
+
+  const readBoard = async () =>
+    page.evaluate(() => ({
+      objective: document.querySelector("[data-tier-ruleset]")?.getAttribute("data-tier-ruleset") ?? null,
+      headerText: document.querySelector("[data-ruleset-objective]")?.textContent?.trim() ?? "",
+      notMeasured: document.querySelector("[data-ruleset-not-measured]")?.textContent?.trim() ?? "",
+      evidence: document.querySelector("[data-ruleset-evidence]")?.textContent?.trim() ?? "",
+      letters: [...document.querySelectorAll("[data-tier-placement]")].map(
+        (li) => `${li.getAttribute("data-tier-placement")}:${li.querySelector(".tier-badge")?.textContent?.trim()}`,
+      ),
+      emptyTop: document.querySelector("[data-empty-tier]")?.getAttribute("data-empty-tier") ?? null,
+      emptyEvidence: document.querySelector("[data-empty-tier-evidence]")?.getAttribute("data-empty-tier-evidence") ?? null,
+      headerBeforeFirstLetter: (() => {
+        const h = document.querySelector("[data-tier-ruleset]");
+        const first = document.querySelector(".tier-badge");
+        if (!h || !first) return null;
+        return h.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING ? true : false;
+      })(),
+    }));
+
+  const options = await page.locator("#tier-objective option").evaluateAll((els) => els.map((e) => e.value));
+  if (options.length < 3) problems.push(`/history: the objective control offers ${options.length} objective(s); §3.8 asks for three`);
+
+  const boards = [];
+  for (const value of options) {
+    await page.selectOption("#tier-objective", value);
+    await sleep(180);
+    const b = await readBoard();
+    boards.push(b);
+    if (b.objective !== value) problems.push(`/history: choosing "${value}" left the ruleset header describing "${b.objective}" — the header would be describing the previous question (N-171)`);
+    if (b.letters.length === 0) problems.push(`/history: objective "${value}" renders no placements at all`);
+    if (b.headerBeforeFirstLetter !== true) problems.push(`/history: under "${value}" a tier letter renders before the ruleset header (C-44)`);
+    for (const item of ["Human worth", "Happiness", "Moral value"])
+      if (!b.notMeasured.includes(item)) problems.push(`/history: under "${value}" the not-measured list above the board omits "${item}" (N-171)`);
+  }
+
+  const distinct = new Set(boards.map((b) => b.letters.join("|")));
+  if (distinct.size < boards.length)
+    problems.push(
+      `/history: ${boards.length} objectives produced ${distinct.size} distinct board(s) in the browser. Watching the same ` +
+        `positions reorder is the demonstration; a switch that changes nothing teaches that the objective is scenery (N-170).`,
+    );
+  else details.push(`${boards.length} objectives, ${distinct.size} distinct boards in the browser: ${boards.map((b) => `${b.objective} → ${b.letters.join(" ")}`).join(" · ")}`);
+
+  const refusing = boards.filter((b) => b.emptyTop);
+  if (refusing.length === 0)
+    problems.push("/history: no objective renders an empty top tier. N-172: an instrument visibly declining to answer is the most persuasive thing on the page.");
+  else {
+    for (const b of refusing) {
+      if (b.emptyTop !== "S") problems.push(`/history: "${b.objective}" renders an empty-tier card for ${b.emptyTop} rather than the top tier — an ordinary mid-board gap is not a refusal (N-172)`);
+      if (b.emptyEvidence !== "insufficient-evidence")
+        problems.push(`/history: "${b.objective}" renders an empty top tier badged "${b.emptyEvidence}" — a refusal has to say why it is refusing (N-172)`);
+    }
+    if (problems.length === 0)
+      details.push(`${refusing.map((b) => b.objective).join(", ")} renders an empty top tier badged insufficient-evidence, and the other boards render none`);
+  }
+
+  await restorePreserved(page);
+  await ctx.close();
+  record(143, "C-43 / C-44 (N-170..N-172): the objective switch changes the board, the header follows it, and the empty top tier is badged", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-51 (N-306) — A PRE-EXISTING SAVED LIBRARY SURVIVES A SUITE RUN.
+   ============================================================
+   The suite cannot be pointed at somebody's real browser profile to prove this,
+   and that is exactly why the claim needs a test rather than an assurance: the
+   run where it would matter is the run nobody does twice. So a context is seeded
+   with a library that looks like a reader's — named saves, a campaign, an
+   edition, a position — the suite's own clear-and-walk path is driven over it,
+   and the whole `tgtl:` map is compared byte for byte afterwards.
+
+   It uses THE SAME functions the walks above use. A version of this that
+   reimplemented the preservation would prove only that the test can preserve
+   things. Planting a skipped restore in tests/lib-preserve.mjs turns this red.
+   ============================================================ */
+{
+  const problems = [];
+  const details = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+
+  const SEED = {
+    "tgtl:play:saves": JSON.stringify([{ id: "s1", label: "the long one", at: "2026-09-01" }]),
+    "tgtl:play:run": JSON.stringify({ act: 4, seed: "abc" }),
+    "tgtl:sim2:campaign": JSON.stringify({ season: 11, budget: { time: 3 } }),
+    "tgtl:edition": "game",
+    "tgtl:credential-position": JSON.stringify({ floor: "yes" }),
+  };
+
+  await page.goto(BASE + "/play", { waitUntil: "domcontentloaded" });
+  await sleep(200);
+  await page.evaluate((seed) => {
+    for (const [k, v] of Object.entries(seed)) localStorage.setItem(k, v);
+  }, SEED);
+  const before = await readLibrary(page);
+
+  // The suite's own opening move, then a walk that writes over the top of it.
+  await clearPlayState(page);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await sleep(320);
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("tgtl:play:run", JSON.stringify({ act: 1, seed: "walk" }));
+      localStorage.setItem("tgtl:play:walk-artefact", "left behind by the suite");
+    } catch {}
+  });
+
+  const cleared = await readLibrary(page);
+  if (cleared.some(([k]) => k === "tgtl:play:saves"))
+    problems.push("the clear did not remove the named-save library, so this test proves nothing about restoring it");
+
+  await restorePreserved(page);
+  const after = await readLibrary(page);
+
+  const fmt = (rows) => rows.map(([k, v]) => `${k}=${v}`).join("\n");
+  if (fmt(before) !== fmt(after)) {
+    const beforeMap = new Map(before);
+    const afterMap = new Map(after);
+    for (const [k, v] of beforeMap)
+      if (!afterMap.has(k)) problems.push(`C-51: the suite DELETED the reader's ${k} and did not put it back`);
+      else if (afterMap.get(k) !== v)
+        problems.push(`C-51: the suite OVERWROTE the reader's ${k} (was ${String(v).slice(0, 60)}…, now ${String(afterMap.get(k)).slice(0, 60)}…)`);
+    for (const [k] of afterMap)
+      if (!beforeMap.has(k)) problems.push(`C-51: the suite LEFT BEHIND ${k}, which the reader never had`);
+  } else {
+    details.push(
+      `${before.length} seeded tgtl: keys (named saves, an active run, a campaign, an edition, a position) survive a clear, a reload and a walk that overwrote two of them: byte-identical afterwards`,
+    );
+    details.push(`the suite's own clearPlayState + restorePreserved path was used, not a copy of it`);
+  }
+
+  await ctx.close();
+  record(151, "C-51 (N-306): a pre-existing saved library survives a suite run byte-identical", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */

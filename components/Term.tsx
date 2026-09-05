@@ -21,10 +21,18 @@ export function Term({
   k,
   define = false,
   caps = false,
+  marked,
 }: {
   k: TermKey;
   define?: boolean;
   caps?: boolean;
+  /**
+   * N-326 — override the marker decision. Left unset, a use is marked when it is
+   * not the defining use, which is what the authoring rule already means. Set
+   * false where the surrounding treatment already carries the emphasis (a caps
+   * heading, below).
+   */
+  marked?: boolean;
 }) {
   const pathname = usePathname();
   const { edition, effectiveFrame } = useGuide();
@@ -36,6 +44,29 @@ export function Term({
   const label = showGame ? (record.game as string) : record.standard;
   const shown = caps ? label.toUpperCase() : label;
 
+  /**
+   * N-326 (C-34) — THE GAME-VOCABULARY MARKER.
+   *
+   * After the defining use, a game term renders in small caps, so the frame is
+   * legible AS a frame rather than as the site's ordinary voice. That is the
+   * "model, not metaphor" commitment made visible — and it is what makes the
+   * frame easier to put down, because you can see where it is.
+   *
+   * Three places it must never appear, all of them decided by `showGame` above
+   * and by nothing else: the Standard edition, a route whose frame is down, and
+   * a term that has no game label at all. C-34 asserts the first two over the
+   * exported HTML and over this file's source, and is proven red by a plant that
+   * lets the class escape into Standard.
+   *
+   * Which uses count as "after the first": the author sets `define` on a page's
+   * first occurrence of a key — the rule the trunk has run on since 2.0 — so the
+   * defining use is the unmarked one and every later use is marked. A page that
+   * uses a term exactly once without defining it would be marked on that single
+   * use; that is a mis-marking rather than a breach of the wall, and the honest
+   * fix is the authoring rule the gate-3 parity lint already encourages.
+   */
+  const showMarker = showGame && (marked ?? !define);
+
   if (showGame && define && record.define) {
     return (
       <span className="term term--defined">
@@ -44,7 +75,7 @@ export function Term({
       </span>
     );
   }
-  return <span className="term">{shown}</span>;
+  return <span className={showMarker ? "term term--marked" : "term"}>{shown}</span>;
 }
 
 /**
@@ -75,7 +106,9 @@ export function TermHeading({
   return (
     <>
       <Tag className={className}>
-        <Term k={k} caps />
+        {/* N-326: a caps heading already carries the emphasis; the marker would
+            be a second treatment on the same words. */}
+        <Term k={k} caps marked={false} />
         {suffix ? <span className="heading-suffix"> {suffix}</span> : null}
       </Tag>
       {showGloss && <p className="term-gloss">{record.define}</p>}

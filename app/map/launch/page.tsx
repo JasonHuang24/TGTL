@@ -9,6 +9,7 @@ import {
   NextStep,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
+import { PositionNote } from "@/components/PositionNote";
 
 export const metadata: Metadata = {
   title: "The launch years",
@@ -47,6 +48,16 @@ export default function LaunchPage() {
         no part of it is at zero. Every row has something in it; several are crowded. The problem is not
         that anything is missing. It is that the board cannot yet be read.
       </p>
+
+      {/* N-150 (C-42) — the floor question is this page's hinge, and until now
+          the reader had to apply it to themselves. */}
+      <PositionNote
+        notes={{
+          yes: "With a floor beneath a serious failure, this stage is the cheapest time you will ever have to run a reversible experiment, and the standard advice to take a real swing at something is sound for you. The thing worth watching for instead is spending the abundant resource — time — on nothing in particular, because a floor makes drifting comfortable as well as making risk survivable.",
+          no: "Without a floor beneath a serious failure, most of the confident advice aimed at this stage was written for somebody else, and following it is how a recoverable stretch becomes an unrecoverable one. Building even a small floor is not a preliminary to the interesting part; for you it is the move with the highest return in the stage, because it converts every later risk from unbounded to bounded.",
+          unsure: "The hinge of this whole stage is whether there is a floor beneath a serious failure, and it is the one fact none of this page can supply. Settle it before applying any advice about risk to yourself — the same swing is a bounded experiment from one starting position and an unrecoverable move from another.",
+        }}
+      />
 
       <h2>Several of your resources are borrowed, and read as owned</h2>
       <p>
@@ -135,9 +146,9 @@ export default function LaunchPage() {
       </MentorNote>
 
       <NextSteps>
-        <NextStep href="/map/credential-decision">The credential decision — the first big fork, with a position filter.</NextStep>
-        <NextStep href="/topics/money">Money and slack — why the floor question is really about the buffer.</NextStep>
-        <NextStep href="/guidance">Choosing a path — if you are standing at the fork now.</NextStep>
+        <NextStep href="/map/credential-decision" relation="unlocks" why="The first big fork of this stage, with a position filter that re-resolves its costs.">The credential decision — the first big fork, with a position filter.</NextStep>
+        <NextStep href="/topics/money" relation="explains" why="Why the floor question is really a question about the buffer underneath it.">Money and slack — why the floor question is really about the buffer.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="If you are standing at the fork now rather than reading about it.">Choosing a path — if you are standing at the fork now.</NextStep>
       </NextSteps>
 
       <EvidenceDrawer

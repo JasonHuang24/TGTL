@@ -11,6 +11,7 @@ import {
   CONTEXT_BREADCRUMB,
   stageIndex,
 } from "@/content/roadmap";
+import { AGENCY_MEANING } from "@/content/play/acts";
 import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 import { STAGES_TL } from "@/content/timeline/stages";
 
@@ -78,10 +79,14 @@ export function Roadmap() {
           ))}
         </div>
       </div>
+      {/* N-160 (C-5). The old note said "this lens changes no claims", which left
+          the reader to decide whether the guide had checked and found nothing. It
+          had not checked. Say which it is. */}
       {sexLens !== "shared" && (
         <p className="roadmap-lens-note">
-          This lens changes no claims. The windows below are common to everyone; a version with
-          verified sex-linked differences would require research this preview does not assert.
+          No sex-linked difference has been researched for the windows on this map. That is an absence of
+          research and not a finding that there is none, so this control changes nothing below it — and it
+          will keep changing nothing until a sourced difference exists.
         </p>
       )}
 
@@ -123,6 +128,16 @@ export function Roadmap() {
             Selected <Term k="stage" define /> · {stage.short}
           </p>
           <h2>{edition === "game" ? stage.gameLabel : stage.label}</h2>
+          {/* N-366. On the early stages only: what kind of thing the decisions of
+              this stretch are. A map of a whole life read from the middle looks
+              like a set of choices somebody could have made differently, and for
+              the first stretches of it that is simply not what they were. */}
+          {stage.agency ? (
+            <p className="stage-agency" data-agency={stage.agency}>
+              <span className="stage-agency-word">{stage.agency}</span>
+              <span className="stage-agency-note">{AGENCY_MEANING[stage.agency]}</span>
+            </p>
+          ) : null}
           {stage.deepLink ? (
             <>
               <p>
@@ -151,8 +166,9 @@ export function Roadmap() {
         <section className="domain-tracks panel" aria-label="Parallel domains">
           <p className="eyebrow">Parallel tracks</p>
           <p className="domain-tracks-note">
-            A life is not a single ladder. These run at once and at different rates — one can climb while
-            another stalls. The bars are illustrative shape, not a schedule.
+            A life is not a single ladder. It is a map with weather: these run at once and at different
+            rates, one can climb while another stalls, and the part you can read is not the part you can
+            control. The bars are illustrative shape, not a schedule.
           </p>
           <ul>
             {DOMAINS.map((d, i) => (

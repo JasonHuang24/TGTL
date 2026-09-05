@@ -202,6 +202,73 @@ exist, and it says plainly that never is a path rather than a failure.
 State honestly whether catching up is easy, partial, expensive, or closed. "Closed" is
 an allowed answer; pretending otherwise is not.
 
+### 7.1 Grading a route (6.0, N-379)
+
+A route entry may be written two ways, and the compiler accepts both:
+
+```json
+"routes": [
+  "a part-time return through a community college",
+  { "route": "a second residency application", "grade": "costly" }
+]
+```
+
+The four grades, and what each one promises:
+
+| grade | renders as | means |
+|---|---|---|
+| `easy` | *open* | available, and the cost is not what stands in the way |
+| `costly` | *expensive* | genuinely open, and the price is real — money, years, or both |
+| `partial` | *partial* | some of what was lost comes back through this; some does not |
+| `closed` | *closed* | this particular door does not reopen |
+
+Why the field exists: **rule 7 applies a pressure worth naming.** The cheapest way to
+satisfy "every cost carries a route" is a route that is technically true and
+practically useless — *you can retrain*, *you can appeal*. A reader told that a door is
+expensive can plan around it; a reader told it is open, who then finds the price, has
+learned that this guide flatters.
+
+**The grade never replaces a route.** `{ "grade": "closed" }` with no `route` is a hard
+error, and so is an empty one. T-4 reads through the grade to the sentence: the
+requirement is unchanged, and only the accessor moved. A branch whose only route is
+graded `closed` still owes the reader somewhere to go, which is what the rest of the
+list is for.
+
+Grades are **opt-in**. An ungraded route makes no claim about its price, which is the
+honest default when you do not know. Do not grade a route you have not thought about;
+an unsupported *open* is worse than no word at all.
+
+---
+
+## 7A. Expectation evidence must say when it was speaking (6.0, N-386)
+
+Every `Source` cited by a **`cultural-expectation`** record carries `timing`:
+
+| timing | means |
+|---|---|
+| `contemporaneous` | recorded at the time, by a party in a position to record it: a rule as the body that administers it currently states it, a survey run in the period it describes, a document written then |
+| `retrospective` | looking back — a memoir, an oral history, a survey asking people what they remember expecting, an essay about how things used to be |
+
+The compiler **refuses the batch** naming the record and the source when a
+cultural-expectation record cites a source with no `timing`, and T-9's `measures`
+discipline extends to it. The requirement follows the **citation**, not the source: the
+same page can be an ordinary statistical source for one record and a claim of a
+completely different kind when cited about what people used to expect. A source cited
+by both carries the field.
+
+Why: nostalgia is the primary source most likely to be cited about an earlier
+expectation and the least likely to be true. Memory reconstructs an expectation to fit
+what followed, so a later reflection is evidence about **how the past is perceived now**,
+and is not direct evidence of the expectation itself.
+
+Retrospective sources stay usable, and are **labelled rather than excluded** — the word
+renders beside the source's own stamp, so a reader can discount it themselves. That is
+the move this build makes everywhere else, and there is no reason for this channel to
+be the exception.
+
+**If you cannot tell from the excerpt you actually read, write `retrospective`.** It is
+the honest under-claim: it weakens the record rather than the reader's guard.
+
 ---
 
 ## 8. Length and shape
@@ -234,6 +301,9 @@ Each of these fails the build, naming the record:
 
 - numeric timing with no resolving source
 - a `bySex` block with no `measures` or no source
+- a `cultural-expectation` record citing a source with no `timing` (N-386)
+- a route graded with anything but `easy`, `costly`, `partial` or `closed`, or a graded
+  route carrying no sentence (N-379)
 - a sensitive record with no `careNote`, or missing a required route
 - a branch with `costs` and no `routes`
 - an `optional` record with an analysis and no `never` branch

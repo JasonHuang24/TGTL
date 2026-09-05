@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import {
   ReadingPage,
   PageHeader,
+  Lede,
   Callout,
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
+  NoWinner,
 } from "@/components/primitives";
+import Link from "next/link";
 import { CredentialFilter } from "@/components/CredentialFilter";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
 
@@ -32,9 +36,18 @@ export default function CredentialDecisionPage() {
         status="editorial"
       />
 
+      {/* N-004 — position sensitivity in one sentence, at the head of the page
+          whose whole argument is that the same move costs differently from a
+          different start. The rest of this page is that sentence, slowly. */}
+      <Lede>
+        &ldquo;Just take the risk&rdquo; is sound advice for someone with a floor beneath failure and
+        dangerous advice for someone without one. It is the same sentence either way, which is why
+        advice about this decision is so often confidently wrong.
+      </Lede>
+
       <MechanicAnchor ids={["position"]} />
 
-      <h2>What this page will and will not do</h2>
+      <h2 id="what-this-page-will-do">What this page will and will not do</h2>
       <p>
         It will not tell you which to want. That is not a dodge; it is a stated boundary. The model here
         can lay a decision out and show its structure, but it does not generate the aim behind it — what
@@ -42,7 +55,7 @@ export default function CredentialDecisionPage() {
         answer, and refuse to give you a confident recommendation that ignores the one thing only you know.
       </p>
 
-      <h2>First fact: the shapes are different, and shape beats average</h2>
+      <h2 id="shapes">First fact: the shapes are different, and shape beats average</h2>
       <p>
         A steady credentialed path and a long-shot creative or entrepreneurial one are not the same bet at
         different volumes; they are differently shaped bets. The credentialed path has a high floor, a long
@@ -53,7 +66,7 @@ export default function CredentialDecisionPage() {
         because the bad outcome is what you are most likely to get.
       </p>
 
-      <h2>Second fact: reversibility runs opposite to how it feels</h2>
+      <h2 id="reversibility">Second fact: reversibility runs opposite to how it feels</h2>
       <p>
         The &ldquo;safe&rdquo; credentialed path is the more locked-in one. It takes years, and each year
         raises the cost of leaving, because the sunk investment converts into identity. The &ldquo;risky&rdquo;
@@ -74,14 +87,62 @@ export default function CredentialDecisionPage() {
         </p>
       </Callout>
 
+      {/* N-094 — the rule the reversibility section above has always implied and
+          never stated, put where a real one-way door is being considered. */}
       <p>
-        So set your position, and read each path&rsquo;s cost and risk note as it re-resolves. Nothing here is
+        Which gives the general rule, worth carrying past this page: apply rigour in proportion to how
+        hard a decision is to undo. Spend the extra week, the third conversation and the question you are
+        avoiding on the one-way doors; decide the two-way ones fast, because on those the deliberation
+        costs more than the mistake would. Most people have this backwards, and agonise over the
+        reversible choices while walking through the irreversible ones on momentum.
+      </p>
+
+      <p id="position">
+        So set your position, and read each path&rsquo;s cost and risk note as it re-resolves. This is the
+        one place the setting is made, and it changes every position note on the site. Nothing here is
         stored anywhere but this browser, and nothing is scored.
       </p>
 
       <CredentialFilter />
 
-      <h2>The part about your family</h2>
+      {/* N-093 (C-41) — the comparison closes on the refusal, naming what each
+          path emphasises rather than which is better. It renders after the
+          paths, because a refusal placed anywhere else is a caption. */}
+      <NoWinner
+        sides={[
+          {
+            name: "College / university",
+            emphasises:
+              "a high floor and a durable signal, bought with years and often debt, spent up front and hardest to walk back once the sunk investment has converted into identity.",
+          },
+          {
+            name: "Trade / apprenticeship",
+            emphasises:
+              "earning while learning and a skill that is hard to offshore, bought with a narrower field of entry and a longer-run dependence on the body holding up.",
+          },
+          {
+            name: "Work first",
+            emphasises:
+              "immediate income and real information about what the work is actually like, bought by forgoing the ready-made network and by an entry window into credentialed paths that narrows with time.",
+          },
+        ]}
+        note="The one thing that genuinely reorders them is not on this list: it is whether there is a floor beneath a serious failure, which is a fact about your position rather than about the paths."
+      />
+
+      {/* N-124 and N-137 — two one-line handoffs to mechanisms that belong on
+          the work guide and are decision-relevant here. */}
+      <p>
+        Two things worth reading before you commit, both of which live on{" "}
+        <Link href="/topics/work">the work guide</Link> rather than here. First,{" "}
+        <Link href="/topics/work#learning-curves">what shape the learning curve is</Link>: a path whose
+        early months feel like no progress at all may be a threshold curve rather than the wrong choice,
+        and quitting in the flat part is the common and expensive error. Second,{" "}
+        <Link href="/topics/work#the-schools-rules">which of school&rsquo;s rules do not generalise</Link>{" "}
+        — effort is assessed there and almost nowhere afterwards, which changes what a credential is
+        actually buying you.
+      </p>
+
+      <h2 id="the-part-about-your-family">The part about your family</h2>
       <p>
         This framing assumes the decision is yours to make. In many families it is not made alone, and describing
         it as an individual choice with an interfering audience misdescribes the situation — the audience may be
@@ -93,10 +154,14 @@ export default function CredentialDecisionPage() {
       </p>
 
       <NextSteps>
-        <NextStep href="/map/launch">The launch years — the stage this decision sits inside.</NextStep>
-        <NextStep href="/topics/work">Education and career — credentials, standing, and changing direction.</NextStep>
-        <NextStep href="/guidance">Choosing a path — lay out your own version of this decision.</NextStep>
+        <NextStep href="/map/launch" relation="see-also" why="The stage this decision sits inside, and what else is running at the same time.">The launch years — the stage this decision sits inside.</NextStep>
+        <NextStep href="/topics/work" relation="explains" why="Credentials, standing and changing direction — the mechanisms this page is applying.">Education and career — credentials, standing, and changing direction.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="Turns the structure here into your decision, with your own objectives in it.">Choosing a path — lay out your own version of this decision.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/lab">the Decision Lab forks exactly this one and shows what separated the two branches.</TryInPlay>
 
       <EvidenceDrawer
         record={{

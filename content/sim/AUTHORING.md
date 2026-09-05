@@ -26,6 +26,29 @@ Death · serious illness · the character's end · depression. These live ONLY o
 separate beat-schedule channel (`content/sim/campaign/beats.ts`), which you are
 not authoring. Your records must not reference them, imply them, or set them up.
 
+**Keep the referent unnamed.** Care work is playable — `caring-duty` is a shipped
+condition and `caregiving` is a shipped skill, so looking after someone is not per
+se loss tier. What keeps it out of loss tier is that the *object* of the care is
+never a person or a condition. The caring-duty thread already in the pool
+(`content/sim/campaign/events/batch-comp-family.ts` — the family-admin records,
+the appointment-and-paperwork record, the office-that-never-picks-up record) sits
+inside the boundary only because its referent is unnamed: the object of care is
+"the family admin", "the appointment and the paperwork behind it", "an office that
+never picks up" — institutional logistics, never a body.
+
+So: a companion may *do* the admin, be asked to cover it, or put it down. Tasha
+does all three. But no rendered string may say who the appointment is **for**, and
+no rendered string may name a condition. The moment a line identifies that
+appointment with a live companion — "the appointment for Diane" — or with an
+illness, those records become loss-tier setup retroactively, and they are in your
+batch, not on the beat channel.
+
+This is a wall being *tightened*, not rebalanced: no exclusion list changes, and
+nothing that was permitted stops being permitted. C-10 asserts it and is proven
+red by planting a companion's name into one of those sentences. The origin is the
+family batch's adversarial verifier (`records/content-pipeline.md`, the caregiving
+thread; `KNOWN_LIMITATIONS.md` §5; `DECISIONS.md` "A verifier's carried warning").
+
 ### The capacity-event boundary — where health-adjacent content may go
 A playable capacity event is limited to a **non-life-threatening,
 non-diagnosed, recoverable-or-manageable reduction expressed in function, access,

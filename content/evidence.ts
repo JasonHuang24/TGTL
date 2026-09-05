@@ -5,6 +5,7 @@
  * (the triage requires the infrastructure designed now). No `researched` record
  * ships in v2.0 except hotlines, which carry their own verification fixture.
  */
+import type { RoutePath } from "./routes";
 
 /** Content status shown to readers as a compact label (§9.4). */
 export type ContentStatus = "illustrative" | "editorial" | "researched";
@@ -21,6 +22,31 @@ export const STATUS_MEANING: Record<ContentStatus, string> = {
   editorial:
     "The site's reasoned synthesis of how something works — our judgement, with the reasoning shown, not a citation.",
   researched: "Rests on at least one recorded source.",
+};
+
+/**
+ * N-299 (6.0 §3.11, §7.1) — A LABEL FOR A BEHAVIOUR, NOT A CLAIM.
+ *
+ * The three statuses above describe CLAIMS: things the site says about the world,
+ * which can be sourced or reasoned or admitted to be illustrative. An engine, a
+ * ranking or an ordering is not a claim about the world at all — it is a decision
+ * about how this instrument arranges things, and it was never in a position to be
+ * `researched`. Labelling it `illustrative` says "this is a worked example",
+ * which is not what a live ordering is either.
+ *
+ * So ordering behaviour gets its own label, deliberately separate from the set
+ * above, and the six content labels are untouched: nothing that describes the
+ * world may wear this, and nothing that orders things has to borrow one of theirs.
+ */
+export type BehaviourLabel = "design-hypothesis";
+
+export const BEHAVIOUR_LABEL: Record<BehaviourLabel, string> = {
+  "design-hypothesis": "Design hypothesis",
+};
+
+export const BEHAVIOUR_MEANING: Record<BehaviourLabel, string> = {
+  "design-hypothesis":
+    "A product behaviour awaiting validation — how this instrument orders things, not a claim about the world.",
 };
 
 /** Mentor-note provenance (subset for v2.0, §9.4). */
@@ -79,4 +105,30 @@ export type CorrectionEntry = {
   kind: CorrectionKind;
   summary: string;
   detail: string;
+  /**
+   * N-291 (6.0 §3.11, C-47) — THE NO-SILENT-FIX RULE, as data.
+   *
+   * The pages this correction actually changed. Each one renders a `RevisionNote`
+   * naming this entry, because a silent fix converts a reader's correction into
+   * the editors' foresight. C-47 asserts the note on every listed page, so adding
+   * a page here without saying so on the page is a build failure rather than an
+   * oversight.
+   */
+  pages?: RoutePath[];
+};
+
+/**
+ * N-290 (6.0 §3.11, §7.1) — A RETRACTION, kept permanently beside the mixed
+ * corrections register. The original text is retained, not deleted: struck
+ * through beside its replacement, so what the site used to say stays readable.
+ */
+export type RetractionEntry = {
+  id: string;
+  date: string;
+  page: RoutePath;
+  /** What the site said. Kept verbatim, rendered struck through, never removed. */
+  original: string;
+  /** What it says now. Empty means the claim was withdrawn and not replaced. */
+  replacement: string;
+  reason: string;
 };

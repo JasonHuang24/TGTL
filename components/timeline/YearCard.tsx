@@ -28,6 +28,8 @@ import {
   EARLY_INTERVENTION_URL,
   EARLY_INTERVENTION_QUOTE,
   EARLY_INTERVENTION_PUBLISHER,
+  SOURCE_TIMING_LABEL,
+  SOURCE_TIMING_MEANING,
   emptyStateFor,
   type Milestone,
   type Source,
@@ -120,6 +122,20 @@ function SourceStamp({ s }: { s: Source }) {
   return (
     <span className="tl-stamp" {...{ [ATTR_STAMP]: s.id }}>
       data {s.dataYear} · published {s.publicationYear} · checked {s.retrievedOn}
+      {/* N-386 — a source that is looking back says so beside its stamp, in one
+          word, so a reader can discount it without opening anything. */}
+      {s.timing === "retrospective" && (
+        <>
+          {" · "}
+          <span
+            className="tl-source-timing"
+            data-tl-source-timing="retrospective"
+            title={SOURCE_TIMING_MEANING.retrospective}
+          >
+            {SOURCE_TIMING_LABEL.retrospective}
+          </span>
+        </>
+      )}
     </span>
   );
 }

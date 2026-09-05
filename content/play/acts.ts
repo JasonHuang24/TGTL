@@ -16,6 +16,34 @@ export type Slot =
   | { kind: "card"; cardId: string } // a fixed, always-played decision card (e.g. the slack shock)
   | { kind: "beat"; beatId: string }; // a scripted (loss-tier) beat
 
+/**
+ * N-366 (6.0 §3.9) — AGENCY IS NOT CONSTANT.
+ *
+ * The hardest honest objection to a life *simulator* is that its early acts present
+ * choices a child never had. The answer is four words, one per act, naming what
+ * kind of thing the act's decisions actually are:
+ *
+ *   happens to    — events arrive; nothing is on offer.
+ *   decided for   — someone else makes the consequential call, and the character
+ *                   lives inside it.
+ *   decided with  — the character has a real say inside limits somebody else sets.
+ *   decided by    — the call is the character's, and so is the cost.
+ *
+ * It costs four words and it is the correct answer, so it is on the act framing
+ * rather than in a note somewhere. The same four run down the early stages of the
+ * map (`content/roadmap.ts`), because the map covers the same years.
+ */
+export const AGENCY_KINDS = ["happens to", "decided for", "decided with", "decided by"] as const;
+export type AgencyKind = (typeof AGENCY_KINDS)[number];
+
+/** What each kind means, in one line, shown beside the words the first time. */
+export const AGENCY_MEANING: Record<AgencyKind, string> = {
+  "happens to": "things arrive; there is nothing on offer to decide",
+  "decided for": "somebody else makes the consequential call, and you live inside it",
+  "decided with": "you have a real say, inside limits somebody else is setting",
+  "decided by": "the call is yours, and so is what it costs",
+};
+
 export type ActDef = {
   /** 1-based act number (display); the engine uses the 0-based index. */
   n: number;
@@ -24,6 +52,8 @@ export type ActDef = {
   ageBand: string;
   /** True for the watched early acts — the interface makes "made for you" explicit. */
   watched?: boolean;
+  /** N-366: what kind of agency this act's decisions actually are. */
+  agency: AgencyKind;
   /** Short second-person intro shown when the act opens. Edition-neutral. */
   intro: string;
   /** Which mechanic this act first introduces (walkthrough-style, one at a time). */
@@ -40,6 +70,7 @@ export const ACTS: ActDef[] = [
     title: "Birth & dependency",
     ageBand: "the first years",
     watched: true,
+    agency: "happens to",
     intro:
       "You arrive already dependent, already somewhere. Nothing here is yours to decide yet — the point is to feel that it isn't.",
     slots: [{ kind: "watched" }],
@@ -50,6 +81,7 @@ export const ACTS: ActDef[] = [
     title: "Early childhood",
     ageBand: "the small years",
     watched: true,
+    agency: "decided for",
     intro:
       "The people around you are making the consequential calls. You watch a couple of them land — they were never on offer to you.",
     slots: [{ kind: "watched" }],
@@ -59,6 +91,7 @@ export const ACTS: ActDef[] = [
     id: "tutorial-years",
     title: "The tutorial years",
     ageBand: "school age",
+    agency: "decided with",
     intro: "The first buttons appear. Small stakes — but the loop is the loop, and it starts here.",
     introducesMechanic: "readout",
     slots: [{ kind: "decision" }, { kind: "decision" }],
@@ -68,6 +101,7 @@ export const ACTS: ActDef[] = [
     id: "adolescence",
     title: "Adolescence",
     ageBand: "the teenage years",
+    agency: "decided with",
     intro: "More is yours now, and more is at stake. This is where you find out what an experiment costs.",
     introducesMechanic: "variance",
     slots: [{ kind: "decision" }, { kind: "decision" }],
@@ -77,6 +111,7 @@ export const ACTS: ActDef[] = [
     id: "launch",
     title: "Launch",
     ageBand: "roughly eighteen to twenty-nine",
+    agency: "decided by",
     intro:
       "The meaty stretch: agency high, resources gated, and the first choices that quietly lock. Some of what looks free is borrowed.",
     introducesMechanic: "position",
@@ -87,6 +122,7 @@ export const ACTS: ActDef[] = [
     id: "build",
     title: "Build & establish",
     ageBand: "the thirties",
+    agency: "decided by",
     intro: "Early choices start bending the curves — in both directions. You can see the compounding now.",
     introducesMechanic: "compounding",
     slots: [{ kind: "card", cardId: "card-build-shock" }, { kind: "decision" }, { kind: "decision" }],
@@ -96,6 +132,7 @@ export const ACTS: ActDef[] = [
     id: "midgame-caregiving",
     title: "Midgame & caregiving",
     ageBand: "the middle stretch",
+    agency: "decided by",
     intro:
       "The load changes shape. Other people's days run through yours now, and you are asked whether you still hold the goal you chose.",
     introducesMechanic: "slack",
@@ -107,6 +144,7 @@ export const ACTS: ActDef[] = [
     id: "late",
     title: "Later life",
     ageBand: "the last long stretch",
+    agency: "decided by",
     intro: "What compounded has compounded. The moves now are about transmission, and about letting go.",
     introducesMechanic: "recovery",
     slots: [{ kind: "decision" }, { kind: "decision" }],

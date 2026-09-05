@@ -27,6 +27,9 @@
  */
 import { chromium } from "playwright";
 import { readFileSync } from "node:fs";
+// N-306 (C-51) — the suite records a reader's own tgtl: state before it clears
+// anything and puts it back before the context closes.
+import { preserveThenClear, restorePreserved } from "./lib-preserve.mjs";
 
 const BASE = (process.argv[2] || "").startsWith("http") ? process.argv[2] : "http://localhost:4321";
 /** A finished 24-season run, so the closing screen can be audited in one load. */
@@ -54,7 +57,17 @@ const PLAY_ROOT = ".sim-play-app, .play-app, .sim-campaign, .sim-lab, .sim-door"
  * contrast, tap targets) is surface-agnostic and applies unchanged.
  */
 const TIMELINE_ROOT = ".tl-page";
-const rootFor = (name) => (name.startsWith("timeline-") ? TIMELINE_ROOT : PLAY_ROOT);
+/**
+ * 6.0 §6 — the same argument one family further out. The four reading routes this
+ * version adds and the concept table are reading surfaces, whose root is the
+ * article wrapper ; they carry no play root and no timeline root.
+ * The audit — clipping, contrast, tap targets, horizontal overflow — is
+ * surface-agnostic and applies to them unchanged, and it matters most on the
+ * set-down one, where the reader has the least to spend on a page that fights them.
+ */
+const READING_ROOT = ".prose-page";
+const rootFor = (name) =>
+  name.startsWith("timeline-") ? TIMELINE_ROOT : name.startsWith("reading-") ? READING_ROOT : PLAY_ROOT;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* ============================ the in-page audit ============================ */
@@ -342,11 +355,7 @@ async function freshPlay(page) {
   await page.waitForTimeout(260);
   // The orchestrator writes a prologue run at mount, so a plain clear races it.
   // Clear, reload, and then step through the resume gate if one still appears.
-  await page.evaluate(() => {
-    try {
-      for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:play")) localStorage.removeItem(k);
-    } catch {}
-  });
+  await preserveThenClear(page, ["tgtl:play"]);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(320);
   const gate = page.locator(".sim-play-gate, .play-gate");
@@ -430,11 +439,7 @@ async function freshAt(page, route, clearSim = true) {
   await page.goto(BASE + route, { waitUntil: "domcontentloaded" });
   await sleep(280);
   if (clearSim)
-    await page.evaluate(() => {
-      try {
-        for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:sim2") || k.startsWith("tgtl:play")) localStorage.removeItem(k);
-      } catch {}
-    });
+    await preserveThenClear(page, ["tgtl:sim2", "tgtl:play"]);
   await page.reload({ waitUntil: "domcontentloaded" });
   await sleep(340);
 }
@@ -522,6 +527,19 @@ SURFACES.push(
       }
     },
   },
+  // 6.0 §6 — the reading surfaces this version adds, audited at three viewports
+  // x both themes like every other surface. The set-down one is here for the
+  // same reason the sensitive timeline segment is: a page a depleted reader
+  // lands on is the last place a clipped line or a small tap target is
+  // acceptable.
+  { name: "reading-orientation", async setup(page) { await freshAt(page, "/orientation"); } },
+  { name: "reading-burnout", async setup(page) { await freshAt(page, "/situations/burnout"); } },
+  { name: "reading-breakup", async setup(page) { await freshAt(page, "/situations/breakup"); } },
+  {
+    name: "reading-getting-through-today",
+    async setup(page) { await freshAt(page, "/situations/getting-through-today"); },
+  },
+  { name: "reading-concepts", async setup(page) { await freshAt(page, "/topics/concepts"); } },
   { name: "play-door", async setup(page) { await freshAt(page, "/play"); } },
   { name: "campaign-prologue", async setup(page) { await campaignTo(page, "prologue"); } },
   { name: "campaign-hand", async setup(page) { await campaignTo(page, "hand"); } },
@@ -640,6 +658,9 @@ async function main() {
         } catch (err) {
           failures.push(`${surface.name} · ${theme} · ${vp.name}px: driver error — ${err.message}`);
         }
+        // N-306 (C-51) — whatever this walk cleared or wrote goes back before the
+        // context that held it is thrown away, including after a driver error.
+        await restorePreserved(page);
         await ctx.close();
       }
     }

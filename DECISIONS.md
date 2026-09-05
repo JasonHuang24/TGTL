@@ -1,4 +1,4 @@
-# DECISIONS.md — TGTL 5.0 (The Timeline)
+# DECISIONS.md — TGTL 6.0 (The Consolidation) · continuing the 5.0 record below
 
 The continuation of the blueprint. Every underdetermined judgment call the 5.0
 blueprint left to the executor lands here, dated, so 5.1 can audit 5.0 the way 5.0
@@ -995,6 +995,1003 @@ actions are GitHub's, not the build's.
 
 
 ---
+
+## 8. Consolidation — TGTL 6.0 (2026-09-04 →)
+
+The 6.0 record. Authority: `blueprint_TGTL_6.0.md` (in this repository, commit
+`fd9851a`), which builds the 130 rows the owner accepted in
+`records/consolidation-register.md` §8. Fable 5.1 is architect and reviewer; Opus
+subagents build in batches; Fable alone commits. Each batch below records: the rows
+it landed, what was sent back and why, the roster result, the five sensitive-page
+hashes, every C-gate's proven red, and every `INVENTION:` in the N-436 shape
+(what · doctrine · hidden definitions · ethical and interpretive risks · open
+questions · adversarial check). Findings against the blueprint itself are recorded
+here, never resolved silently. The record forms N-307 (readiness), N-309 (owner
+override), N-310 (structural findings, noted not acted on) and N-311 (the correction
+table) are opened in batch 6.
+
+### Batch 0 — contract (Fable alone)
+
+**[2026-09-04] ROSTER GREEN BEFORE ANY EDIT.** On the untouched branch (`fd9851a`):
+`npm run build` (60 pages, zero errors), `npm run typecheck` clean, `npm run
+gates:all` — static 7, Life Arc 8, sandbox 12 + invention gate, timeline 15 — all
+PASS; `bash tests/falsify-walls.sh` 9 of 9 red on plant with byte-identical restores
+(`batch-people.ts` sha256 `fa585279…`, `generated/milestones.ts` `436e1a1e…`,
+`out/timeline/index.html` `224eaf1a…`). The served half (browser gates, S-9,
+timeline screenshots) is recorded under batch 1's review.
+
+**[2026-09-04] THE FIVE HASHES, baseline = `main`.** `app/situations/depression/page.tsx`
+`7157c728…` · `a-death` `d7ce27c1…` · `grief` `2bd7b7dd…` · `being-hurt` `77f1151c…` ·
+`app/threshold/supporting-someone/page.tsx` `24526d37…`. Every batch review recomputes
+them; any difference fails the batch (blueprint §5.2).
+
+**[2026-09-04] ENVIRONMENT.** Node v22.20.0 from the 5.0 session's scratchpad
+(`…/0b89b0b3-…/scratchpad/node-v22.20.0-win-x64`, still present); a `python3` shim to
+`C:\Python310\python.exe` on `PATH` because the Windows Store `python3` stub is what
+Git Bash otherwise resolves and the falsify script calls `python3`. Both are
+session-scoped; any Node ≥ 18.18 and any Python 3 reproduce the build.
+
+**[2026-09-04] THE BLUEPRINT LIVES IN THE REPOSITORY.** Prior blueprints sit at the
+workspace root outside git; the build handoff requires this one committed on the
+branch, and the repository is the one writable folder. So `blueprint_TGTL_6.0.md` is
+at the repository root and no copy was placed beside its predecessors. Reversible by
+the owner copying it out.
+
+**[2026-09-04] BOUNDARY NOTE.** One file outside the repository was written: the
+workspace's `.claude/launch.json` (a Claude Code tooling file that already existed,
+created by an earlier seat) gained two serve configurations so the browser gates and
+the blueprint artifact could be checked in the in-app browser. No project document
+and nothing in the archive was touched; the boundary proof at Phase D will show the
+timestamp.
+
+**[2026-09-04] `KNOWN_LIMITATIONS.md` NUMBERING.** The handoff asks for a new §0
+"6.0". The 5.0 section is also §0 and its sub-numbers (0.1.1 … 0.3.4) are cited
+across the records, so the 5.0 block keeps them and is retitled "0 (carried from
+5.0)"; the new block uses lettered sub-sections (0.A …) so no existing citation
+breaks. Cosmetic; reversible.
+
+**[2026-09-04] `tests/consolidation-gates.ts` registered** with every C-gate from
+blueprint §8 reporting N/A until the batch that gives it a subject; `npm run
+gates:consolidation` joins `gates:all`. The runner prints `Gate C-N:` so the falsify
+probes can name a gate without colliding with the T suite's numbering.
+
+### Batch 1 — fix first (N-226, N-190, N-191, N-260, N-160) — built by Opus, reviewed by Fable 5.1
+
+**[2026-09-04] BATCH 0'S SERVED HALF, recorded here as promised:** on the untouched branch,
+`node tests/browser-gates.mjs` ALL BROWSER GATES PASS (gates 0, 4–9, 14), `tests/s9-ui.mjs`
+120 audits clean, `tests/timeline-screenshots.mjs` 40 captures.
+
+**What landed.** `lib/storage.ts` gains `writeVerified` (write, read back, compare) and the
+seven `SaveStatus` states with reader-facing words; `lib/sim/persist.ts` and
+`lib/engine/persist.ts` return the status of every save, quarantine an unreadable original
+under `<key>.quarantine` instead of overwriting it, and clear the quarantines on erase;
+`STORAGE_KEYS` is unchanged at thirteen (C-1 asserts it). The campaign and arc save notices
+render the returned status; the arc's "Keep this one and start another" no longer clears a
+run whose keep-write did not read back — a live data-loss path, closed. The explain drawer
+renders an action's `failureModes` beside its tied recovery route, guarded on both (C-2);
+the action card renders `switchingCost` beside the opportunity note (C-3). The hotline
+fixture stores `coverage: Nation[]` and DERIVES its region label (C-4); the abuse group is
+five one-nation lines (England, Scotland, Wales, Northern Ireland, Ireland), each sourced
+to a page fetched in this batch; Ireland's 999 and Canada's 988 and 911 — the two checks
+§7 recorded as not separately done — are now sourced (retrievals 8–11). The map's lens
+note says the sex lens is unresearched, not a null finding (C-5).
+
+**Sent back:** nothing. The batch passed review as built; three reviewer amendments below.
+
+**Reviewer amendments (recorded, not delegated).** (1) The batch found GOV.UK and
+GOV.WALES disagreeing on the Welsh helpline digit and chose the Welsh Government's; I
+re-fetched both, confirmed the disagreement is on the pages, and fetched a third official
+source — Welsh Women's Aid, which operates the line — which agrees with GOV.WALES
+(`records/research-pipeline.md`, retrieval 13). Three against one; **0808 80 10 800**
+stands. (2) `hotline-988`'s label is the US service's name while its coverage includes
+Canada; a `note` naming Canada's 9-8-8 Suicide Crisis Helpline was added, sourced to
+retrieval 10. (3) The fixture's `note` field turned out never to render; `HotlineList`
+now renders it, reusing the existing region class — no new CSS.
+
+**Findings, recorded rather than fixed.** (a) The seventy-two failure-mode records
+reach readers less often than the register implies: a 48-season walk across six runs
+landed only *event* failures, and `SimEvent` carries no `failureModes` field. Adding one
+is new content and a schema delta outside blueprint §7.1, so it was not done; a candidate
+for the register, not for this version. (b) C-2's rendered half is not asserted — the
+drawer is client-only and no walk reaches an action failure deterministically; the source
+half plus engine-level evidence stands in, and the limitation is named in the gate.
+(c) `content/safety-resources.json` (imported by nothing) was brought into line rather than
+deleted, because three records name it by path; the owner may still delete it. (d) The
+register's counts were off by inspection: 72 records carry 178 failure-mode lines; 43
+campaign actions carry a switching cost (the register said 42 and 47 in two places).
+(e) `HOTLINE_LAST_VERIFIED` was not moved: it already reads 2026-09-04 and this batch
+re-checked twelve pages, not every record; the pipeline section carries the distinction.
+(f) `loadArcSave` reports `blocked` for a save that is simply absent — the honest word
+would be an eighth state that the blueprint does not have; left, noted for 6.1.
+
+**Proven red, then green (record gates).** C-1: `tests/save-status-harness.ts` run against
+the pre-N-226 code failed 16 of 18 cases ("no status on the returned value"); with
+`| "migrated"` deleted the gate named the missing state and the count of six; green after.
+C-3: with `data-sim-switching-cost` renamed, the browser gate reported "31 action cards
+rendered and NOT ONE [data-sim-switching-cost] among them"; green after with 8 of 31
+cards rendering one. C-2, C-4 (two plants each) and C-5 are probes in
+`tests/falsify-walls.sh`, red on plant, restores byte-identical.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7,
+Life Arc 8, sandbox 12 + invention gate, timeline 15, C suite 5 substantive + 46 N/A —
+all PASS; falsify 14 of 14 (3 sandbox, 6 timeline, 5 consolidation) red on plant, all
+restores byte-identical; browser gates ALL PASS incl. the new C-3; S-9 120 audits clean.
+`gates:balance`/`gates:pileup` not run (no engine or pool file touched). Browser walk:
+`/threshold` renders the five nation lines with derived labels; `/map` under the Female
+lens renders the new note and identical stage content.
+
+**The five hashes:** unchanged from batch 0 (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`,
+`77f1151c…`, `24526d37…`).
+
+### Batch 2 — safety, group J (+ group I's two rules) — built by Opus, reviewed by Fable 5.1
+
+**Interruption, recorded.** The build agent was cut off mid-batch by an expired login (an
+API authentication failure, not a fault in the work) while writing the C-7..C-10 probes.
+It was resumed with its context intact; the working tree was checked before the resume and
+nothing was redone.
+
+**What landed.** `/threshold#privacy` no longer opens with the incognito reassurance: it
+says what private browsing does and does not hide (N-262). Two Escape presses inside
+nine hundred milliseconds run the same navigation as "Leave this page" on every route the
+inventory marks set-down — derived, never hand-listed; attached only while set-down; the
+note says so where the visible control renders (N-263, C-6). The set-down notice says the
+reader's own preference was not changed (N-265). The footer and `/methodology` name what is
+stored and what this site cannot see (N-266). `SAFETY_SOURCES.md` stands at the repository
+root: fifteen coverage entries, the maintenance rule, the known gaps, referenced from the
+fixture's header (N-267, C-7). The doctrine that a favourable reading never overrides a
+safety route is written beside the exclusion lists; guidance gains the board's crisis gate
+above its ranking, from the same `CRISIS_CHIPS` (N-268, C-8). The set-down evidence rule is
+written where intensity is decided and published on `/methodology`, with the clause that
+the five reviewed pages wait (N-272, C-9). "Keep the referent unnamed" is authoring law in
+`content/sim/AUTHORING.md` (N-273, C-10). The owner's three safety charters are published
+as checklists under "What these instruments must never do" (N-430). The presentation walls
+for a graphical layer that does not exist are written beside the lists and on
+`/methodology` (N-253). Nothing was built for N-256; the rejection tests are blueprint §10.
+
+**A finding the batch's own gate made, before any edit:** `components/Board.tsx` computed
+its reading eleven lines before rendering the crisis chips. The shape was right on the page
+and wrong in the source. C-8's first run named it; the crisis `<aside>` is now declared
+above `computeReading` and rendered unchanged. The rendered board is byte-for-byte what it
+was.
+
+**Sent back:** nothing. One reviewer amendment: the set-down notice read "This page … This
+page"; tightened to one sentence with the same content.
+
+**Gap reports and findings, recorded.** (a) `/threshold/supporting-someone` has never
+imported `SetDownNotice`, so N-265's sentence does not reach it; adding it is an edit to a
+frozen page and waits for the review — the register's parked-for-review list gains it
+(`KNOWN_LIMITATIONS.md` §0.D). (b) The browser suite had no quick-exit assertion at all
+before this batch; C-6's is written from scratch and fulfils the exit request locally so
+the navigation completes without an off-origin load. (c) C-6's browser record id is `106`
+(C-N + 100) because id 6 exists; convention noted. (d) Blueprint §3.10 says "the ten risks
+of a life parse"; the brief lists eleven, all published — a finding against the blueprint's
+prose. (e) The brief's fourth list, §6B "Privacy and sensitivity", is open design questions,
+not prohibitions, and was not rendered as a checklist; its wording is in the batch report.
+(f) `SAFETY_SOURCES.md` transcribes the batch-1 and publish-pass retrievals; it does not
+re-verify, and says so twice.
+
+**The owner's wording, as the walls' origin (N-430; N-410 follows in batch 6).**
+`MASTER_PROJECT_BRIEF.md` §4A "Privacy and psychological risk" (L923–937): *publicly
+labeling users without consent · diagnosing physical or mental conditions · assigning
+humiliating appearance scores · treating disability as tragedy by default · encouraging
+fatalism · inviting competitive claims about who suffered more · turning trauma into
+entertainment · using a difficulty tier to excuse harmful behavior · treating subjective
+pain as invalid because external conditions look favorable.* "Attribute ethics"
+(L5488–5501): *attributes are not human worth · low scores are not moral failures · high
+scores are not proof of merit · ratings should not define fixed potential · unknown should
+remain unknown · the profile should not diagnose · the system should not encourage eugenic
+interpretation · appearance and intelligence require especially careful treatment · user
+attributes should not become public leaderboards by default · children should not be boxed
+into permanent identities by early measurements · environment and support should remain
+visible · no one attribute should determine the recommended life path.* §6B "Risks"
+(L8736–8748, eleven): *reducing a life to measurable output · treating prestige as the
+primary achievement · scoring circumstances as moral success or failure · ignoring unpaid
+care and ordinary love · turning tragedy into entertainment · encouraging obsessive
+comparison · overstating causal attribution · presenting a constructed biography as
+historical fact · generating regret through simplistic counterfactuals · assuming everyone
+shares the same win condition · implying that a short life cannot be meaningful.*
+
+**Proven red, then green.** C-6 (record): with `/triage` omitted from the handler, the
+browser gate reported "/triage: two Escape presses did not leave the page"; green after on
+all seven set-down routes, and the gesture does not fire on `/topics`. C-7, C-8 (two
+plants: guidance ranking hoisted above the gate; the board's gate given an `onClick` that
+records), C-9 (an evidence label given as a game term), C-10 (two plants: " for Diane";
+a condition named) are probes in `tests/falsify-walls.sh`, red on plant, restores
+byte-identical. C-8, C-9 and C-10 also went red on the untouched tree before the batch
+built anything — the pre-build reds are in the batch report.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 12 + invention gate, timeline 15, C suite 10 substantive + 41 N/A — all PASS; falsify 20 of 20
+(3 sandbox, 6 timeline, 11 consolidation) red on plant, all restores byte-identical; browser gates ALL
+PASS including C-6 on all seven set-down routes and not on `/topics`; S-9 120 audits clean. Browser
+walk: `/situations/grief` in the Game edition renders the notice and no game term; `/threshold`'s
+privacy list and footer render the new text; `/threshold/supporting-someone` renders the Escape
+sentence and no set-down notice (the gap above). **The five hashes:** unchanged (`7157c728…`,
+`d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+### Batch 3 — the play layer, group H (twenty-three rows) — built by Opus, reviewed by Fable 5.1
+
+**What landed.** The Lab: one draw-vary pair (`lab-the-repair`) curated to land the same, so
+the "identical choices, different luck, same result" reading renders for the first time
+(N-192, C-11); the same situation's pivot moved to its second step (N-193); every situation
+declares what the fork cannot settle, above the branches (N-225, C-22); the standing note on
+when a comparison stops being controlled (N-224); the seed curation disclosed on
+`/methodology` with both criteria (N-195, C-13). The campaign: a repeat-last-season control
+on quiet seasons committing through the one shared path, with a delta-only briefing (N-194,
+C-12); the origin's face motif in the chrome on every turn (N-204, C-14); the five-field
+response contract on every action and event option, read from the records — nothing authored
+(N-211, C-15); a pure `previewAction` and the preview pane (N-212, C-16); the standing upkeep
+option, priced in time so it is affordable at the bottom of the economy (N-213, C-17); the
+fourth door state, declared on four doors whose labels already said it (N-214, C-18); the
+living record — each season's explanation stored with the content version that produced it,
+reopened rather than recomputed (N-216, C-20) — and the drift notice, built and guarded
+(N-223); the empty queue's second sentence (N-218, C-21); the attribution disclaimer above
+the look-back's aggregate with a new S-12b (N-222); arm-then-confirm on every erase (N-227);
+the state rail on every step (N-228, C-23); the forbidden register and the colour rule
+measured as chroma (N-233, C-19); the seed sentence twice (N-234); `TryInPlay` on six reading
+routes and on no set-down route (N-235, C-24); the arc closing where it opened (N-341); every
+parse panel declaring recorded, interpreted or unknowable (N-355, C-25); four agency words on
+the acts and the early map stages (N-366).
+
+**Sent back:** nothing. One reviewer amendment: the delta briefing's band words are now the
+published `GAUGE_BAND_ORDER` rather than a copy.
+
+**Findings against the blueprint, recorded rather than resolved silently.**
+(a) §7.1 lists `ActionContract.ifItGoesBadly` as *required* while §3.9 says "no new content
+is invented" for N-211. The two cannot both hold: a required field means authoring a route
+for every option, across the frozen pool. The batch followed §3.9 — "if it goes badly" is
+DERIVED from the recovery tie the schema already requires — and §7.1's line is struck as
+erratum. (b) §7.1 places `SeasonRecord` in `lib/sim/persist.ts` and forbids a new storage
+key, which together force the records onto `SimState` (`seasonRecords?`, optional so old
+saves load); the type is declared in `content/sim/schema.ts` to avoid the import cycle and
+re-exported where §7.1 names it. Recorded as a schema delta §7.1 did not list. (c) N-223's
+premise does not exist in the trunk: `deserialize` declares a save from a different content
+version unresumable (4.0 §2.4), so the drift notice is built, guarded, and currently
+unreachable. Relaxing that migration wall is the owner's call — added to the owner-decisions
+register. (d) The register's *lands in* for N-222 names the arc's parse; the aggregate lives
+in the look-back, so the line went where the aggregate renders. (e) N-233's brief list goes
+red on four ordinary-English authored strings ("all the damage", "kill the most expensive
+first", "what actually killed it", "grind it out"); the full list governs the edition
+vocabulary and an unambiguous subset governs play-surface strings — recorded in
+`content/terminology.json` beside both lists. (f) C-23 exempts `beatsPlayed` by design
+(§5.1 keeps beats off every forward-looking surface). (g) The narrowing door state is
+declared, not derived; a derived one needs per-flag age the state does not carry.
+(h) The arc's per-save delete does not yet arm; a candidate for the register.
+
+**Fleets, before → after the upkeep option (no cap touched).** S-10: all eight assertions
+pass both times; worst season anywhere 17 → 18 affordable (14 → 15 beyond the floor);
+meaningfully different viable endings per preset rose on every preset; two priority leaders
+moved (health → rest-heavy, recognition → greedy-recognition); the small-move-only share
+stays zero. S-13: all four pass; deep-depletion seasons 783 → 758; failure-band resolutions
+292 → 278, every one still surfacing an authored tied route; the deep-depletion maximum-draw
+count 0 → 1, under the published ceiling of two. Read together: an always-affordable
+maintenance move makes the bottom slightly less punishing and the endings more varied.
+
+**Proven red, then green.** All fifteen C-gates: twelve as probes in `tests/falsify-walls.sh`
+(C-11, C-13, C-15 … C-19, C-21 … C-25), three as records — C-12 (a reversed proposal entered
+the ledger out of order; the repeat no longer walked the previous season in order), C-14 (the
+motif rendered on turn one only), C-20 (the stamp moved with the live version; the list
+recomputed instead of reading). S-12b (gate 215) red with `draw` dropped from the aggregate;
+gate 127 proves one press does not erase. The pre-build reds and the harness outputs are in
+the batch report.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 13 (S-12b joined) + invention gate, timeline 15, C suite 25 substantive + 26 N/A — all PASS;
+S-10 eight assertions and S-13 four assertions PASS (525 fleet runs; 864 adversarial seasons); falsify
+33 of 33 (3 sandbox, 6 timeline, 24 consolidation) red on plant, all restores byte-identical; browser
+gates ALL PASS including 112 (the repeat control, keyboard), 114 (the motif on every turn) and 127 (one
+press does not erase); S-9 120 audits clean. Browser walk on the quiet-season fixture: the briefing
+offers Repeat last season with a word-only delta; the house motif sits in the header; the state rail
+lists skills, capabilities, conditions, backlog, flags, people and the seed in words; the upkeep card
+carries the five contract fields and its switching cost; hovering an option fills the preview pane.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: `previewAction`, a pure read-before-commit function (N-212).** *What:* a named
+export in `lib/sim/season.ts` returning words about what an option would touch. *Doctrine:*
+§3.9 asks for the pane; a gate cannot assert the purity of an inline closure. *Hidden
+definitions:* "domains touched" = the priority labels the action's tags serve, through
+`domainsServe`; "affordable" = against the season's budget, not the remaining one, because
+§7.1's signature carries no allocation list. *Risks:* a preview is a small forecast and may
+be read as a promise — mitigated by naming areas, never outcomes, bands or weights. *Open
+questions:* whether `affordable` should reflect the remaining budget. *Adversarial check:*
+not a mode; no digit, score, network or URL; no new key or directory; planted mutation makes
+C-16 red naming the count of previews.
+
+**INVENTION: the stored season explanation and `SimState.seasonRecords` (N-216).** *What:*
+`SeasonRecord` plus three functions in persist; an optional array inside the existing save.
+*Doctrine:* §7.1 forbids a new key and names the type; the state was the only home. *Hidden
+definitions:* "the rendered explanation" = the lead line then every other line in §7.6 order,
+composed in exactly one place; "the version" = `CONTENT_VERSION`, never the run's stamp.
+*Risks:* a preserved sentence asserts a memory; lives inside the save the erase control
+clears. *Open questions:* `replay()` does not reproduce records, so a branch's prefix has no
+stored text and is marked recomputed. *Adversarial check:* S-7 unchanged and green; C-1's
+thirteen-key assertion green; old saves load; proven falsifiable twice.
+
+**INVENTION: the repeat-last-season control and the one shared commit path (N-194).**
+*What:* `repeatProposal`, `commitAllocations`, a delta panel replacing the grid on a quiet
+season. *Doctrine:* §3.4b asks for the control; nothing says what happens when a previous
+action is gone — it is dropped and named, never substituted, and the whole proposal is refused
+if it no longer fits the budget. *Hidden definitions:* "the delta" = nothing arrived and
+nothing pending, gauge movement in words against session state captured at the previous
+resolve, plus live pressures and needs; a resumed run has no delta and says so. *Risks:* a
+one-press season compresses a decision; only on quiet seasons, names what it commits, the full
+briefing one press away. *Open questions:* repeating more than one season at once — not built.
+*Adversarial check:* §7.6 order preserved and asserted (C-12); no new key; S-7 unaffected.
+
+**INVENTION: `narrowing` as a declared door meaning (N-214).** *What:* the fourth state, set
+on four doors whose authored labels already describe it. *Doctrine:* §2.3.3 adds the state;
+the dynamic form needs per-flag age §7.1 does not have. *Hidden definitions:* narrowing = the
+flag's own meaning, not elapsed time. *Risks:* a darker reading of the same fact; the note is
+descriptive, not fatalistic; no label relabelled. *Open questions:* `deferred-care` and
+`waitlist`, left as they were. *Adversarial check:* C-18 — never the open token, never a red;
+the doors gate's coverage unchanged.
+
+**INVENTION: "if it goes badly" derived from the recovery tie, and two sanctioned phrases
+(N-211).** *What:* `ifItGoesBadly()` in the doctrine's order; `NO_RECOVERY_TIE_PHRASE`,
+`NOTHING_WAITS_PHRASE`. *Doctrine:* the brief and §3.9 — nothing authored; §7.1's required
+field would have meant authoring across frozen files (erratum (a) above). *Hidden
+definitions:* the per-record `noRecoveryTie.reason` addresses the author, so the player sees
+one sanctioned phrase; where no authored tie exists the floor route renders labelled as the
+floor route and is never counted as the tie. *Risks:* the no-tie phrase must not read as
+"nothing you can do" — worded to say another person's decision is not a setback of yours.
+*Adversarial check:* S-3's tie rule untouched; 458 responses resolve to five fields (C-15).
+
+**INVENTION: arm-then-confirm as a shared control (N-227).** *What:* `ArmedButton` in
+`components/ResetButton.tsx`, applied to four erase paths. *Doctrine:* §3.9 asks for the two
+presses and the two sentences, not the mechanism's home. *Hidden definitions:* a six-second
+window, deliberately not rendered — a countdown is a digit on a play surface. *Risks:* reads
+as an obstacle to someone who wants their data gone now; the second press is immediate.
+*Open questions:* the arc's per-save delete. *Adversarial check:* S-9 green; gate 6 extended;
+gate 127 proves one press does not erase.
+
+**INVENTION: the colour rule measured as chroma, and the two-scope forbidden register
+(N-233).** *What:* C-19 resolves the tokens the band classes use and fails on a green/red
+pair where either end reaches 0.50 chroma; the register at two scopes. *Doctrine:* §3.9 says
+"no token pair encodes valence as green/red" without defining green/red; the shipped
+`--sim-poor` is a red-hued terracotta, so hue alone would fail the shipped design. *Hidden
+definitions:* the threshold and the shipped values (0.28 / 0.42 / 0.37) are printed by the
+gate. *Risks:* any numeric threshold can be gamed to 0.49; the output prints the measurement
+so drift is visible. *Open questions:* none open — it already covers the arc's band tints.
+*Adversarial check:* both halves proven red.
+
+**INVENTION: the C-suite engine harness and the quiet-season fixture.** *What:*
+`tests/consolidation-sim-harness.ts` (one spawn, eight assertions) and
+`tests/fixtures/quiet-season.json` made by `tools/make-quiet-season-fixture.ts`. *Doctrine:*
+the C suite runs under strip-types with relative specifiers only; batch 1's harness set the
+precedent; the fixture is the same honest shortcut `make-parse-fixture.ts` takes. *Hidden
+definitions:* "the worst envelope" = every gauge depleted, backlog past its third threshold,
+high-load conditions on. *Risks:* a harness is where a gate can be quietly weakened; it exits
+zero always and reports per line, so a harness that will not run yields no gate lines and the
+suite says so. *Adversarial check:* every harness-backed gate planted red through the full
+`gates:consolidation` path.
+
+### Batch 4 — the reading layer, groups A, B, D and L (thirty-seven rows) — built by Opus, reviewed by Fable 5.1
+
+**Interruption, recorded.** The build agent was stopped when the Claude Code process exited
+mid-batch; the tree was inspected before it was resumed with its context intact, and the
+static server it had relied on was restarted by it. Nothing was redone.
+
+**What landed.** `/orientation` is a real reading route again — The Human Package, seven
+headed sections, the anti-app declaration first, the "just take the risk" sentence, the
+nine-stop reading path with its skip list, no `<Term>` on the page at all (N-001..N-004,
+N-008, C-26); "What is this?" under the book pair and the stance above the doors (N-005,
+N-002); "a map with weather" on `/map` (N-009); search from a build-time index over routes,
+page headings and the twenty-four milestone pages, generated by `prebuild` (N-012, C-27).
+Triage's demand branch routed by structure (N-021); `/situations/getting-through-today`,
+set-down by intensity, six things and then stop (N-023, C-28); `/situations/burnout`, four
+pathway steps, the construct attributed to the WHO's ICD-11 page fetched on 2026-09-05 and
+carried as a researched record with no digit (N-025, C-29; N-280's callout on step four);
+`/situations/breakup` at the sensitive bar with no loss-tier term (N-026); the slow-decider
+moves and the "not solvable, only navigable" section on `/situations` (N-036, N-041, C-30);
+`PathwayStep` with its primary system, retrofitted on job-loss with the prose unchanged, plus
+the three-horizon ladder and the worked board (N-045..N-047). The concept index, ten ideas
+across six columns, every cell verified against the page it points at (N-111, C-31); twelve
+mechanism sections across the four guides, reciprocity's universality softened to "wherever
+anyone has looked for it" and labelled our judgement (N-116..N-140). Typed cross-links with a
+why-line on every one of forty-three cards (N-320, C-32); the single-home invariant on every
+topic route (N-321, C-33); system tags through `<Term>` on the seven pages with a profile
+(N-322); the small-caps marker in Game Guide only (N-326, C-34); `branch` routed through the
+map on the walkthrough (N-327); the comic-register rule with no route flagged (N-329, C-35);
+the five quest terms and their paragraph (N-358); the mentor line with its disavowal (N-434).
+
+**Sent back:** nothing. Two reviewer amendments: N-003's clause added to `WEIGHTS_INTRO` in
+`content/play/framing.ts` (the play layer was outside the batch's licence, so it deferred the
+half it could not touch); and a text-escaping artefact (`'''`) in the batch's pipeline record
+corrected.
+
+**Independent checks.** The WHO page was re-fetched by the reviewer: the syndrome sentence,
+the three dimensions and the "not a medical condition" clause are on the page as quoted. The
+four new pages were read in full for tone; the set-down page is two hundred and fifty-eight
+words with no analytical word from the published list and no instrument link above its first
+heading.
+
+**Findings, recorded rather than fixed.** (a) N-127's `/character` half was withheld: the
+row names `/character` and the brief's never-edit list named "the character sheet"; the
+unambiguous half (the daily plan) landed and the sentence for `/character` goes to batch 5,
+which owns that page. (b) N-322's tag row is on the seven pages with a system profile and not
+on the two index pages, where the union of everything says nothing — a call that could go
+the other way. (c) Heading anchors are opt-in (64 of 115 indexed headings jump; the rest land
+on the page and the result says so) because five reader pages are frozen and cannot gain
+ids — INVENTION below. (d) The routes header said twenty-seven routes while the list held
+thirty-one; corrected to thirty-six plus one stub with the arithmetic named. (e) N-047's
+worked board relabelled one row "Resources and moves" after gate 3 caught the bare word
+colliding with a new game label. (f) S-9, pointed at the reading surfaces for the first time,
+found a **live pre-existing contrast failure** on every mentor note's provenance line (4.37:1
+against the 4.5:1 floor); the batch moved the token from `--muted` to `--ink-soft`, the one
+existing-CSS change no row asked for, and the reviewer keeps it: leaving a known AA failure
+red is the worse option. (g) C-26 asserts the orientation page through the only channel game
+vocabulary uses (no `<Term>`) rather than a phrase list, because the generated set-down list
+now contains ordinary English ("resources", "the map", "priority") — the same class of
+finding batch 3 recorded for C-19. (h) C-33's first plant was a RED FLAG: a substring check
+matched the renamed attribute; the assertion now matches on the attribute boundary. The
+probe did its job on the gate.
+
+**Proven red, then green.** All ten C-gates are probes in `tests/falsify-walls.sh`, fourteen
+plants for ten gates (C-26, C-27, C-28 and C-34 twice each), every one red on its plant and
+restored byte-identical. C-31's first run failed four cells on the untouched draft; two were
+fixed with aliases the pages actually use, one by deleting a cell the page could not keep,
+one by writing the mechanism the cell claimed — the gate changed the content, not the other
+way round.
+
+**Roster (reviewer's own run, final tree):** build clean (the search index regenerated by `prebuild`);
+typecheck clean; static 7, Life Arc 8, sandbox 13, timeline 15, C suite 35 substantive + 16 N/A — all
+PASS; falsify 47 of 47 (3 sandbox, 6 timeline, 38 consolidation) red on plant, restores byte-identical;
+browser gates ALL PASS over 36 routes; S-9 150 audits clean across 25 surfaces. The `/TGTL` mount
+build's link audit found ONE root-relative escape — a plain anchor to `/topics/work#standing` on the
+people guide — routed through `next/link` by the reviewer before the commit (third amendment).
+Browser walk at 320px: `/orientation` with no game term and no digit outside its review date; triage's
+demand branch routing by structure; the set-down page with one link and no chrome; search returning a
+milestone page and jumping to a heading; the concept table as a marked scroll region.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: heading anchors are opt-in, and the index says which entries can jump (N-012).**
+*What:* the search-index generator emits a `path#slug` only where the source heading carries
+an explicit id; other headings are indexed for their words and land at the top of the page,
+and the result line says which. *Doctrine:* §3.2 asks for anchors that resolve; a universal
+"every heading has an id" rule cannot hold while five reader pages are frozen. *Hidden
+definitions:* "a heading" = a literal h2/h3 in a reader page's source; component-rendered
+headings are not indexed. *Risks:* a two-tier search that could read as some pages mattering
+less; mitigated by the result line saying what the click will do; the id set will drift
+toward pages a batch happened to touch. *Open questions:* add ids to the unanchored headings
+on the non-frozen pages so the exception is exactly the five; index the built HTML instead
+of the source. *Adversarial check:* the failure mode it replaces is an anchor that resolves
+to nothing, which C-27's second plant proves the gate catches; it cannot hide a page from
+search, only withhold the jump; it carries no number or claim.
+
+**INVENTION: `Concept.aliases` — a cell may be evidenced by a word the page actually uses
+(N-111).** *What:* an optional alias list per concept; C-31 accepts a route as owning a
+concept if its text contains the name or an alias. *Doctrine:* §8's C-31 line permits a
+listed alias; §7.1 does not list the field. *Hidden definitions:* "owns the mechanism" is
+operationalised as the rendered text containing the word on a boundary — a loose proxy in
+the permissive direction. *Risks:* aliases are the obvious way to defeat the gate; the list
+is five words across three concepts and is in the reviewed diff. *Open questions:* require
+the alias in a heading; cap the count. *Adversarial check:* the aliases were added to make
+failing cells pass, and that is the load-bearing fact — two of four failures were fixed that
+way, one by deleting the cell, one by writing the mechanism; `/threshold` was the plant
+because both "trust" and "credibility" fail there, and it went red.
+
+### Batch 5 — board, logs, guidance, position, timeline schema, history (groups C, E, F, G; thirty-one rows) — built by Opus, reviewed by Fable 5.1
+
+**What landed.** The board: the moves line, the wall-or-door procedure and the two-sided
+warning at the wall step, the scheduling-versus-horizon diagnostic at the conflict step
+(labelled our judgement), the alignment question and the behaviour-versus-values caveat at
+the want step, a borderline value on every level select that the reading treats as open,
+and "This does not fit" on the reading, honoured by striking it through and offering the
+no-reading state (N-062..N-075, N-411; C-36). The logs: copy-as-text, a read-only plain-text
+view and a print block that leave nothing on any wire, a stop condition on every upkeep
+item, the blank-state line, the pivot line, maintenance debt with its caveat (N-074,
+N-077, N-078, N-084, N-371; C-37, C-38). Guidance: the disclosure echoing objectives,
+constraints and the ruleset's horizon above the first rank, the three moves in the
+no-recommendation state, the cheapest-question line (also on triage), the reversibility rule
+and the opportunity-cost shut-off above the plans, the seven-way scorecard, rejection and
+"none of these fit" (N-080, N-088, N-089, N-094, N-095, N-408, N-072; C-39). The daily plan:
+minimum, alternative and stop on every lane, the separation from the fiction (N-077, N-091,
+N-411; C-40). The character sheet: the five layers as structure with the need-state line, a
+reference population on every band, the four composites decomposed, the scorecard, and
+N-127's attention note (N-399, N-403, N-405, N-408). Position set once and re-resolved on
+five pages, from the existing key, through a shared control and a note primitive (N-150;
+C-42). The timeline schema: graded routes with T-4 reading through the grade, and source
+timing required on every source a cultural-expectation record cites with T-9 extended
+(N-379, N-386). History: three objectives with qualitative weights and per-objective
+placements, the ruleset header above every letter, an empty top tier under autonomy badged
+insufficient evidence, the patch note as three parallel panels, the no-winner panel closing
+the board (N-170..N-176, N-093; C-41, C-43, C-44).
+
+**Sent back:** nothing. One reviewer amendment: N-078's deferred half — the saves panel's
+blank state on the play door now carries "The blank state is private, not incomplete."
+
+**Findings, recorded rather than fixed.** (a) N-080's horizon is the ruleset's, published as
+`RANKING_RULESET`, because the flow has never asked the reader for one; a reader-set horizon
+is a new enumerated input and a register candidate. (b) N-064's two-sided warning already
+lived on the board page as a callout; the step help carries a compressed twin, and the two
+are kept. (c) N-386 had to touch an existing batch file — two `timing` lines in
+`p2-cultural-expectations.json` — because the pipeline has no source override; both sources
+were stamped `contemporaneous`, the EEOC page being the one judgement call (a present-tense
+statement of a statute in force; its publication year is the statute's, not the page's).
+(d) N-172's first pass rendered the empty state on every unoccupied tier; corrected to the
+top tier alone, where the refusal means something, and C-43 asserts both directions.
+(e) Gate 10 caught a literal backspace byte the agent introduced through a shell heredoc —
+the 4.0 defect class, caught by the 4.0 guard — and the regex it had silently disarmed was
+then separately proven red. (f) Three gates found holes in themselves on their first plants
+(C-38's window, C-42's comment and same-named type, C-41's attribute boundary) and were
+fixed toward strictness. (g) The third tier objective is security, not mobility, because
+mobility reproduces autonomy's letters on four of five positions. (h) Blueprint §7.1 does not
+list `StepHelp`, `SHEET_LAYERS`, `TIER_OBJECTIVES` or `LedgerItem.stop` as schema deltas
+though §3.4 and §3.8 require them — the same class of finding as batch 3's.
+
+**Proven red, then green.** C-36 (two plants), C-38, C-39 (two), C-40, C-41, C-42 (two plus a
+recorded play-layer plant), C-43 (two plus browser 143), C-44 (two) as probes; C-37 as a
+record (a planted `fetch` caught in source and at runtime by browser 137). T-4 gains a
+second probe (a graded entry with no sentence) with the original still red; T-9 gains a
+probe on a cultural-expectation source with no timing. Gate 9's runtime walk now sets a
+position and asserts it re-resolves on every page that carries a note and reaches no URL.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 13, timeline 15, C suite 44 substantive + 7 N/A — all PASS; falsify 62 of 62 (3 sandbox, 8
+timeline, 51 consolidation) red on plant, restores byte-identical including `generated/sources.ts`;
+browser gates ALL PASS including 137 and 143; S-9 150 audits clean; 40 timeline screenshots; the
+`/TGTL` mount build's link audit finds zero escapes. Browser walk: `/history` reorders under all three
+objectives (era power S S D C F · autonomy A B C C F with the empty S badged insufficient evidence ·
+security S C D D F), the ruleset header precedes the first letter with no digit, the no-winner panel
+closes it; `/character/board` renders three help blocks, three borderline options, the crisis gate
+first, the rejection control and the moves line.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: `StepHelp` — a procedure attached to a board step (N-064, N-066, N-075,
+N-411).** *What:* an optional `help` field on a constraint step, rendered as an ordered list
+with a note, a warning and its own status label. *Doctrine:* §3.4 asks for four ordered
+questions and a two-sentence diagnostic at named steps "within the existing step shape — no
+new input". *Hidden definitions:* "ordered" is an `<ol>` enforced by the stop-rule sentence,
+not by the interface; status is per help block. *Risks:* a procedure beside a question reads
+as a checklist; mitigated by the stop-at-first-clear-answer note and by nothing being
+answerable. *Open questions:* whether the warning should live only here. *Adversarial
+check:* no input, nothing stored; every string joins the no-score lint's corpus; gates 2, 3,
+S-5 green; C-8's ordering untouched.
+
+**INVENTION: the rejection flag's three lifetimes (N-072, C-36).** *What:* board and guidance
+persist `rejected` inside their existing values; the character sheet's is session-only.
+*Doctrine:* §3.4 names the existing keys and forbids a new one; `/character` describes an
+illustrative preset, so persisting a disagreement with it would record a judgement about a
+reader who was never described. *Hidden definitions:* rejected = presentation changes, the
+fixture never does; struck and unweighted, never removed. *Risks:* the asymmetry is invisible
+to a reader. *Open questions:* session-only everywhere. *Adversarial check:* thirteen keys
+(C-1, C-36); nothing counted; erased by the site control; red on the harder plant — control
+present, rendering ignoring it.
+
+**INVENTION: `RANKING_RULESET` — the ordering in words (N-080, C-39).** *What:* a constant
+stating the horizon and the four rules `rankPlans` applies, rendered in the disclosure.
+*Doctrine:* §3.4 requires the horizon above any ranking; nothing asks the reader for one.
+*Hidden definitions:* the horizon is the ruleset's; the rules are prose about code and can
+drift. *Risks:* prose describing code is a lie waiting to happen — the file says the text is
+the bug report if they diverge; C-39 cannot assert the sentences are true of the function.
+*Open questions:* a reader-set horizon (register candidate). *Adversarial check:* no number,
+no score, nothing stored; unconditional and first; red on reorder and on a dropped marker.
+
+**INVENTION: `NoWinner` and "renders last" as the assertion (N-093, C-41).** *What:* a
+primitive and a gate requiring it after the final comparison item on a hand-listed pair of
+surfaces. *Doctrine:* §3.4 asks for the panel; "closing" is undefined. *Hidden definitions:*
+last = a byte offset after the last item marker in the export with scripts stripped; the
+surface list is authored, not derived. *Risks:* an offset check is satisfied by a hidden
+panel; the sides are authored. *Open questions:* whether `/history`'s panel compares
+archetypes or objectives — it compares the objectives. *Adversarial check:* red on an
+attribute rename; refuses a verdict phrase; requires two named sides; matches the marker
+on its boundary after a sibling attribute masked a rename.
+
+**INVENTION: the empty-tier card is top-tier-only (N-172).** *What:* the explicit empty
+state renders for S alone, badged with the objective's evidence label. *Doctrine:* §3.8 asks
+for an empty S badged insufficient evidence and says nothing about other gaps. *Hidden
+definitions:* empty per objective and per side, computed from the rendered board. *Risks:* a
+missing middle tier now says nothing. *Adversarial check:* C-43 requires it for an empty top
+tier, requires the label, forbids the card on the filled default board; browser 143 reads it
+after switching.
+
+**INVENTION: C-37 asserts "nothing the reader wrote leaves the device", not "zero requests"
+(N-074).** *What:* the runtime gate permits same-origin router prefetches and refuses any
+off-origin request, any body, any URL carrying the record's words, any same-origin request
+that is not a prefetch. *Doctrine:* §8's line says "no network request"; literally read, the
+gate is red on the framework's own prefetch timer. *Hidden definitions:* prefetch = `/_next/`
+or `?_rsc=`; the record's words = strings the test typed. *Risks:* the allowance is a shape
+an exfiltration could fit; narrowed by the body and record-text checks. *Open questions:*
+asserting on resource type. *Adversarial check:* a planted `fetch("/collect?d=…")` is caught
+verbatim; the source half refuses seven constructions.
+
+### Batch 6 — methodology, evidence and records (group K; twenty-four rows) — built by Opus, reviewed by Fable 5.1
+
+**What landed.** The known-breaks list became the disanalogy register: eleven numbered,
+anchored entries with severity, status, candidate fix and the routes that inherit each,
+the four inherited details verbatim, the graphical-layer rules folded in as entry eleven,
+seven new entries (the emotional gap, the coherence illusion, no respawn and no designer,
+compound situations, the instruments' own risks, self-generated amendments), a `ModelBreak`
+callout citing an entry by number on eleven routes, and `/methodology` framing the section
+as a page that undermines the site on purpose and refusing to resolve the trade-off
+(N-280..N-283; C-45). A retractions register published empty with its format (N-290;
+C-46). The no-silent-fix rule as data — `CorrectionEntry.pages` and a `RevisionNote` on
+every page a logged correction changed, applied to the hotline verification on `/threshold`
+(N-291; C-47). The admission test published, and `changes` required on every route with an
+honest sentence retrofitted on all thirty-six (N-296; C-48). The design-hypothesis label on
+the engine-weights section and inside guidance's disclosure (N-299). Perishable routes with
+a review date in the header on the work guide and history (N-301; C-49). Planned cards
+generated from the single what's-coming list on the topics, situations and history indexes
+(N-302; C-50). The evidence-tax line at the top of `/methodology` (N-304). The browser
+suites snapshot and restore a reader's library, proven on a seeded one (N-306; C-51). The
+two geographic rules and the nine ways "best" can differ (N-344, N-392). The conditions a
+reader attaches to their own worth, on `/character`, examined and never scored (N-410).
+`records/consolidation/OWNER-LABELS.md` (N-435). `WHATS_COMING` reordered to the owner's
+research priorities with the parked areas and the 6.1 pass as entries (N-437). The record
+rows below (N-307, N-308, N-309, N-310, N-311, N-436, N-438).
+
+**Sent back:** nothing. Reviewer amendments in the Phase D commit rather than here: the
+README half of N-434 (the batch could not edit `README.md`), and the 6.0 stamp.
+
+**Findings, recorded rather than fixed.** (a) `/play` renders no planned cards for the four
+play-area entries — the play layer was outside the batch's licence; C-50 prints the
+exemption by name and it is owner decision 0.E.56. (b) The revision note on `/threshold`
+sits with the verification paragraph, not at the top, because that page's doctrine is
+numbers first; a deliberate deviation from N-291's default. (c) The batch changed a
+published correction's summary — "the launch gate below is closed" became "the
+verification gate is closed" — because the deixis was wrong once rendered off the register
+and "the launch" is a generated set-down term. The claim, date, kind and detail are
+unchanged; the reviewer accepts it and records it here so the register's own wording change
+is not itself a silent fix. (d) `RoutePath` is an alias for `string`, so the gates rather
+than the compiler catch a dangling path — by name. (e) C-46's first plant stayed green
+because a bare attribute name also appears in Next's flight payload; the gate now asserts
+the rendered form — the third gate this version to catch itself that way.
+
+**Proven red, then green.** C-45 (two plants), C-46 (two), C-47 (two), C-48, C-49 (two),
+C-50 (two) and C-51 (two, plus browser gate 151's live seeded library) — thirteen probes,
+all red on plant, all restores byte-identical. The C suite is fifty-one substantive gates
+with none left at N/A.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 13, timeline 15, C suite 51 substantive and none at N/A — all PASS; falsify 75 of 75 (3
+sandbox, 8 timeline, 64 consolidation) red on plant, restores byte-identical; browser gates ALL PASS
+including 151; S-9 150 audits clean; the `/TGTL` mount build's link audit finds zero escapes. Browser
+walk: `/methodology` renders eleven anchored breaks, the empty retractions register, the admission
+test, the nine ways, the geography rules, the obsolescence rule and the evidence-tax line; `/topics`
+renders ten planned cards from the list; `/threshold` renders the revision note after the numbers;
+`/topics/work` renders its review date and its model-break callout.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: `ModelBreak`, and "inherits" as a two-way resolution (N-281, C-45).** *What:*
+an aside citing a numbered entry with a link to its anchor, on eleven routes. *Doctrine:*
+§3.11 asks for the callout and three placements; that every entry must be cited somewhere
+and that both directions are asserted is the build's. *Hidden definitions:* "cites" = the
+attribute in the exported HTML; "inherits" = the entry lists the route AND the route renders
+the attribute; the page's optional local line is its own words and the title is the
+register's. *Risks:* the same shape on eleven pages becomes furniture; a humility callout on
+a hard page can read as hedging. *Open questions:* requiring the local line; hiding the
+number from the reader. *Adversarial check:* no digit beyond the ordinal, no game term, on no
+set-down route; both plants red naming route and entry.
+
+**INVENTION: `RoutePath` as an alias for `string` (N-281, N-291).** *What:* a one-line
+alias. *Doctrine:* §7.1 names the type without listing it. *Hidden definitions:* not a
+literal union, so a typo is caught by the gates by name rather than by the compiler.
+*Risks:* the name promises more than it gives; the comment says so. *Open questions:* the
+literal union once routes stop moving. *Adversarial check:* C-45 and C-47 red on a dangling
+path.
+
+**INVENTION: `area: "methodology"` means "this list is the entry's only home" (N-302,
+C-50).** *What:* one member of the closed area union carries the absence of an index.
+*Doctrine:* every entry must declare an area; three belong to parts of the site with no index.
+*Hidden definitions:* for those, "renders on that index" is satisfied by the list itself, a
+weaker check. *Risks:* it could become the default for anything awkward. *Open questions:*
+an index for guidance. *Adversarial check:* both directions red.
+
+**INVENTION: C-50 publishes its own uncovered area (N-302).** *What:* the passing output
+names the four play entries it does not check. *Doctrine:* a gate covering three of four
+areas must not read as covering all. *Risks:* a printed exemption is still an exemption
+(0.E.56). *Adversarial check:* narrow, named, every other direction red.
+
+**INVENTION: `tests/lib-preserve.mjs`, and the suite proving the claim on itself (N-306,
+C-51).** *What:* a shared module both suites clear through; browser gate 151 seeds a
+library, drives the suite's own path and compares the whole `tgtl:` map. *Doctrine:* §3.11
+asks for snapshot and restore; the live assertion is more than asked. *Hidden definitions:*
+the library = every `tgtl:` key; per page, because storage is per context; byte-identical =
+the sorted map as text. *Risks:* ephemeral contexts prove the mechanism, not a real profile.
+*Open questions:* a persistent-profile run; restore on a crash. *Adversarial check:* two
+shell plants red; the live gate red if the restore returns early.
+
+**INVENTION: `PageHeader.perishablePrefix` (N-301, C-49).** *What:* an optional prefix
+beside the `perishable` object. *Doctrine:* §7.1 fixes the route field; the prefix is
+rendering. *Risks:* two pages drift. *Open questions:* derive from the route's evidence
+label. *Adversarial check:* C-49 red in both directions.
+
+### The readiness rule — what a feature must have before an agent may build it (N-307)
+
+**[2026-09-05] STANDING RULE, in force for every 6.0 brief and every brief after it.**
+Adapted from `blueprint_ChatGPTSol5-6.md` §19 (workspace root, read-only), the one place
+in the archive that names the failure this project is most exposed to and gives it a cheap
+remedy. The `INVENTION:` rule catches an invented mechanism after it is written; this
+catches it before.
+
+A feature is ready for a build agent only when all ten of these exist, in writing, before
+the agent starts:
+
+1. **An owner** — the screen, component or module it lands in, named. A feature with no home
+   produces a foreign body, this executor's known failure mode.
+2. **Its inputs** — what it reads, and from where, including "nothing".
+3. **Its outputs** — what it renders, returns or writes, including "nothing is stored".
+4. **Its empty, loading, error and unavailable states**, written, because each is a screen a
+   reader will meet and the wording of an empty state is a content decision.
+5. **What it does at three hundred and twenty pixels**, and when the frame is set down.
+6. **Its accessibility behaviour** — keyboard path, focus order, what a screen reader is told,
+   contrast, tap targets. S-9 is the check; the behaviour is the specification.
+7. **Its content status** — illustrative, our judgement, researched, or a design hypothesis
+   for an ordering — chosen before the content is written.
+8. **Its source requirements** — whether it may carry a digit at all, and from which fetched
+   page. A figure from a prototype is a claim to re-source.
+9. **Its acceptance criteria, and the plant that proves them.** A gate is not a gate until it
+   has been shown to fail.
+10. **Its explicit exclusions** — what it is not allowed to become.
+
+And one condition over the ten: **no unresolved semantic conflict.** Where two governing
+documents disagree, the disagreement is resolved and recorded before the build, never
+silently by whoever writes the code. (The register row calls these ten; the source lists
+ten conditions and the conflict clause, which is why it is written as ten and a condition.)
+
+**If any is missing, the agent writes a short gap report naming what it would have had to
+invent, builds the rest, and stops there.** It does not invent product meaning to fill the
+hole. Every 6.0 brief carried this sentence, and the gap reports the batches produced are
+recorded batch by batch above.
+
+### When an owner instruction supersedes the blueprint (N-309)
+
+**[2026-09-05] A STANDING FORM.** A blueprint that quietly loses an argument cannot be
+audited afterwards. When the owner overrules it, the superseded rule stays visible with the
+reason, in this shape:
+
+> **OWNER OVERRIDE — [date].** *What the governing document said:* [the rule, by document
+> and section]. *What the owner instructed:* [the instruction, in the owner's words where
+> they exist]. *Why:* [the owner's reason where given; "not given" where not — an override
+> owes no justification and the record must not invent one]. *What it supersedes, and what
+> it does not.* *What would reverse it.*
+
+It is deliberately not the `INVENTION:` shape: an invention is the build's decision and owes
+an adversarial check; an override is the owner's and owes only an accurate record.
+
+**The overrides in force for 6.0.**
+
+> **OWNER OVERRIDE — 2026-09-04.** *Said:* the consolidation handoff §5 left the Phase D
+> merge rule as a placeholder (merge when green, or show the PR first). *Instructed:* merge
+> when green. *Why:* not given. *Scope:* the Phase D merge only; never force-push and never
+> rewrite published history still stand. *Reverses on:* the owner asking to see the PR.
+
+> **OWNER OVERRIDE — 2026-09-04.** *Said:* the handoff assumed the prototype folders would
+> move to an archive location. *Instructed:* the archive stays in the workspace root. *Why:*
+> not given. *Scope:* location only; the folders remain read-only input, and the boundary
+> proof covers the repository and the root documents and says so. *Reverses on:* the owner
+> naming a destination.
+
+> **OWNER OVERRIDE — 2026-09-04.** *Said:* `blueprint_TGTL_5.0.md` §12.7 and the 5.0
+> handoff assumed `ultracode` for a build of this size. *Instructed:* run without it, with
+> Opus subagents and Fable reviewing. *Why:* it fans out Fable subagents and burns tokens.
+> *Scope:* this track's executor configuration; the review discipline is the architect's
+> batch reviews and the pre-merge self-review, and the blueprint says on its front page that
+> it was not adversarially audited by workflow. *Reverses on:* the owner's word.
+
+> **OWNER OVERRIDE — 2026-09-04.** *Said:* the register §3 offered two triage routes and
+> left every architect's call open to be overruled. *Instructed:* the calls stand on every
+> row; build the recommended scope; merge when green. *Why:* not given. *Scope:* the calls;
+> the 130-row scope follows from them. *Reverses on:* any row the owner names.
+
+**Not an owner override, recorded so the distinction stays sharp:** the scope moved from
+147 rows to 130 while the blueprint was written. That was the architect's correction of the
+register's §6 estimate, not an owner instruction; it is a finding against the register, in
+the Phase B record, not here.
+
+### Structural findings — noted, not acted on (N-310)
+
+**[2026-09-05]** The pressure this architecture took and held: things found during the
+consolidation that a rebuild would have been the wrong answer to. A finding nobody acted on
+leaves no diff, which is why this half of a record usually goes missing.
+
+- **Content pressure surfaced no wrong-or-homeless-content error.** A hundred and thirty
+  rows landed in every group and every one found an existing module: no new directory, no
+  new storage key, no new stylesheet, no new component family. The route inventory as the
+  single source, the terminology map as the only route for vocabulary, and content living
+  in `content/` held under a harvest none of them were designed for.
+- **The two legacy fixtures, kept.** `content/route-inventory.json` and
+  `content/safety-resources.json` are imported by nothing; the second was brought into line
+  in batch 1 because records name it by path. Owner decision 0.E.55.
+- **Failure-mode records reach readers less often than the register implied** (batch 3):
+  events carry no `failureModes` field and adding one is a schema delta outside §7.1.
+- **An eighth save status is missing and was not invented** (`loadArcSave` reports
+  `blocked` for an absent save).
+- **Two lints go red on ordinary English, and the fix was scope rather than tolerance:** the
+  forbidden register at two scopes; C-26 asserting through `<Term>` rather than a phrase
+  list.
+- **The system-tag row is on the seven pages with a profile and not on the two indexes.**
+- **The narrowing door state is declared, not derived.**
+- **Heading anchors are opt-in,** because five pages are frozen.
+- **Batch 6's own:** `/play` renders no planned cards (0.E.56); the revision note on
+  `/threshold` sits with the verification paragraph, not at the top; the disanalogy register
+  and the corrections register stay two lists on one page, one about the frame and one about
+  the facts; N-434's README half is written in the Phase D commit, not by the batch.
+
+### The seven-defect correction table (N-311)
+
+**[2026-09-05] A FORM, filled with what this version actually hit** — finding → correction
+→ the evidence that proves it, one row each, the evidence being something that was run.
+
+| # | Finding | Correction | Evidence |
+|---|---|---|---|
+| 1 | A failed save reported success: `writeString` returned nothing and both save notices said "Saved to this device." whatever the write did | `writeVerified` writes, reads back, compares; seven states with reader-facing words; the notices render the returned status | The harness against the pre-N-226 code failed sixteen of eighteen cases; with `migrated` deleted the gate named the missing state; green after (C-1) |
+| 2 | A live data-loss path: the arc's "Keep this one and start another" cleared a run whose keep-write had not read back | The clear is conditional on the returned status; an unverifiable save is quarantined under `<key>.quarantine`, never overwritten; the erase control clears quarantines | C-1's harness; `ALL_STORAGE_KEYS` derives the quarantine keys; thirteen keys unchanged |
+| 3 | Seventy-two failure-mode records and forty-three switching costs authored and never rendered | The explain drawer renders failure modes beside the tied recovery route; the card renders the switching cost | C-2 red with the tie removed; C-3 red with "31 action cards rendered and NOT ONE" |
+| 4 | An England-only abuse helpline labelled United Kingdom on the highest-stakes page | `coverage: Nation[]` stored and the label derived; five one-nation lines, each sourced to a fetched page | C-4 red twice: a UK-labelled England-only record; an abuse line widened to another nation's service |
+| 5 | The board computed its reading before rendering the crisis chips; the page looked right and the source was wrong | The crisis aside declared above `computeReading`; guidance gained the same gate above its ranking | C-8's first run named it before any edit; the probe reports the two line numbers |
+| 6 | A literal backspace byte from a shell heredoc silently disarmed a regex — the 4.0 defect class, in 6.0 | The byte removed; the regex separately proven red; briefs say to use the file tools | Gate 10 caught it — the 4.0 guard doing what it was written for |
+| 7 | A live WCAG AA contrast failure on every mentor note's provenance line, unseen because S-9 had never covered the reading surfaces | `--muted` → `--ink-soft` | S-9 over twenty-five reading surfaces, a hundred and fifty audits, clean after |
+
+**Three gates catching themselves, kept beside them:** C-33's first plant was a RED FLAG
+(a substring matched the renamed attribute; now matched on the boundary); C-31's first run
+failed four concept cells on the draft and the content changed, not the gate; C-46's first
+plant stayed green because a bare attribute name also sits in Next's flight payload, so the
+gate now asserts the rendered form.
+
+### The no-worth-score wall, in the owner's own words (N-410)
+
+**[2026-09-05] RECORDED VERBATIM** from `MASTER_PROJECT_BRIEF.md`, "Self-worth criteria",
+lines 3969–3993:
+
+> **L3971:** "Self-worth requires special care."
+> **L3973–3987:** "People may condition worth on:" — Approval · Attractiveness · Wealth ·
+> Productivity · Achievement · Intelligence · Strength · Relationship status · Parenthood ·
+> Moral purity · Religious standing · Social usefulness · Independence
+> **L3989:** "A conditional self-worth system can create motivation, but it can also produce
+> shame, fragility, perfectionism, comparison, and crisis when the condition is lost."
+> **L3991:** "The guide may analyze the person's criteria for feeling worthy, but it should
+> not produce an objective human-worth score."
+> **L3993:** "A person's inherent moral status and dignity should not be reduced to
+> attributes, achievements, wealth, attractiveness, or productivity."
+
+**What this changes.** The prohibition was enforced everywhere; the permission in the same
+sentence had never been used. `/character` now carries the content the wording permits —
+the thirteen conditions as the owner lists them, what a conditional system charges, and two
+questions (whose conditions these are, and whether the reader would apply them to anyone
+else). It asks nothing, records nothing, produces no reading. The wall is unchanged.
+
+### The `INVENTION:` entry shape (N-436)
+
+**[2026-09-05] THE FORM, extended to the owner's own capture template.** The 4.0 rule
+stands: any mechanism beyond the blueprint's letter gets an entry with its adversarial
+check before it ships. 6.0 adds three fields from the brief's §15 brainstorming practice,
+whose governing sentence is *keep user decisions, inferred implications, and unsettled
+possibilities visibly distinct*. Every entry carries, in this order: **What** (what was
+built, named so it can be found) · **Doctrine** (which sentence asked for it, and where the
+sentence stops) · **Hidden definitions** (the words that had to be given a meaning nobody
+wrote down) · **Ethical and interpretive risks** (how a reader could be hurt or misled, with
+the mitigation or the admission there is none) · **Open questions** (what was left
+unsettled, so the next version inherits the question) · **Adversarial check** (the walls it
+was tested against, and the plant that turns its gate red). The forty-odd entries in this
+section from batch 3 onward are in this shape.
+
+### Phase D — verification, the pull request, the merge and the live site (Fable alone)
+
+**[2026-09-05] THE CLEAN REBUILD.** `rm -rf .next out && npm ci && npm run build`, then the
+whole roster, run by the reviewer on the final tree of batch 6 plus the Phase D amendments
+below. Log kept in the session scratchpad (`phaseD-roster.log`).
+
+**Roster (reviewer's own run, clean rebuild, final tree):** `npm ci` and build clean (the search
+index regenerated by `prebuild`: 180 entries — 35 routes, 121 headings, 24 milestone pages);
+typecheck clean; static 7, Life Arc 8, sandbox 13, timeline 15, C suite 51 substantive and none
+at N/A — all PASS; S-10 balance 8 of 8 over 525 fleet runs; S-13 pile-up 4 of 4 over 864
+adversarial seasons; falsify 75 of 75 (3 sandbox, 8 timeline, 64 consolidation) red on plant and
+restored byte-identical; browser gates ALL PASS (gates 0, 3–9, 14, 106, 112, 114, 127, 137, 143,
+151 — 36 routes × both editions console-clean, 320px on every route and the allocate screen,
+local-only at runtime with position included); S-9 150 audits clean over 25 surfaces; 40 timeline
+screenshots captured; the export carries "TGTL 6.0 preview" and `noindex` on every page checked;
+the `/TGTL` mount build's link audit finds zero escapes, `.nojekyll` present, `/roadmap`
+refreshing to `/TGTL/map/`; root rebuild clean.
+
+**The Phase D amendments (reviewer, not an Opus batch).** The footer stamp is now
+"TGTL 6.0 preview — The Consolidation" (0.E.49; `components/SiteChrome.tsx`), and
+`KNOWN_LIMITATIONS.md` line ~241 says so. `package.json` is `tgtl-6.0` 6.0.0 and the
+lockfile's root entry, which still said `tgtl-claude-4.0` 4.0.0 through three versions, now
+matches it — a name in a file nothing reads, corrected because the boundary proof and the
+README both cite the package name. `README.md` is rewritten for 6.0 (the consolidation
+paragraph, the owner's mentor line from N-434, the preview status as of 2026-09-05, the
+harvest by area, thirty-six routes and one stub, `gates:consolidation`, seventy-five probes,
+S-9 over twenty-five surfaces, the library-preserving suites, `content:search`,
+`SAFETY_SOURCES.md` in the project shape). `DECISIONS.md` and `KNOWN_LIMITATIONS.md` carry
+6.0 titles with 5.0's blocks retitled "carried from 5.0", not removed.
+
+**The boundary proof, reproduced** (`node --experimental-strip-types
+tools/timeline-boundary-proof.mjs` → `records/boundary-proof.md`). It covers the repository's
+sibling folders and the workspace's root documents, nothing else. Fifteen files outside the
+build folder carry an mtime later than the proof's baseline, each listed with its hash.
+Eleven are expected: `.claude/launch.json` (the two preview entries, recorded in batch 0),
+the two 6.0 handoff prompts the owner wrote, and the 5.0 documents already listed by the
+5.0 proof. **Nine are in the read-only archive and need saying plainly:** seven under
+`gol-chatgptsol5-6/` (`.vinext/dev/lock.json`, four `.wrangler/registry/` entries and the
+miniflare cache's `metadata.sqlite` and `-shm`) and `gol-opus5/grep.exe.stackdump`, plus one
+more registry file — all with mtimes between 19:15 and 19:21 on 2026-09-04 (local). Those
+are a dev server's own state files and a crashed `grep` from Git Bash, not source; the
+window falls inside Phase A's register work (the register commit `d601731` is 19:46 that
+evening, the blueprint `fd9851a` 20:06), when the sweep agents ran the Sol prototype to
+screenshot it. No commit on `consolidation/6.0` touches the archive and no Phase C agent was
+briefed with it writable. The files are left exactly as found: deleting them would itself be
+a write into the archive. Recorded here and in the report; the owner may clear the tool
+state or leave it.
+
+**The persona walks (in-app browser against the fresh `out/` on port 4322; both editions,
+both themes, 320px).**
+- *Thirty-four, no degree, unpartnered, renting.* `/map/credential-decision` renders the
+  position control and no floor; setting "no floor" once re-resolves the note on
+  `/topics/work` ("Without a floor beneath a serious failure, the gap is the whole problem…")
+  with nothing in the URL. The page's only "behind" is "the aim behind it". Try-in-Play
+  present; the no-winner block present; no verdict word on either page.
+- *A parent of a two-year-old not yet talking.* The timeline's age-two year shows the care
+  note in the open, the screening line and "early intervention", no percentage and no
+  "should". `/topics/health` hands off to `/situations/depression` without naming a
+  diagnosis, and its lens switch is marked.
+- *Sixty-eight, recently widowed.* `/situations/grief` renders zero `<Term>` marks, no tag
+  row, no Try-in-Play, Help-now in the header, no Play or Timeline in the nav.
+  `/timeline/ms-death-of-a-spouse-later-life` links both real pages, carries no percentage
+  and no verdict. `/situations/a-death` is byte-identical to `main`.
+- *Someone with nothing left tonight.* `/threshold` links "there is a short page for that"
+  in the intro above the Emergency section; one click lands on
+  `/situations/getting-through-today` (257 words, six things, "And then stop … That is the
+  whole page. Nothing else on this site is for you right now."), whose nav carries no Play
+  or Timeline entry and whose text carries no game word. At 320px in Game Guide and dark:
+  no horizontal scroll, still zero terms.
+- `/orientation`, `/topics/concepts`, `/situations/burnout` at 320px, Game Guide, dark:
+  no horizontal scroll; the concept table scrolls in its own container; the burnout page
+  names the WHO and "occupational phenomenon" and renders no numeral.
+
+**Enforcement code read for the eight gates the rubric names** (`tests/consolidation-gates.ts`):
+C-1 (the seven states counted and named, thirteen keys, quarantine keys derived for the erase
+control, the save UI reading the returned status, then the harness); C-4 (every rendered
+region label derived from coverage, "United Kingdom" only when all four nations are covered,
+one abuse line per nation and Ireland, each covering that nation alone); C-6 (the Escape
+handler inside an effect with cleanup, gated on the set-down predicate, re-run on route
+change, sharing a `location.replace` with the visible control); C-10 (the caring-duty floor
+derived from the objects of care, then every rendered string checked against the condition
+list and every companion referent form); C-15 (the five names fixed in `CONTRACT_FIELD_NAMES`,
+every `data-sim-option` block wrapping a `ResponseContract`); C-16 (no storage import, no
+draw call inside `previewAction`, the pane a live region); C-24 (every set-down route walked
+in the export for the marker and any `/play` href, and the six named routes for its
+presence); C-34 (the marker gated on the same expression as the game label, no page in the
+export carrying it, no set-down route declaring tags). Each asserts structure or behaviour,
+not the presence of a string; each has a proven red in its batch entry.
+
+**Sources re-fetched for this review** (2026-09-05): WHO burn-out (the definition sentence
+and "not classified as a medical condition", eighteen and five words); 988lifeline.org
+("The 988 Lifeline is available 24/7/365."); 988.ca ("24/7/365 Crisis Support");
+samaritans.org (116 123, free, any time); gov.wales Live Fear Free ("Call: 0808 80 10 800",
+24 hours). Each agrees with `content/hotlines.ts` and `SAFETY_SOURCES.md`.
+
+**The five hashes on the tree that ships,** against `main`: unchanged —
+`app/situations/depression/page.tsx` `7157c728…`, `a-death` `d7ce27c1…`, `grief`
+`2bd7b7dd…`, `being-hurt` `77f1151c…`, `app/threshold/supporting-someone/page.tsx`
+`24526d37…`.
+
+**The self-review against the pre-registered rubric (blueprint §10):**
+
+| criterion (weight) | score /10 | the evidence, and what holds the score down |
+|---|---|---|
+| Sensitive-page and set-down trust (3) | 9 | The five hashes match `main` after every batch and on the clean rebuild. C-24 and C-34 walk every set-down route in the export: no Try-in-Play marker, no `/play` link, no tag row, no `term--marked`. The fourth persona reaches `/situations/getting-through-today` from Help-now in one click and is told, in the page's own words, "And then stop … That is the whole page." Held down: `/threshold/supporting-someone` has never imported the set-down notice and is frozen until its review (0.E.50). |
+| Honesty of every number and attribution (3) | 9 | Fourteen retrievals in `records/research-pipeline.md`; no digit on any 6.0 page was typed from memory. Re-fetched on 2026-09-05 for this review: the WHO burn-out page (the definition sentence and "not classified as a medical condition"), 988 Lifeline, 9-8-8 Canada, Samaritans 116 123, Live Fear Free 0808 80 10 800 — each agrees with the fixture. The burnout page renders no numeral at all. Held down: the register's own counts for the failure modes and switching costs were wrong by inspection and had to be recounted from the tree. |
+| Landed in the trunk's architecture, not as a foreign subsystem (2) | 9 | Every row reuses an existing key, component, schema or content module; `STORAGE_KEYS` is unchanged at thirteen; the position control writes the existing `credentialPosition` key; the search index is a build-time artefact of the routes and milestones already declared. Held down: the two schema findings — `SeasonRecord` on `SimState` and `ifItGoesBadly` derived from the recovery tie — are records of the blueprint bending, not of the trunk bending, but they are bends. |
+| Descriptive-never-normative and no-worth-score, in words and in colour (2) | 9 | The tier board's three objectives with an empty top tier under autonomy; conditional self-worth examined and never scored; the position note is a sentence and never a rank; the colour rule is measured as chroma; the credential page's only "behind" is "the aim behind it". Held down: the guidance ranking still ranks, under its disclosure, and a reader-set horizon is an open decision (0.E.54). |
+| Presentation craft — smooth and fun (2) | 7 | The season loop now shows the five-field contract, a pure preview in an aria-live pane, the state rail, a standing upkeep option and repeat-last-season; the erase controls arm then confirm. Held down: no reader other than the reviewer has used the loop; "fun" is the owner's standard and has been measured here by one person walking it. |
+| First-contact clarity — entrance, orientation, search (1) | 8 | `/orientation` is a real page with nine stops and a skip list; search reaches page headings and every milestone page. Held down: the search's heading coverage is opt-in (sixty-four of a hundred and fifteen anchors jump; 0.E.53). |
+| Navigation and integration — typed links, concept index, position, try-in-play (1) | 8 | Typed links with a why-line; the concept index over four guides; position re-resolving on five pages; Try-in-Play on the six routes the row names. Held down: `/play` renders no planned cards (0.E.56). |
+| Readability of the new pages at 320px (1) | 7 | Every new route measured 320 wide with no horizontal scroll, in both editions and both themes; the concept table scrolls inside its own container. Held down: at 320px the help-now page's link to the short page sits below the whole intro, above the Emergency section — one click, but a long thumb. |
+| Technical smoothness and accessibility (1.5) | 8 | S-9's 150 audits green on 25 surfaces; the preview pane is a live region; the double-Escape handler is derived from the route inventory and shares its navigation with the visible control (C-6). Held down: the Life Arc's per-save delete does not arm (0.E.52); the drift notice is built and unreachable (0.E.51). |
+| **Weighted** | **8.4 / 10** | (9·3 + 9·3 + 9·2 + 9·2 + 7·2 + 8 + 8 + 7 + 8·1.5) / 16.5 |
+
+**Verdict:** green on the roster; the walls hold; every human gate open; **merge under the
+owner's rule.** The report recommends an independent review of the 6.0 build alongside the
+pending 4.0 one (0.E.48).
 
 # The 2.0 / 3.0 / 4.0 record, carried in full
 

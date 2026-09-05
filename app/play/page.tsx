@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PlayDoor } from "@/components/sim/PlayDoor";
+import { ModelBreak } from "@/components/primitives";
 
 export const metadata: Metadata = {
   title: "The Playthrough",
@@ -56,6 +57,15 @@ export default function PlayDoorPage() {
       </div>
 
       <PlayDoor />
+
+      {/* N-281, N-253 (§3.11, C-45) — the presentation walls for a scene layer are
+          now entry eleven of the disanalogy register rather than a hand-written
+          section beside it, and this is the door a scene would ever be behind. The
+          citation is the whole content: the rules live in one maintained place. */}
+      <ModelBreak n={11}>
+        Nothing here is drawn, and the rules a picture would have to inherit were written before
+        there was a picture to argue with.
+      </ModelBreak>
     </div>
   );
 }

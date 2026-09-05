@@ -235,6 +235,41 @@ export const SOURCE_KIND_LABEL: Record<SourceKind, string> = {
  * the record claims. The compiler counts the words; T-11 re-checks; a separate
  * verifier agent re-fetched the URL and confirmed the excerpt appears (§4.4).
  */
+/**
+ * N-386 (6.0 §3.7, §7.1) — WHEN THE SOURCE WAS SPEAKING.
+ *
+ * `contemporaneous` — the source records the thing at the time it was true: a
+ *   rule as the body that administers it currently states it, a survey run in
+ *   the period it describes, a document written then.
+ * `retrospective` — the source is looking back. A memoir, an oral history, a
+ *   survey asking people what they remember expecting, an essay about how
+ *   things used to be.
+ *
+ * WHY THIS FIELD EXISTS AND WHERE IT IS REQUIRED. The compiler requires it on
+ * every source cited by a `cultural-expectation` record and nowhere else,
+ * because that is the channel where the failure actually happens: nostalgia is
+ * the primary source most likely to be cited about what people used to expect,
+ * and the least likely to be true. Memory reconstructs an expectation to fit
+ * what followed, so a later reflection is evidence about the present perception
+ * of a past expectation, and is not direct evidence of the expectation.
+ *
+ * Retrospective sources stay usable. They are labelled, and the label renders
+ * beside the stamp so the reader can discount it themselves — the same move
+ * this site makes everywhere else instead of quietly excluding things.
+ */
+export type SourceTiming = "contemporaneous" | "retrospective";
+
+export const SOURCE_TIMING_LABEL: Record<SourceTiming, string> = {
+  contemporaneous: "contemporaneous",
+  retrospective: "retrospective",
+};
+
+export const SOURCE_TIMING_MEANING: Record<SourceTiming, string> = {
+  contemporaneous: "Recorded at the time, by a party in a position to record it.",
+  retrospective:
+    "Looking back. A remembered expectation is evidence of how the past is perceived now, and not direct evidence of what was expected then.",
+};
+
 export type Source = {
   id: SourceId;
   title: string;
@@ -246,6 +281,11 @@ export type Source = {
   dataYear: number;
   /** What the source measured: sex at birth, self-reported gender, registration, self-report… */
   measures: string;
+  /**
+   * N-386 — whether the source spoke at the time or is looking back. REQUIRED
+   * by the compiler on any source a `cultural-expectation` record cites.
+   */
+  timing?: SourceTiming;
   /** ISO date this build fetched it. */
   retrievedOn: string;
   /** Verbatim, <= 25 words, contains the figure. */
@@ -254,6 +294,61 @@ export type Source = {
 };
 
 /* ------------------------------------------------------------- analysis */
+
+/**
+ * N-379 (6.0 §3.7, §7.1) — HOW EXPENSIVE THE ROUTE ACTUALLY IS.
+ *
+ * T-4 requires a route beside every cost, which is the right rule and applies a
+ * pressure worth naming: the cheapest way to satisfy it is a route that is
+ * technically true and practically useless. "You can retrain" is a route. So is
+ * "you can appeal", where the appeal succeeds for almost nobody.
+ *
+ * Grading them is more honest and no less kind. The brief's own instruction is
+ * to state plainly when catching up is easy, difficult, expensive, partial or
+ * impossible, and a reader who is told a door is expensive can plan; a reader
+ * who is told it is open, and then finds the price, learns that this site
+ * flatters.
+ *
+ *   easy    — available, and the cost is not the obstacle
+ *   costly  — genuinely open, and the price is real: money, years, or both
+ *   partial — some of what was lost comes back; some does not
+ *   closed  — this particular door does not reopen. Saying so is allowed
+ *
+ * T-4 IS EXTENDED, NEVER RELAXED. "Every cost has a route" still holds exactly
+ * as before; the gate reads through the grade to the route rather than
+ * accepting a grade in place of one. A `closed` grade is not an exemption from
+ * carrying a route — it is a description OF a route, and a branch whose only
+ * routes are closed still has to say where the reader goes instead, which is
+ * what the other entries in the list are for.
+ */
+export type RouteGrade = "easy" | "costly" | "partial" | "closed";
+
+export const ROUTE_GRADE_WORD: Record<RouteGrade, string> = {
+  easy: "open",
+  costly: "expensive",
+  partial: "partial",
+  closed: "closed",
+};
+
+export const ROUTE_GRADE_MEANING: Record<RouteGrade, string> = {
+  easy: "Available, and the cost is not what stands in the way.",
+  costly: "Genuinely open, and the price is real — money, years, or both.",
+  partial: "Some of what was lost comes back through this; some of it does not.",
+  closed: "This particular door does not reopen. It is listed because knowing that is worth more than hoping.",
+};
+
+/** A route out of a cost: a bare sentence, or the same sentence with its price named. */
+export type BranchRoute = string | { route: string; grade: RouteGrade };
+
+/** The prose of a route, whichever shape it was authored in. */
+export function routeText(r: BranchRoute): string {
+  return typeof r === "string" ? r : r.route;
+}
+
+/** The grade, where one was authored. An ungraded route makes no claim about its price. */
+export function routeGrade(r: BranchRoute): RouteGrade | undefined {
+  return typeof r === "string" ? undefined : r.grade;
+}
 
 /**
  * One branch of a timing analysis (§7.1, §5.7).
@@ -266,14 +361,14 @@ export type Branch =
   | {
       tends: string;
       costs: NonEmpty<string>;
-      routes: NonEmpty<string>;
+      routes: NonEmpty<BranchRoute>;
       evidence: EvidenceLabel;
       sources?: SourceId[];
     }
   | {
       tends: string;
       costs?: undefined;
-      routes?: string[];
+      routes?: BranchRoute[];
       evidence: EvidenceLabel;
       sources?: SourceId[];
     };

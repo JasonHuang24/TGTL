@@ -48,7 +48,8 @@ import {
   deleteArcSave,
   ARC_SAVE_CAP_NOTE,
 } from "@/lib/engine/persist";
-import { ACTS, END_OF_LIFE } from "@/content/play/acts";
+import { SAVE_STATUS_WORDS } from "@/lib/storage";
+import { ACTS, END_OF_LIFE, AGENCY_MEANING, type AgencyKind } from "@/content/play/acts";
 import { CARD_BY_ID } from "@/content/play/cards";
 import { BEATS } from "@/content/play/beats";
 import {
@@ -132,10 +133,12 @@ export function Playthrough() {
   const actMeta = useMemo(() => {
     if (!run) return null;
     if (run.phase === "endOfLife") {
-      return { title: END_OF_LIFE.title, intro: END_OF_LIFE.intro, aimsAudit: false, n: 9 };
+      // The end-of-life phase carries no agency word: what agency a person has
+      // at the end of a life is not something this project asserts (§5.1).
+      return { title: END_OF_LIFE.title, intro: END_OF_LIFE.intro, aimsAudit: false, n: 9, agency: undefined };
     }
     const a = ACTS[run.act];
-    return a ? { title: a.title, intro: a.intro, aimsAudit: Boolean(a.aimsAudit), n: a.n } : null;
+    return a ? { title: a.title, intro: a.intro, aimsAudit: Boolean(a.aimsAudit), n: a.n, agency: a.agency } : null;
   }, [run]);
 
   if (screen === "loading") return null; // the static floor shows until we hydrate
@@ -159,8 +162,16 @@ export function Playthrough() {
                 // way to get it back — §2.3.7's named saves are the fifth
                 // sanctioned §3.2 delta and were the one that did not land.
                 const a = ACTS[pendingResume.act];
-                saveArcRun(pendingResume, a ? `A life, at ${a.title}` : "A life, before it started", "kept when you started another");
+                const kept = saveArcRun(pendingResume, a ? `A life, at ${a.title}` : "A life, before it started", "kept when you started another");
                 setArcSaves(listArcSaves());
+                // N-226 / C-1: this button promises to keep the life you are
+                // leaving before it clears the run. If the write did not read
+                // back, say so — and do NOT clear the run on top of it.
+                if (kept.status !== "saved") {
+                  setArcNotice(`The life you were in was not kept. ${SAVE_STATUS_WORDS[kept.status]} It is still here; nothing has been cleared.`);
+                  return;
+                }
+                setArcNotice(null);
                 clearRun();
                 startNew();
               }}
@@ -204,7 +215,9 @@ export function Playthrough() {
           const a = ACTS[run.act];
           const save = saveArcRun(run, a ? `A life, at ${a.title}` : "A life, before it started", "saved from the bar");
           setArcSaves(listArcSaves());
-          setArcNotice(`Saved as "${save.label}".`);
+          // N-226 / C-1: the status the write RETURNED, in words. A status that
+          // is not `saved` is never rendered as saved.
+          setArcNotice(save.status === "saved" ? `Saved as "${save.label}".` : SAVE_STATUS_WORDS[save.status]);
         }}
       />
       {arcNotice ? (
@@ -413,7 +426,7 @@ function Briefing({ edition, onContinue }: { edition: "standard" | "game"; onCon
 
 /* ============================ The act stage body (the decision loop) ============================ */
 
-type ActMeta = { title: string; intro: string; aimsAudit: boolean; n: number };
+type ActMeta = { title: string; intro: string; aimsAudit: boolean; n: number; agency?: AgencyKind };
 
 function StageBody({
   run,
@@ -580,6 +593,16 @@ function ActIntro({
         {watched && <span className="sim-watched-tag"> · watched — decided for you</span>}
       </p>
       <h1>{actMeta.title}</h1>
+      {/* N-366. Four words naming what kind of decision this act's decisions are.
+          Without them the early acts read as choices a child never had, which is
+          the hardest honest objection to a life simulator; with them the act says
+          plainly that its calls were made for the character, not by them. */}
+      {actMeta.agency ? (
+        <p className="sim-act-agency" data-sim-agency={actMeta.agency}>
+          <span className="sim-act-agency-word">{actMeta.agency}</span>
+          <span className="sim-act-agency-note">{AGENCY_MEANING[actMeta.agency]}</span>
+        </p>
+      ) : null}
       <p className="sim-act-intro-text">{actMeta.intro}</p>
 
       {actMeta.aimsAudit && (

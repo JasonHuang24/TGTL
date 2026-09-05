@@ -8,6 +8,7 @@ import {
 } from "@/components/primitives";
 import { Board } from "@/components/Board";
 import { Term } from "@/components/Term";
+import { MOVES_LINE } from "@/content/board";
 
 export const metadata: Metadata = {
   title: "Guided pressure reading",
@@ -67,7 +68,7 @@ export default function BoardPage() {
             destination. People improve their execution of a goal they would no longer choose, and
             experience the result as meaninglessness.
           </li>
-          <li>
+          <li id="conflict">
             <strong>Is the aim in conflict with another you also hold?</strong> If so, that conflict is
             the problem, and it will have been presenting itself as a time-management complaint. No
             calendar resolves a conflict between two things you both want.
@@ -95,12 +96,23 @@ export default function BoardPage() {
           who knows you well and is standing outside the situation, and let their reading of your condition
           outvote your own.
         </p>
+
+        {/* N-062 — the closing prose. The campaign guarantees rest, wait and ask
+            in every half-year and proves it across hundreds of runs; the reading
+            side has never said it once, to the reader most likely to need it. */}
+        <p className="board-moves-line" data-moves-line>
+          One last thing about whatever you decide to do next. {MOVES_LINE} Waiting deliberately, while a
+          slow decision is made somewhere else, is not the same as doing nothing, and it is often the
+          correct move. Asking is not a confession that you could not manage alone; it is the cheapest way
+          there is to move something. And accepting a thing that will not move frees everything you were
+          spending on it, which is a gain and not a surrender.
+        </p>
       </section>
 
       <NextSteps>
-        <NextStep href="/character/logs">Keep a record of what you knew, and the upkeep you're not doing.</NextStep>
-        <NextStep href="/guidance">Turn the binding row into a decision, with real options.</NextStep>
-        <NextStep href="/threshold">If a condition on the board is danger — the numbers.</NextStep>
+        <NextStep href="/character/logs" relation="see-also" why="A board is a snapshot; the record is what lets you check it against what actually happened.">Keep a record of what you knew, and the upkeep you're not doing.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="Once you know which row is binding, the decision has a shape you can lay out.">Turn the binding row into a decision, with real options.</NextStep>
+        <NextStep href="/threshold" relation="protects" why="If a row on the board is danger rather than pressure, this page comes before every other one.">If a condition on the board is danger — the numbers.</NextStep>
       </NextSteps>
     </InstrumentPage>
   );

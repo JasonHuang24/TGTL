@@ -61,6 +61,20 @@ export type TermKey =
   | "namedSave"
   | "playDoor"
   | "arc"
+  | "tryInPlay"
+  /* 6.0 §3.12 (N-322) — the system-tag labels. Four of the site's own domains,
+     entering the map so the tag row at the head of a situation or topic page
+     renders through <Term> like every other label. */
+  | "money"
+  | "health"
+  | "work"
+  | "time"
+  /* 6.0 §3.12 (N-358) — five words the site had been using as if they were one. */
+  | "passion"
+  | "project"
+  | "quest"
+  | "questline"
+  | "purpose"
   /* 5.0 §3.9 — the timeline's vocabulary. Entering the map means gate 2's
      GENERATED set-down lint covers these automatically, so a game label can never
      reach a set-down page or a sensitive segment without the gate noticing. */
@@ -351,6 +365,93 @@ export const TERMS: Record<TermKey, TermRecord> = {
     standard: "a whole life, fast",
     game: "the life arc",
     define: "the short mode: the whole shape of a life in eight acts",
+  },
+
+  /* ---- 6.0 §3.9 (N-235): the reading-to-play entry ---------------------
+     The trunk's play layer is reachable from the entrance and from itself; a
+     reader who has just read the credential decision has nowhere to go and try
+     it. This is that link's label, and it enters the map for the usual reason:
+     gate 2's GENERATED set-down lint then covers it automatically, so the entry
+     can never reach a set-down route without the gate noticing. It is a link and
+     never a nudge — `allowedAtSetDown: false` is the default and is written out
+     here because on this key it is the whole point. */
+  tryInPlay: {
+    key: "tryInPlay",
+    standard: "Try this as a decision",
+    game: "Try this in Play",
+    define: "the same question, taken into the simulator as one decision you can fork and compare",
+    allowedAtSetDown: false,
+  },
+
+  /* ---- 6.0 §3.12 (N-322): the system tags ------------------------------
+     A tag row says, before the click, that a job loss is money and people and
+     standing at once — which is that page's own thesis, made visible in a glance.
+     Two of the four carry the Game Guide labels the map has always used for the
+     same domains (`Resources`, `Vitality`), so no new game vocabulary is invented
+     to make a tag row; the other two read the same in both editions, which §4.1
+     has always allowed. A set-down route renders no tag row at all (§5.3). */
+  money: {
+    key: "money",
+    standard: "Money and slack",
+    game: "Resources",
+    define: "what you have to spend and the margin underneath it",
+  },
+  health: {
+    key: "health",
+    standard: "Health and capacity",
+    game: "Vitality",
+    define: "the condition of the body and mind everything else is spent from",
+  },
+  work: {
+    key: "work",
+    standard: "Work and standing",
+    define: "what you trade your time and skill for, and what others believe you can do",
+    allowedAtSetDown: true,
+  },
+  time: {
+    key: "time",
+    standard: "Time and attention",
+    define: "the hours, and the far smaller thing that decides what the hours produce",
+    allowedAtSetDown: true,
+  },
+
+  /* ---- 6.0 §3.12 (N-358): five words, five different things ------------
+     The trunk mapped "goal" to a main quest and "project" to a side quest in one
+     line each, and left the rest of the family unsorted — which is how a reader
+     ends up concluding that a passion they never turned into anything is a
+     failure. It is not: a passion may never become a project, and a project may
+     be pursued without any passion at all. "Side" here is a statement about
+     priority, never about value. The paragraph that draws the distinction is on
+     /walkthrough; `content/character.ts` is batch 5's and is untouched. */
+  passion: {
+    key: "passion",
+    standard: "a passion",
+    define: "something you are drawn to for its own sake, whether or not you ever do anything with it",
+    allowedAtSetDown: true,
+  },
+  project: {
+    key: "project",
+    standard: "a project",
+    define: "something you have actually undertaken, with work in it and an end you could describe",
+    allowedAtSetDown: true,
+  },
+  quest: {
+    key: "quest",
+    standard: "an aim you are pursuing",
+    game: "a quest",
+    define: "a project you are currently spending on, with a next move you could name today",
+  },
+  questline: {
+    key: "questline",
+    standard: "a run of connected aims",
+    game: "a questline",
+    define: "several aims that only make sense in sequence, where finishing one opens the next",
+  },
+  purpose: {
+    key: "purpose",
+    standard: "a purpose",
+    define: "the answer to what the whole thing is for, which is yours to supply and may stay unsettled",
+    allowedAtSetDown: true,
   },
 
   /* ---- 5.0 §3.9: the timeline ----------------------------------------

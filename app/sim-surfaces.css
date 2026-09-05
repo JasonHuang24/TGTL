@@ -722,6 +722,24 @@
   font-size: 0.84rem;
   color: var(--sim-mixed);
 }
+/* N-191 — the switching cost, beside the opportunity note it belongs with.
+   A neutral token: this is a fact about the move, not a warning against it. */
+.sim-card-switching {
+  margin: 0;
+  display: grid;
+  gap: 0.1rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--sim-ink);
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--sim-line);
+}
+.sim-card-switching-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
 .sim-option-list {
   list-style: none;
   margin: 0.6rem 0 0;
@@ -834,6 +852,31 @@
 .sim-recovery-why {
   color: var(--sim-muted);
   font-size: 0.84rem;
+}
+/* N-190 — the diagnostic reading of a failure, in the explain drawer, with the
+   tied recovery route inside the same block. One border, one region: the two are
+   not separable in the layout any more than they are in the markup (C-2). */
+.sim-drawer-failure {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  background: var(--sim-sunk);
+}
+.sim-failure-modes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.sim-failure-modes li {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--sim-ink);
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--sim-line);
 }
 
 /* The beat's reduced frame (§5.1): no chips, no strip, no card face. */
@@ -1176,6 +1219,14 @@
 .sim-door-group-head[data-state="opened"] {
   color: var(--sim-good);
 }
+/* N-214 (C-18). The fourth state, "narrowing", is a door getting harder each
+   season it goes unused. It is NOT an opening, so it never takes --sim-good; it
+   is not a verdict either, so it never takes --sim-poor. It renders in the same
+   muted rail tone as "closed" and "still recoverable", stated in words and not
+   coloured — which is the rule the rest of the parse follows. Declared
+   explicitly rather than left to inherit, so the assertion has a subject and the
+   plant (mapping it to the open token) has something to overwrite. */
+.sim-door-group-head[data-state="narrowing"] { color: var(--sim-muted); }
 .sim-door-note {
   grid-column: 1 / -1;
   font-size: 0.84rem;
@@ -1312,4 +1363,235 @@
   line-height: 1.55;
   border-top: 1px solid var(--sim-line);
   padding-top: 0.6rem;
+}
+
+/* =========================================================================
+   6.0 CONSOLIDATION, batch 3 (group H) — the surfaces the play layer gained.
+   No new stylesheet, no fixed geometry on anything that holds text, tokens only.
+   ========================================================================= */
+
+/* N-204 · the origin motif in the season chrome, on every turn. The same card
+   frame the selection card uses, sized down to sit beside the header facts. */
+.sim-header {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+.sim-header-origin {
+  grid-row: span 2;
+  border-bottom: none;
+  border-right: 1px solid var(--sim-line);
+  border-radius: var(--radius) 0 0 var(--radius);
+  padding: 0.4rem 0.7rem 0.4rem 0.2rem;
+  max-width: 6.5rem;
+}
+.sim-header-origin .sim-motif {
+  opacity: 0.85;
+}
+
+/* N-228 · the state rail, opened from the header so it is reachable from every
+   season step rather than from the two screens that happen to have an aside. */
+.sim-state-rail {
+  margin: 0 clamp(1rem, 3vw, 1.5rem) 1rem;
+}
+.sim-state-rail-block {
+  display: grid;
+  gap: 0.3rem;
+  padding-top: 0.7rem;
+  margin-top: 0.7rem;
+  border-top: 1px solid var(--sim-line);
+}
+
+/* N-211 · the five-field response contract, compact under each option. */
+.sim-contract {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.6rem 0 0;
+  padding: 0.55rem 0.7rem;
+  background: var(--sim-sunk);
+  border-radius: var(--radius);
+}
+.sim-contract-row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9rem) 1fr;
+  gap: 0.2rem 0.7rem;
+  align-items: baseline;
+}
+.sim-contract-name {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+  margin: 0;
+}
+.sim-contract-value {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--sim-ink);
+}
+@media (max-width: 32rem) {
+  .sim-contract-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* N-212 · the pure preview pane. One live region per open card. */
+.sim-preview {
+  margin-top: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed var(--sim-line-strong);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.25rem;
+}
+.sim-preview-line {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--sim-ink);
+}
+.sim-preview-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-preview-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+  line-height: 1.5;
+}
+
+/* N-194 · the delta-only briefing on a quiet season. */
+.sim-briefing-delta {
+  margin-bottom: 1rem;
+}
+
+/* N-227 · arm-then-confirm. The armed state is a state of the control, not a
+   colour: the word on the button changes and the consequence appears beside it. */
+.sim-armed {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.sim-armed .sim-ghost-btn[data-sim-armed="1"] {
+  border-color: var(--sim-line-strong);
+}
+
+/* N-216 · the stored explanation, reopened in the look-back's season list. */
+.sim-parse-rest {
+  color: var(--sim-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+/* N-225 · what a Lab fork cannot settle, above the branches. */
+.sim-lab-unknowns {
+  margin-bottom: 1rem;
+}
+
+/* N-228 · the state rail's own axis/band lines. Deliberately separate from
+   .sim-profile-* : the constraint profile is the hand a character was dealt and
+   carries the worth guard by law (S-8); these are capabilities the character
+   built, and the two must not answer to one another's rules. */
+.sim-state-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-state-line {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) 1fr;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-state-line:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.sim-state-axis {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-state-band {
+  color: var(--sim-ink);
+  font-size: 0.92rem;
+  margin: 0;
+}
+.sim-state-note {
+  grid-column: 1 / -1;
+  font-size: 0.84rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+
+/* N-366 · the agency word on an act's framing. */
+.sim-act-agency {
+  margin: 0 0 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+.sim-act-agency-word {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--sim-accent);
+}
+.sim-act-agency-note {
+  font-size: 0.86rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+
+/* N-355 · recorded / interpreted / unknowable, on every parse panel that
+   reports something. Three states, one treatment: the word is the signal and
+   the colour is not — nothing here paints one kind as better than another. */
+.sim-parse-kind {
+  margin: 0 0 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+.sim-parse-kind-word {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--sim-muted);
+  border: 1px solid var(--sim-line-strong);
+  border-radius: var(--radius);
+  padding: 0.1rem 0.4rem;
+}
+.sim-parse-kind-note {
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+
+/* N-341 · the closing frame: the book shuts and the run returns. */
+.sim-parse-closing {
+  text-align: center;
+}
+.sim-parse-closing-line {
+  margin: 0 auto 1rem;
+  max-inline-size: 42rem;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--sim-ink);
+}
+.sim-parse-closing .sim-replay-buttons {
+  justify-content: center;
 }

@@ -2,20 +2,53 @@
 
 import Link from "next/link";
 import { useMemo, useState, useId } from "react";
-import { ROUTES } from "@/content/routes";
+import INDEX_FILE from "@/content/generated/search-index.json";
 
 /**
- * Client-side search over the titles, summaries, and keywords of all searchable
- * reader routes (§6.7). The index is the route inventory itself (a build-time
- * data module, no external service). Simple substring/prefix matching. The
- * entrance is excluded (searchable: false). Without JS, the topics page still
- * lists everything below, so browsing does not depend on this.
+ * Client-side search (§6.7, N-012). The index is a BUILD ARTEFACT —
+ * `content/generated/search-index.json`, produced by `tools/build-search-index.mjs`
+ * before every build — not a live query and not an external service. Nothing
+ * leaves the browser, and nothing is fetched at query time (gate 9).
+ *
+ * What changed in 6.0: this component used to build its haystack from the route
+ * inventory alone, so a reader typing a word that appears in an <h2> but not in a
+ * page summary was told the guidance did not exist, and the twenty-four generated
+ * milestone pages — the largest sourced area on the site — could not be found at
+ * all. The index now carries three kinds of entry: whole routes, the headings
+ * written into each reader page, and every milestone page. A heading whose source
+ * carries an id links straight to it; one that does not lands the reader at the
+ * top of its page, which the result says.
+ *
+ * Without JavaScript, the topics page still lists every route below this control,
+ * so browsing never depends on it.
  */
-const INDEX = ROUTES.filter((r) => r.searchable).map((r) => ({
-  path: r.path,
-  title: r.title,
-  summary: r.summary,
-  haystack: [r.title, r.summary, ...(r.keywords ?? [])].join(" ").toLowerCase(),
+
+type Entry = {
+  kind: "route" | "heading" | "milestone";
+  path: string;
+  title: string;
+  summary?: string;
+  keywords?: string[];
+  anchor?: string | null;
+  onPage?: string;
+  level?: string;
+};
+
+const KIND_LABEL: Record<Entry["kind"], string> = {
+  route: "Page",
+  heading: "Section",
+  milestone: "Timeline",
+};
+
+/** Routes rank above the sections inside them; milestone pages come last. */
+const KIND_RANK: Record<Entry["kind"], number> = { route: 0, heading: 1, milestone: 2 };
+
+const INDEX = (INDEX_FILE.entries as Entry[]).map((e) => ({
+  ...e,
+  href: e.anchor ?? e.path,
+  haystack: [e.title, e.summary ?? "", e.onPage ?? "", ...(e.keywords ?? [])]
+    .join(" ")
+    .toLowerCase(),
 }));
 
 export function Search() {
@@ -26,7 +59,9 @@ export function Search() {
   const results = useMemo(() => {
     if (query.length < 2) return [];
     const terms = query.split(/\s+/);
-    return INDEX.filter((r) => terms.every((t) => r.haystack.includes(t))).slice(0, 12);
+    return INDEX.filter((r) => terms.every((t) => r.haystack.includes(t)))
+      .sort((a, b) => KIND_RANK[a.kind] - KIND_RANK[b.kind])
+      .slice(0, 12);
   }, [query]);
 
   return (
@@ -52,10 +87,19 @@ export function Search() {
           ) : (
             <ul>
               {results.map((r) => (
-                <li key={r.path}>
-                  <Link href={r.path}>
-                    <span className="search-title">{r.title}</span>
-                    <span className="search-summary">{r.summary}</span>
+                <li key={`${r.kind}:${r.href}:${r.title}`}>
+                  <Link href={r.href}>
+                    <span className="search-title">
+                      <span className="search-kind">{KIND_LABEL[r.kind]}</span>
+                      {r.title}
+                    </span>
+                    <span className="search-summary">
+                      {r.kind === "route"
+                        ? r.summary
+                        : r.anchor
+                          ? `On ${r.onPage} — goes straight to this section.`
+                          : `On ${r.onPage}.`}
+                    </span>
                   </Link>
                 </li>
               ))}

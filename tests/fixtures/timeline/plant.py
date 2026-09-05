@@ -74,6 +74,41 @@ def plant_t4(path):
     return True
 
 
+def plant_t4b(path):
+    """T-4, N-379's half — a graded route with no sentence in it.
+
+    The extension's own failure mode: `{ "grade": "closed" }` reads like an
+    answer and is not one. T-4 is EXTENDED, never relaxed — the gate reads
+    through the grade to the sentence, and a grade on its own has to fail
+    exactly as a missing route always did.
+    """
+    s = load(path)
+    m = re.search(r'"routes": \[\s*\n(\s*)"', s)
+    if not m:
+        return False
+    ind = m.group(1)
+    i = m.start()
+    j = s.index("]", i)
+    save(path, s[:i] + '"routes": [\n' + ind + '{ "grade": "closed" }\n' + ind[:-2] + s[j:])
+    return True
+
+
+def plant_t9(path):
+    """T-9, N-386's half — a source cited about an expectation with no timing.
+
+    Planted into the compiled SOURCES rather than the milestones, because that
+    is the artifact the gate reads for this half. A source that does not say
+    whether it was speaking at the time or looking back is exactly the shape
+    nostalgia arrives in.
+    """
+    s = load(path)
+    new, n = re.subn(r'\n\s*"timing": "(?:contemporaneous|retrospective)",', "", s, count=1)
+    if n == 0:
+        return False
+    save(path, new)
+    return True
+
+
 def plant_t6(path):
     """T-6 — strip the care note off a sensitive record (§5.3)."""
     s = load(path)
@@ -112,6 +147,8 @@ PROBES = {
     "t1": plant_t1,
     "t3": plant_t3,
     "t4": plant_t4,
+    "t4b": plant_t4b,
+    "t9": plant_t9,
     "t6": plant_t6,
     "t7": plant_t7,
     "t8": plant_t8,

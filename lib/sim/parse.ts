@@ -60,7 +60,8 @@ export type PriorityRead = {
 
 export type DoorState = {
   label: string;
-  state: "opened" | "closed" | "still recoverable";
+  /** N-214: four states. "narrowing" is a door getting harder, not a closed one. */
+  state: "opened" | "closed" | "still recoverable" | "narrowing";
   note: string;
 };
 

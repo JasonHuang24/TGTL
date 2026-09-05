@@ -24,7 +24,9 @@ import {
 import {
   STORAGE_KEYS,
   eraseAll,
+  readJSON,
   readString,
+  writeJSON,
   writeString,
 } from "./storage";
 import { intensityForRoute, type Intensity } from "@/content/routes";
@@ -33,12 +35,53 @@ import { resolveTerm, type TermKey } from "@/content/terminology";
 export type Edition = "standard" | "game";
 export type ThemeChoice = "system" | "light" | "dark";
 
+/* =========================================================================
+   N-150 (6.0 §3.6, C-42) — SET YOUR POSITION ONCE.
+   =========================================================================
+   The machinery has existed since 2.0 and exactly one page has ever read it:
+   `components/CredentialFilter.tsx` writes `STORAGE_KEYS.credentialPosition`
+   and re-resolves its own cost notes from it. Everywhere else on the site,
+   position sensitivity is prose the reader has to apply to themselves.
+
+   Promoting the EXISTING key to shared state — no new key, §7.1 — turns the
+   site's best mechanic (the same move costing differently from a different
+   start) from a demonstration on one page into how the guide speaks.
+
+   THE WALLS ON IT, all asserted by C-42:
+   - Position is ENUMERATED. Three questions, two or three answers each, and
+     `unsure` is a first-class answer rather than a gap.
+   - Position NEVER produces a rank, a band, a score, or a comparison between
+     readers. Its only two consumers are the control that sets it and the note
+     that re-resolves prose from it. Nothing derives anything else from it.
+   - Position NEVER enters a URL, and never reaches the play layer.
+   - It is erased by the same site-wide erase control as everything else.
+   ========================================================================= */
+export type Floor = "unsure" | "yes" | "no";
+export type Dependents = "no" | "yes";
+export type Debt = "some" | "none";
+export type Position = { floor: Floor; dependents: Dependents; debt: Debt };
+
+export const DEFAULT_POSITION: Position = { floor: "unsure", dependents: "no", debt: "some" };
+
+function isPosition(v: unknown): v is Position {
+  if (!v || typeof v !== "object") return false;
+  const p = v as Position;
+  return (
+    (p.floor === "unsure" || p.floor === "yes" || p.floor === "no") &&
+    (p.dependents === "no" || p.dependents === "yes") &&
+    (p.debt === "some" || p.debt === "none")
+  );
+}
+
 type GuideValue = {
   edition: Edition;
   reduceFraming: boolean;
   theme: ThemeChoice;
   /** True once localStorage has been read on the client (avoids hydration flash logic). */
   hydrated: boolean;
+  /** N-150 — the reader's position, from the EXISTING credentialPosition key. */
+  position: Position;
+  setPosition: (value: Position) => void;
   setEdition: (value: Edition) => void;
   setReduceFraming: (value: boolean) => void;
   setTheme: (value: ThemeChoice) => void;
@@ -62,6 +105,7 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
   const [edition, setEditionState] = useState<Edition>("standard");
   const [reduceFraming, setReduceFramingState] = useState(false);
   const [theme, setThemeState] = useState<ThemeChoice>("system");
+  const [position, setPositionState] = useState<Position>(DEFAULT_POSITION);
   const [hydrated, setHydrated] = useState(false);
 
   // Read persisted preferences once, on the client.
@@ -71,6 +115,11 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
     if (readString(STORAGE_KEYS.reduceFraming) === "1") setReduceFramingState(true);
     const savedTheme = readString(STORAGE_KEYS.theme);
     if (isTheme(savedTheme)) setThemeState(savedTheme);
+    // N-150 — the existing key, validated rather than trusted: a value stored by
+    // an older build (or edited by hand) falls back to the default instead of
+    // rendering a note keyed on a shape that does not exist.
+    const savedPosition = readJSON<unknown>(STORAGE_KEYS.credentialPosition, DEFAULT_POSITION);
+    if (isPosition(savedPosition)) setPositionState(savedPosition);
     setHydrated(true);
   }, []);
 
@@ -98,6 +147,12 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
     writeString(STORAGE_KEYS.theme, value);
   }, []);
 
+  /* N-150 — one write, to the key that already existed. No URL, ever. */
+  const setPosition = useCallback((value: Position) => {
+    setPositionState(value);
+    writeJSON(STORAGE_KEYS.credentialPosition, value);
+  }, []);
+
   const effectiveFrame = useCallback(
     (route: string): Intensity => {
       const base = intensityForRoute(route);
@@ -117,6 +172,7 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
     setEditionState("standard");
     setReduceFramingState(false);
     setThemeState("system");
+    setPositionState(DEFAULT_POSITION);
     // Let pages holding their own state know to clear it.
     window.dispatchEvent(new CustomEvent("tgtl:reset"));
   }, []);
@@ -127,6 +183,8 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
       reduceFraming,
       theme,
       hydrated,
+      position,
+      setPosition,
       setEdition,
       setReduceFraming,
       setTheme,
@@ -139,6 +197,8 @@ export function GuideProvider({ children }: { children: React.ReactNode }) {
       reduceFraming,
       theme,
       hydrated,
+      position,
+      setPosition,
       setEdition,
       setReduceFraming,
       setTheme,

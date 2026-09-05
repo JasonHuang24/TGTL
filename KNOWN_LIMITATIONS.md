@@ -1,4 +1,4 @@
-# KNOWN_LIMITATIONS.md — TGTL 5.0 (The Timeline)
+# KNOWN_LIMITATIONS.md — TGTL 6.0 (The Consolidation)
 
 The honest list. Everything the build does not do, does not know, or defers — plus
 every gate the owner still has to close before this is shown to the public.
@@ -7,7 +7,173 @@ The 4.0 list is preserved below in full and remains in force; 5.0 entries come f
 
 ---
 
-## 0. NEW IN 5.0 — the timeline
+## 0. NEW IN 6.0 — The Consolidation
+
+6.0 harvests the nine archived prototypes, Sol's four specs and the master brief into
+the trunk: the 130 rows of `records/consolidation-register.md` §8, built to
+`blueprint_TGTL_6.0.md`. **It adds ideas and closes no review.** Every human gate in
+§0 (carried from 5.0) and §1 below stands unchanged, and the preview label stays.
+
+### 0.A Parked as areas — a version each, not harvested piecemeal
+
+The social manual (N-141), the Atlas of arenas (N-154), the story campaign "The Years
+Between" (N-220), the Living Scene (N-250), the ethics and meaning wing (N-393), the
+topic set — civic, housing, place, identity, sexuality, meaning (N-415, N-421, N-422,
+N-424, N-425) — and archetype resemblance (N-086). Named in `WHATS_COMING` in the
+brief's research-priority order (N-437).
+
+### 0.B Deferred to the 6.1 evidence pass — accepted, not built
+
+N-284, N-285, N-286, N-287, N-288, N-292, N-293, N-294, N-295, N-297, N-298, N-300,
+N-303, N-305, N-429 (the claim grades, the open-questions and corrections registers,
+editorial standards, the research-review record, the fixture-validation and
+define-at-first-use gates, the falsifiability closure of the twenty-five open
+assertions in §4.11, the research-pass contract) and the two scene-layer rules N-252
+and N-255. None is marked done; none is partly built.
+
+### 0.C Stop-and-ask rows — parked until the owner says the word
+
+N-324 frame-strength tags, N-376 the peer-advantage population rule, N-381 the
+screening-threshold record kind. Each would *add* a lint rule.
+
+### 0.D The human gates, restated unchanged
+
+Open exactly as listed: 0.1.1 pediatric review · 0.1.2 clinical review of the
+timeline's fertility, later-health and dying records · 0.1.3 the owner's read of the
+cultural-expectation records · 0.1.4 the research-required list · 0.1.5 the stage-rail
+art checkpoint · 0.1.6 the four unsettled findings · 1.2 the five sensitive pages ·
+1.3 the 3.0 beats and the board's short-circuit · 1.4 the two 4.0 beats · 1.5 the
+parse bridge · 1.6 the 4.0 art direction · the independent review of the 4.0 play
+layer. 6.0 adds to the review list: `/situations/breakup` (loss-adjacent) and
+`/situations/getting-through-today` (a set-down page a depleted reader lands on).
+Parked for that review, found in 6.0 batch 2: `/threshold/supporting-someone` has never
+imported the set-down notice, so N-265's reassurance does not reach it; adding it is an edit
+to a frozen page. Found in batch 3: the content-version drift notice (N-223) is built and cannot currently render,
+because a save from a different content version is declared unresumable (4.0 §2.4) — whether to
+let a mixed record resume is the owner's; and the Life Arc's per-save delete does not yet arm the
+way the campaign's does (N-227), a candidate for the register. Found in batch 4: the search index jumps to a heading only where the page's source carries an
+id (sixty-four of the hundred and fifteen headings indexed); the five frozen pages cannot gain
+ids, so the rest land at the top of their page and the result says so. Found in batch 5: the guidance flow's disclosure states the ruleset's horizon because the flow
+has never asked the reader for one; a reader-set horizon would be a new enumerated input and is a
+candidate for the register, not built. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+
+---
+
+### 0.E Owner decisions still required — the numbered register (N-308)
+
+Opened 2026-09-05. **Not built and not decided are different lists.** Everything below is
+open; a default in force is a placeholder, never an answer. Sources: §0.1 and §1 (the human
+gates), `blueprint_TGTL_5.0.md` §12, `blueprint_TGTL_4.0.md` §12, `blueprint_TGTL_3.0.md`
+§14, the register's stop-and-ask rows and parked areas, `blueprint_TGTL_6.0.md` §12, and
+§0.D above.
+
+**The human gates — release blockers.**
+
+| # | The decision | From | Default in force |
+|---|---|---|---|
+| 0.E.1 | Pediatric/developmental reading of every child-development and puberty record | §0.1.1 | Quiet, paired with the screening line, routed to health |
+| 0.E.2 | Clinical reading of every fertility, health-decline and dying record and the life-expectancy note | §0.1.2 | Shipped behind the preview label |
+| 0.E.3 | The owner's editorial read of every cultural-expectation record | §0.1.3 | Shipped, labelled our judgement |
+| 0.E.4 | Whether to ship with visible "not yet sourced" markers | §0.1.4, 5.0 §12.2 | Yes |
+| 0.E.5 | The stage-rail art checkpoint | §0.1.5, 5.0 §12.11 | Plain rail, built to be redirected |
+| 0.E.6 | Clinical and specialist review of the five sensitive pages | §1.2 | Byte-identical since 2.0; 6.0 changed nothing on them |
+| 0.E.7 | Review of the 3.0 beats and the board's crisis short-circuit | §1.3 | Contained: deterministic, skippable, reduced-frame |
+| 0.E.8 | Review of the two 4.0 loss-tier beats | §1.4 | Same containment; never previewed |
+| 0.E.9 | The parse bridge's selection rule and six templates | §1.5 | `selectBridge` takes a campaign id and nothing else |
+| 0.E.10 | The 4.0 art-direction sign-off | §1.6 | Shipped at final art |
+| 0.E.11 | An independent acceptance review of the 4.0 play layer | §0.1.7 | Pending; 6.0 repeats the recommendation and adds itself |
+| 0.E.12 | Review of the two routes 6.0 adds to that list: `/situations/breakup` and `/situations/getting-through-today` | §0.D | Written at the sensitive bar, behind the label |
+
+**The four findings 5.0 could not settle (§0.1.6).** 0.E.13 the inert timeline sex lens
+(default: the control stays, the note says unresearched) · 0.E.14 the unused band table
+(left published) · 0.E.15 the first-person branch questions (suppressed on dying records,
+kept elsewhere) · 0.E.16 the five major-and-unsourced records (left, named in §0.2).
+
+**From `blueprint_TGTL_5.0.md` §12, still open.** 0.E.17 sequencing against the 4.0 review
+(6.0 built on 4.0 as it stands) · 0.E.18 the age ceiling (0–100 plus the terminal card) ·
+0.E.19 whether the timeline absorbs the map (coexist) · 0.E.20 sex-lens labels (Female /
+Male with the measurement note) · 0.E.21 the generational layer (deferred) · 0.E.22 the
+executor model (for 6.0 the owner said it: Opus in batches, no ultracode) · 0.E.23
+persisting the selected year (yes, view state) · 0.E.24 wiring the campaign's milestones
+instrument to timeline content (no; T-12 holds) · 0.E.25 hosting (static export; GitHub Pages
+at `jasonhchronicles.com/TGTL/`) · 0.E.26 HTTPS enforcement (as Pages created it) · 0.E.27
+the export size and the five major-and-unsourced records (untouched).
+
+**From `blueprint_TGTL_4.0.md` §12.** 0.E.28 public naming ("The Playthrough" umbrella) ·
+0.E.29 companion-arc census and tone (four to six, warm-realist) · 0.E.30 preset names and
+hands (the spec's five, adapted, labelled fictional).
+
+**From `blueprint_TGTL_3.0.md` §14 — the three the register found recorded nowhere.**
+0.E.31 the Standard edition's framing of the prologue (same structure, frame held lightly) ·
+0.E.32 whether `/guidance` later merges into the play layer's engine UI (kept standalone) ·
+0.E.33 primary-nav composition and History's seat (the nav as derived from `content/routes.ts`).
+
+**The stop-and-ask rows — each would ADD a lint rule; none is built.** 0.E.34 frame-strength
+tags (N-324) · 0.E.35 the peer-advantage population rule (N-376) · 0.E.36 the
+screening-threshold record kind (N-381).
+
+**The parked areas — each a version of its own, named in `WHATS_COMING` in the owner's
+research-priority order.** 0.E.37 the social manual (N-141) · 0.E.38 the Atlas (N-154) ·
+0.E.39 "The Years Between" (N-220) · 0.E.40 the Living Scene (N-250; its presentation walls
+adopted in advance as disanalogy eleven) · 0.E.41 the ethics and meaning wing (N-393) ·
+0.E.42 the topic set (N-415, N-421, N-422, N-424, N-425) · 0.E.43 archetype resemblance
+(N-086) · 0.E.44 the sex-lens research batch (N-380).
+
+**This version's own (`blueprint_TGTL_6.0.md` §12 and §0.D).** 0.E.45 the 6.1 evidence pass
+(the next version; none partly built) · 0.E.46 the register's screenshots (stay committed) ·
+0.E.47 a literal ninety-row cut (the hundred and thirty; any cut is the owner's to name) ·
+0.E.48 an independent review of the 6.0 build (recommended) · 0.E.49 the version stamp
+("TGTL 6.0 preview — The Consolidation"; yes) · 0.E.50 `/threshold/supporting-someone` has
+never imported the set-down notice (waits for 0.E.6) · 0.E.51 whether a save from a
+different content version may resume, which would make the drift notice reachable (the 4.0
+migration wall stands) · 0.E.52 the Life Arc's per-save delete does not arm (left; register
+candidate) · 0.E.53 opt-in heading anchors (sixty-four of a hundred and fifteen jump) ·
+0.E.54 a reader-set horizon for the guidance ranking (the ruleset's horizon is published) ·
+0.E.55 whether `content/route-inventory.json` and `content/safety-resources.json`, both
+legacy and imported by nothing, should be deleted (kept; records name them) · 0.E.56 whether
+`/play` should render the planned cards for the four play-area entries (it does not; C-50
+prints the exemption).
+
+### 0.F The design was audited against its own frame and found single-player (N-438)
+
+**[2026-09-05]** The owner's own finding about his own design, paraphrased from
+`MASTER_PROJECT_BRIEF.md`'s multiplayer-systems coverage audit (lines 4054–4250). The
+project has a mature single-player layer — starting conditions, capacities, progression,
+skills, aims, difficulty, effects, possessions and access, maps and eras, crowded strategies
+and tier boards, changing rulesets, endings and the read-back — and a much thinner
+multiplayer one: the shared, persistent world that exists because millions of other people
+are pursuing overlapping and conflicting goals at once. Between them sits a band the audit
+calls addressed but undeveloped: parties and the support that flows through them, shared
+household resources, reputation, institutional membership, competition, cooperation,
+exchange, the social meta, exploitation and enforcement, and accessibility as a property of
+a shared world.
+
+**Thirteen systems are named as not addressed at all:** party formation and its lifecycle ·
+roles and cooperative composition, including the labour nobody credits · shared quests at
+raid scale · guilds, factions and institutions — joining, rising, leaving, being trapped ·
+conflict and predation · the economy between people, with several currencies · trust,
+reputation and information · governance, rules and enforcement · persistent-world and
+population mechanics — networks, density, migration, queues · time, routine and live events
+· onboarding and protection — caregivers and schools as the tutorial, and its failures ·
+retraining and second lives, and why a real respec is always partial · endgame and
+succession.
+
+**Eight are named as the highest-value next additions,** in the owner's order: party
+formation and lifecycle; party roles, shared resources and unequal sacrifice; guilds,
+factions and institutional membership; the economy of exchange between people; conflict,
+exploitation, governance and enforcement; shared quests, public goods and collective
+failure; trust, reputation and social-network effects; persistent-world constraints.
+
+**Why this is a limitation and not a roadmap entry.** Every page takes one person as its
+subject, and the audit is the systematic version of the first entry in the disanalogy
+register: the frame has no collective subject. The household pulling in different
+directions, the person carrying invisible work, the one who cannot leave because leaving is
+priced beyond them — each is currently described as a private optimisation problem when it
+is not one. None of the thirteen is built, none partly, and nothing in 6.0 started one.
+
+---
+
+## 0 (carried from 5.0). NEW IN 5.0 — the timeline
 
 ### 0.1 Release gates the owner must close (5.0)
 
@@ -72,7 +238,7 @@ All are listed in §1 below and none was touched by 5.0. **Hotline verification,
 carried, was CLOSED on 2026-09-04** (§1.1).
 
 **0.1.8 How this ships while the gates are open (publish pass, 2026-09-04).** As a
-labelled preview: the footer of every page says "TGTL 5.0 preview", links to
+labelled preview: the footer of every page says "TGTL 6.0 preview" (5.0's stamp until 2026-09-05), links to
 `/methodology#preview-status` where the open gates are listed, and every page carries
 `noindex`. It is a GitHub Pages project site at https://jasonhchronicles.com/TGTL/.
 The label comes off only when the owner closes the gates above; nothing in the publish
@@ -357,7 +523,9 @@ before launch:
 
 - `beat-low-season` — a flat stretch, naming `/situations/depression`.
 - `beat-someone-ill` — someone close becoming seriously ill, naming
-  `/situations/a-death`.
+  `/topics/relationships`. *(Corrected in 6.0: this record said `/situations/a-death`;
+  `content/sim/campaign/beats.ts` has always named `/topics/relationships`, and the
+  code is the honest record — the beat is about illness, not a death.)*
 
 They are placed deterministically, are always skippable, render reduced-frame, and
 are never previewed on any surface. That is the containment. It is not a substitute
