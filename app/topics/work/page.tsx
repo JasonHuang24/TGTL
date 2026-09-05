@@ -9,6 +9,7 @@ import {
   NextSteps,
   NextStep,
   TryInPlay,
+  ModelBreak,
 } from "@/components/primitives";
 import Link from "next/link";
 import { Term } from "@/components/Term";
@@ -36,6 +37,7 @@ export default function WorkPage() {
         title="Education and career"
         intro="A workplace looks like it runs on the written rules. It runs mostly on the unwritten ones, and the gap between the two is where careers are made and lost. Here are the parts that are most consistently mistaken for something they are not."
         systems={ROUTE_BY_PATH["/topics/work"]?.systems}
+        perishable={ROUTE_BY_PATH["/topics/work"]?.perishable}
       />
 
       <MechanicAnchor ids={["readout"]} />
@@ -115,6 +117,18 @@ export default function WorkPage() {
         can end the relationship in an afternoon, and you generally cannot, because your side needs a next
         position that takes months. Slack is what flattens that asymmetry.
       </p>
+      {/* N-280 (§3.11, C-45) — THE STRUCTURAL-CHANGE MOVE, at the point of use.
+          Everything above this line describes conditions set above the reader's
+          pay grade and then hands them personal moves, which is exactly where
+          this frame's known break bites. Cited, not restated. */}
+      <ModelBreak n={1}>
+        Almost everything on this page is written as something you can do, because that is what this
+        instrument can see. The invisible-work problem, the exit asymmetry and a workload set above
+        your grade are not personal optimisation problems, and the moves that would actually change
+        them &mdash; a union, a professional body, a regulator, a law &mdash; are ones nobody makes
+        alone. Where that is the real answer, no amount of individual strategy substitutes for it,
+        and a page that implied otherwise would be selling you your environment as your discipline.
+      </ModelBreak>
       {/* N-116 — the model that generates the non-portability above, rather than
           just asserting it. One structural idea covering staleness, the reset,
           the invalidation asymmetry, and why an audience is not a network. */}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { InstrumentPage, PageHeader, EvidenceDrawer } from "@/components/primitives";
+import { InstrumentPage, PageHeader, EvidenceDrawer, ModelBreak } from "@/components/primitives";
 import { Guidance } from "@/components/Guidance";
 
 export const metadata: Metadata = {
@@ -18,6 +18,13 @@ export default function GuidancePage() {
         status="illustrative"
       />
       <Guidance />
+      {/* N-281 — the break this instrument leans on hardest: it can lay out what a
+          decision costs and has no access to what it is like. */}
+      <ModelBreak n={3}>
+        This flow is good at costs, constraints and what is open, and it does not know what any of
+        it feels like. If the hard part of your decision is the part that has no cost line, this
+        page is not the thing that will help you with it.
+      </ModelBreak>
       <EvidenceDrawer
         record={{
           status: "illustrative",

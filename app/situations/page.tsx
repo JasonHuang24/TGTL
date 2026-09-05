@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadingPage, PageHeader } from "@/components/primitives";
+import { ReadingPage, PageHeader, ModelBreak } from "@/components/primitives";
+import { PlannedCards } from "@/components/PlannedCards";
 
 export const metadata: Metadata = {
   title: "Situations",
@@ -75,6 +76,18 @@ export default function SituationsIndexPage() {
           </li>
         ))}
       </ul>
+
+      {/* N-281 — the index is where a reader with two of these at once finds out
+          that the site is arranged one to a page. Better said here than implied. */}
+      <ModelBreak n={8}>
+        These are written one to a page because that is the only way to write them. If two of them
+        are true for you at the same time, they are not two problems: each one takes the slack the
+        other needed, and reading both pages does not add up to the page for that.
+      </ModelBreak>
+
+      {/* N-302 (C-50) — the situations that are not written yet, named where a
+          reader who did not find theirs is standing. Generated from WHATS_COMING. */}
+      <PlannedCards area="situations" />
 
       <p className="situation-index-note">
         If none of these is quite it, <Link href="/triage">start from what happened</Link> and let two

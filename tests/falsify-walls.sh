@@ -749,6 +749,116 @@ c_probe "C-44 · the not-measured list missing an item" "C-44" \
   'Human worth · Moral value' \
   'omits "Happiness"'
 
+# C-45 (N-281) — an entry claiming a route that does not exist. The register's
+# whole value is that a page can cite it; a citation into nothing is the failure
+# the numbering was supposed to prevent.
+c_probe "C-45 · a disanalogy inherited by a route that does not exist" "C-45" \
+  "content/methodology.ts" \
+  '    inheritedBy: ["/walkthrough"],' \
+  '    inheritedBy: ["/walkthroughs"],' \
+  "is not a route in the inventory"
+
+# C-45 again — the other direction: the entry still claims the page, and the page
+# has quietly stopped citing it. This is the drift that leaves a register
+# describing a site that no longer exists.
+c_probe "C-45 · a page that stops citing the entry that claims it" "C-45" \
+  "out/topics/concepts/index.html" \
+  'data-model-break="4"' \
+  'data-model-break-RENAMED="4"' \
+  "claims this page inherits it"
+
+# C-46 (N-290) — the empty register hiding itself. A section that appears with its
+# first entry is the mechanism-invented-under-pressure this row refuses.
+c_probe "C-46 · the retractions section vanishes while it is empty" "C-46" \
+  "out/methodology/index.html" \
+  'data-retractions-empty="true"' \
+  'data-retractions-EMPTIED="true"' \
+  "renders no empty state"
+
+# C-46 again — the source half: the heading rendered only when there is something
+# to show. It would pass every rendered check on the day somebody adds an entry.
+c_probe "C-46 · the retractions heading gated on having entries" "C-46" \
+  "app/methodology/page.tsx" \
+  '      <h2 id="retractions">Retractions and downgrades</h2>' \
+  '      {RETRACTIONS.length > 0 && <h2 id="retractions">Retractions and downgrades</h2>}' \
+  "rendered conditionally"
+
+# C-47 (N-291) — a correction that changed a page, with the page saying nothing.
+# The silent fix, planted exactly as it would happen: a page added to the record.
+c_probe "C-47 · a logged correction changes a page that says nothing" "C-47" \
+  "content/methodology.ts" \
+  '    id: "cor-history-scope",' \
+  '    id: "cor-history-scope",
+    pages: ["/topics/money"],' \
+  "a silent fix"
+
+# C-47 again — the note removed from the page the register names.
+c_probe "C-47 · the revision note removed from the page that changed" "C-47" \
+  "out/threshold/index.html" \
+  'data-revision-note="cor-hotline-verified"' \
+  'data-revision-note-RENAMED="cor-hotline-verified"' \
+  "renders no revision note naming it"
+
+# C-48 (N-296) — the admission test answered with nothing. The type requires the
+# field; an empty string is the cheap way past a required string.
+c_probe "C-48 · a route admitted without saying what it changes" "C-48" \
+  "content/routes.ts" \
+  '      "Whether what changed a position was the people in it or the ruleset around them — which is the question you were probably arguing about.",' \
+  '      "",' \
+  "records no answer to what it changes"
+
+# C-49 (N-301) — flagged perishable in the inventory, rendering permanence.
+c_probe "C-49 · a perishable route rendering no review date" "C-49" \
+  "out/topics/work/index.html" \
+  'data-perishable="2027-02"' \
+  'data-perishable-RENAMED="2027-02"' \
+  "renders no staleness stamp"
+
+# C-49 again — a review date on a route nobody flagged: a date with no
+# maintenance behind it, which is worse than no date.
+c_probe "C-49 · a review date on a route that is not flagged" "C-49" \
+  "out/topics/money/index.html" \
+  '<article class="prose-page"' \
+  '<article data-perishable="2027-02" class="prose-page"' \
+  "a date nobody is maintaining"
+
+# C-50 (N-302) — an orphan badge. Unbuilt scope named in a second place is the
+# exact failure the single-source rule exists to prevent.
+c_probe "C-50 · a planned badge naming nothing in the list" "C-50" \
+  "out/topics/index.html" \
+  'data-planned="wc-adolescence"' \
+  'data-planned="wc-adolescence-invented-here"' \
+  "is not a WHATS_COMING entry"
+
+# C-50 again — an entry that renders on no index: the reader still has to go
+# looking for the hole, which is the state the row was written against.
+c_probe "C-50 · an entry whose area renders it nowhere" "C-50" \
+  "content/methodology.ts" \
+  '    id: "wc-crisis-recovery",
+    area: "situations",' \
+  '    id: "wc-crisis-recovery",
+    area: "history",' \
+  "renders no planned card there"
+
+# C-51 (N-306) — the suite going back to deleting a reader's keys outright.
+c_probe "C-51 · a suite deleting storage keys without recording them" "C-51" \
+  "tests/s9-ui.mjs" \
+  '  await preserveThenClear(page, ["tgtl:play"]);' \
+  '  await page.evaluate(() => { for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:play")) localStorage.removeItem(k); });' \
+  "still deletes"
+
+# C-51 again — the restore that does not survive the failure path, which is the
+# run where a reader actually loses something.
+c_probe "C-51 · the restore dropped from the failure path" "C-51" \
+  "tests/lib-preserve.mjs" \
+  '  } finally {
+    await restorePreserved(page);
+  }' \
+  '  } finally {
+    void page;
+  }' \
+  "does not restore in a finally"
+
 fi
 
 echo

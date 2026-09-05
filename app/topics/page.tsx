@@ -4,6 +4,7 @@ import { ReadingPage, PageHeader } from "@/components/primitives";
 import { Search } from "@/components/Search";
 import { ROUTES } from "@/content/routes";
 import { SingleHomeNote } from "@/components/SingleHomeNote";
+import { PlannedCards, PlannedNote } from "@/components/PlannedCards";
 
 export const metadata: Metadata = {
   title: "Topics",
@@ -18,6 +19,7 @@ const TOPIC_CARDS = [
 ];
 
 const summaryFor = (path: string) => ROUTES.find((r) => r.path === path)?.summary ?? "";
+const plannedFor = (path: string) => ROUTES.find((r) => r.path === path)?.planned;
 
 export default function TopicsIndexPage() {
   return (
@@ -38,6 +40,9 @@ export default function TopicsIndexPage() {
               <span className="topic-card-title">{t.title}</span>
               <span className="topic-card-line">{summaryFor(t.href)}</span>
             </Link>
+            {/* N-302 — a guide that exists, with a named deepening that does not.
+                The id resolves into WHATS_COMING; the text comes from there. */}
+            {plannedFor(t.href) && <PlannedNote id={plannedFor(t.href) as string} />}
           </li>
         ))}
       </ul>
@@ -54,6 +59,14 @@ export default function TopicsIndexPage() {
         Looking for what happens at a particular age?{" "}
         <Link href="/timeline">The timeline</Link> goes year by year from birth to one hundred.
       </p>
+
+      {/* N-302 (C-50) — the rest of the topics area that is not built, met here
+          rather than only on the methodology page. Generated from WHATS_COMING;
+          the entries already claimed by a card above are not repeated. */}
+      <PlannedCards
+        area="topics"
+        claimed={TOPIC_CARDS.map((t) => plannedFor(t.href)).filter(Boolean) as string[]}
+      />
 
       {/* N-321 — the invariant, said to the reader on the index and on every
           guide, as something reportable rather than as a description. */}

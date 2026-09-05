@@ -9,6 +9,7 @@ import {
   type Provenance,
   PROVENANCE_LABEL,
 } from "@/content/evidence";
+import { CORRECTIONS, DISANALOGIES } from "@/content/methodology";
 
 /**
  * Server-safe presentational primitives shared across pages. No hooks, no state —
@@ -21,11 +22,22 @@ export function PageHeader({
   intro,
   status,
   systems,
+  perishable,
+  perishablePrefix = "Due for review by",
 }: {
   eyebrow?: string;
   title: string;
   intro?: string;
   status?: ContentStatus;
+  /**
+   * N-301 (6.0 §3.11, C-49) — passed from the page's own
+   * `ROUTE_BY_PATH[...].perishable`, so the inventory decides which pages are
+   * dying and the header only renders the consequence. Some pages are SUPPOSED
+   * to expire; a review date on one of those is not an apology.
+   */
+  perishable?: { reviewBy: string };
+  /** Latitude: the one word of context a particular expiry needs. */
+  perishablePrefix?: string;
   /**
    * N-322 (6.0 §3.12) — the system tag row. Passed from the page's own
    * `ROUTE_BY_PATH[...].systems` so the inventory stays the single source, and
@@ -50,6 +62,12 @@ export function PageHeader({
       )}
       {intro && <p className="page-intro">{intro}</p>}
       {status && <StatusLabel status={status} />}
+      {perishable && (
+        <p className="page-perishable" data-perishable={perishable.reviewBy}>
+          <StalenessStamp date={perishable.reviewBy} prefix={perishablePrefix} /> — this page is
+          about something that moves, so it is written to expire rather than to stand.
+        </p>
+      )}
     </header>
   );
 }
@@ -395,6 +413,55 @@ export function NoWinner({
       </dl>
       {note && <p className="no-winner-note">{note}</p>}
     </aside>
+  );
+}
+
+/**
+ * N-281 (6.0 §3.11, C-45) — A PAGE CITES A DISANALOGY INSTEAD OF IMPROVISING ONE.
+ *
+ * Writers do not improvise humility page by page; they inherit it from one
+ * maintained source. This renders the numbered entry's title and links its anchor,
+ * so the page carries the warning and the register carries the words — and when
+ * the register's wording improves, every page that cites it improves with it.
+ *
+ * The number is the contract. `data-model-break` is what C-45 resolves in the
+ * exported HTML, in both directions: no page may cite an entry that does not
+ * exist, and no entry may claim a page that does not cite it.
+ */
+export function ModelBreak({ n, children }: { n: number; children?: React.ReactNode }) {
+  const entry = DISANALOGIES.find((d) => d.n === n);
+  if (!entry) return null;
+  return (
+    <aside className="callout model-break" data-tone="quiet" data-model-break={n}>
+      <p className="callout-title">Where this model breaks</p>
+      {children ? <p className="model-break-local">{children}</p> : null}
+      <p className="model-break-cite">
+        <Link href={`/methodology#break-${entry.n}`}>
+          Known break {entry.n}: {entry.title}
+        </Link>{" "}
+        — on the record, with the rest of them.
+      </p>
+    </aside>
+  );
+}
+
+/**
+ * N-291 (6.0 §3.11, C-47) — THE NO-SILENT-FIX RULE, on the page that changed.
+ *
+ * A silent fix converts a reader's correction into the editors' foresight, and a
+ * site whose history shows no errors is either very lucky or editing it. So a
+ * page changed by a logged correction says so, in one line, reading the date and
+ * the summary out of the register rather than restating them — a note that could
+ * drift from the entry it describes would be a second thing to keep true.
+ */
+export function RevisionNote({ correctionId }: { correctionId: string }) {
+  const entry = CORRECTIONS.find((c) => c.id === correctionId);
+  if (!entry) return null;
+  return (
+    <p className="revision-note" data-revision-note={entry.id}>
+      <span className="revision-note-label">Changed {entry.date}:</span> {entry.summary}{" "}
+      <Link href="/methodology#corrections">The register says what changed and why.</Link>
+    </p>
   );
 }
 

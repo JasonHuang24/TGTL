@@ -20,6 +20,7 @@ import { HOTLINE_GROUPS, NATIONS, UK_NATIONS, hotlineRegions, ALL_HOTLINES } fro
 import { SETDOWN_FORBIDDEN_TERMS, TERMS } from "../content/terminology.ts";
 import { STATUS_LABEL } from "../content/evidence.ts";
 import { ROUTES, SETDOWN_ROUTES, LOSS_ADJACENT_ROUTES } from "../content/routes.ts";
+import { DISANALOGIES, CORRECTIONS, RETRACTIONS, WHATS_COMING } from "../content/methodology.ts";
 import { CONCEPTS, CONCEPT_COLUMNS } from "../content/concepts.ts";
 import { TIER_OBJECTIVES, ARCHETYPES, TIER_NOT_MEASURED } from "../content/history.ts";
 import { TIMELINE_MILESTONE_ROUTES } from "../content/timeline/generated/routes.ts";
@@ -2913,6 +2914,451 @@ function c44(): CGateResult | null {
   };
 }
 
+/* =========================================================================
+   C-45 (N-281) — every route that cites a disanalogy links a numbered entry,
+   and every entry lists at least one inheriting route that exists AND cites it.
+   =========================================================================
+   The register's whole value is that it is INHERITED rather than restated, and
+   an inheritance breaks silently in two different directions. A page can cite an
+   entry that has been renumbered or removed, which leaves a reader following a
+   link into nothing. And an entry can claim a page that has quietly stopped
+   citing it, which leaves the register describing a site that no longer exists.
+
+   Both halves are asserted over the EXPORTED HTML, because a `ModelBreak` that a
+   page imports and never renders would satisfy a source check.
+   ========================================================================= */
+function c45(): CGateResult | null {
+  const methodology = readOut("/methodology");
+  if (!methodology || !methodology.includes("data-break=")) return null;
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  // 1. The register itself: unique numbers, unique ids, and nothing claiming
+  //    nobody. An entry with no inheriting route is humility that no page ever
+  //    meets, which is the state this row exists to end.
+  const seenN = new Set<number>();
+  const seenId = new Set<string>();
+  for (const d of DISANALOGIES) {
+    if (seenN.has(d.n)) fails.push(`content/methodology.ts: two disanalogy entries carry the number ${d.n}`);
+    if (seenId.has(d.id)) fails.push(`content/methodology.ts: two disanalogy entries carry the id "${d.id}"`);
+    seenN.add(d.n);
+    seenId.add(d.id);
+    if (!d.inheritedBy || d.inheritedBy.length === 0)
+      fails.push(`content/methodology.ts: disanalogy ${d.n} ("${d.title}") lists no inheriting route — an unread break is not a published one (N-281)`);
+    if (!methodology.includes(`id="break-${d.n}"`))
+      fails.push(`/methodology: no anchor id="break-${d.n}" for entry ${d.n} ("${d.title}") — pages link that anchor`);
+  }
+
+  // 2. FORWARD: every route an entry claims exists, and renders the citation.
+  for (const d of DISANALOGIES) {
+    for (const route of d.inheritedBy) {
+      const rec = ROUTES.find((r) => r.path === route);
+      if (!rec) {
+        fails.push(
+          `content/methodology.ts: disanalogy ${d.n} ("${d.title}") is inherited by "${route}", which is not a route in the inventory`,
+        );
+        continue;
+      }
+      const html = readOut(route);
+      if (html === null) {
+        fails.push(`disanalogy ${d.n}: ${route} is in the inventory but was not exported, so the citation could not be checked`);
+        continue;
+      }
+      if (!html.includes(`data-model-break="${d.n}"`))
+        fails.push(
+          `${route}: disanalogy ${d.n} ("${d.title}") claims this page inherits it, and the page carries no ModelBreak for it (N-281)`,
+        );
+    }
+  }
+
+  // 3. REVERSE: every citation in the whole export resolves, and is claimed back.
+  let citations = 0;
+  for (const rec of ROUTES) {
+    const html = readOut(rec.path);
+    if (html === null) continue;
+    for (const m of html.matchAll(/data-model-break="(\d+)"/g)) {
+      citations++;
+      const n = Number(m[1]);
+      const entry = DISANALOGIES.find((d) => d.n === n);
+      if (!entry) {
+        fails.push(`${rec.path}: cites disanalogy ${n}, which does not exist in the register`);
+        continue;
+      }
+      if (!entry.inheritedBy.includes(rec.path))
+        fails.push(
+          `${rec.path}: cites disanalogy ${n} ("${entry.title}") and the entry does not list this route in inheritedBy — the register would describe a site that no longer exists`,
+        );
+    }
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  details.push(
+    `${DISANALOGIES.length} numbered disanalogies, each anchored on /methodology and each inherited by at least one route`,
+  );
+  details.push(`${citations} ModelBreak citations across the export, every one resolving to an entry that claims it back`);
+  details.push(
+    DISANALOGIES.map((d) => `${d.n} ${d.id} [${d.severity}/${d.status}] → ${d.inheritedBy.join(", ")}`).join(" · "),
+  );
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-46 (N-290) — the retractions section renders with zero entries.
+   =========================================================================
+   The failure this catches is not a missing section. It is a section that hides
+   itself while it is empty and comes into existence with its first entry, which
+   is precisely the mechanism-invented-under-pressure the row refuses. So it is
+   asserted twice: the exported page carries the section and its empty state
+   while `RETRACTIONS` is empty, and the SOURCE does not gate the heading on
+   there being anything to show.
+   ========================================================================= */
+function c46(): CGateResult | null {
+  const html = readOut("/methodology");
+  if (!html || !html.includes('id="retractions"')) return null;
+  const fails: string[] = [];
+  const src = read("app/methodology/page.tsx");
+
+  if (!html.includes('id="retractions"'))
+    fails.push('/methodology: no id="retractions" — the register a page links to has to be there before the first entry');
+
+  const text = textOf(html).toLowerCase();
+  // The standing sentence is the row's substance, not decoration.
+  if (!text.includes("invented after the first error"))
+    fails.push('/methodology: the retractions section no longer says that a mechanism invented after the first error is not a mechanism (N-290)');
+  // The format is published while it is empty: what was said, kept and struck.
+  if (!text.includes("struck through"))
+    fails.push("/methodology: the retractions section does not say the original text is kept and struck through, which is the format it commits to (N-290)");
+
+  if (RETRACTIONS.length === 0) {
+    // The RENDERED attribute, with its value. Next.js also emits every prop into
+    // its own flight payload as `data-retractions-empty\":true`, so a bare
+    // substring check passes on a page whose element was removed — which is the
+    // failure this gate exists to catch, and the first plant found it.
+    if (!html.includes('data-retractions-empty="true"'))
+      fails.push(
+        "/methodology: RETRACTIONS is empty and the section renders no empty state — a register that appears with its first entry is not a published mechanism (N-290)",
+      );
+  } else if (!html.includes('data-retraction="')) {
+    fails.push(`/methodology: ${RETRACTIONS.length} retraction(s) recorded and none rendered`);
+  }
+
+  // The source half: the heading is unconditional. A conditional heading passes
+  // the rendered check on the day somebody adds an entry and fails a reader on
+  // every day before that.
+  const headingLine = src.split("\n").find((l) => l.includes('id="retractions"')) ?? "";
+  if (/RETRACTIONS\.length\s*>\s*0\s*&&/.test(headingLine))
+    fails.push(
+      "app/methodology/page.tsx: the retractions heading is rendered conditionally on there being entries — the section is required to render empty (N-290)",
+    );
+  if (!/RETRACTIONS\.length === 0 \?/.test(src))
+    fails.push("app/methodology/page.tsx: no explicit empty state for the retractions register");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/methodology renders the retractions register with ${RETRACTIONS.length} entries, its format published, and an explicit empty state`,
+      "the heading is unconditional in source: the section cannot come into existence with its first entry",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-47 (N-291) — a page changed by a logged correction renders a revision note.
+   =========================================================================
+   A silent fix converts a reader's correction into the editors' foresight. The
+   register knowing about a change is not the same as the page saying so, and the
+   gap between the two is where a site's history quietly improves. Asserted in
+   both directions so that neither the note nor the record can drift alone.
+   ========================================================================= */
+function c47(): CGateResult | null {
+  const withPages = CORRECTIONS.filter((c) => c.pages && c.pages.length > 0);
+  if (withPages.length === 0) return null;
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  for (const c of withPages) {
+    for (const route of c.pages ?? []) {
+      const rec = ROUTES.find((r) => r.path === route);
+      if (!rec) {
+        fails.push(`content/methodology.ts: correction ${c.id} names "${route}", which is not a route in the inventory`);
+        continue;
+      }
+      const html = readOut(route);
+      if (html === null) {
+        fails.push(`correction ${c.id}: ${route} was not exported, so the revision note could not be checked`);
+        continue;
+      }
+      if (!html.includes(`data-revision-note="${c.id}"`))
+        fails.push(
+          `${route}: correction ${c.id} says this page changed and the page renders no revision note naming it — a silent fix (N-291)`,
+        );
+      // The note carries the register's own words, not a paraphrase that can drift.
+      const text = textOf(html);
+      if (html.includes(`data-revision-note="${c.id}"`) && !text.includes(c.summary))
+        fails.push(`${route}: the revision note does not carry correction ${c.id}'s summary as the register states it`);
+      if (html.includes(`data-revision-note="${c.id}"`) && !text.includes(c.date))
+        fails.push(`${route}: the revision note for ${c.id} carries no date`);
+    }
+  }
+
+  // REVERSE: a note on a page the register does not name is a claim with no record.
+  for (const rec of ROUTES) {
+    const html = readOut(rec.path);
+    if (html === null) continue;
+    for (const m of html.matchAll(/data-revision-note="([^"]+)"/g)) {
+      const id = m[1];
+      const c = CORRECTIONS.find((x) => x.id === id);
+      if (!c) {
+        fails.push(`${rec.path}: renders a revision note for "${id}", which is not in the corrections register`);
+        continue;
+      }
+      if (!(c.pages ?? []).includes(rec.path))
+        fails.push(`${rec.path}: renders a revision note for ${id}, and the register does not list this page as changed by it`);
+    }
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  details.push(
+    `${withPages.length} correction(s) name a changed page; every named page renders the note with the register's date and summary`,
+  );
+  for (const c of withPages) details.push(`${c.id} → ${(c.pages ?? []).join(", ")}`);
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-48 (N-296) — every non-stub route records what it changes.
+   =========================================================================
+   The admission test is only a boundary if every page has had to clear it. The
+   type makes the field required; this makes it non-empty and a sentence, because
+   the cheap way past a required string is an empty one, and the next cheapest is
+   a copy of the summary — which answers "what is this page about" rather than
+   "what does it change for the reader".
+   ========================================================================= */
+function c48(): CGateResult | null {
+  if (!ROUTES.some((r) => r.changes)) return null;
+  const fails: string[] = [];
+  const real = ROUTES.filter((r) => !r.stub);
+
+  for (const r of real) {
+    const c = (r.changes ?? "").trim();
+    if (!c) {
+      fails.push(`content/routes.ts: ${r.path} records no answer to what it changes for the reader — the admission test is not optional (N-296)`);
+      continue;
+    }
+    if (c.length < 30)
+      fails.push(`content/routes.ts: ${r.path}'s "changes" is too short to be an answer: "${c}"`);
+    if (c === r.summary)
+      fails.push(`content/routes.ts: ${r.path}'s "changes" is a copy of its summary — what a page is about is not what it changes (N-296)`);
+  }
+
+  // The test itself is published, or the boundary is private and unenforceable.
+  const html = readOut("/methodology");
+  if (html === null) fails.push("/methodology was not exported");
+  else {
+    if (!html.includes('id="admission-test"'))
+      fails.push('/methodology: the admission test is not published under id="admission-test" (N-296)');
+    const text = textOf(html).toLowerCase();
+    if (!text.includes("changes a decision or an orientation"))
+      fails.push("/methodology: the admission test's sentence is not on the page in its own words (N-296)");
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${real.length} non-stub routes each record the decision or orientation they change, in a sentence of their own`,
+      "the test is published on /methodology#admission-test, so a reader can hold the site to its own scope",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-49 (N-301) — every perishable route renders a stamp and a review date.
+   =========================================================================
+   A declared property that does not reach the page is worse than no property at
+   all: the inventory says the page is dying and the reader meets a page that
+   claims permanence. Both directions again — a stamp on a route nobody flagged
+   is a date with no maintenance behind it.
+   ========================================================================= */
+function c49(): CGateResult | null {
+  const flagged = ROUTES.filter((r) => r.perishable);
+  if (flagged.length === 0) return null;
+  const fails: string[] = [];
+
+  for (const r of flagged) {
+    const date = r.perishable?.reviewBy ?? "";
+    if (!/^\d{4}(-\d{2}){0,2}$/.test(date))
+      fails.push(`content/routes.ts: ${r.path}'s review date "${date}" is not a plain ISO date`);
+    const html = readOut(r.path);
+    if (html === null) {
+      fails.push(`${r.path}: flagged perishable and not exported`);
+      continue;
+    }
+    if (!html.includes(`data-perishable="${date}"`))
+      fails.push(`${r.path}: flagged perishable in the inventory and renders no staleness stamp (N-301)`);
+    if (!textOf(html).includes(date))
+      fails.push(`${r.path}: renders a perishable marker with no visible review date — the date is the whole content of the stamp (N-301)`);
+  }
+
+  for (const r of ROUTES) {
+    const html = readOut(r.path);
+    if (html === null) continue;
+    if (html.includes("data-perishable=") && !r.perishable)
+      fails.push(`${r.path}: renders a review date and is not flagged perishable in the inventory — a date nobody is maintaining`);
+  }
+
+  // The class is published, not private to the route file.
+  const meth = readOut("/methodology");
+  if (meth && !meth.includes('id="planned-obsolescence"'))
+    fails.push("/methodology: the rule that some pages are supposed to expire is not published (N-301)");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      flagged.map((r) => `${r.path} → review by ${r.perishable?.reviewBy}`).join(" · "),
+      "each renders the stamp with its date; no unflagged route renders one; the rule is published on /methodology#planned-obsolescence",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-50 (N-302) — planned badges and WHATS_COMING resolve in both directions.
+   =========================================================================
+   The single-source rule (2.0 §6.9, extended by 6.0 §2.3.2) is the thing being
+   protected: the inline cards are DERIVED, so an orphan badge means somebody has
+   started naming unbuilt scope in a second place, and an entry that renders on no
+   index means the reader still has to go looking for the hole.
+
+   WHAT THIS GATE DOES NOT COVER, said out loud: entries whose area is "play".
+   The play layer was outside batch 6's licence, so `/play` renders no planned
+   cards and the entries reach a reader only through the list on /methodology. The
+   gate asserts that much rather than passing over them in silence.
+   ========================================================================= */
+const AREA_INDEX: Record<string, string> = {
+  topics: "/topics",
+  situations: "/situations",
+  history: "/history",
+  methodology: "/methodology",
+  timeline: "/timeline",
+  play: "/play",
+};
+const AREAS_WITH_CARDS = ["topics", "situations", "history"];
+
+function c50(): CGateResult | null {
+  if (!Array.isArray(WHATS_COMING) || WHATS_COMING.length === 0) return null;
+  if (typeof (WHATS_COMING as unknown as { id?: string }[])[0]?.id !== "string") return null;
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  const ids = new Set<string>();
+  for (const w of WHATS_COMING) {
+    if (ids.has(w.id)) fails.push(`content/methodology.ts: two WHATS_COMING entries carry the id "${w.id}"`);
+    ids.add(w.id);
+    if (!AREA_INDEX[w.area]) fails.push(`content/methodology.ts: "${w.id}" declares an area with no index: ${w.area}`);
+  }
+
+  // Everything is named in the single source, whatever else renders it.
+  const meth = readOut("/methodology");
+  if (meth === null) fails.push("/methodology was not exported");
+  else
+    for (const w of WHATS_COMING)
+      if (!meth.includes(`data-coming="${w.id}"`))
+        fails.push(`/methodology: "${w.id}" is not in the what's-coming list — that list is the only place unbuilt scope is named (2.0 §6.9)`);
+
+  // FORWARD: an entry for an index this batch renders meets the reader there.
+  for (const w of WHATS_COMING) {
+    if (!AREAS_WITH_CARDS.includes(w.area)) continue;
+    const index = AREA_INDEX[w.area];
+    const html = readOut(index);
+    if (html === null) {
+      fails.push(`${index}: not exported, so "${w.id}" could not be checked`);
+      continue;
+    }
+    if (!html.includes(`data-planned="${w.id}"`))
+      fails.push(`${index}: WHATS_COMING entry "${w.id}" declares area "${w.area}" and renders no planned card there (N-302)`);
+  }
+
+  // REVERSE: every badge anywhere in the export resolves to an entry.
+  let badges = 0;
+  for (const r of ROUTES) {
+    const html = readOut(r.path);
+    if (html === null) continue;
+    for (const m of html.matchAll(/data-planned="([^"]+)"/g)) {
+      badges++;
+      if (!ids.has(m[1]))
+        fails.push(`${r.path}: renders a planned badge for "${m[1]}", which is not a WHATS_COMING entry — unbuilt scope named in a second place (N-302)`);
+    }
+  }
+
+  // A route's own pointer resolves too.
+  for (const r of ROUTES)
+    if (r.planned && !ids.has(r.planned))
+      fails.push(`content/routes.ts: ${r.path} points at planned entry "${r.planned}", which does not exist`);
+
+  const playEntries = WHATS_COMING.filter((w) => w.area === "play");
+  if (fails.length) return { pass: false, details: fails };
+  details.push(`${WHATS_COMING.length} WHATS_COMING entries, every one named in the list on /methodology`);
+  details.push(`${badges} planned badges across the export, every one resolving to an entry`);
+  details.push(
+    `areas rendering cards: ${AREAS_WITH_CARDS.join(", ")}; NOT COVERED: ${playEntries.length} entries in area "play" (${playEntries
+      .map((w) => w.id)
+      .join(", ")}) — /play was outside batch 6's licence, so those reach a reader through the list alone`,
+  );
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-51 (N-306) — a pre-existing tgtl: library survives a suite run byte-identical.
+   =========================================================================
+   The substance is a browser assertion (browser gate 151), because the claim is
+   about what a suite run does to a real profile and no static read can see that.
+   What is asserted HERE is the structural half a browser run cannot: that neither
+   suite still holds a bare delete loop, and that both go through the shared
+   preserve-and-restore path — a suite that reimplemented its own clearing would
+   pass the browser gate and lose the next reader's saves.
+   ========================================================================= */
+function c51(): CGateResult | null {
+  if (!existsSync(join(ROOT, "tests/lib-preserve.mjs"))) return null;
+  const fails: string[] = [];
+  const preserve = read("tests/lib-preserve.mjs");
+
+  for (const fn of ["preserveThenClear", "restorePreserved", "readLibrary"])
+    if (!preserve.includes(`export async function ${fn}`) && !preserve.includes(`export function ${fn}`))
+      fails.push(`tests/lib-preserve.mjs: no ${fn} — the two suites share this or they do not share anything`);
+
+  for (const rel of ["tests/browser-gates.mjs", "tests/s9-ui.mjs"]) {
+    const src = read(rel);
+    if (!src.includes('from "./lib-preserve.mjs"'))
+      fails.push(`${rel}: does not use the shared preservation helpers (N-306)`);
+    if (!src.includes("preserveThenClear("))
+      fails.push(`${rel}: does not snapshot before clearing`);
+    if (!src.includes("restorePreserved("))
+      fails.push(`${rel}: never restores what it cleared`);
+    // The defect itself: a loop that removes tgtl keys without recording them.
+    const bare = [...src.matchAll(/localStorage\.removeItem\(k\)/g)].length;
+    if (bare > 0)
+      fails.push(
+        `${rel}: still deletes ${bare} localStorage key(s) directly — every clear goes through preserveThenClear so a reader's library is recorded first (N-306)`,
+      );
+  }
+
+  // The restore has to survive the failure path, which is the run where it matters.
+  if (!/finally\s*\{[\s\S]{0,120}restorePreserved/.test(preserve))
+    fails.push("tests/lib-preserve.mjs: withPreservedLibrary does not restore in a finally — a failing suite is the run that eats the library");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "both suites clear through tests/lib-preserve.mjs: record every tgtl: key, remove what the walk needs gone, put it all back before the context closes",
+      "neither suite contains a bare removeItem loop; the restore also runs on the failure path",
+      "the byte-identity claim is proven live by browser gate 151 (a seeded library, the suite's own clear-and-walk, then a full comparison)",
+    ],
+  };
+}
+
 export const GATES: CGate[] = [
   { id: 1, row: "N-226", name: "A failed or unverified write never reports saved", proof: "record", run: c1 },
   { id: 2, row: "N-190", name: "A rendered failure mode carries its tied recovery route", proof: "probe", run: c2 },
@@ -2958,13 +3404,13 @@ export const GATES: CGate[] = [
   { id: 42, row: "N-150", name: "Position produces no rank, band or comparison and never enters a URL", proof: "probe", run: c42 },
   { id: 43, row: "N-170", name: "Every placement belongs to a named objective; changing it changes the board", proof: "probe", run: c43 },
   { id: 44, row: "N-171", name: "No placement renders without the ruleset header", proof: "probe", run: c44 },
-  { id: 45, row: "N-281", name: "Disanalogy entries and their inheriting routes resolve both ways", proof: "probe", run: NA },
-  { id: 46, row: "N-290", name: "The retractions register renders when empty", proof: "probe", run: NA },
-  { id: 47, row: "N-291", name: "A page changed by a logged correction renders a revision note", proof: "probe", run: NA },
-  { id: 48, row: "N-296", name: "Every new route records what it changes", proof: "probe", run: NA },
-  { id: 49, row: "N-301", name: "Every perishable route renders a stamp and review date", proof: "probe", run: NA },
-  { id: 50, row: "N-302", name: "Planned badges and WHATS_COMING ids match both ways", proof: "probe", run: NA },
-  { id: 51, row: "N-306", name: "A pre-existing saved library survives a suite run byte-identical", proof: "record", run: NA },
+  { id: 45, row: "N-281", name: "Disanalogy entries and their inheriting routes resolve both ways", proof: "probe", run: c45 },
+  { id: 46, row: "N-290", name: "The retractions register renders when empty", proof: "probe", run: c46 },
+  { id: 47, row: "N-291", name: "A page changed by a logged correction renders a revision note", proof: "probe", run: c47 },
+  { id: 48, row: "N-296", name: "Every new route records what it changes", proof: "probe", run: c48 },
+  { id: 49, row: "N-301", name: "Every perishable route renders a stamp and review date", proof: "probe", run: c49 },
+  { id: 50, row: "N-302", name: "Planned badges and WHATS_COMING ids match both ways", proof: "probe", run: c50 },
+  { id: 51, row: "N-306", name: "A pre-existing saved library survives a suite run byte-identical", proof: "record", run: c51 },
 ];
 
 if (!existsSync(OUT_DIR)) {

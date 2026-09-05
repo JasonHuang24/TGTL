@@ -17,6 +17,7 @@ import { chromium } from "playwright";
 import { mkdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { preserveThenClear, restorePreserved, readLibrary } from "./lib-preserve.mjs";
 
 const BASE = process.argv[2] || "http://localhost:4321";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -67,12 +68,17 @@ async function click(page, text, scope = "") {
   return false;
 }
 
+/**
+ * N-306 (C-51) — RECORD BEFORE CLEARING, AND PUT IT BACK.
+ *
+ * This used to delete every `tgtl:play*` and `tgtl:sim2*` key outright. Harmless
+ * against an ephemeral context, destructive the first time anyone points the
+ * suite at a browser profile with a named-save library in it. The clear now
+ * snapshots first; `restorePreserved` puts the reader's own state back before the
+ * context that held it is closed.
+ */
 async function clearPlayState(page) {
-  await page.evaluate(() => {
-    try {
-      for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:play") || k.startsWith("tgtl:sim2")) localStorage.removeItem(k);
-    } catch {}
-  });
+  await preserveThenClear(page, ["tgtl:play", "tgtl:sim2"]);
 }
 
 /* ============================================================
@@ -269,6 +275,7 @@ async function labTo(page, opts = {}) {
       const url = page.url();
       if (/tgtl%3A|tgtl:|board=|guidance=|log=|play=|sim2/.test(url)) urlLeaks.push(url);
     }
+    await restorePreserved(page);
     await ctx.close();
   }
   record(
@@ -337,6 +344,7 @@ async function labTo(page, opts = {}) {
     if (stored && stillThere !== stored) posDetails.push("the position did not survive navigation, so it is not shared state (N-150)");
     if (posDetails.length === 0)
       posDetails.push(`the position was set through the control, survived ${seen.length} navigations, re-resolved a note on every page that carries one, and reached no URL`);
+    await restorePreserved(page);
     await ctx.close();
   }
 
@@ -459,6 +467,7 @@ async function labTo(page, opts = {}) {
   else details.push("under print media the entry forms and controls are gone and the records remain");
   await page.emulateMedia({ media: "screen" });
 
+  await restorePreserved(page);
   await ctx.close();
   record(137, "C-37 (N-074): the copy-out and print paths touch no network and no URL", problems.length === 0, problems.length ? problems : details);
 }
@@ -519,6 +528,7 @@ async function labTo(page, opts = {}) {
     ok = false;
     details.push(`reset: leftover ${leftover.join(", ")}`);
   } else details.push("reset: board/logs/guidance/play state cleared");
+  await restorePreserved(page);
   await ctx.close();
   record(6, "State preservation + reset", ok, details);
 }
@@ -543,6 +553,7 @@ async function labTo(page, opts = {}) {
   await campaignTo(page, "allocate");
   const badPlay = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   if (badPlay) overflow.push("/play/campaign (allocate): horizontal overflow at 320px");
+  await restorePreserved(page);
   await ctx.close();
   record(8, `Responsive: no horizontal body scroll at 320px (${ROUTES.length} routes + the allocate screen)`, overflow.length === 0,
     overflow.length ? overflow : [`All ${ROUTES.length} routes clean at 320px, including the allocate screen with every instrument rendered.`]);
@@ -579,6 +590,7 @@ async function labTo(page, opts = {}) {
     ok = false;
     details.push("keyboard: could not reach Threshold from the entrance");
   } else details.push("keyboard: Help-now focusable on all eight sampled routes including all three play modes; reached Threshold by keyboard");
+  await restorePreserved(page);
   await ctx.close();
   record(7, "Keyboard: Help-now reachable everywhere", ok, details);
 }
@@ -744,6 +756,7 @@ async function labTo(page, opts = {}) {
     if (cols === 2 && noPrediction && axisSwitched)
       details.push("S-4: one Lab comparison completed keyboard-only, both branches rendered, the axis switched by Enter and the comparison re-rendered, no-prediction line present.");
   }
+  await restorePreserved(page);
   await ctx.close();
   record(4, "S-4 · Keyboard: a full season, a fork, a Lab comparison; Help-now in every state", ok, details);
 }
@@ -812,6 +825,7 @@ async function labTo(page, opts = {}) {
       await shoot(page, `arc-creation-${suffix}`);
       await arcTo(page, "parse");
       await shoot(page, `arc-parse-${suffix}`);
+      await restorePreserved(page);
       await ctx.close();
     }
   }
@@ -901,6 +915,7 @@ async function labTo(page, opts = {}) {
     details.push(
       `allocate screen: ${found.length} of ${cards} action cards render their switching cost; e.g. "${found[0].slice(0, 90)}…"`,
     );
+  await restorePreserved(page);
   await ctx.close();
   record(3, "C-3 (N-191): the action card renders its switching cost", problems.length === 0, problems.length ? problems : details);
 }
@@ -974,6 +989,7 @@ async function labTo(page, opts = {}) {
   // jump off-site is sanctioned only where the reader may need to hide the screen.
   const stray = await doubleEscape("/topics");
   if (stray) problems.push(`/topics: double-Escape left the page from a route that is not set-down (${stray})`);
+  await restorePreserved(page);
   await ctx.close();
   if (!problems.length)
     details.push(
@@ -1055,6 +1071,7 @@ async function labTo(page, opts = {}) {
   // And the look-back at the end of the run, which is a season screen too.
   await campaignParseTo(page);
   if (!(await page.locator("[data-sim-origin-face]").count())) problems.push("the look-back carries no origin motif");
+  await restorePreserved(page);
   await ctx.close();
   if (!problems.length) details.push(`${seen.join(" · ")}; the allocate screen and the look-back carry it too, and the preset's name is nowhere in the header`);
   record(114, "C-14 (N-204): every season screen carries its origin motif", problems.length === 0, problems.length ? problems : details);
@@ -1125,6 +1142,7 @@ async function labTo(page, opts = {}) {
     if (before === after && resolved) problems.push("the season resolved but the header did not advance");
     if (resolved) details.push(`the repeat control took focus, activated on Enter, and committed a season of ${resolved} outcome(s) through the same path as a hand allocation`);
   }
+  await restorePreserved(page);
   await ctx.close();
   record(112, "C-12 / S-4 (N-194): the repeat-last-season control is keyboard-reachable and commits", problems.length === 0, problems.length ? problems : details);
 }
@@ -1196,6 +1214,7 @@ async function labTo(page, opts = {}) {
     if (!t.includes("cannot be undone by the Guidebook")) problems.push("the branch delete's armed state does not carry the cannot-be-undone line");
     if (!problems.length) details.push("the branch delete arms and states that the parent or sibling branches remain separate");
   }
+  await restorePreserved(page);
   await ctx.close();
   record(127, "C / N-227: erasing arms first, and the armed state says what survives", problems.length === 0, problems.length ? problems : details);
 }
@@ -1277,8 +1296,83 @@ async function labTo(page, opts = {}) {
       details.push(`${refusing.map((b) => b.objective).join(", ")} renders an empty top tier badged insufficient-evidence, and the other boards render none`);
   }
 
+  await restorePreserved(page);
   await ctx.close();
   record(143, "C-43 / C-44 (N-170..N-172): the objective switch changes the board, the header follows it, and the empty top tier is badged", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-51 (N-306) — A PRE-EXISTING SAVED LIBRARY SURVIVES A SUITE RUN.
+   ============================================================
+   The suite cannot be pointed at somebody's real browser profile to prove this,
+   and that is exactly why the claim needs a test rather than an assurance: the
+   run where it would matter is the run nobody does twice. So a context is seeded
+   with a library that looks like a reader's — named saves, a campaign, an
+   edition, a position — the suite's own clear-and-walk path is driven over it,
+   and the whole `tgtl:` map is compared byte for byte afterwards.
+
+   It uses THE SAME functions the walks above use. A version of this that
+   reimplemented the preservation would prove only that the test can preserve
+   things. Planting a skipped restore in tests/lib-preserve.mjs turns this red.
+   ============================================================ */
+{
+  const problems = [];
+  const details = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+
+  const SEED = {
+    "tgtl:play:saves": JSON.stringify([{ id: "s1", label: "the long one", at: "2026-09-01" }]),
+    "tgtl:play:run": JSON.stringify({ act: 4, seed: "abc" }),
+    "tgtl:sim2:campaign": JSON.stringify({ season: 11, budget: { time: 3 } }),
+    "tgtl:edition": "game",
+    "tgtl:credential-position": JSON.stringify({ floor: "yes" }),
+  };
+
+  await page.goto(BASE + "/play", { waitUntil: "domcontentloaded" });
+  await sleep(200);
+  await page.evaluate((seed) => {
+    for (const [k, v] of Object.entries(seed)) localStorage.setItem(k, v);
+  }, SEED);
+  const before = await readLibrary(page);
+
+  // The suite's own opening move, then a walk that writes over the top of it.
+  await clearPlayState(page);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await sleep(320);
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("tgtl:play:run", JSON.stringify({ act: 1, seed: "walk" }));
+      localStorage.setItem("tgtl:play:walk-artefact", "left behind by the suite");
+    } catch {}
+  });
+
+  const cleared = await readLibrary(page);
+  if (cleared.some(([k]) => k === "tgtl:play:saves"))
+    problems.push("the clear did not remove the named-save library, so this test proves nothing about restoring it");
+
+  await restorePreserved(page);
+  const after = await readLibrary(page);
+
+  const fmt = (rows) => rows.map(([k, v]) => `${k}=${v}`).join("\n");
+  if (fmt(before) !== fmt(after)) {
+    const beforeMap = new Map(before);
+    const afterMap = new Map(after);
+    for (const [k, v] of beforeMap)
+      if (!afterMap.has(k)) problems.push(`C-51: the suite DELETED the reader's ${k} and did not put it back`);
+      else if (afterMap.get(k) !== v)
+        problems.push(`C-51: the suite OVERWROTE the reader's ${k} (was ${String(v).slice(0, 60)}…, now ${String(afterMap.get(k)).slice(0, 60)}…)`);
+    for (const [k] of afterMap)
+      if (!beforeMap.has(k)) problems.push(`C-51: the suite LEFT BEHIND ${k}, which the reader never had`);
+  } else {
+    details.push(
+      `${before.length} seeded tgtl: keys (named saves, an active run, a campaign, an edition, a position) survive a clear, a reload and a walk that overwrote two of them: byte-identical afterwards`,
+    );
+    details.push(`the suite's own clearPlayState + restorePreserved path was used, not a copy of it`);
+  }
+
+  await ctx.close();
+  record(151, "C-51 (N-306): a pre-existing saved library survives a suite run byte-identical", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */

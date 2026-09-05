@@ -1,21 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadingPage, PageHeader, Callout } from "@/components/primitives";
+import { ReadingPage, PageHeader, Callout, ModelBreak } from "@/components/primitives";
 import { ResetButton } from "@/components/ResetButton";
 import { EngineMethodology } from "@/components/reference/EngineMethodology";
 import { SandboxMethodology } from "@/components/reference/SandboxMethodology";
 import { TimelineMethodology } from "@/components/reference/TimelineMethodology";
 import {
   INTERNAL_MODEL,
-  KNOWN_BREAKS,
+  DISANALOGIES,
   WHATS_COMING,
   CORRECTIONS,
+  RETRACTIONS,
 } from "@/content/methodology";
+import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
   title: "How this site works",
   description:
     "The instrument and how to judge it, the two editions and set-down, how evidence works, the corrections register, the known breaks, and what's coming.",
+};
+
+/** N-281 — the register's two axes, in reader words. */
+const SEVERITY_LABEL: Record<string, string> = {
+  structural: "Structural — the frame itself",
+  material: "Material — how it is written and shown",
+  edge: "Edge — a boundary not reached yet",
+};
+
+const STATUS_WORD: Record<string, string> = {
+  open: "Open: no fix",
+  mitigated: "Mitigated: built against, not solved",
+  accepted: "Accepted: the cost of the position",
 };
 
 const KIND_LABEL: Record<string, string> = {
@@ -41,6 +56,16 @@ export default function MethodologyPage() {
         title="This site is an instrument"
         intro="It describes life using the vocabulary of a game. That is not a claim that life is a game. It is a way of seeing — and, like any instrument, it is fairly judged by what it lets you notice and do, not by how closely it resembles its subject."
       />
+
+      {/* N-304 — the sentence that justifies the whole disclosure architecture,
+          said at the top because it is the rule the rest of this page follows. */}
+      <p className="methodology-standard">
+        The working standard for everything below: this site should show its confidence without
+        making you pay an <strong>evidence tax</strong> to read it. The reasoning, the status of a
+        claim and the sources sit one click away in a drawer rather than in the middle of the
+        sentence &mdash; there when you want to audit us, out of the way when you came here to find
+        something out.
+      </p>
 
       {/* N-434 — the clearest one-line statement of what this site is for, said
           with the disavowal that was written in the same breath. The promise
@@ -172,37 +197,161 @@ export default function MethodologyPage() {
         varies, the finding is used without a number.
       </p>
 
+      {/* N-392 (§3.11) — a reading skill, taught once and used everywhere. The
+          brief's version is about kettles; the distinction is the same for
+          careers, credentials, cities and schools, which is why it lives here
+          rather than on one comparison page. */}
+      <h2 id="nine-ways-best">Nine reasons something can be the popular choice</h2>
+      <p>
+        Whenever this site compares options, it refuses to name an overall winner, and the reason is
+        worth having as a habit of your own. &ldquo;Best&rdquo; is not one thing, and the most
+        common choice is not necessarily the strongest one. Before treating popularity as evidence
+        of quality, check whether it is instead:
+      </p>
+      <ul className="nine-ways">
+        <li>
+          <strong>Availability</strong> &mdash; it is what was in front of most people, and the
+          alternatives were somewhere else.
+        </li>
+        <li>
+          <strong>Marketing</strong> &mdash; more was spent telling people about it than about
+          anything better.
+        </li>
+        <li>
+          <strong>Habit</strong> &mdash; it is what people already used, and switching required a
+          reason.
+        </li>
+        <li>
+          <strong>Bundling</strong> &mdash; it arrived attached to something else that was chosen
+          for other reasons.
+        </li>
+        <li>
+          <strong>Network effects</strong> &mdash; its value comes from other people using it, which
+          is real but is not quality.
+        </li>
+        <li>
+          <strong>Switching costs</strong> &mdash; leaving is expensive, so staying looks like
+          preference.
+        </li>
+        <li>
+          <strong>Placement</strong> &mdash; it was at eye level, at the top of the list, first in
+          the results.
+        </li>
+        <li>
+          <strong>A low price at the start</strong> &mdash; cheap to begin and dearer to keep, which
+          is a different offer from cheap.
+        </li>
+        <li>
+          <strong>Quality</strong> &mdash; which is on the list, and is one of nine.
+        </li>
+      </ul>
+      <p>
+        The same nine explain a crowded degree, a standard career path, a city everyone is moving to
+        and a piece of advice everybody repeats. None of them makes the popular option wrong. What
+        they do is stop &ldquo;most people do this&rdquo; from finishing the argument.
+      </p>
+
       <TimelineMethodology />
 
+      {/* N-281, N-282, N-283 (§3.11, C-45) — the disanalogy register. Numbered and
+          anchored because pages cite entries by number; framed, per N-283, as what
+          it actually is rather than as a modest closing caveat. */}
       <h2 id="known-breaks">Known breaks in this model</h2>
       <p>
-        An instrument whose failures accumulate silently is one that rots. So the places where this
-        site&rsquo;s own frame strains are written down, in public, and grown as more are found.
+        This section undermines the rest of the site, on purpose. That is not modesty and it is not
+        a disclaimer: an instrument whose failure modes are not written down is dangerous in
+        proportion to how useful it is, because the more it helps the more readily you stop checking
+        it.
+      </p>
+      <p>
+        There is a real trade-off here, and we are not going to resolve it for you. The confidence
+        that makes an instrument worth using and the humility that makes it honest pull against each
+        other: a page hedged into fog helps nobody, and a page that sounds certain about a life is
+        lying. This site chooses to be direct on the page and to keep the whole list of its own
+        failures in one place, numbered, where any page that strains can point at it. What that
+        costs is the thing you are reading now &mdash; a section that tells you the frame you have
+        just been handed is wrong in every specific way we have so far been able to name. We think
+        that is the cheaper of the two prices.
+      </p>
+      <p className="known-breaks-key">
+        Each entry says where the failure lives &mdash; <strong>structural</strong> (the frame
+        itself is wrong here, and better writing will not fix it), <strong>material</strong> (the
+        content and presentation decide how badly it bites), or <strong>edge</strong> (it bites at a
+        boundary this site has not reached yet) &mdash; and what was done about it:{" "}
+        <strong>open</strong>, <strong>mitigated</strong>, or <strong>accepted</strong>. Pages that
+        lean on a break link it by number rather than improvising an apology of their own, and each
+        entry lists the pages that lean on it.
       </p>
       <div className="known-breaks">
-        {KNOWN_BREAKS.map((b) => (
-          <section key={b.id} id={b.id} className="known-break">
-            <h3>{b.title}</h3>
+        {DISANALOGIES.map((b) => (
+          <section key={b.id} id={`break-${b.n}`} className="known-break" data-break={b.n}>
+            <h3 id={b.id}>
+              <span className="known-break-n" aria-hidden="true">
+                {b.n}
+              </span>
+              {b.title}
+            </h3>
+            <p className="known-break-meta">
+              <span className="known-break-severity" data-severity={b.severity}>
+                {SEVERITY_LABEL[b.severity]}
+              </span>{" "}
+              ·{" "}
+              <span className="known-break-status" data-status-break={b.status}>
+                {STATUS_WORD[b.status]}
+              </span>
+            </p>
             <p>{b.detail}</p>
+            {b.candidateFix && (
+              <p className="known-break-fix">
+                <strong>What would reduce it:</strong> {b.candidateFix}
+              </p>
+            )}
+            <p className="known-break-inherited">
+              <span className="known-break-inherited-label">Inherited by:</span>{" "}
+              {b.inheritedBy.map((p, i) => (
+                <span key={p}>
+                  {i > 0 ? " · " : ""}
+                  <Link href={p}>{ROUTE_BY_PATH[p]?.title ?? p}</Link>
+                </span>
+              ))}
+            </p>
           </section>
         ))}
-        {/* N-253 (§5.4): the presentation walls, adopted before the thing they govern
-            exists. No scene layer is built in this version and none is planned here. */}
-        <section id="graphical-layer" className="known-break">
-          <h3>Rules adopted for a picture that does not exist yet</h3>
-          <p>
-            Nothing on this site is drawn. If a scene layer is ever built, these rules were adopted
-            before it, so the first picture inherits them instead of arguing with them: a safety
-            transition replaces the scene with calm, plain help and never animates damage or
-            failure; health is shown through capacity, symptoms, support, access and accommodation,
-            never through grotesque visuals; discrimination and systemic exclusion are never drawn
-            as penalties attached to a person, because they are properties of a ruleset; parenthood
-            and childlessness are never scored; appearance never determines worth; and colour never
-            encodes a verdict. Writing them down now is the point &mdash; a rule adopted after the
-            first picture is a rule argued against a picture someone has already made.
-          </p>
-        </section>
       </div>
+
+      {/* N-344 (§3.11) — two geographic rules written before geography grows. A
+          rule adopted after the first continent is a rule argued against a page
+          somebody has already written. */}
+      <h2 id="geography">Two rules for a map that has not grown yet</h2>
+      <p>
+        This site currently describes one country in one era, and it will not always. Two rules are
+        adopted now, while there is nothing to defend. <strong>Continents are containers, not
+        cultures.</strong> A region is a box that holds enormous internal variety, and an expansion
+        that gives a continent one Default Human has stopped describing anywhere real; the same rule
+        that keeps &ldquo;default&rdquo; from meaning &ldquo;normal&rdquo; has to survive the jump
+        to geography, or it was never a rule.{" "}
+        <strong>Era boundaries are local, never universal.</strong> A period break is a claim about
+        a particular place: industrialisation, majority, retirement and adulthood itself begin and
+        end at different moments in different societies, and a single global timeline of ages is a
+        projection error wearing a date. Moving between regions is a life path that many people
+        take, not an edge case &mdash; whatever gets built has to carry the person who left as well
+        as the person who stayed. These are a paragraph today and a build check the day a second
+        region or a second era arrives, not before.
+      </p>
+
+      {/* N-301 (§3.11, C-49) — the class, said out loud. The component and the
+          route flag are the mechanism; this is the reason. */}
+      <h2 id="planned-obsolescence">Some pages here are supposed to expire</h2>
+      <p>
+        A few pages are about things that move: what a labour market currently rewards, which
+        strategies are crowded, what the evidence behind a ranking currently is. Those pages carry a
+        review date at the top, declared in the route inventory rather than remembered by whoever
+        writes them next. The date is not an apology and it does not mean the page is unreliable
+        now. It means the page is the kind of thing that goes out of date by design, and that a
+        version of it still claiming to be current in several years would be malfunctioning rather
+        than enduring. Most pages here are not like that, and the absence of a stamp is itself a
+        claim we are making.
+      </p>
 
       <h2>No scores, and why</h2>
       <p>
@@ -364,14 +513,106 @@ export default function MethodologyPage() {
         ))}
       </ul>
 
+      {/* N-290 (§3.11, C-46) — published EMPTY, with its format fixed, because a
+          retraction mechanism written after the first error is a decision made
+          under pressure by people who would rather not be making it. */}
+      <h2 id="retractions">Retractions and downgrades</h2>
+      <p>
+        A retraction is the serious end of the register above: not a detail corrected, but something
+        this site said that it now believes it should not have said. The format is fixed here,
+        before there is anything in it, and it will not be negotiated with the first entry:{" "}
+        <strong>what was said, kept and struck through rather than deleted</strong>, what replaced it
+        (or the fact that nothing did), the page it was on, the date, and the reason. The original
+        text stays visible, because a retraction that removes the sentence also removes the evidence
+        that we were ever wrong in that particular way.
+      </p>
+      <p>
+        A retraction mechanism invented after the first error is not a mechanism. It is a decision
+        made under pressure by people who would rather not be making it, at the exact moment they
+        have the strongest possible reason to make it small. Publishing the format now is the only
+        version of it that is worth anything.
+      </p>
+      {RETRACTIONS.length === 0 ? (
+        <p className="retractions-empty" data-retractions-empty>
+          <strong>Nothing has been retracted.</strong> This section renders whether or not there is
+          anything in it, and it was written while it was empty. If it is still empty in a year,
+          that is either a good sign or a bad one, and the register above is where you would look to
+          tell which.
+        </p>
+      ) : (
+        <ul className="retractions-register">
+          {RETRACTIONS.map((r) => (
+            <li key={r.id} className="retraction-entry" data-retraction={r.id}>
+              <div className="correction-head">
+                <span className="correction-kind" data-kind="retraction">
+                  Retraction
+                </span>
+                <span className="correction-date">{r.date}</span>
+              </div>
+              <p className="retraction-original">
+                <span className="retraction-label">What this page said:</span>{" "}
+                <del data-retraction-original>{r.original}</del>
+              </p>
+              <p className="retraction-replacement">
+                <span className="retraction-label">What it says now:</span>{" "}
+                {r.replacement || "Nothing. The claim was withdrawn and not replaced."}
+              </p>
+              <p className="retraction-reason">{r.reason}</p>
+              <p className="retraction-page">
+                <Link href={r.page}>{ROUTE_BY_PATH[r.page]?.title ?? r.page}</Link>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* N-282 — the register's tenth entry is about this register. Cited here
+          rather than restated, which is the whole point of the mechanism. */}
+      <ModelBreak n={10}>
+        Everything in the two registers above was written by the same people who wrote the pages
+        they are about.
+      </ModelBreak>
+
+      {/* N-296 (§3.11, C-48) — the scope boundary, published so a reader can hold
+          the site to it. */}
+      <h2 id="admission-test">What is allowed on this site</h2>
+      <p>
+        There is one test a page has to pass to exist here:{" "}
+        <strong>
+          it is admitted only if it changes a decision or an orientation for you as the player of
+          your own life
+        </strong>
+        . Not if the subject is important. Not if the material is interesting, or true, or missing
+        from the internet. If a page cannot say what you would do differently, or see differently,
+        for having read it, then whatever else it is, it is not this.
+      </p>
+      <p>
+        The test is here rather than in a style guide because it is the one sentence that stops
+        &ldquo;explaining life&rdquo; from becoming an encyclopedia, and because publishing it lets
+        you hold us to our own scope. Every route in the inventory records the answer in one line,
+        and the build refuses a page that leaves it blank. If you find a page here that does not
+        change anything for you, that is a reportable fault and not your failure to appreciate it.
+      </p>
+
       <h2>What&rsquo;s coming</h2>
       <p>
         This is the only place on the site where unbuilt scope is named — everywhere else, a page either
-        exists at useful depth or is not shown.
+        exists at useful depth or is not shown. The &ldquo;planned&rdquo; cards you meet on the
+        index pages are generated from this list, so there is still exactly one place to keep true.
+      </p>
+      <p>
+        {/* N-437 — the order is the owner's, from the project brief's research
+            priority list. Paraphrased; the sequence and the reasons are his. */}
+        The order is not ours. It follows the project&rsquo;s own research priority list, which
+        starts with adolescence &mdash; the join between a childhood nobody chose and the first
+        decisions anyone makes for themselves &mdash; and works outward from there. Each entry says
+        why it sits where it does.
       </p>
       <ul className="whats-coming">
-        {WHATS_COMING.map((w, i) => (
-          <li key={i}>{w}</li>
+        {WHATS_COMING.map((w) => (
+          <li key={w.id} data-coming={w.id}>
+            {w.text}
+          </li>
         ))}
       </ul>
 

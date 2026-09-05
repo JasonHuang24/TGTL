@@ -9,6 +9,7 @@ import {
 import { PROFILE_COST_BANDS } from "@/content/sim/schema";
 import { AXIS_BAND_NOTE, PROFILE_INTRO, WORTH_GUARD, bandForHardness } from "@/content/sim/profile";
 import { PROFILE_AXES, PROFILE_AXIS_LABEL, PROFILE_AXIS_MEANING } from "@/content/sim/schema";
+import { BEHAVIOUR_LABEL, BEHAVIOUR_MEANING } from "@/content/evidence";
 
 /**
  * The engine, disclosed (blueprint 3.0 §8): the full weight and outcome tables in
@@ -29,6 +30,24 @@ export function EngineMethodology() {
         This is a model, not a prediction — a way to feel how the mechanics move. Every weight below is
         authored, not measured. It is published in full because a frank, auditable model is the whole
         point; nothing here is hidden, and nothing is claimed as researched.
+      </p>
+      {/* N-299 (6.0 §3.11) — the weights are not a claim about the world, so they
+          do not wear a content label. An ordering behaviour gets a label of its
+          own, and the six labels that describe claims stay for claims. */}
+      <p className="status-inline behaviour-label-line">
+        <span
+          className="status-label"
+          data-behaviour-label="design-hypothesis"
+          title={BEHAVIOUR_MEANING["design-hypothesis"]}
+        >
+          <span className="status-dot" aria-hidden="true" />
+          {BEHAVIOUR_LABEL["design-hypothesis"]}
+        </span>{" "}
+        {BEHAVIOUR_MEANING["design-hypothesis"]} The three labels used elsewhere on this site —
+        Illustrative, Our judgement, Researched — describe things the site says about the world. The
+        way these weights order and resolve anything is not a statement about the world at all; it
+        is a design decision, made here, that has never been validated against how lives actually
+        go. It carries its own label so it can never borrow the credibility of one of theirs.
       </p>
 
       <h3>The Birth RNG is conditional, not independent dice</h3>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadingPage, PageHeader, Lede, EvidenceDrawer } from "@/components/primitives";
+import { ReadingPage, PageHeader, Lede, EvidenceDrawer, ModelBreak } from "@/components/primitives";
 import { CONCEPTS, CONCEPT_COLUMNS } from "@/content/concepts";
 import { ROUTE_BY_PATH } from "@/content/routes";
 import { SingleHomeNote } from "@/components/SingleHomeNote";
@@ -93,6 +93,13 @@ export default function ConceptsPage() {
       </p>
 
       <SingleHomeNote />
+
+      {/* N-281 — a tidy cross-reference is exactly where the coherence illusion
+          does its work, so the entry is cited on the tidiest page here. */}
+      <ModelBreak n={4}>
+        A table this neat is a property of the writing. The things it describes arrive in your life
+        several at a time, out of order, and mostly not matching any of these rows.
+      </ModelBreak>
 
       <EvidenceDrawer
         record={{

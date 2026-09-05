@@ -10,6 +10,7 @@ import {
   NextSteps,
   NextStep,
   TryInPlay,
+  ModelBreak,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
@@ -240,6 +241,15 @@ export default function JobLossPage() {
           scale a page like this works at.
         </p>
       </Callout>
+      {/* N-280 (§3.11, C-45) — the floor callout has always ended by admitting that
+          the fix is above the scale of a page. That admission is a named break in
+          this site's frame, so it cites the entry rather than making the point
+          again in local words. */}
+      <ModelBreak n={1}>
+        The sentence above about policy and enforcement is not a throwaway. It is this whole
+        instrument reaching its edge: it takes one person as its subject, and the move that would
+        change the hardest version of this is one nobody makes alone.
+      </ModelBreak>
 
       </PathwayStep>
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { InstrumentPage, PageHeader, EvidenceDrawer } from "@/components/primitives";
+import { InstrumentPage, PageHeader, EvidenceDrawer, ModelBreak } from "@/components/primitives";
 import { Roadmap } from "@/components/Roadmap";
 
 export const metadata: Metadata = {
@@ -29,6 +29,12 @@ export default function MapPage() {
         <Link href="/play">begin a run in the Playthrough</Link>.
       </p>
       <Roadmap />
+      {/* N-281 — the break a spine of stages leans on hardest: a drawn range is
+          read as a schedule by a reader who is already worried about being late. */}
+      <ModelBreak n={6}>
+        Every window drawn here is a wide range that many people move through, and none of them is a
+        date you are being measured against.
+      </ModelBreak>
       <EvidenceDrawer
         record={{
           status: "editorial",

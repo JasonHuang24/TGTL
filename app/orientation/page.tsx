@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadingPage, PageHeader, EvidenceDrawer } from "@/components/primitives";
+import { ReadingPage, PageHeader, EvidenceDrawer, ModelBreak } from "@/components/primitives";
 
 export const metadata: Metadata = {
   title: "The Human Package",
@@ -211,6 +211,14 @@ export default function OrientationPage() {
         Not necessarily for you. For the evening when the person holding the phone is someone you love,
         and neither of you can think of where to start.
       </p>
+
+      {/* N-281 — the page that says no win condition is supplied is the page that
+          should carry the entry saying this instrument has no destination in it. */}
+      <ModelBreak n={5}>
+        Everything on this site helps you see where you are and what is open from here. None of it
+        tells you where to go, and the pages that sound most like they might are the ones to read
+        most carefully.
+      </ModelBreak>
 
       <EvidenceDrawer
         record={{

@@ -21,6 +21,7 @@ import {
   type Availability,
 } from "@/content/guidance";
 import { MOVES_LINE } from "@/content/board";
+import { BEHAVIOUR_LABEL, BEHAVIOUR_MEANING } from "@/content/evidence";
 import { PositionNote, type PositionNotes } from "@/components/PositionNote";
 
 /** N-150 — written for this page's voice: what position does to a ranking. */
@@ -408,6 +409,20 @@ export function Guidance() {
                     ))}
                   </ul>
                   {RANKING_RULESET.note}
+                  {/* N-299 (6.0 §3.11) — the ordering behaviour's own label, inside
+                      the disclosure beside the ruleset it describes. It is not a
+                      content label and never becomes one: what is being labelled
+                      is how this instrument arranges plans, not a claim about how
+                      lives go. */}
+                  <p className="behaviour-label-line" data-behaviour-label="design-hypothesis">
+                    <span className="status-label" title={BEHAVIOUR_MEANING["design-hypothesis"]}>
+                      <span className="status-dot" aria-hidden="true" />
+                      {BEHAVIOUR_LABEL["design-hypothesis"]}
+                    </span>{" "}
+                    {BEHAVIOUR_MEANING["design-hypothesis"]} This ordering has not been validated
+                    against how anyone&rsquo;s decisions actually turn out, and it is labelled apart
+                    from the evidence labels on the content it orders.
+                  </p>
                 </dd>
               </div>
             </dl>

@@ -573,6 +573,14 @@
     },
     {
       "kind": "heading",
+      "path": "/character",
+      "anchor": "/character#conditional-worth",
+      "title": "The conditions you have attached to your own worth",
+      "onPage": "The state panel, explained",
+      "level": "h2"
+    },
+    {
+      "kind": "heading",
       "path": "/guidance/daily-plan",
       "anchor": "/guidance/daily-plan#the-lanes",
       "title": "The lanes",
@@ -702,6 +710,14 @@
     {
       "kind": "heading",
       "path": "/methodology",
+      "anchor": "/methodology#nine-ways-best",
+      "title": "Nine reasons something can be the popular choice",
+      "onPage": "How this works",
+      "level": "h2"
+    },
+    {
+      "kind": "heading",
+      "path": "/methodology",
       "anchor": "/methodology#known-breaks",
       "title": "Known breaks in this model",
       "onPage": "How this works",
@@ -710,10 +726,18 @@
     {
       "kind": "heading",
       "path": "/methodology",
-      "anchor": null,
-      "title": "Rules adopted for a picture that does not exist yet",
+      "anchor": "/methodology#geography",
+      "title": "Two rules for a map that has not grown yet",
       "onPage": "How this works",
-      "level": "h3"
+      "level": "h2"
+    },
+    {
+      "kind": "heading",
+      "path": "/methodology",
+      "anchor": "/methodology#planned-obsolescence",
+      "title": "Some pages here are supposed to expire",
+      "onPage": "How this works",
+      "level": "h2"
     },
     {
       "kind": "heading",
@@ -776,6 +800,22 @@
       "path": "/methodology",
       "anchor": "/methodology#corrections",
       "title": "Corrections and changes",
+      "onPage": "How this works",
+      "level": "h2"
+    },
+    {
+      "kind": "heading",
+      "path": "/methodology",
+      "anchor": "/methodology#retractions",
+      "title": "Retractions and downgrades",
+      "onPage": "How this works",
+      "level": "h2"
+    },
+    {
+      "kind": "heading",
+      "path": "/methodology",
+      "anchor": "/methodology#admission-test",
+      "title": "What is allowed on this site",
       "onPage": "How this works",
       "level": "h2"
     },

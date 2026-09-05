@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadingPage, PageHeader, Callout } from "@/components/primitives";
+import { ReadingPage, PageHeader, Callout, ModelBreak } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { WalkthroughMechanics } from "@/components/reference/WalkthroughMechanics";
 
@@ -232,6 +232,12 @@ export default function WalkthroughPage() {
             <Link href="/methodology#known-breaks">the methodology page</Link>, not hidden.
           </li>
         </ul>
+        {/* N-281 — the page that teaches the vocabulary carries the condition the
+            vocabulary is lent on. */}
+        <ModelBreak n={2}>
+          Everything this page teaches you to see is borrowed from something that was designed to be
+          winnable, and the thing it is being used on was not.
+        </ModelBreak>
       </section>
     </ReadingPage>
   );

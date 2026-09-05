@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HOTLINE_GROUPS, HOTLINE_LAST_VERIFIED } from "@/content/hotlines";
 import { HotlineList } from "@/components/HotlineList";
+import { RevisionNote } from "@/components/primitives";
 
 export const metadata: Metadata = {
   title: "If you need help now",
@@ -72,6 +73,24 @@ export default function ThresholdPage() {
         </a>{" "}
         is maintained and verified continuously, which this page is not.
       </p>
+
+      {/*
+       * N-291 (6.0 §3.11, C-47) — THE NO-SILENT-FIX RULE, applied to the one page a
+       * logged correction has actually changed.
+       *
+       * A silent fix converts a reader's correction into the editors' foresight.
+       * The numbers on this page were re-checked and five stale source addresses
+       * were replaced; that is recorded in the register, and until now the page it
+       * happened to said nothing about it.
+       *
+       * PLACEMENT IS DELIBERATE AND IS NOT THE RULE'S DEFAULT. The rule says the
+       * top of a changed page. This page's whole doctrine is phone numbers first
+       * and nothing to read before them, so the note sits with the verification
+       * sentence — the one paragraph on the page that is already about exactly
+       * this — rather than above the numbers. Recorded in the batch report as a
+       * judgement call, not a quiet exception.
+       */}
+      <RevisionNote correctionId="cor-hotline-verified" />
 
       <p className="threshold-footer-links">
         <Link href="/threshold/supporting-someone">If you are trying to help someone else</Link> ·{" "}

@@ -1617,6 +1617,126 @@ main {
   font-size: 0.95rem !important;
   color: var(--muted) !important;
 }
+
+/* ---- 6.0 batch 6 (group K): the register apparatus ----
+   No new tokens and no new families: the disanalogy meta line, the planned
+   cards, the revision note and the perishable stamp all reuse the existing
+   type scale, the existing surfaces and --ink-soft (the AA-safe muted token
+   batch 4 moved the mentor provenance line to). */
+.known-break-n {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  color: var(--ink-soft);
+  margin-right: 0.5rem;
+}
+.known-break-meta {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  margin: 0 0 0.5rem;
+}
+.known-break-fix,
+.known-break-inherited {
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+}
+.known-break-inherited-label,
+.retraction-label,
+.revision-note-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.known-breaks-key {
+  font-size: 0.95rem;
+}
+.model-break {
+  margin: 1.6rem 0;
+}
+.model-break-cite {
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+}
+.retractions-empty {
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.retractions-register {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0;
+}
+.retraction-entry {
+  margin: 1rem 0;
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.revision-note {
+  margin: 1.6rem 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--line-strong);
+  font-size: 0.95rem;
+}
+.page-perishable {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.behaviour-label-line {
+  font-size: 0.95rem;
+}
+.planned-section {
+  margin: 2rem 0;
+}
+.planned-lead {
+  font-size: 0.95rem;
+}
+.planned-cards {
+  list-style: none;
+  margin: 1.2rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+.planned-card {
+  display: block;
+  padding: 1rem 1.2rem;
+  background: var(--paper-raised);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+.planned-badge {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  margin-right: 0.5rem;
+}
+.planned-card-line {
+  display: block;
+  margin-top: 0.5rem;
+}
+.planned-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+.nine-ways li {
+  margin: 0.5rem 0;
+}
 .reset-control {
   margin-top: 0.8rem;
   display: flex;

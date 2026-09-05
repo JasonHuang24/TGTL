@@ -27,6 +27,9 @@
  */
 import { chromium } from "playwright";
 import { readFileSync } from "node:fs";
+// N-306 (C-51) — the suite records a reader's own tgtl: state before it clears
+// anything and puts it back before the context closes.
+import { preserveThenClear, restorePreserved } from "./lib-preserve.mjs";
 
 const BASE = (process.argv[2] || "").startsWith("http") ? process.argv[2] : "http://localhost:4321";
 /** A finished 24-season run, so the closing screen can be audited in one load. */
@@ -352,11 +355,7 @@ async function freshPlay(page) {
   await page.waitForTimeout(260);
   // The orchestrator writes a prologue run at mount, so a plain clear races it.
   // Clear, reload, and then step through the resume gate if one still appears.
-  await page.evaluate(() => {
-    try {
-      for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:play")) localStorage.removeItem(k);
-    } catch {}
-  });
+  await preserveThenClear(page, ["tgtl:play"]);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(320);
   const gate = page.locator(".sim-play-gate, .play-gate");
@@ -440,11 +439,7 @@ async function freshAt(page, route, clearSim = true) {
   await page.goto(BASE + route, { waitUntil: "domcontentloaded" });
   await sleep(280);
   if (clearSim)
-    await page.evaluate(() => {
-      try {
-        for (const k of Object.keys(localStorage)) if (k.startsWith("tgtl:sim2") || k.startsWith("tgtl:play")) localStorage.removeItem(k);
-      } catch {}
-    });
+    await preserveThenClear(page, ["tgtl:sim2", "tgtl:play"]);
   await page.reload({ waitUntil: "domcontentloaded" });
   await sleep(340);
 }
@@ -663,6 +658,9 @@ async function main() {
         } catch (err) {
           failures.push(`${surface.name} · ${theme} · ${vp.name}px: driver error — ${err.message}`);
         }
+        // N-306 (C-51) — whatever this walk cleared or wrote goes back before the
+        // context that held it is thrown away, including after a driver error.
+        await restorePreserved(page);
         await ctx.close();
       }
     }

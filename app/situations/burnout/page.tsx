@@ -11,6 +11,7 @@ import {
   NextSteps,
   NextStep,
   TryInPlay,
+  ModelBreak,
 } from "@/components/primitives";
 import { ROUTE_BY_PATH } from "@/content/routes";
 
@@ -200,6 +201,10 @@ export default function BurnoutPage() {
             collective, and this page can describe that and cannot do it.
           </p>
         </Callout>
+        {/* N-280 (§3.11, C-45) — batch 4 wrote the callout; this cites the numbered
+            entry it was already pointing at, so the page inherits the wording
+            instead of keeping its own copy of it. */}
+        <ModelBreak n={1} />
       </PathwayStep>
 
       <MentorNote provenance="experiential-pattern">

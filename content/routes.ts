@@ -38,6 +38,15 @@ import type { TermKey } from "./terminology.ts";
 
 export type Intensity = "full" | "light" | "down";
 
+/**
+ * A path in this inventory. It is an alias for `string` and not a union of the
+ * literal paths on purpose: the gates resolve every one of these against ROUTES
+ * at build time and report the offending value by name (C-45, C-47), which is a
+ * better error than a compiler complaining about an unassignable literal in a
+ * content file. The name exists so a field that means "a route" says so.
+ */
+export type RoutePath = string;
+
 export type RouteRecord = {
   path: string;
   title: string;
@@ -51,12 +60,39 @@ export type RouteRecord = {
   /** A sanctioned redirect stub (§6.1): excluded from nav, doors, search, gate-5 walk. */
   stub?: boolean;
   /**
-   * N-296 (6.0 §7.1) — the decision or orientation this page changes, in one
-   * sentence. Required on the routes 6.0 adds; optional on the ones it inherits,
-   * because retrofitting thirty-one of them is a separate pass. C-48 (batch 6)
-   * asserts it on the new routes.
+   * N-296 (6.0 §3.11, §7.1, C-48) — THE PLAYER-RELEVANCE ADMISSION TEST.
+   *
+   * The decision or orientation this page changes for the reader as the player of
+   * their own life, in one sentence. REQUIRED, on every route including the stub:
+   * it is the site's scope boundary, and a boundary that only new pages have to
+   * clear is not a boundary, it is a habit. Batch 6 retrofitted the inherited
+   * routes; C-48 asserts a non-empty sentence on every non-stub route, and the
+   * type carries the rest.
+   *
+   * The test is published on /methodology#admission-test so a reader can hold the
+   * site to it. A page that cannot fill this in does not belong here — which is
+   * the one sentence that stops "explaining life" becoming an encyclopedia.
    */
-  changes?: string;
+  changes: string;
+  /**
+   * N-301 (6.0 §3.11, §7.1, C-49) — PERISHABLE CONTENT, declared as a property of
+   * the route rather than remembered by whoever writes it next.
+   *
+   * Some pages are supposed to expire. A page about the current shape of a labour
+   * market or about the evidence behind a ranking is not wrong when it goes stale;
+   * it is finished, and a page that claims permanence about a moving target is
+   * malfunctioning. Flagging it here makes the header render a review date, and
+   * C-49 asserts the stamp on every flagged route.
+   */
+  perishable?: { reviewBy: string };
+  /**
+   * N-302 (6.0 §3.11, §7.1, C-50) — the `WHATS_COMING` id this route's card points
+   * at, where a reader meeting the card is also meeting a hole. It is an id and
+   * never a sentence, so 2.0 §6.9's single-source rule survives intact: the list
+   * in `content/methodology.ts` is still the only place unbuilt scope is NAMED,
+   * and every badge is derived from it. C-50 resolves both directions.
+   */
+  planned?: string;
   /**
    * N-322 (6.0 §3.12, §7.1) — which parts of the model this page touches, shown
    * as a tag row at the head of situation and topic pages, rendered through
@@ -83,6 +119,8 @@ export const ROUTES: RouteRecord[] = [
     intensity: "light",
     summary: "The ethereal entrance: choose a manual, then begin a life — or find the page you need.",
     searchable: false,
+    changes:
+      "Which of the two manuals you read this site in, and whether you start from a run, from something that happened, or from a page you came looking for.",
   },
   {
     path: "/play",
@@ -100,6 +138,8 @@ export const ROUTES: RouteRecord[] = [
       "Three ways to play a life: the whole shape of one fast, twelve years as a sandbox campaign, or a single decision forked and compared. The worked daily plan is not one of them — it is the real-world planner, and it is deliberately not a mode.",
     keywords: ["play", "playthrough", "simulator", "game", "life sim", "run", "begin a life", "modes"],
     searchable: true,
+    changes:
+      "Which of the three ways of playing is worth starting, and that the worked daily plan is not one of them.",
   },
   {
     path: "/play/arc",
@@ -109,6 +149,8 @@ export const ROUTES: RouteRecord[] = [
       "The whole shape of a life, fast: character creation through Birth RNG, eight acts of branching decisions with visible outcomes, and an honest look back at the run.",
     keywords: ["whole life", "arc", "acts", "character creation", "birth rng", "overture"],
     searchable: true,
+    changes:
+      "Whether seeing the shape of a whole life quickly is worth doing before you decide how much of the rest of this site you need.",
   },
   {
     path: "/play/campaign",
@@ -118,6 +160,8 @@ export const ROUTES: RouteRecord[] = [
       "Twelve years in twenty-four six-month seasons: a real season budget, an open action menu, other people with their own decisions, and consequences that land seasons later.",
     keywords: ["campaign", "launch window", "seasons", "sandbox", "budget", "allocate", "twelve years"],
     searchable: true,
+    changes:
+      "How you would actually spend a season when everything is short at once, and what that shows you about how you spend a real one.",
   },
   {
     path: "/play/lab",
@@ -127,6 +171,8 @@ export const ROUTES: RouteRecord[] = [
       "Fork one decision, play both branches, and see what actually separated them: the decision, the draw, or the position you started from.",
     keywords: ["decision lab", "fork", "compare", "branch", "counterfactual", "what if"],
     searchable: true,
+    changes:
+      "Whether what separated two outcomes was the decision, the draw, or the position you started from — which changes what you are entitled to conclude about your own past choices.",
   },
   {
     // 6.0 §2.3.1 / §3.1 (N-001) — the stub is repealed. The reader who will never
@@ -154,6 +200,8 @@ export const ROUTES: RouteRecord[] = [
       "The staged manual: the basics of a run and the five controls, the mechanics indexed with their pictures, and the advanced metagame.",
     keywords: ["walkthrough", "learn", "how to play", "basics", "controls", "mechanics", "manual", "guide"],
     searchable: true,
+    changes:
+      "Whether the game vocabulary is worth learning at all, and which of the controls you actually need before playing or reading further.",
   },
   {
     path: "/map",
@@ -164,6 +212,8 @@ export const ROUTES: RouteRecord[] = [
       "The whole-life view across parallel domains — learning, health, work, relationships, money, meaning — with common windows, never deadlines.",
     keywords: ["map", "world map", "roadmap", "life map", "stages", "age", "timeline", "domains", "windows"],
     searchable: true,
+    changes:
+      "Where in the whole-life view your current question sits, and which other domains it is quietly attached to.",
   },
   {
     // 5.0 §3.1 — the timeline route family. Placed directly after /map so the
@@ -181,6 +231,8 @@ export const ROUTES: RouteRecord[] = [
       "when do people", "what age", "legal age", "life stages", "birth to death", "lifespan",
     ],
     searchable: true,
+    changes:
+      "Whether the thing you feel late for is a deadline or a wide window, and what kind of expectation it actually is.",
   },
   {
     path: "/map/launch",
@@ -190,6 +242,8 @@ export const ROUTES: RouteRecord[] = [
       "The stretch from roughly eighteen to twenty-nine: agency rising, resources gated, what compounds from here and what does not — and why a later launch is still a launch.",
     keywords: ["launch", "twenties", "graduate", "young adult", "starting out"],
     searchable: true,
+    changes:
+      "What compounds from the early adult years and what does not — and whether starting later is a different game or the same one.",
   },
   {
     path: "/map/credential-decision",
@@ -199,6 +253,8 @@ export const ROUTES: RouteRecord[] = [
       "College, trade, or work-first as a real decision structure: what each costs, when it pays, which choices lock, and the floor question only you can answer.",
     keywords: ["college", "university", "trade", "apprenticeship", "degree", "credential", "floor", "reversibility", "position"],
     searchable: true,
+    changes:
+      "Which of college, a trade, or work-first fits the position you are actually in, and which parts of that choice lock behind you.",
   },
   {
     path: "/triage",
@@ -207,6 +263,8 @@ export const ROUTES: RouteRecord[] = [
     summary: "One page, two questions at most, then the page you actually need. Nothing is recorded.",
     keywords: ["something happened", "help", "crisis", "urgent", "now", "what do i do"],
     searchable: true,
+    changes:
+      "Which page you need right now, chosen from what happened rather than from a category you have to identify with.",
   },
   {
     path: "/situations",
@@ -217,6 +275,8 @@ export const ROUTES: RouteRecord[] = [
       "Pages for specific hard events. They end with what to do next and what not to decide yet — never a lecture.",
     keywords: ["situations", "events", "index", "what happened"],
     searchable: true,
+    changes:
+      "Which specific page fits what happened — and whether what you are in is one of the shapes that has no solution and only a route through.",
   },
   {
     path: "/situations/job-loss",
@@ -226,6 +286,8 @@ export const ROUTES: RouteRecord[] = [
       "A decision sequence: the first days, stabilization, the search as a system, and recovery routes — with the clocks that actually matter found in week one.",
     keywords: ["job loss", "laid off", "layoff", "unemployed", "fired", "redundancy", "severance", "career"],
     searchable: true,
+    changes:
+      "What to do in the first days after a job ends, which clocks are already running, and what not to decide yet.",
     systems: ["money", "party", "work"],
   },
   {
@@ -285,6 +347,8 @@ export const ROUTES: RouteRecord[] = [
     summary: "What grief is like, what is not true about it, what people report helped, and what a page cannot do.",
     keywords: ["grief", "grieving", "bereaved", "loss", "mourning", "someone died"],
     searchable: true,
+    changes:
+      "What to expect of your own grief, and which of the things you have been told about it are not true.",
   },
   {
     path: "/situations/a-death",
@@ -293,6 +357,8 @@ export const ROUTES: RouteRecord[] = [
     summary: "The logistics of the first days, held apart from the grief, so almost nothing has to be decided today.",
     keywords: ["death", "died", "funeral", "estate", "certificate", "bereavement", "first days"],
     searchable: true,
+    changes:
+      "What actually has to be done in the first days, and how much of it can wait until you can think.",
   },
   {
     path: "/situations/depression",
@@ -302,6 +368,8 @@ export const ROUTES: RouteRecord[] = [
       "Orientation, not treatment: depression corrupts your readouts of yourself, which is exactly why outside readings — people and professionals — are the move.",
     keywords: ["depression", "depressed", "low mood", "anhedonia", "mental health"],
     searchable: true,
+    changes:
+      "Whether to trust your own readouts about yourself right now, and why the move is a reading from outside you.",
   },
   {
     path: "/situations/being-hurt",
@@ -311,6 +379,8 @@ export const ROUTES: RouteRecord[] = [
       "Information, not instructions. Nothing here is conditional on what you decide, and nothing pushes you toward a move that can raise the danger.",
     keywords: ["abuse", "coercive control", "domestic", "partner", "controlling", "hurt", "frightened", "safety"],
     searchable: true,
+    changes:
+      "What is true about your situation, held apart from any decision — nothing here is conditional on what you choose to do.",
   },
   {
     path: "/guidance",
@@ -321,6 +391,8 @@ export const ROUTES: RouteRecord[] = [
       "An optional walkthrough for laying out a decision: what you are aiming at, what you are holding, hard limits, then meaningfully different plans with their costs, pivots, and recovery routes.",
     keywords: ["guidance", "decision", "choose", "plan a", "plan b", "options", "walkthrough"],
     searchable: true,
+    changes:
+      "How to lay a decision out so the options are meaningfully different, and whether you have enough to decide anything yet.",
   },
   {
     path: "/guidance/daily-plan",
@@ -330,6 +402,8 @@ export const ROUTES: RouteRecord[] = [
       "One plan turned into a real Tuesday — with a minimum viable day for when capacity is the constraint, and the anti-shame rules stated plainly.",
     keywords: ["daily plan", "day", "routine", "minimum viable day", "lanes", "schedule"],
     searchable: true,
+    changes:
+      "What a plan looks like on a real day, and what that day becomes when capacity is the binding constraint.",
   },
   {
     path: "/character",
@@ -340,6 +414,8 @@ export const ROUTES: RouteRecord[] = [
       "An illustrative picture of capacity, resources, conditions, and commitments — the same live panel the Playthrough uses — with no overall score, because human worth is not a stat.",
     keywords: ["character sheet", "state panel", "stats", "life stats", "attributes", "self", "capacity"],
     searchable: true,
+    changes:
+      "Which parts of your situation you have been blurring together — and that no total of them is a reading of you.",
   },
   {
     path: "/character/board",
@@ -349,6 +425,8 @@ export const ROUTES: RouteRecord[] = [
       "Read which pressure is actually binding by walking the constraint check through curated options — condition, slack, wall-or-door, still-want-it, conflict, then resources.",
     keywords: ["board", "my board", "pressure reading", "binding constraint", "situation"],
     searchable: true,
+    changes:
+      "Which pressure is actually binding, which is what decides whether any of the obvious moves would help at all.",
   },
   {
     path: "/character/logs",
@@ -358,6 +436,8 @@ export const ROUTES: RouteRecord[] = [
       "Record what you knew before an outcome arrives, and keep sight of the recurring upkeep you are not doing — no counts, no streaks, kept on this device.",
     keywords: ["decision log", "maintenance ledger", "upkeep", "record", "journal", "logs"],
     searchable: true,
+    changes:
+      "What you knew before an outcome arrived, and which recurring upkeep you are quietly not doing.",
   },
   {
     path: "/topics",
@@ -367,6 +447,8 @@ export const ROUTES: RouteRecord[] = [
     summary: "Look something up: money, health, relationships, work — plus search across the guide.",
     keywords: ["topics", "index", "look up", "search"],
     searchable: true,
+    changes:
+      "Which of the four guides owns the mechanism behind your question, so you read one page instead of four.",
   },
   {
     path: "/topics/money",
@@ -376,6 +458,11 @@ export const ROUTES: RouteRecord[] = [
       "Compounding in both directions, exchange rates and their asymmetry, and slack as the buffer that stops a shock becoming a cascade.",
     keywords: ["money", "slack", "compounding", "debt", "savings", "emergency fund", "inequality", "exchange rates"],
     searchable: true,
+    changes:
+      "Whether what you are in is a slack problem rather than an income problem, and what a buffer actually buys you.",
+    // N-302 — the reader meets this guide's hole on the card, not in a list they
+    // would have to go looking for. The id resolves into WHATS_COMING (C-50).
+    planned: "wc-money",
     systems: ["money", "time"],
   },
   {
@@ -386,6 +473,9 @@ export const ROUTES: RouteRecord[] = [
       "Health as the capacity that gates everything else, the maintenance-versus-recovery asymmetry, sleep debt, and when to stop reading a website and see a clinician.",
     keywords: ["health", "maintenance", "sleep", "energy", "recovery", "fitness", "clinician", "body"],
     searchable: true,
+    changes:
+      "Whether what you have been treating as a motivation problem is a capacity problem, and when to stop reading a website and see a clinician.",
+    planned: "wc-health",
     systems: ["health", "time"],
   },
   {
@@ -396,6 +486,9 @@ export const ROUTES: RouteRecord[] = [
       "Trust built slowly and spent fast, repair that turns on changed behaviour, asking for help as a skill, and the load of care.",
     keywords: ["relationships", "party", "trust", "repair", "asking for help", "caregiving", "friends", "family"],
     searchable: true,
+    changes:
+      "What you are actually spending when you ask for help, repair a rift, or carry someone — and what rebuilds it.",
+    planned: "wc-relationships",
     systems: ["party", "time"],
   },
   {
@@ -406,6 +499,13 @@ export const ROUTES: RouteRecord[] = [
       "Credentials as access tokens, the unwritten local rules of a workplace, why popular strategies degrade by being popular, and what a mid-life change of direction actually costs.",
     keywords: ["work", "career", "education", "credentials", "job", "meta", "respec", "workplace", "readout"],
     searchable: true,
+    changes:
+      "Whether the problem in front of you is about capability, about unwritten local rules, or about a strategy that has been crowded out by everyone else running it.",
+    // N-301 — the meta section on this page is dated on purpose and its examples
+    // are the first thing here that will stop being true. The stamp inside the
+    // page said so already; the route now declares it, so the header carries a
+    // review date and the property is inheritable rather than remembered.
+    perishable: { reviewBy: "2027-02" },
     systems: ["work", "money", "party"],
   },
   {
@@ -435,6 +535,13 @@ export const ROUTES: RouteRecord[] = [
       "One era done properly: industrialization as a major patch, with a before-and-after tier board that ranks what a ruleset did to a position — never the worth of the people in it.",
     keywords: ["history", "industrialization", "patch notes", "tier list", "eras", "change"],
     searchable: true,
+    changes:
+      "Whether what changed a position was the people in it or the ruleset around them — which is the question you were probably arguing about.",
+    // N-301 — the tier board's placements rest on an evidence state, declared per
+    // objective in the ruleset header. An evidence state is exactly the kind of
+    // thing that expires, so the header's stamp says when it is due to be read
+    // again rather than restating the state the header already carries.
+    perishable: { reviewBy: "2027-03" },
   },
   {
     path: "/methodology",
@@ -445,6 +552,8 @@ export const ROUTES: RouteRecord[] = [
       "The instrument and how to judge it, the two editions and the set-down system, how evidence works here, the engine's weight tables, the corrections register, the known breaks, and what is coming.",
     keywords: ["methodology", "evidence", "corrections", "known breaks", "no scores", "model", "how this works", "engine", "weights", "coming"],
     searchable: true,
+    changes:
+      "How much weight to give anything on this site, and where its frame is known to fail.",
   },
   {
     path: "/threshold",
@@ -453,6 +562,8 @@ export const ROUTES: RouteRecord[] = [
     summary: "Phone numbers, and nothing else. No framework, no analysis, nothing to read first.",
     keywords: ["threshold", "help now", "crisis", "hotline", "emergency", "suicide", "988", "samaritans"],
     searchable: true,
+    changes:
+      "Nothing, deliberately. It is phone numbers, and the only orientation on it is which number.",
   },
   {
     path: "/threshold/supporting-someone",
@@ -462,6 +573,8 @@ export const ROUTES: RouteRecord[] = [
       "For a supporter: ask directly, keep help unconditional, you are not the risk assessor, and where the cases differ.",
     keywords: ["supporting someone", "help someone", "worried about", "carer", "supporter"],
     searchable: true,
+    changes:
+      "What is yours to do for someone you are worried about, and what is not yours to carry.",
   },
 
   /* ---- Sanctioned redirect stubs (§6.1): excluded from nav, doors, search, gate-5 walk ---- */
@@ -471,6 +584,8 @@ export const ROUTES: RouteRecord[] = [
     intensity: "full",
     summary: "The roadmap is now the world map.",
     searchable: false,
+    changes:
+      "Nothing; it forwards to the world map, which is where this content moved.",
     stub: true,
   },
 ];
