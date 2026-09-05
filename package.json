@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "gates": "node --experimental-strip-types tests/run-gates.ts",
     "gates:sim": "tsx tests/sim-gates.ts",
-    "gates:all": "npm run gates && npm run gates:sim && npm run gates:sim4 && npm run gates:timeline",
+    "gates:all": "npm run gates && npm run gates:sim && npm run gates:sim4 && npm run gates:timeline && npm run gates:consolidation",
     "serve:out": "node tests/serve-out.mjs",
     "gates:sim4": "tsx tests/sim-gates-4.ts",
     "gates:s9": "node tests/s9-ui.mjs",
@@ -24,7 +24,8 @@
     "content:timeline": "node --experimental-strip-types tools/timeline-build-content.mjs",
     "gates:timeline": "node --experimental-strip-types tests/timeline-gates.ts",
     "known-limits:timeline": "node --experimental-strip-types tools/timeline-known-limitations.mjs",
-    "gates:falsify": "bash tests/falsify-walls.sh"
+    "gates:falsify": "bash tests/falsify-walls.sh",
+    "gates:consolidation": "node --experimental-strip-types tests/consolidation-gates.ts"
   },
   "dependencies": {
     "next": "^15.5.24",

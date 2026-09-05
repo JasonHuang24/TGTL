@@ -996,6 +996,65 @@ actions are GitHub's, not the build's.
 
 ---
 
+## 8. Consolidation — TGTL 6.0 (2026-09-04 →)
+
+The 6.0 record. Authority: `blueprint_TGTL_6.0.md` (in this repository, commit
+`fd9851a`), which builds the 130 rows the owner accepted in
+`records/consolidation-register.md` §8. Fable 5.1 is architect and reviewer; Opus
+subagents build in batches; Fable alone commits. Each batch below records: the rows
+it landed, what was sent back and why, the roster result, the five sensitive-page
+hashes, every C-gate's proven red, and every `INVENTION:` in the N-436 shape
+(what · doctrine · hidden definitions · ethical and interpretive risks · open
+questions · adversarial check). Findings against the blueprint itself are recorded
+here, never resolved silently. The record forms N-307 (readiness), N-309 (owner
+override), N-310 (structural findings, noted not acted on) and N-311 (the correction
+table) are opened in batch 6.
+
+### Batch 0 — contract (Fable alone)
+
+**[2026-09-04] ROSTER GREEN BEFORE ANY EDIT.** On the untouched branch (`fd9851a`):
+`npm run build` (60 pages, zero errors), `npm run typecheck` clean, `npm run
+gates:all` — static 7, Life Arc 8, sandbox 12 + invention gate, timeline 15 — all
+PASS; `bash tests/falsify-walls.sh` 9 of 9 red on plant with byte-identical restores
+(`batch-people.ts` sha256 `fa585279…`, `generated/milestones.ts` `436e1a1e…`,
+`out/timeline/index.html` `224eaf1a…`). The served half (browser gates, S-9,
+timeline screenshots) is recorded under batch 1's review.
+
+**[2026-09-04] THE FIVE HASHES, baseline = `main`.** `app/situations/depression/page.tsx`
+`7157c728…` · `a-death` `d7ce27c1…` · `grief` `2bd7b7dd…` · `being-hurt` `77f1151c…` ·
+`app/threshold/supporting-someone/page.tsx` `24526d37…`. Every batch review recomputes
+them; any difference fails the batch (blueprint §5.2).
+
+**[2026-09-04] ENVIRONMENT.** Node v22.20.0 from the 5.0 session's scratchpad
+(`…/0b89b0b3-…/scratchpad/node-v22.20.0-win-x64`, still present); a `python3` shim to
+`C:\Python310\python.exe` on `PATH` because the Windows Store `python3` stub is what
+Git Bash otherwise resolves and the falsify script calls `python3`. Both are
+session-scoped; any Node ≥ 18.18 and any Python 3 reproduce the build.
+
+**[2026-09-04] THE BLUEPRINT LIVES IN THE REPOSITORY.** Prior blueprints sit at the
+workspace root outside git; the build handoff requires this one committed on the
+branch, and the repository is the one writable folder. So `blueprint_TGTL_6.0.md` is
+at the repository root and no copy was placed beside its predecessors. Reversible by
+the owner copying it out.
+
+**[2026-09-04] BOUNDARY NOTE.** One file outside the repository was written: the
+workspace's `.claude/launch.json` (a Claude Code tooling file that already existed,
+created by an earlier seat) gained two serve configurations so the browser gates and
+the blueprint artifact could be checked in the in-app browser. No project document
+and nothing in the archive was touched; the boundary proof at Phase D will show the
+timestamp.
+
+**[2026-09-04] `KNOWN_LIMITATIONS.md` NUMBERING.** The handoff asks for a new §0
+"6.0". The 5.0 section is also §0 and its sub-numbers (0.1.1 … 0.3.4) are cited
+across the records, so the 5.0 block keeps them and is retitled "0 (carried from
+5.0)"; the new block uses lettered sub-sections (0.A …) so no existing citation
+breaks. Cosmetic; reversible.
+
+**[2026-09-04] `tests/consolidation-gates.ts` registered** with every C-gate from
+blueprint §8 reporting N/A until the batch that gives it a subject; `npm run
+gates:consolidation` joins `gates:all`. The runner prints `Gate C-N:` so the falsify
+probes can name a gate without colliding with the T suite's numbering.
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0

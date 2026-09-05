@@ -7,7 +7,50 @@ The 4.0 list is preserved below in full and remains in force; 5.0 entries come f
 
 ---
 
-## 0. NEW IN 5.0 — the timeline
+## 0. NEW IN 6.0 — The Consolidation
+
+6.0 harvests the nine archived prototypes, Sol's four specs and the master brief into
+the trunk: the 130 rows of `records/consolidation-register.md` §8, built to
+`blueprint_TGTL_6.0.md`. **It adds ideas and closes no review.** Every human gate in
+§0 (carried from 5.0) and §1 below stands unchanged, and the preview label stays.
+
+### 0.A Parked as areas — a version each, not harvested piecemeal
+
+The social manual (N-141), the Atlas of arenas (N-154), the story campaign "The Years
+Between" (N-220), the Living Scene (N-250), the ethics and meaning wing (N-393), the
+topic set — civic, housing, place, identity, sexuality, meaning (N-415, N-421, N-422,
+N-424, N-425) — and archetype resemblance (N-086). Named in `WHATS_COMING` in the
+brief's research-priority order (N-437).
+
+### 0.B Deferred to the 6.1 evidence pass — accepted, not built
+
+N-284, N-285, N-286, N-287, N-288, N-292, N-293, N-294, N-295, N-297, N-298, N-300,
+N-303, N-305, N-429 (the claim grades, the open-questions and corrections registers,
+editorial standards, the research-review record, the fixture-validation and
+define-at-first-use gates, the falsifiability closure of the twenty-five open
+assertions in §4.11, the research-pass contract) and the two scene-layer rules N-252
+and N-255. None is marked done; none is partly built.
+
+### 0.C Stop-and-ask rows — parked until the owner says the word
+
+N-324 frame-strength tags, N-376 the peer-advantage population rule, N-381 the
+screening-threshold record kind. Each would *add* a lint rule.
+
+### 0.D The human gates, restated unchanged
+
+Open exactly as listed: 0.1.1 pediatric review · 0.1.2 clinical review of the
+timeline's fertility, later-health and dying records · 0.1.3 the owner's read of the
+cultural-expectation records · 0.1.4 the research-required list · 0.1.5 the stage-rail
+art checkpoint · 0.1.6 the four unsettled findings · 1.2 the five sensitive pages ·
+1.3 the 3.0 beats and the board's short-circuit · 1.4 the two 4.0 beats · 1.5 the
+parse bridge · 1.6 the 4.0 art direction · the independent review of the 4.0 play
+layer. 6.0 adds to the review list: `/situations/breakup` (loss-adjacent) and
+`/situations/getting-through-today` (a set-down page a depleted reader lands on).
+The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+
+---
+
+## 0 (carried from 5.0). NEW IN 5.0 — the timeline
 
 ### 0.1 Release gates the owner must close (5.0)
 
@@ -357,7 +400,9 @@ before launch:
 
 - `beat-low-season` — a flat stretch, naming `/situations/depression`.
 - `beat-someone-ill` — someone close becoming seriously ill, naming
-  `/situations/a-death`.
+  `/topics/relationships`. *(Corrected in 6.0: this record said `/situations/a-death`;
+  `content/sim/campaign/beats.ts` has always named `/topics/relationships`, and the
+  code is the honest record — the beat is about illness, not a death.)*
 
 They are placed deterministically, are always skippable, render reduced-frame, and
 are never previewed on any surface. That is the containment. It is not a substitute
