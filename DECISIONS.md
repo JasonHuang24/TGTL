@@ -1474,6 +1474,133 @@ failing cells pass, and that is the load-bearing fact — two of four failures w
 way, one by deleting the cell, one by writing the mechanism; `/threshold` was the plant
 because both "trust" and "credibility" fail there, and it went red.
 
+### Batch 5 — board, logs, guidance, position, timeline schema, history (groups C, E, F, G; thirty-one rows) — built by Opus, reviewed by Fable 5.1
+
+**What landed.** The board: the moves line, the wall-or-door procedure and the two-sided
+warning at the wall step, the scheduling-versus-horizon diagnostic at the conflict step
+(labelled our judgement), the alignment question and the behaviour-versus-values caveat at
+the want step, a borderline value on every level select that the reading treats as open,
+and "This does not fit" on the reading, honoured by striking it through and offering the
+no-reading state (N-062..N-075, N-411; C-36). The logs: copy-as-text, a read-only plain-text
+view and a print block that leave nothing on any wire, a stop condition on every upkeep
+item, the blank-state line, the pivot line, maintenance debt with its caveat (N-074,
+N-077, N-078, N-084, N-371; C-37, C-38). Guidance: the disclosure echoing objectives,
+constraints and the ruleset's horizon above the first rank, the three moves in the
+no-recommendation state, the cheapest-question line (also on triage), the reversibility rule
+and the opportunity-cost shut-off above the plans, the seven-way scorecard, rejection and
+"none of these fit" (N-080, N-088, N-089, N-094, N-095, N-408, N-072; C-39). The daily plan:
+minimum, alternative and stop on every lane, the separation from the fiction (N-077, N-091,
+N-411; C-40). The character sheet: the five layers as structure with the need-state line, a
+reference population on every band, the four composites decomposed, the scorecard, and
+N-127's attention note (N-399, N-403, N-405, N-408). Position set once and re-resolved on
+five pages, from the existing key, through a shared control and a note primitive (N-150;
+C-42). The timeline schema: graded routes with T-4 reading through the grade, and source
+timing required on every source a cultural-expectation record cites with T-9 extended
+(N-379, N-386). History: three objectives with qualitative weights and per-objective
+placements, the ruleset header above every letter, an empty top tier under autonomy badged
+insufficient evidence, the patch note as three parallel panels, the no-winner panel closing
+the board (N-170..N-176, N-093; C-41, C-43, C-44).
+
+**Sent back:** nothing. One reviewer amendment: N-078's deferred half — the saves panel's
+blank state on the play door now carries "The blank state is private, not incomplete."
+
+**Findings, recorded rather than fixed.** (a) N-080's horizon is the ruleset's, published as
+`RANKING_RULESET`, because the flow has never asked the reader for one; a reader-set horizon
+is a new enumerated input and a register candidate. (b) N-064's two-sided warning already
+lived on the board page as a callout; the step help carries a compressed twin, and the two
+are kept. (c) N-386 had to touch an existing batch file — two `timing` lines in
+`p2-cultural-expectations.json` — because the pipeline has no source override; both sources
+were stamped `contemporaneous`, the EEOC page being the one judgement call (a present-tense
+statement of a statute in force; its publication year is the statute's, not the page's).
+(d) N-172's first pass rendered the empty state on every unoccupied tier; corrected to the
+top tier alone, where the refusal means something, and C-43 asserts both directions.
+(e) Gate 10 caught a literal backspace byte the agent introduced through a shell heredoc —
+the 4.0 defect class, caught by the 4.0 guard — and the regex it had silently disarmed was
+then separately proven red. (f) Three gates found holes in themselves on their first plants
+(C-38's window, C-42's comment and same-named type, C-41's attribute boundary) and were
+fixed toward strictness. (g) The third tier objective is security, not mobility, because
+mobility reproduces autonomy's letters on four of five positions. (h) Blueprint §7.1 does not
+list `StepHelp`, `SHEET_LAYERS`, `TIER_OBJECTIVES` or `LedgerItem.stop` as schema deltas
+though §3.4 and §3.8 require them — the same class of finding as batch 3's.
+
+**Proven red, then green.** C-36 (two plants), C-38, C-39 (two), C-40, C-41, C-42 (two plus a
+recorded play-layer plant), C-43 (two plus browser 143), C-44 (two) as probes; C-37 as a
+record (a planted `fetch` caught in source and at runtime by browser 137). T-4 gains a
+second probe (a graded entry with no sentence) with the original still red; T-9 gains a
+probe on a cultural-expectation source with no timing. Gate 9's runtime walk now sets a
+position and asserts it re-resolves on every page that carries a note and reaches no URL.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 13, timeline 15, C suite 44 substantive + 7 N/A — all PASS; falsify 62 of 62 (3 sandbox, 8
+timeline, 51 consolidation) red on plant, restores byte-identical including `generated/sources.ts`;
+browser gates ALL PASS including 137 and 143; S-9 150 audits clean; 40 timeline screenshots; the
+`/TGTL` mount build's link audit finds zero escapes. Browser walk: `/history` reorders under all three
+objectives (era power S S D C F · autonomy A B C C F with the empty S badged insufficient evidence ·
+security S C D D F), the ruleset header precedes the first letter with no digit, the no-winner panel
+closes it; `/character/board` renders three help blocks, three borderline options, the crisis gate
+first, the rejection control and the moves line.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: `StepHelp` — a procedure attached to a board step (N-064, N-066, N-075,
+N-411).** *What:* an optional `help` field on a constraint step, rendered as an ordered list
+with a note, a warning and its own status label. *Doctrine:* §3.4 asks for four ordered
+questions and a two-sentence diagnostic at named steps "within the existing step shape — no
+new input". *Hidden definitions:* "ordered" is an `<ol>` enforced by the stop-rule sentence,
+not by the interface; status is per help block. *Risks:* a procedure beside a question reads
+as a checklist; mitigated by the stop-at-first-clear-answer note and by nothing being
+answerable. *Open questions:* whether the warning should live only here. *Adversarial
+check:* no input, nothing stored; every string joins the no-score lint's corpus; gates 2, 3,
+S-5 green; C-8's ordering untouched.
+
+**INVENTION: the rejection flag's three lifetimes (N-072, C-36).** *What:* board and guidance
+persist `rejected` inside their existing values; the character sheet's is session-only.
+*Doctrine:* §3.4 names the existing keys and forbids a new one; `/character` describes an
+illustrative preset, so persisting a disagreement with it would record a judgement about a
+reader who was never described. *Hidden definitions:* rejected = presentation changes, the
+fixture never does; struck and unweighted, never removed. *Risks:* the asymmetry is invisible
+to a reader. *Open questions:* session-only everywhere. *Adversarial check:* thirteen keys
+(C-1, C-36); nothing counted; erased by the site control; red on the harder plant — control
+present, rendering ignoring it.
+
+**INVENTION: `RANKING_RULESET` — the ordering in words (N-080, C-39).** *What:* a constant
+stating the horizon and the four rules `rankPlans` applies, rendered in the disclosure.
+*Doctrine:* §3.4 requires the horizon above any ranking; nothing asks the reader for one.
+*Hidden definitions:* the horizon is the ruleset's; the rules are prose about code and can
+drift. *Risks:* prose describing code is a lie waiting to happen — the file says the text is
+the bug report if they diverge; C-39 cannot assert the sentences are true of the function.
+*Open questions:* a reader-set horizon (register candidate). *Adversarial check:* no number,
+no score, nothing stored; unconditional and first; red on reorder and on a dropped marker.
+
+**INVENTION: `NoWinner` and "renders last" as the assertion (N-093, C-41).** *What:* a
+primitive and a gate requiring it after the final comparison item on a hand-listed pair of
+surfaces. *Doctrine:* §3.4 asks for the panel; "closing" is undefined. *Hidden definitions:*
+last = a byte offset after the last item marker in the export with scripts stripped; the
+surface list is authored, not derived. *Risks:* an offset check is satisfied by a hidden
+panel; the sides are authored. *Open questions:* whether `/history`'s panel compares
+archetypes or objectives — it compares the objectives. *Adversarial check:* red on an
+attribute rename; refuses a verdict phrase; requires two named sides; matches the marker
+on its boundary after a sibling attribute masked a rename.
+
+**INVENTION: the empty-tier card is top-tier-only (N-172).** *What:* the explicit empty
+state renders for S alone, badged with the objective's evidence label. *Doctrine:* §3.8 asks
+for an empty S badged insufficient evidence and says nothing about other gaps. *Hidden
+definitions:* empty per objective and per side, computed from the rendered board. *Risks:* a
+missing middle tier now says nothing. *Adversarial check:* C-43 requires it for an empty top
+tier, requires the label, forbids the card on the filled default board; browser 143 reads it
+after switching.
+
+**INVENTION: C-37 asserts "nothing the reader wrote leaves the device", not "zero requests"
+(N-074).** *What:* the runtime gate permits same-origin router prefetches and refuses any
+off-origin request, any body, any URL carrying the record's words, any same-origin request
+that is not a prefetch. *Doctrine:* §8's line says "no network request"; literally read, the
+gate is red on the framework's own prefetch timer. *Hidden definitions:* prefetch = `/_next/`
+or `?_rsc=`; the record's words = strings the test typed. *Risks:* the allowance is a shape
+an exfiltration could fit; narrowed by the body and record-text checks. *Open questions:*
+asserting on resource type. *Adversarial check:* a planted `fetch("/collect?d=…")` is caught
+verbatim; the source half refuses seven constructions.
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0

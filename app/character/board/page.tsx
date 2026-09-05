@@ -8,6 +8,7 @@ import {
 } from "@/components/primitives";
 import { Board } from "@/components/Board";
 import { Term } from "@/components/Term";
+import { MOVES_LINE } from "@/content/board";
 
 export const metadata: Metadata = {
   title: "Guided pressure reading",
@@ -94,6 +95,17 @@ export default function BoardPage() {
           something written down. The only real correction is external. If you can, show it to one person
           who knows you well and is standing outside the situation, and let their reading of your condition
           outvote your own.
+        </p>
+
+        {/* N-062 — the closing prose. The campaign guarantees rest, wait and ask
+            in every half-year and proves it across hundreds of runs; the reading
+            side has never said it once, to the reader most likely to need it. */}
+        <p className="board-moves-line" data-moves-line>
+          One last thing about whatever you decide to do next. {MOVES_LINE} Waiting deliberately, while a
+          slow decision is made somewhere else, is not the same as doing nothing, and it is often the
+          correct move. Asking is not a confession that you could not manage alone; it is the cheapest way
+          there is to move something. And accepting a thing that will not move frees everything you were
+          spending on it, which is a gain and not a surrender.
         </p>
       </section>
 

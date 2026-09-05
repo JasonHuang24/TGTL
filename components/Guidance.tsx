@@ -10,9 +10,25 @@ import {
   VETOES,
   NO_RECOMMENDATION,
   WAITING_SHAPE,
+  RANKING_RULESET,
+  REVERSIBILITY_RULE,
+  OPPORTUNITY_COST,
+  SCORECARD_KINDS,
+  SCORECARD_LEAD,
+  SCORECARD_CLOSE,
+  CHEAPEST_QUESTION,
   type Plan,
   type Availability,
 } from "@/content/guidance";
+import { MOVES_LINE } from "@/content/board";
+import { PositionNote, type PositionNotes } from "@/components/PositionNote";
+
+/** N-150 — written for this page's voice: what position does to a ranking. */
+const GUIDANCE_POSITION_NOTES: PositionNotes = {
+  yes: "With a floor beneath a serious failure, the ranking below is doing what rankings do best: comparing genuinely available options. The bounded pilot is a real experiment rather than a gamble, and the honest advice is to run the reversible thing early, while time is the resource you have most of.",
+  no: "Without a floor beneath a serious failure, read the ranking with one correction in mind. Anything whose downside is unbounded is not a bounded experiment for you, whatever its label says, and protecting the floor is not a preliminary to the decision — it is the decision, and holding is a legitimate first plan rather than a failure to choose.",
+  unsure: "Whether there is a floor beneath a serious failure changes this ranking more than any preference you can enter on it, and only you can answer it. It is worth settling before weighing the options, because the same plan is an experiment from one starting position and an unbounded risk from another.",
+};
 
 /**
  * The choosing-a-path walkthrough (§6.5). Optional and skippable; every step
@@ -23,13 +39,22 @@ import {
  * unknown slack → Plan A availability unknown).
  */
 
-type Health = "full" | "limited" | "unknown";
-type Slack = "some" | "none" | "unknown";
+/**
+ * N-073 — `borderline` is a fourth value, distinct from `unknown`. "Prefer not
+ * to say" and "it depends on the context" are different facts about a reader,
+ * and collapsing them loses the more useful of the two.
+ */
+type Health = "full" | "limited" | "borderline" | "unknown";
+type Slack = "some" | "none" | "borderline" | "unknown";
 type Inputs = {
   weights: Record<string, number>;
   health: Health;
   slack: Slack;
   vetoes: string[];
+  /** N-072 (C-36) — plan ids the reader has set aside. Inside the existing key. */
+  rejected?: string[];
+  /** N-072 — the reader said none of the set fits. */
+  noneFit?: boolean;
 };
 
 const DEFAULT: Inputs = {
@@ -37,7 +62,15 @@ const DEFAULT: Inputs = {
   health: "unknown",
   slack: "unknown",
   vetoes: [],
+  rejected: [],
+  noneFit: false,
 };
+
+const BORDERLINE_LABEL = "Borderline / depends on the context";
+
+/** N-073 — a borderline answer is answered and non-binding, and says so. */
+const BORDERLINE_NOTE =
+  "Borderline is treated as non-binding: it does not push the ranking either way, and the plan that depends on it is marked as having unknown availability rather than being quietly demoted. It is not the same as preferring not to say, and it is not a half-point.";
 
 const STEPS = ["Objectives", "Your cards", "Limits", "Result"] as const;
 
@@ -53,11 +86,30 @@ function meetsMinimum(i: Inputs): boolean {
   return anyObjective && i.health !== "unknown" && i.slack !== "unknown";
 }
 
+/**
+ * N-088 — which of the four inputs are still missing, in the reader's words.
+ * A refusal that names what it is missing is a refusal the reader can act on.
+ */
+function missingInputs(i: Inputs): string[] {
+  const out: string[] = [];
+  if (!Object.values(i.weights).some((w) => w > 0))
+    out.push("What you are optimising for — at least one objective above zero, so there is something to weigh against.");
+  if (i.health === "unknown")
+    out.push("Your health and energy right now, even roughly — a limited capacity changes which plan is runnable at all.");
+  if (i.slack === "unknown")
+    out.push("Whether you have any slack, because most active moves need some margin to execute.");
+  if (i.vetoes.length === 0)
+    out.push("Your hard limits, if you have any. None is a real answer here, and it is worth entering on purpose rather than by omission.");
+  return out;
+}
+
 function rankPlans(i: Inputs): Plan[] {
   const a = { ...PLANS.find((p) => p.id === "plan-a")! };
   const b = PLANS.find((p) => p.id === "plan-b")!;
   const c = PLANS.find((p) => p.id === "plan-c")!;
-  if (i.slack === "unknown") a.availability = "unknown";
+  // N-073: borderline joins unknown here — neither is a value the availability
+  // of a pilot can be asserted from, and neither is rounded to "none".
+  if (i.slack === "unknown" || i.slack === "borderline") a.availability = "unknown";
   if (i.health === "limited" || i.slack === "none") return [c, a, b];
   const stability = i.weights.stability ?? 0;
   const autonomyCraft = Math.max(i.weights.autonomy ?? 0, i.weights.craft ?? 0);
@@ -126,6 +178,15 @@ export function Guidance() {
       ...s,
       vetoes: s.vetoes.includes(id) ? s.vetoes.filter((v) => v !== id) : [...s.vetoes, id],
     }));
+
+  /* N-072 (C-36) — rejection lives inside the existing guidance value. */
+  const isPlanRejected = (id: string) => (inputs.rejected ?? []).includes(id);
+  const toggleReject = (id: string) =>
+    setInputs((s) => {
+      const cur = s.rejected ?? [];
+      return { ...s, rejected: cur.includes(id) ? cur.filter((r) => r !== id) : [...cur, id] };
+    });
+  const setNoneFit = (v: boolean) => setInputs((s) => ({ ...s, noneFit: v }));
 
   return (
     <div className="guidance">
@@ -196,6 +257,21 @@ export function Guidance() {
               </div>
             </div>
           ))}
+          {/* N-408 — a taxonomy, read and never selected. The moment it became
+              a control it would be an assessment of the reader. */}
+          <div className="guidance-scorecard" data-scorecard>
+            <h3>Whose scorecard is this?</h3>
+            <p className="guidance-teach">{SCORECARD_LEAD}</p>
+            <dl className="scorecard-list">
+              {SCORECARD_KINDS.map((k) => (
+                <div key={k.name}>
+                  <dt>{k.name}</dt>
+                  <dd>{k.what}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="guidance-teach">{SCORECARD_CLOSE}</p>
+          </div>
           <button type="button" className="guidance-next" onClick={() => setStep(1)}>
             Next: your cards →
           </button>
@@ -216,6 +292,7 @@ export function Guidance() {
               [
                 ["full", "Full enough to run something new"],
                 ["limited", "Limited — capacity is the constraint"],
+                ["borderline", BORDERLINE_LABEL],
                 ["unknown", "Prefer not to say"],
               ] as [Health, string][]
             ).map(([v, l]) => (
@@ -231,6 +308,7 @@ export function Guidance() {
               [
                 ["some", "Some — I could absorb a shock without something breaking"],
                 ["none", "None — I'm at the edge"],
+                ["borderline", BORDERLINE_LABEL],
                 ["unknown", "Prefer not to say"],
               ] as [Slack, string][]
             ).map(([v, l]) => (
@@ -240,6 +318,12 @@ export function Guidance() {
               </label>
             ))}
           </fieldset>
+          {/* N-073 — what borderline does, said where it is offered. */}
+          <p className="guidance-teach guidance-borderline-note" data-borderline-note>
+            {BORDERLINE_NOTE}
+          </p>
+          {/* N-150 (C-42) — the position note, re-resolved from the one setting. */}
+          <PositionNote notes={GUIDANCE_POSITION_NOTES} />
           <button type="button" className="guidance-next" onClick={() => setStep(2)}>
             Next: limits →
           </button>
@@ -268,22 +352,85 @@ export function Guidance() {
 
       {step === 3 && (
         <section className="guidance-result">
-          <div className="panel guidance-disclosure">
+          {/*
+           * N-080 (C-39) — THE DISCLOSURE HEADER, ABOVE EVERY RANKED OUTPUT.
+           *
+           * It renders unconditionally and before any `.plan-rank`, so the
+           * reader can never meet an order without the rule that produced it.
+           * It updates live from the same inputs the ranking reads.
+           */}
+          <div className="panel guidance-disclosure" data-guidance-disclosure>
             <p className="eyebrow">Illustrative · conditional, parallel options — not a universal best life</p>
             <p>
               These are the strongest available choices <em>given what you entered</em>, shown as
-              meaningfully different trade-offs. None dominates every objective. What you weighted:{" "}
-              {OBJECTIVES.filter((o) => (inputs.weights[o.id] ?? 0) > 0)
-                .map((o) => o.label.toLowerCase())
-                .join(", ") || "nothing yet"}
-              . {inputs.vetoes.length > 0 && `Vetoes in force: ${inputs.vetoes.map((id) => VETOES.find((v) => v.id === id)?.label).join("; ")}.`}
+              meaningfully different trade-offs. None dominates every objective.
             </p>
+            <dl className="disclosure-scope">
+              <div>
+                <dt data-disclosure-objectives>Objectives in force</dt>
+                <dd>
+                  {OBJECTIVES.filter((o) => (inputs.weights[o.id] ?? 0) > 0)
+                    .map((o) => o.label.toLowerCase())
+                    .join(", ") || "none yet — nothing has been weighted above zero"}
+                </dd>
+              </div>
+              <div>
+                <dt data-disclosure-constraints>Constraints and vetoes in force</dt>
+                <dd>
+                  {[
+                    inputs.health === "full"
+                      ? "capacity full enough to run something new"
+                      : inputs.health === "limited"
+                        ? "limited capacity, which promotes holding above every active plan"
+                        : inputs.health === "borderline"
+                          ? "capacity borderline, treated as non-binding"
+                          : "capacity not entered",
+                    inputs.slack === "some"
+                      ? "some slack to absorb a shock"
+                      : inputs.slack === "none"
+                        ? "no slack, which promotes holding above every active plan"
+                        : inputs.slack === "borderline"
+                          ? "slack borderline, treated as non-binding"
+                          : "slack not entered",
+                    inputs.vetoes.length > 0
+                      ? `vetoes: ${inputs.vetoes.map((id) => VETOES.find((v) => v.id === id)?.label).join("; ")}`
+                      : "no vetoes entered",
+                  ].join(" · ")}
+                </dd>
+              </div>
+              <div>
+                <dt data-disclosure-horizon>Horizon and ruleset</dt>
+                <dd>
+                  {RANKING_RULESET.horizon}
+                  <ul className="disclosure-rules">
+                    {RANKING_RULESET.rules.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                  {RANKING_RULESET.note}
+                </dd>
+              </div>
+            </dl>
           </div>
 
           {!ok ? (
             <div className="panel no-recommendation">
               <h2>{NO_RECOMMENDATION.title}</h2>
               <p>{NO_RECOMMENDATION.body}</p>
+              {/* N-088 — the visible ledger of what is missing, from the same
+                  inputs the ranking would have read. */}
+              <h3>What is still missing</h3>
+              <ul data-missing-inputs>
+                {missingInputs(inputs).map((m, i) => (
+                  <li key={i}>{m}</li>
+                ))}
+              </ul>
+              <h3>{NO_RECOMMENDATION.movesTitle}</h3>
+              <ol data-moves-anyway>
+                {NO_RECOMMENDATION.movesAnyway.map((m, i) => (
+                  <li key={i}>{m}</li>
+                ))}
+              </ol>
               <h3>What would change the answer</h3>
               <ul>
                 {NO_RECOMMENDATION.whatWouldChange.map((w, i) => (
@@ -300,13 +447,75 @@ export function Guidance() {
                 ← Fill in the minimum
               </button>
             </div>
+          ) : inputs.noneFit ? (
+            /* N-072 — the reader said none of the set fits. The honest output is
+               the no-recommendation state, not the next-best guess. */
+            <div className="panel no-recommendation" data-none-fit-state>
+              <h2>None of these fit — so there is no recommendation here</h2>
+              <p>
+                You have said the set is wrong for you, and the set is what this page had. Rather than
+                offering the least-wrong item from a list you have rejected, it stops. The plans are
+                authored fixtures; if none of them describes a real option in your situation, the fixtures
+                are the thing that is wrong.
+              </p>
+              <h3>{NO_RECOMMENDATION.movesTitle}</h3>
+              <ol>
+                {NO_RECOMMENDATION.movesAnyway.map((m, i) => (
+                  <li key={i}>{m}</li>
+                ))}
+              </ol>
+              <button type="button" className="guidance-next" onClick={() => setNoneFit(false)}>
+                Bring the plans back
+              </button>
+            </div>
           ) : (
             <>
-              <PlanCard plan={experiment} rank="Do this first" avail={AVAIL_LABEL} />
+              {/* N-095 — the framing on the walkthrough, before the options. */}
+              <aside className="panel guidance-opportunity" data-opportunity-cost>
+                <h3>{OPPORTUNITY_COST.title}</h3>
+                <p>{OPPORTUNITY_COST.body}</p>
+                <p>{OPPORTUNITY_COST.shutoff}</p>
+              </aside>
+              {/* N-094 — the rule the per-plan reversibility field sits under. */}
+              <aside className="panel guidance-reversibility" data-reversibility-rule>
+                <h3>{REVERSIBILITY_RULE.title}</h3>
+                <p>{REVERSIBILITY_RULE.body}</p>
+                <p>{REVERSIBILITY_RULE.caveat}</p>
+              </aside>
+              {/* N-062 — the moves the campaign guarantees, on the reading side. */}
+              <p className="guidance-moves-line" data-moves-line>
+                One thing before the list. {MOVES_LINE}
+              </p>
+              <PlanCard
+                plan={experiment}
+                rank="Do this first"
+                avail={AVAIL_LABEL}
+                rejected={isPlanRejected(experiment.id)}
+                onReject={() => toggleReject(experiment.id)}
+              />
               {ranked.map((p, i) => (
-                <PlanCard key={p.id} plan={p} rank={`Ranked ${i + 1}`} avail={AVAIL_LABEL} />
+                <PlanCard
+                  key={p.id}
+                  plan={p}
+                  rank={`Ranked ${i + 1}`}
+                  avail={AVAIL_LABEL}
+                  rejected={isPlanRejected(p.id)}
+                  onReject={() => toggleReject(p.id)}
+                />
               ))}
-              <PlanCard plan={unlock} rank="Can reorder all of the above" avail={AVAIL_LABEL} />
+              <PlanCard
+                plan={unlock}
+                rank="Can reorder all of the above"
+                avail={AVAIL_LABEL}
+                rejected={isPlanRejected(unlock.id)}
+                onReject={() => toggleReject(unlock.id)}
+              />
+              <p className="guidance-none-fit">
+                <button type="button" className="board-reject" data-reject="set" onClick={() => setNoneFit(true)}>
+                  None of these fit
+                </button>{" "}
+                — and saying so stops the page rather than moving you down the list.
+              </p>
               {/* N-036 — a shape rather than an option. It is not ranked, because
                   it is not chosen and competes with nothing. */}
               <aside className="panel guidance-shape-note" data-plan-shape={WAITING_SHAPE.id}>
@@ -333,10 +542,32 @@ export function Guidance() {
         <Link href="/topics/work#learning-curves">the shape of the curve sets what the first weeks
         should feel like</Link>, which is what stops a threshold skill being abandoned in its flat part.
       </p>
-      <p className="guidance-foot">
-        A pivot is a planned response, not proof of a failed person. To turn a chosen plan into a real
-        day, see <Link href="/guidance/daily-plan">the worked daily plan</Link>.
-      </p>
+      {/* N-089 — the prudent next move. One sentence that is a whole decision
+          method, and the one this site is most trying to teach. */}
+      <aside className="panel guidance-next-move" data-cheapest-question>
+        <h3>A prudent next move</h3>
+        <p className="guidance-next-move-line">{CHEAPEST_QUESTION}</p>
+        <p>
+          Most stuck decisions are stuck because the next step being considered is large, and a large
+          step needs a confidence nobody has yet. There is almost always a smaller one available whose
+          answer would genuinely move the decision — a phone call, a form read properly, one honest
+          conversation with somebody who has done it. If the answer to a question would not change what
+          you do, it is not the question; find the one that would, and pick the cheapest of those.
+        </p>
+      </aside>
+
+      {/* N-084 — the pivot strip. The reader's likeliest self-accusation,
+          converted into a mechanic, in the owner's register. */}
+      <aside className="panel guidance-pivot-strip" data-pivot-strip>
+        <h3>Pivoting</h3>
+        <p className="guidance-pivot-line">A pivot is a planned response, not proof of a failed person.</p>
+        <p>
+          Every plan above carries its own pivot triggers, written down in advance precisely so that
+          acting on one is a decision made earlier by a calmer version of you, rather than a judgement
+          made in the week it goes wrong. A trigger firing is the plan working. To turn a chosen plan
+          into a real day, see <Link href="/guidance/daily-plan">the worked daily plan</Link>.
+        </p>
+      </aside>
     </div>
   );
 }
@@ -345,13 +576,18 @@ function PlanCard({
   plan,
   rank,
   avail,
+  rejected,
+  onReject,
 }: {
   plan: Plan;
   rank: string;
   avail: Record<Availability, string>;
+  /** N-072 — the reader set this one aside; it renders struck and unweighted. */
+  rejected: boolean;
+  onReject: () => void;
 }) {
   return (
-    <article className="panel plan-card" data-kind={plan.kind}>
+    <article className={`panel plan-card${rejected ? " is-rejected" : ""}`} data-kind={plan.kind}>
       <div className="plan-card-head">
         <span className="plan-rank">{rank}</span>
         <span className="plan-avail" data-avail={plan.availability}>
@@ -387,7 +623,8 @@ function PlanCard({
             <dd>{plan.variance}</dd>
           </div>
           <div>
-            <dt>Reversibility</dt>
+            {/* N-094 — the field, under the rule stated above the list. */}
+            <dt>Reversibility — rigour on one-way doors, speed on two-way</dt>
             <dd>{plan.reversibility}</dd>
           </div>
           <div>
@@ -404,6 +641,22 @@ function PlanCard({
           </div>
         </dl>
       </details>
+      {/* N-072 (C-36) — per-card rejection, honoured in the rendering. */}
+      <button
+        type="button"
+        className="board-reject"
+        data-reject={plan.id}
+        aria-pressed={rejected}
+        onClick={onReject}
+      >
+        {rejected ? "Put this option back" : "This does not fit"}
+      </button>
+      {rejected && (
+        <p className="board-reject-note" data-reject-note>
+          Set aside, on your say-so. It stays here struck through and carries no weight in the order —
+          nothing about you was recorded, and the same control puts it back.
+        </p>
+      )}
     </article>
   );
 }

@@ -83,6 +83,13 @@ export default function TriagePage() {
 
       <p className="triage-prompt">Choose the closest.</p>
 
+      {/* N-089 — one calm line under the two questions, in the register of a
+          set-down route: no analysis, no apparatus, no game word. */}
+      <p className="triage-cheapest-question" data-cheapest-question>
+        And if none of this is urgent and you are only stuck: choose the cheapest question whose answer
+        could change what you do. Ask it before promising anything more.
+      </p>
+
       {/* N-023 — the quiet line, under the questions rather than above them, for
           the reader who does not have the capacity to answer either. */}
       <p className="triage-nothing-left">

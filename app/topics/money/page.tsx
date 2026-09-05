@@ -12,6 +12,7 @@ import {
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
 import { SingleHomeNote } from "@/components/SingleHomeNote";
+import { PositionNote } from "@/components/PositionNote";
 import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
@@ -103,6 +104,28 @@ export default function MoneyPage() {
         decades, it is why the distance between two starting positions tends to widen.
       </p>
 
+      {/* N-095 — opportunity cost belongs in the exchange-rates section because
+          it IS an exchange rate: what the option you did not take was worth. The
+          half that matters here is the shut-off valve on the back end. */}
+      <h3 id="opportunity-cost">Opportunity cost is a decision tool, not a regret tool</h3>
+      <p>
+        The most important exchange rate in any of this is the one with no receipt: what you gave up by
+        choosing what you chose. Every commitment is also a decision not to make the other ones, and that
+        forgone version is a real cost that no budget shows. It is worth thinking about hard, once, and
+        hardest in front of a door that only opens one way — which is precisely where people think about
+        it least, because the decision already feels made.
+      </p>
+      <p>
+        And then it is worth stopping. Once the information window has closed — once the alternative is
+        no longer available to you — comparing your life to the version you did not take is not analysis,
+        because the comparison has nothing on its other side. The imagined alternative contains no bad
+        Tuesdays, no illness and no bad luck, so it wins every time, and it would have won against any
+        life you actually lived. Running that comparison at three in the morning is rumination wearing
+        the clothes of rigour. The useful test is whether the thinking could still change something: if
+        it could, it is a decision, and if it cannot, it is not analysis and putting it down costs
+        nothing.
+      </p>
+
       <MentorNote provenance="cultural-wisdom">
         <p>
           Some things do not convert from any currency at any price. Sleep cannot be bought back after
@@ -111,6 +134,17 @@ export default function MoneyPage() {
           most completely, and the one the regret shows up around most reliably.
         </p>
       </MentorNote>
+
+      {/* N-150 (C-42) — the position note. Exchange rates are the mechanism this
+          row exists for: the same emergency costs a different multiple from a
+          different position, and this is the page that says so. */}
+      <PositionNote
+        notes={{
+          yes: "With a floor beneath a serious failure, your conversion table is the favourable one, and the effect is easy to miss from inside it: a shock gets paid out of savings or family rather than out of a credit card or a payday lender, so the same emergency costs you a fraction of what it costs someone without that. That advantage is real, it is not a reward, and knowing it is there is what stops it being read as evidence of better discipline.",
+          no: "Without a floor beneath a serious failure, you are paying the worse rate on every conversion — the same emergency, bought at credit-card or payday prices, and the same shortage of time bought back at a rate your hours cannot meet. That is arithmetic done to you, not by you. The moves that do not need a buffer are the ones worth reading first: asking, negotiating, and claiming what you are entitled to claim.",
+          unsure: "Whether there is a floor beneath a serious failure decides which exchange rates you are actually paying, more than any decision described on this page does. It is worth settling before applying any of this to yourself, because the same table is a modest inconvenience from one position and a compounding penalty from another.",
+        }}
+      />
 
       <h2 id="no-slack">If you have no slack right now</h2>
       <p>

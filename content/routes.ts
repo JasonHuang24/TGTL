@@ -89,8 +89,15 @@ export const ROUTES: RouteRecord[] = [
     title: "The Playthrough",
     navLabel: "Play",
     intensity: "full",
+    /*
+     * N-091 (6.0 §3.4, C-40) — the door names the real-world planner and says
+     * it is not one of these. The daily plan is the closest thing on the site
+     * to a fourth mode and is deliberately not one: it is not randomised, it
+     * generates no outcome, and it looks nothing like these three. Saying so on
+     * the door is the cheap half of the separation; C-40 enforces the other.
+     */
     summary:
-      "Three ways to play a life: the whole shape of one fast, twelve years as a sandbox campaign, or a single decision forked and compared.",
+      "Three ways to play a life: the whole shape of one fast, twelve years as a sandbox campaign, or a single decision forked and compared. The worked daily plan is not one of them — it is the real-world planner, and it is deliberately not a mode.",
     keywords: ["play", "playthrough", "simulator", "game", "life sim", "run", "begin a life", "modes"],
     searchable: true,
   },

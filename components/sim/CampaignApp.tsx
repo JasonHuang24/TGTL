@@ -827,7 +827,7 @@ function SavesPanel({
           ))}
         </ul>
       ) : (
-        <p className="sim-panel-empty">Nothing saved on this device yet.</p>
+        <p className="sim-panel-empty">Nothing saved on this device yet. The blank state is private, not incomplete.</p>
       )}
       <p className="sim-panel-note" data-sim-randomness-line>
         {RANDOMNESS_LINE} A seed is what makes a run reproducible and forkable, so two branches can be

@@ -21,6 +21,7 @@ import { SETDOWN_FORBIDDEN_TERMS, TERMS } from "../content/terminology.ts";
 import { STATUS_LABEL } from "../content/evidence.ts";
 import { ROUTES, SETDOWN_ROUTES, LOSS_ADJACENT_ROUTES } from "../content/routes.ts";
 import { CONCEPTS, CONCEPT_COLUMNS } from "../content/concepts.ts";
+import { TIER_OBJECTIVES, ARCHETYPES, TIER_NOT_MEASURED } from "../content/history.ts";
 import { TIMELINE_MILESTONE_ROUTES } from "../content/timeline/generated/routes.ts";
 
 export type CGateResult = { pass: boolean; details: string[] };
@@ -2125,6 +2126,793 @@ function c35(): CGateResult | null {
   };
 }
 
+/* =========================================================================
+   BATCH 5 — the C suite's board, logs, guidance, position, history gates.
+   =========================================================================
+   A note on the exported HTML these gates read. Next inlines an RSC flight
+   payload in a <script> after the markup, and for a SERVER component that
+   payload repeats the page's own attributes — so a naive count of a data
+   attribute in out/*.html is doubled on a server page and single on a client
+   one. Every gate below that counts or orders elements reads `markup()`, which
+   strips the script blocks first. A gate that silently counted twice would be a
+   gate whose arithmetic nobody could reproduce.
+   ========================================================================= */
+
+/** The rendered markup with the RSC flight payload and every other script removed. */
+const markup = (html: string): string => html.replace(/<script[\s\S]*?<\/script>/gi, "");
+
+/* =========================================================================
+   C-36 (N-072) — every classifying surface renders a rejection control, and a
+   rejected reading renders unweighted.
+   Plant: drop the control from one surface → red naming the surface.
+   =========================================================================
+   THE THREE SURFACES. A classifying surface is one that tells the reader what
+   kind of thing their situation is: the board's reading, guidance's ranked
+   plans, and the character sheet's layer explanations. Each gets a rejection
+   the RENDERING honours, because a button that records a disagreement and then
+   changes nothing is worse than no button — it collects the objection and files
+   it where the reader cannot see it working.
+
+   WHAT THIS GATE CAN AND CANNOT SEE. All three are client components whose
+   rejected state exists only after a click, so the exported HTML never carries
+   it and cannot answer the second half. Rendering React inside the C suite is
+   not available either: the suite runs under --experimental-strip-types with
+   relative specifiers, and there is no JSX transform in it. So the gate asserts
+   the structure that makes the honouring possible and the stylesheet that
+   performs it — the control exists, the state drives a class, and the class
+   strikes the text through. The limitation is named here rather than hidden,
+   the way batch 1 named C-2's.
+
+   The storage half is asserted too, and it is not decoration: §7.1 forbids a
+   new key, so the flags live INSIDE the existing `board` and `guidance` values.
+   A rejection that quietly acquired its own key would be this row's most likely
+   failure and would look like nothing at all in the diff.
+   ========================================================================= */
+function c36(): CGateResult | null {
+  const board = read("components/Board.tsx");
+  if (!board.includes("data-reject")) return null;
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  const SURFACES: { rel: string; what: string; rejectedClass: string }[] = [
+    { rel: "components/Board.tsx", what: "the board's reading", rejectedClass: "board-reading-result" },
+    { rel: "components/Guidance.tsx", what: "guidance's ranked plans", rejectedClass: "plan-card" },
+    { rel: "components/CharacterSheet.tsx", what: "the character sheet's panel explanations", rejectedClass: "sheet-layer" },
+  ];
+
+  const css = read("app/globals.css");
+
+  for (const s of SURFACES) {
+    const src = read(s.rel);
+    if (!/data-reject[=\s}]/.test(src)) {
+      fails.push(
+        `${s.rel}: ${s.what} renders NO [data-reject] control. A classifying surface with no way for the ` +
+          `reader to say it is wrong about them is a surface whose authority is a verdict (N-072).`,
+      );
+      continue;
+    }
+    // The rendering must HONOUR it: the flag has to reach a class on the card.
+    // The class must be applied CONDITIONALLY on the flag. All three surfaces do
+    // it the same way — a template literal with a ternary — and asserting the
+    // shape rather than a variable name is what stops a rename passing this.
+    const honours = /\?\s*" is-rejected"/.test(src);
+    if (!honours)
+      fails.push(
+        `${s.rel}: a rejection control renders but nothing in the component turns the flag into an ` +
+          `"is-rejected" class — the disagreement is collected and not honoured (N-072).`,
+      );
+    // And the stylesheet must actually strike it, not merely tint it.
+    const rule = new RegExp(`\\.${s.rejectedClass}\\.is-rejected[^{]*\\{[^}]*line-through`, "s");
+    if (!rule.test(css))
+      fails.push(
+        `app/globals.css: .${s.rejectedClass}.is-rejected does not strike its text through. Colour alone ` +
+          `is not a rendering of a rejection (N-072, and the UI standing law).`,
+      );
+    // A set-level refusal, so "none of these fit" is a complete answer.
+    if (!/data-reject-none|data-none-fit-state/.test(src))
+      fails.push(`${s.rel}: no set-level "none of these fit" state — the set can be rejected item by item and never as a set (N-072).`);
+  }
+
+  // §7.1 — NO NEW STORAGE KEY. The flags live inside the existing values.
+  const storage = read("lib/storage.ts");
+  const keyBlock = storage.slice(storage.indexOf("export const STORAGE_KEYS"), storage.indexOf("} as const;"));
+  const keyCount = [...keyBlock.matchAll(/^\s+\w+:\s*"tgtl:/gm)].length;
+  if (keyCount !== 13)
+    fails.push(`lib/storage.ts: STORAGE_KEYS has ${keyCount} entries; N-072's flags live inside the existing board and guidance values (§7.1)`);
+  if (!/rejected\?:\s*string\[\]/.test(read("content/board.ts")))
+    fails.push("content/board.ts: BoardSelections carries no `rejected` list, so the board's flag is not inside the existing board value");
+  if (!/rejected\?:\s*string\[\]/.test(read("components/Guidance.tsx")))
+    fails.push("components/Guidance.tsx: Inputs carries no `rejected` list, so guidance's flag is not inside the existing guidance value");
+
+  if (fails.length) return { pass: false, details: fails };
+  details.push(`all three classifying surfaces render a [data-reject] control and a set-level refusal: ${SURFACES.map((s) => s.rel).join(", ")}`);
+  details.push("each turns the flag into an is-rejected class, and globals.css strikes each of the three through rather than tinting it");
+  details.push("no new storage key: the flags live inside the existing board and guidance values (thirteen keys, unchanged)");
+  details.push(
+    "LIMITATION, named: the struck state is asserted structurally (control + class + stylesheet rule). The " +
+      "three components are client-only, so out/ never carries the rejected state, and the C suite has no JSX " +
+      "transform to render one. The browser walk covers the live behaviour.",
+  );
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-37 (N-074) — the export path issues no network request.
+   Proven red as a browser record: a fetch planted in the handler → red.
+   =========================================================================
+   2.0's KNOWN_LIMITATIONS named this cost and did nothing about it, because
+   doing something looked like breaking local-only. It does not — but the reason
+   it does not is a property of the implementation, not of the idea, and that is
+   exactly the kind of property that decays. So the source half is asserted
+   here (nothing in the export path can reach the network, and the print block
+   exists), and the runtime half is a browser record that watches the wire while
+   the control is actually pressed.
+   ========================================================================= */
+function c37(): CGateResult | null {
+  const logs = read("components/Logs.tsx");
+  if (!logs.includes("data-copy-out")) return null;
+  const fails: string[] = [];
+
+  // 1. Nothing in the component may reach the network or a URL, at all.
+  const FORBIDDEN: { re: RegExp; why: string }[] = [
+    { re: /\bfetch\s*\(/, why: "a fetch()" },
+    { re: /XMLHttpRequest/, why: "an XMLHttpRequest" },
+    { re: /navigator\.sendBeacon/, why: "a sendBeacon" },
+    { re: /new\s+WebSocket/, why: "a WebSocket" },
+    { re: /<form[^>]*action=/, why: "a form with an action" },
+    { re: /location\.(href|hash|search)\s*=/, why: "a write to the URL" },
+    { re: /history\.(pushState|replaceState)/, why: "a history entry" },
+  ];
+  for (const f of FORBIDDEN)
+    if (f.re.test(logs))
+      fails.push(`components/Logs.tsx: the records component contains ${f.why}. The export path keeps every byte on the device (N-074, gate 9).`);
+
+  // 2. The two ways out, and the fallback that needs no permission.
+  if (!/navigator\.clipboard\.writeText/.test(logs))
+    fails.push("components/Logs.tsx: no clipboard write — the copy-out control does not copy anything");
+  if (!/readOnly/.test(logs) || !/data-copy-text/.test(logs))
+    fails.push("components/Logs.tsx: no read-only textarea fallback for a browser that refuses the clipboard (N-074)");
+  if (/<textarea(?![^>]*readOnly)[^>]*data-copy-text/.test(logs))
+    fails.push("components/Logs.tsx: the fallback textarea is not read-only — it would be an input the site could interpret (S-6)");
+  if (!/window\.print\(\)/.test(logs))
+    fails.push("components/Logs.tsx: no print control, so the reader with no clipboard permission has one way out and not two");
+
+  // 3. The print block itself.
+  const css = read("app/globals.css");
+  if (!/@media print\s*\{/.test(css))
+    fails.push("app/globals.css: no @media print block — the print path renders the site's chrome onto paper (N-074)");
+  else {
+    const printBlock = css.slice(css.indexOf("@media print"));
+    for (const hidden of [".site-header", ".site-footer", ".log-form", ".board-reject", ".reset-button"])
+      if (!printBlock.includes(hidden))
+        fails.push(`app/globals.css: the print block does not remove ${hidden}; a printed record should carry no controls`);
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "components/Logs.tsx: no fetch, XHR, beacon, socket, form action, URL write or history entry anywhere in the component",
+      "two ways out, both local: the Clipboard API, and a read-only textarea for a browser that refuses it",
+      "app/globals.css carries an @media print block that removes the chrome and every control",
+      "the runtime half is browser gate 137: the control is pressed with the wire watched, and the URL is compared before and after",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-38 (N-077) — every planned task declares a stop condition.
+   Plant: blank a lane's stop cell → red naming the lane.
+   =========================================================================
+   A task with no declared end has no state in which it is finished, which makes
+   every state a state of not having done enough. That is how a plan becomes a
+   stick, and it is a property of the plan rather than of the reader's
+   character — which is why it is worth a gate rather than a paragraph.
+
+   Both halves: every lane row in the exported daily plan, and every upkeep item
+   the logs component renders. The upkeep half is structural (client-only) and
+   is asserted where it can actually fail — the render must emit the cell
+   unconditionally, because an item saved before this field existed would
+   otherwise render nothing at all and the absence would be invisible.
+   ========================================================================= */
+function c38(): CGateResult | null {
+  const html = readOut("/guidance/daily-plan");
+  if (!html || !html.includes("data-lane-stop")) return null;
+  const fails: string[] = [];
+  const body = markup(html);
+
+  const rows = [...body.matchAll(/class="lane-row"/g)].length;
+  const stops = [...body.matchAll(/data-lane-stop/g)].length;
+  const minimums = [...body.matchAll(/data-lane-minimum/g)].length;
+  const alternatives = [...body.matchAll(/data-lane-alternative/g)].length;
+  if (rows === 0) fails.push("/guidance/daily-plan: no lane rows found at all — the gate proved nothing");
+  if (stops !== rows) fails.push(`/guidance/daily-plan: ${rows} planned lane(s) and ${stops} stop condition(s). Every planned task declares where it ends (N-077).`);
+  if (minimums !== rows) fails.push(`/guidance/daily-plan: ${rows} planned lane(s) and ${minimums} minimum(s). A lane with no minimum cannot survive a bad day intact (N-077).`);
+  if (alternatives !== rows) fails.push(`/guidance/daily-plan: ${rows} planned lane(s) and ${alternatives} alternative(s) (N-077).`);
+
+  // Every stop cell must SAY something. A blank cell is the failure this exists for.
+  // The cell's own words, with its label removed. The cell is the last in its
+  // row, so the first </div> after it closes the row and bounds the window —
+  // reading to the first </span> would only ever find the label.
+  [...body.matchAll(/data-lane-stop/g)].forEach((m, i) => {
+    // From INSIDE the element, not from the attribute: starting at the attribute
+    // leaves `="true">` in the window, and `="true">` survives a tag strip
+    // (there is no `<` in front of it), so an emptied cell measured twenty-one
+    // characters long and the gate reported a green it had not earned. Found by
+    // its own plant, which is what the plant is for.
+    const from = body.indexOf(">", m.index ?? 0) + 1;
+    const to = body.indexOf("</div>", from);
+    const seg = body.slice(from, to === -1 ? from + 600 : to);
+    const label = seg.match(/class="lane-cell-label"[^>]*>([^<]*)</);
+    let text = seg.replace(/<[^>]*>/g, " ");
+    if (label) text = text.replace(label[1], " ");
+    text = text.replace(/\s+/g, " ").trim();
+    if (text.length < 8)
+      fails.push(`/guidance/daily-plan: lane ${i + 1} renders a stop cell with nothing in it ("${text}"). An empty stop condition is a lane with no end (N-077).`);
+  });
+
+  // The upkeep half: enumerated, always rendered, stored inside the existing value.
+  const logs = read("components/Logs.tsx");
+  if (!/STOP_OPTIONS\s*=\s*\[/.test(logs))
+    fails.push("components/Logs.tsx: the upkeep item has no enumerated stop-condition list (S-6: nothing free-text the site interprets)");
+  if (!/data-stop-condition/.test(logs))
+    fails.push("components/Logs.tsx: the upkeep item does not render a stop condition");
+  // Rendered UNCONDITIONALLY: a `{l.stop && ...}` guard would hide the absence.
+  if (/\{l\.stop\s*&&\s*\(/.test(logs))
+    fails.push(
+      "components/Logs.tsx: the stop condition renders only when set. An item saved before the field existed " +
+        "would then render nothing, and a missing stop would be invisible — which is the exact failure this gate is for.",
+    );
+  if (!/<select[\s\S]{0,220}STOP_OPTIONS/.test(logs))
+    fails.push("components/Logs.tsx: the stop condition is not an enumerated <select>");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/guidance/daily-plan: all ${rows} lanes render a minimum, an alternative and a non-empty stop condition`,
+      `components/Logs.tsx: the upkeep item's stop condition is an enumerated select over ${[...logs.matchAll(/^\s{2}"[^"]+",$/gm)].length ? "a closed list" : "a closed list"}, rendered unconditionally so an absent one is visible`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-39 (N-080) — no ranked output renders without its objective set, its active
+   constraints and its horizon printed above it.
+   Plant: render the plans above the disclosure → red.
+   =========================================================================
+   A ranked list with a hidden rule behind it reads as an opinion the site holds
+   about the reader's life. The same list with its rule printed above it reads
+   as what it is — arithmetic over inputs the reader chose, which changed
+   because THEY changed something.
+
+   The assertion is over SOURCE ORDER, not over the export, and deliberately:
+   the result step is client-only and renders only after the reader walks to it,
+   so out/guidance/index.html carries no `.plan-rank` at all and could never
+   fail. Source order is where this actually breaks — the same shape as C-8's
+   ordering assertion, and for the same reason. "Above" means above in the JSX
+   that produces the DOM, which is what a reader meets.
+   ========================================================================= */
+function c39(): CGateResult | null {
+  const src = read("components/Guidance.tsx");
+  if (!src.includes("data-guidance-disclosure")) return null;
+  const fails: string[] = [];
+
+  const disclosureAt = src.indexOf("data-guidance-disclosure");
+  const rankAt = src.indexOf('className="plan-rank"');
+  const firstCardAt = src.indexOf("<PlanCard");
+  if (rankAt === -1 && firstCardAt === -1) return null;
+  if (disclosureAt === -1)
+    fails.push("components/Guidance.tsx: no [data-guidance-disclosure] panel — a ranking renders with its ruleset nowhere (N-080)");
+  else {
+    if (firstCardAt !== -1 && disclosureAt > firstCardAt)
+      fails.push(
+        `components/Guidance.tsx: the first <PlanCard> is declared at character ${firstCardAt} and the disclosure at ` +
+          `${disclosureAt} — the ranking renders ABOVE the rule that produced it (N-080).`,
+      );
+    // The three things it has to name, each by its own marker so a rewrite that
+    // drops one is caught rather than being absorbed into the paragraph.
+    for (const [attr, what] of [
+      ["data-disclosure-objectives", "the objective set"],
+      ["data-disclosure-constraints", "the active constraints and vetoes"],
+      ["data-disclosure-horizon", "the horizon and the ruleset"],
+    ] as [string, string][]) {
+      if (!src.includes(attr))
+        fails.push(`components/Guidance.tsx: the disclosure does not name ${what} (${attr} absent). All three, above any ranking (N-080).`);
+    }
+    // It must update LIVE — a hardcoded summary is worse than none, because it
+    // would go on saying the same thing while the ranking moved underneath it.
+    const panel = src.slice(disclosureAt, firstCardAt === -1 ? src.length : firstCardAt);
+    if (!/inputs\.(weights|vetoes|health|slack)/.test(panel))
+      fails.push("components/Guidance.tsx: the disclosure does not read the live inputs, so it would keep saying the same thing while the ranking moved (N-080)");
+    if (!/RANKING_RULESET/.test(panel))
+      fails.push("components/Guidance.tsx: the disclosure does not render the published ruleset, so the ordering's rule is still unstated (N-080)");
+  }
+
+  // The crisis gate stays FIRST — batch 2's C-8 asserts it, and this row adds a
+  // panel above the ranking, which is exactly where that ordering could slip.
+  const crisisAt = src.indexOf("const crisisGate");
+  const rankFnAt = src.indexOf("const ranked");
+  if (crisisAt === -1 || rankFnAt === -1 || crisisAt > rankFnAt)
+    fails.push("components/Guidance.tsx: the crisis gate is no longer declared above the ranking (C-8; §5.5) — N-080's panel must not have moved it");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "components/Guidance.tsx: the disclosure panel is declared above the first plan card and names the objectives, the constraints and vetoes, and the horizon and ruleset",
+      "it reads the live inputs and renders the published RANKING_RULESET, so it moves when the ranking moves",
+      "the crisis gate is still declared above the ranking (C-8 unaffected by this row's panel)",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-40 (N-091) — no sim token or sim component class appears on the daily plan.
+   Plant: add a sim-panel class → red.
+   =========================================================================
+   The safety-relevant half of this row is the visual distinction. The closer
+   the real-world planner and the fiction get — and WHATS_COMING already names
+   deeper integration as wanted — the more explicitly they have to look
+   different, because the moment a real Tuesday borrows the simulation's
+   presentation, the simulation starts reading as a claim about the reader's
+   life. Free now, expensive later.
+   ========================================================================= */
+function c40(): CGateResult | null {
+  const html = readOut("/guidance/daily-plan");
+  if (!html) return null;
+  if (!html.includes("data-plan-separation")) return null;
+  const fails: string[] = [];
+  const body = markup(html);
+
+  // Sim component classes and sim design tokens, both.
+  const classHits = [...body.matchAll(/class="([^"]*\bsim-[a-z0-9-]+[^"]*)"/g)].map((m) => m[1]);
+  for (const c of classHits.slice(0, 6))
+    fails.push(`/guidance/daily-plan: renders the sim class "${c}". The real day may borrow nothing from the fiction's presentation (N-091).`);
+  const tokenHits = [...body.matchAll(/var\(--sim-[a-z0-9-]+\)/g)].map((m) => m[0]);
+  for (const t of [...new Set(tokenHits)].slice(0, 6))
+    fails.push(`/guidance/daily-plan: renders the sim design token ${t} (N-091)`);
+  if (/data-sim-[a-z-]+/.test(body))
+    fails.push(`/guidance/daily-plan: renders a data-sim-* attribute — a play-surface marker on the real planner (N-091)`);
+
+  // And the separation has to be STATED, not merely true.
+  const sep = body.match(/data-plan-separation[^>]*>([\s\S]*?)<\/p>/);
+  const text = sep ? sep[1].replace(/<[^>]*>/g, "").trim() : "";
+  if (text.length < 80)
+    fails.push("/guidance/daily-plan: the separation sentence is missing or too short to say anything (N-091)");
+  else if (!/not a fiction|not randomised|not randomized|no draw/i.test(text))
+    fails.push(`/guidance/daily-plan: the separation sentence does not say that this is a real day rather than a fiction: "${text.slice(0, 120)}…"`);
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "/guidance/daily-plan: no sim- class, no --sim-* token, no data-sim-* attribute in the exported markup",
+      "the separation is stated on the page, not merely true of it",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-41 (N-093) — every comparison surface closes with the no-winner panel.
+   Plant: remove it from one → red naming the surface.
+   =========================================================================
+   A comparison that simply stops reads as unfinished, and an unfinished
+   comparison invites the reader to supply the missing verdict themselves —
+   usually the one they arrived with. So the refusal has to BE the closing
+   element rather than an absence where one would go, and "last" is asserted
+   literally: nothing belonging to the comparison may render after it.
+
+   The surfaces are listed here rather than derived, because "is this page a
+   comparison?" is a judgement and a derived list would quietly shrink.
+   ========================================================================= */
+function c41(): CGateResult | null {
+  const cred = readOut("/map/credential-decision");
+  if (!cred || !cred.includes("data-no-winner")) return null;
+  const fails: string[] = [];
+
+  /** route → the marker for an item of the comparison it closes. */
+  const SURFACES: { route: string; itemMarker: RegExp; what: string }[] = [
+    { route: "/map/credential-decision", itemMarker: /class="credential-path panel"/g, what: "the three credential paths" },
+    { route: "/history", itemMarker: /data-tier-placement/g, what: "the tier board's placements" },
+  ];
+
+  for (const s of SURFACES) {
+    const html = readOut(s.route);
+    if (!html) {
+      fails.push(`${s.route}: not exported, so the gate proved nothing about it`);
+      continue;
+    }
+    const body = markup(html);
+    // Matched on the attribute BOUNDARY. `data-no-winner-side` contains
+    // `data-no-winner` as a substring, so a plain indexOf would find a side
+    // after the panel itself had been renamed away and report a green this gate
+    // had not earned — the same class of false green batch 4 recorded against
+    // C-33's first plant.
+    const panelAt = body.search(/data-no-winner[=\s>]/);
+    if (panelAt === -1) {
+      fails.push(
+        `${s.route} compares ${s.what} and does not close with the no-winner panel. A comparison that stops ` +
+          `without an explicit refusal invites the reader to supply the verdict (N-093).`,
+      );
+      continue;
+    }
+    const items = [...body.matchAll(s.itemMarker)];
+    if (items.length === 0) {
+      fails.push(`${s.route}: no comparison items found by ${s.itemMarker} — the gate proved nothing`);
+      continue;
+    }
+    const lastItemAt = items[items.length - 1].index ?? 0;
+    if (panelAt < lastItemAt)
+      fails.push(
+        `${s.route}: the no-winner panel renders at ${panelAt}, before the last of ${s.what} at ${lastItemAt}. ` +
+          `A refusal placed in the middle of a comparison is a caption, not a close (N-093).`,
+      );
+    // It has to name what each side emphasises — that is the whole content of
+    // an honest refusal, and an empty panel would satisfy a naive check.
+    const sides = [...body.slice(panelAt).matchAll(/data-no-winner-side/g)].length;
+    if (sides < 2)
+      fails.push(`${s.route}: the no-winner panel names ${sides} side(s). It exists to say what EACH side emphasises (N-093).`);
+    // And it must not sneak a verdict back in.
+    const panelText = body.slice(panelAt, panelAt + 2600).replace(/<[^>]*>/g, " ");
+    for (const verdict of ["the best option", "the winner", "the strongest overall", "overall best"])
+      if (panelText.toLowerCase().includes(verdict))
+        fails.push(`${s.route}: the no-winner panel contains "${verdict}" — the refusal has a verdict in it (N-093)`);
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `both comparison surfaces close on the refusal: ${SURFACES.map((s) => s.route).join(", ")}`,
+      "the panel renders after the last item on each, names at least two sides with what each emphasises, and carries no verdict",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-42 (N-150) — position produces no rank, band or comparison, and never
+   appears in a URL.
+   Plant: give a third component the context's position → red naming the file.
+   =========================================================================
+   This row promotes an existing key to shared state, which is a small change
+   with a large blast radius: the reader's position is now readable from every
+   client component on the site. The whole safety of it is that only two things
+   read it — the control that SETS it, and the note that SELECTS an authored
+   paragraph from it. Neither computes anything.
+
+   So the gate is a closed consumer list, and it is deliberately blunt: any
+   third reader fails it, even a well-behaved one. A well-behaved third reader
+   is how this becomes a scoring input, one honest commit at a time.
+
+   The URL half is asserted at runtime by gate 9's walk, which sets a position
+   and then reads every URL it lands on; the static half here is that nothing in
+   the tree writes it to one.
+   ========================================================================= */
+function c42(): CGateResult | null {
+  const ctx = read("lib/guide-context.tsx");
+  if (!ctx.includes("DEFAULT_POSITION")) return null;
+  const fails: string[] = [];
+
+  /** The only two consumers, plus the file that defines the state. */
+  const ALLOWED = new Set([
+    "lib/guide-context.tsx",
+    "components/CredentialFilter.tsx", // PositionControl + the credential comparison
+    "components/PositionNote.tsx",
+  ]);
+
+  const roots = ["components", "app", "lib", "content"];
+  const files: string[] = [];
+  const walk = (dir: string) => {
+    const abs = join(ROOT, dir);
+    if (!existsSync(abs)) return;
+    for (const entry of readdirSync(abs)) {
+      const rel = `${dir}/${entry}`;
+      const full = join(ROOT, rel);
+      if (statSync(full).isDirectory()) walk(rel);
+      else if (/\.tsx?$/.test(entry)) files.push(rel);
+    }
+  };
+  roots.forEach(walk);
+
+  const consumers: string[] = [];
+  for (const rel of files) {
+    const src = read(rel);
+    const readsKey = /STORAGE_KEYS\.credentialPosition/.test(src);
+    // `position` taken off the context, under either name.
+    // A destructure from the context, in either order and under either local
+    // name, or a direct property read. Written as one shape rather than as a
+    // list of the three spellings the tree happens to use today.
+    const readsCtx =
+      /const\s*\{[^}]*\bposition\b[^}]*\}\s*=\s*useGuide\(\)/.test(src) || /useGuide\(\)\.position\b/.test(src);
+    if (!readsKey && !readsCtx) continue;
+    consumers.push(rel);
+    if (!ALLOWED.has(rel.replace(/\\/g, "/")))
+      fails.push(
+        `${rel} reads the reader's position. The only permitted consumers are the control that sets it and the ` +
+          `note that selects an authored paragraph from it (N-150, C-42) — a third reader is how a filter becomes a score.`,
+      );
+  }
+  if (consumers.length === 0) fails.push("no file reads the position at all — the gate proved nothing");
+
+  // It must never reach the play layer, under any name.
+  for (const rel of files.filter((f) => /^(components\/(sim|play)|lib\/(sim|engine)|content\/sim)\//.test(f))) {
+    const src = read(rel);
+    // Matched on the IMPORT, not on the bare name: content/sim/schema.ts declares
+    // its own unrelated `PositionNote` type for a play-surface note, and failing
+    // this gate on a coincidence is how a gate gets weakened to make it green.
+    if (
+      /credentialPosition/.test(src) ||
+      /from "@\/components\/PositionNote"/.test(src) ||
+      /const\s*\{[^}]*\bposition\b[^}]*\}\s*=\s*useGuide\(\)/.test(src)
+    )
+      fails.push(`${rel}: the play layer reads the reader's position. Position is a reading-layer filter and never a character (§1, N-150).`);
+  }
+
+  // Nothing anywhere may put it in a URL.
+  for (const rel of ["components/PositionNote.tsx", "components/CredentialFilter.tsx", "lib/guide-context.tsx"]) {
+    const src = read(rel);
+    for (const [re, what] of [
+      [/location\.(hash|search|href)\s*=/, "a write to the URL"],
+      [/URLSearchParams/, "a query-string builder"],
+      [/history\.(pushState|replaceState)/, "a history entry"],
+    ] as [RegExp, string][])
+      if (re.test(src)) fails.push(`${rel}: contains ${what}. Position never enters a URL (gate 9, C-42).`);
+  }
+
+  // And it must not be turned into a rank, band, score or count anywhere.
+  // Comments stripped first: this file's own header explains that it produces no
+  // rank, band or score, and a gate that read its own doctrine as a violation
+  // would be unfixable except by deleting the explanation.
+  const stripComments = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ");
+  const note = stripComments(read("components/PositionNote.tsx"));
+  for (const [re, what] of [
+    [/\bscore\b/i, "a score"],
+    [/\brank(ed|ing)?\b/i, "a rank"],
+    [/\bpercentile\b/i, "a percentile"],
+    [/[+\-*/]\s*position\.|position\.\w+\s*[+\-*/]/, "arithmetic on the position"],
+  ] as [RegExp, string][])
+    if (re.test(note)) fails.push(`components/PositionNote.tsx: contains ${what}. The note SELECTS an authored paragraph; it computes nothing (N-150).`);
+
+  // The key itself is the existing one — §7.1 adds none.
+  const storage = read("lib/storage.ts");
+  const keyBlock = storage.slice(storage.indexOf("export const STORAGE_KEYS"), storage.indexOf("} as const;"));
+  if ([...keyBlock.matchAll(/^\s+\w+:\s*"tgtl:/gm)].length !== 13)
+    fails.push("lib/storage.ts: STORAGE_KEYS is no longer thirteen entries — N-150 promotes the EXISTING credentialPosition key and adds none (§7.1)");
+
+  // Every page that renders a note must render all three answers' worth of
+  // authorship, so a reader who set nothing is not shown a blank.
+  const noteUsers = files.filter((f) => /<PositionNote\b/.test(read(f)));
+  for (const rel of noteUsers) {
+    // The three notes may be inline at the call site or a named constant
+    // elsewhere in the file, which is where a shared one naturally lives. What
+    // matters is that all three answers are authored in that page's own voice.
+    const src = read(rel);
+    for (const key of ["yes", "no", "unsure"])
+      if (!new RegExp(`\\b${key}:\\s*["\`']`).test(src))
+        fails.push(`${rel}: a PositionNote is rendered without a "${key}" note — the reader who has set nothing meets a blank (N-150)`);
+  }
+  if (noteUsers.length < 5)
+    fails.push(`only ${noteUsers.length} page(s) render a position note; the row names five (/map/launch, /topics/work, /topics/money, /situations/job-loss, /guidance)`);
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `the position has exactly ${consumers.length} readers, all permitted: ${consumers.join(", ")}`,
+      `${noteUsers.length} pages render a PositionNote, each supplying all three authored answers`,
+      "no rank, band, score, percentile or arithmetic in the note; no URL write, query string or history entry in any of the three files",
+      "the play layer references it nowhere; STORAGE_KEYS is unchanged at thirteen",
+      "the runtime half is gate 9's walk: a position is set, the site is navigated, and no URL carries it",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-43 (N-170) — every placement belongs to a named objective, and changing the
+   objective changes the board.
+   Plant: a placement with no objective → red naming the archetype.
+   =========================================================================
+   The trunk's own TIER_LIMITS named this as the missing thing. Watching the
+   same five positions reorder under "autonomy" versus "era power" is the single
+   best demonstration on this site that a tier is a fact about a ruleset and not
+   about people — better than any paragraph saying so, because the reader does
+   it themselves and sees the letters move.
+
+   Which means the second half of the assertion is the load-bearing one. A
+   switch that produced the same board under every setting would be a control
+   that teaches the opposite of the lesson: that the ranking is the ranking, and
+   the stated objective is decoration.
+   ========================================================================= */
+function c43(): CGateResult | null {
+  const src = read("content/history.ts");
+  if (!src.includes("TIER_OBJECTIVES")) return null;
+  const fails: string[] = [];
+
+  if (TIER_OBJECTIVES.length < 3)
+    fails.push(`content/history.ts: ${TIER_OBJECTIVES.length} objective(s); §3.8 asks for the trunk's era power plus autonomy plus at least one more`);
+
+  const archetypeIds = ARCHETYPES.map((a) => a.id);
+  const WEIGHTS = ["very high", "high", "moderate", "low"];
+
+  for (const o of TIER_OBJECTIVES) {
+    // Every placement belongs to exactly one objective, both directions.
+    for (const id of archetypeIds)
+      if (!o.placements[id])
+        fails.push(`content/history.ts: objective "${o.id}" has no placement for archetype "${id}" — a position on the board with no ruling under a named objective (N-170)`);
+    for (const id of Object.keys(o.placements))
+      if (!archetypeIds.includes(id))
+        fails.push(`content/history.ts: objective "${o.id}" places "${id}", which is not an archetype on the board (N-170)`);
+    // Qualitative weights only. A number here would be a score.
+    for (const f of o.factors) {
+      if (!WEIGHTS.includes(f.weight))
+        fails.push(`content/history.ts: objective "${o.id}" weights "${f.name}" as "${f.weight}", which is not one of ${WEIGHTS.join(" | ")}`);
+      if (/\d/.test(String(f.weight)) || /\d/.test(f.name))
+        fails.push(`content/history.ts: objective "${o.id}" carries a digit in a factor ("${f.name}: ${f.weight}") — the weights are qualitative (§3.8)`);
+    }
+    // Every ruling says something, and no ruling carries a digit.
+    for (const [id, p] of Object.entries(o.placements)) {
+      if (!p.ruling || p.ruling.trim().length < 20)
+        fails.push(`content/history.ts: objective "${o.id}", archetype "${id}" has no ruling worth reading`);
+      if (/\d/.test(p.ruling))
+        fails.push(`content/history.ts: objective "${o.id}", archetype "${id}" has a digit in its ruling — no number on this board (§4.1)`);
+    }
+    if (!o.notMeasured.length) fails.push(`content/history.ts: objective "${o.id}" declares nothing as not-measured (N-171)`);
+    if (!o.unit || !/position/i.test(o.unit))
+      fails.push(`content/history.ts: objective "${o.id}" does not declare its unit as a position — the line that stops a tier list ranking people (N-171)`);
+  }
+
+  // THE LOAD-BEARING HALF: two objectives must produce two different boards.
+  const boardOf = (o: (typeof TIER_OBJECTIVES)[number], side: "before" | "after") =>
+    ARCHETYPES.map((a) => `${a.id}:${o.placements[a.id]?.[side] ?? "-"}`).join("|");
+  const distinct = new Set(TIER_OBJECTIVES.map((o) => boardOf(o, "after")));
+  if (distinct.size < TIER_OBJECTIVES.length)
+    fails.push(
+      `content/history.ts: ${TIER_OBJECTIVES.length} objectives produce only ${distinct.size} distinct board(s) under the "after" ruleset. ` +
+        `A switch that changes nothing teaches that the stated objective is decoration (N-170).`,
+    );
+
+  // And the control must exist and be the thing that drives the render.
+  const comp = read("components/History.tsx");
+  if (!/<select[\s\S]{0,400}TIER_OBJECTIVES/.test(comp))
+    fails.push("components/History.tsx: no <select> over the objectives — the board is disclosed and still fixed (N-170)");
+  if (!/objective\.placements/.test(comp))
+    fails.push("components/History.tsx: the board does not render from the chosen objective's placements (N-170)");
+  if (!/data-ruleset-factors/.test(comp))
+    fails.push("components/History.tsx: no per-objective factor-weight inspector (N-170)");
+
+  // N-172 — at least one objective refuses the top tier, and says so with the
+  // right label. An empty top tier claiming to be evidence-informed would be the
+  // same overclaim as a filled one, wearing the opposite costume.
+  const emptyS = TIER_OBJECTIVES.filter((o) => !ARCHETYPES.some((a) => o.placements[a.id]?.after === "S" || o.placements[a.id]?.before === "S"));
+  if (emptyS.length === 0)
+    fails.push("content/history.ts: no objective leaves the S tier empty. N-172: the empty top tier is the most persuasive refusal on the site.");
+  for (const o of emptyS)
+    if (o.evidence !== "insufficient-evidence")
+      fails.push(
+        `content/history.ts: objective "${o.id}" leaves the top tier empty and is labelled "${o.evidence}". ` +
+          `An empty tier carries "insufficient-evidence" — a refusal has to say why it is refusing (N-172).`,
+      );
+  if (emptyS.length > 0) {
+    /*
+     * The RENDERED half of N-172 cannot be read off the export: the board is a
+     * client component whose objective defaults to era power, whose top tier is
+     * filled, so the exported HTML correctly carries no empty-tier card. What is
+     * asserted here is the structure that produces one, and browser gate 143
+     * switches the objective for real and looks at the card.
+     *
+     * The condition is asserted as TOP-TIER-ONLY on purpose. A first pass
+     * rendered the explicit empty state for every unoccupied letter, and
+     * `EMPTY_TIER_NOTE` is a claim about the top of a board — an ordinary gap in
+     * the middle is not a refusal of anything, and dressing it as one spends the
+     * credibility the real refusal needs.
+     */
+    const comp = read("components/History.tsx");
+    if (!/data-empty-tier/.test(comp))
+      fails.push("components/History.tsx: nothing renders an empty tier as an empty tier — a refusal has to be visible (N-172)");
+    if (!/topTierEmpty/.test(comp) || !/TIERS\[0\]/.test(comp))
+      fails.push("components/History.tsx: the empty-tier card is not conditioned on the TOP tier being empty (N-172)");
+    if (/emptyTiers\.map/.test(comp))
+      fails.push(
+        "components/History.tsx: the empty-tier card renders for every unoccupied letter. An explicit empty state on an " +
+          "ordinary mid-board gap spends the credibility the real refusal needs (N-172).",
+      );
+    if (!/data-empty-tier-evidence/.test(comp))
+      fails.push("components/History.tsx: the empty tier renders without the objective's evidence label beside it (N-172)");
+    const body = markup(readOut("/history") ?? "");
+    const defaultFillsTop = ARCHETYPES.some((a) => TIER_OBJECTIVES[0].placements[a.id]?.after === "S");
+    if (defaultFillsTop && body.includes("data-empty-tier"))
+      fails.push(
+        `/history: the default objective "${TIER_OBJECTIVES[0].id}" has somebody in its top tier and the exported board still ` +
+          `renders an empty-tier card (N-172)`,
+      );
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${TIER_OBJECTIVES.length} objectives (${TIER_OBJECTIVES.map((o) => o.id).join(", ")}), each placing all ${archetypeIds.length} archetypes and placing nothing else`,
+      `they produce ${distinct.size} distinct boards under the "after" ruleset — changing the objective changes the letters`,
+      "every factor weight is one of the four qualitative words; no digit in any weight, factor name or ruling",
+      `${emptyS.length} objective(s) leave the S tier empty on purpose and are labelled insufficient-evidence (N-172): ${emptyS.map((o) => o.id).join(", ")}`,
+      "the empty-tier card is conditioned on the TOP tier alone, carries the objective's evidence label, and does not render on the exported default board (whose top tier is filled); browser gate 143 switches the objective and reads the card",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-44 (N-171) — no placement renders without the ruleset header above it.
+   Plant: render the board above the header → red.
+   =========================================================================
+   The trunk carried its caveat BELOW the board, which is the wrong side of it:
+   by the time a reader reaches the caveat they have read five letters and
+   decided what they mean. Declared first, the reader knows what is being ranked
+   before they see a rank — and "an economic position, not a demographic group
+   or a person" is the single line that stops a tier list from becoming a
+   ranking of people.
+   ========================================================================= */
+function c44(): CGateResult | null {
+  const html = readOut("/history");
+  if (!html || !html.includes("data-tier-ruleset")) return null;
+  const body = markup(html);
+  const fails: string[] = [];
+
+  const headerAt = body.indexOf("data-tier-ruleset");
+  const firstPlacementAt = body.indexOf("data-tier-placement");
+  const firstBadgeAt = body.search(/class="tier-badge/);
+  if (firstPlacementAt === -1) fails.push("/history: no placement rendered at all — the gate proved nothing");
+  if (headerAt === -1) fails.push("/history: the board renders no ruleset header (N-171)");
+  else {
+    for (const [at, what] of [
+      [firstPlacementAt, "the first placement"],
+      [firstBadgeAt, "the first tier letter"],
+    ] as [number, string][]) {
+      if (at !== -1 && at < headerAt)
+        fails.push(
+          `/history: ${what} renders at ${at}, above the ruleset header at ${headerAt}. The reader meets a letter ` +
+            `before learning what is being ranked, which is the arrangement this row exists to reverse (N-171).`,
+        );
+    }
+    // The five declarations, each by its own marker.
+    for (const [attr, what] of [
+      ["data-ruleset-objective", "the objective"],
+      ["data-ruleset-unit", "the unit"],
+      ["data-ruleset-factors", "the priority factors"],
+      ["data-ruleset-not-measured", "the not-measured list"],
+      ["data-ruleset-evidence", "the evidence state"],
+    ] as [string, string][])
+      if (!body.includes(attr)) fails.push(`/history: the ruleset header does not declare ${what} (${attr} absent) — N-171 names all five`);
+
+    // The not-measured list is LITERAL: these seven, in the header, above the letters.
+    const headerBlock = body.slice(headerAt, firstPlacementAt === -1 ? body.length : firstPlacementAt).toLowerCase();
+    for (const item of TIER_NOT_MEASURED)
+      if (!headerBlock.includes(item.toLowerCase()))
+        fails.push(`/history: the not-measured list above the board omits "${item}" (N-171)`);
+    if (!/position/.test(headerBlock) || !/not a demographic group|not a demographic|never a person|not a person/.test(headerBlock))
+      fails.push('/history: the unit does not say that what is ranked is a position and not a demographic group or a person (N-171)');
+  }
+
+  // TIER_DISCLAIMER and TIER_LIMITS both survive.
+  if (!body.includes("tier-disclaimer")) fails.push("/history: the standing disclaimer no longer renders (§2.1 — it stays)");
+  if (!body.includes("tier-limits")) fails.push("/history: TIER_LIMITS no longer renders (§2.1 — it stays)");
+  // Its apology for the missing switch is now false, and must have gone.
+  const limits = read("content/history.ts");
+  const limitsText = limits.slice(limits.indexOf("export const TIER_LIMITS"));
+  if (/would let you re-weight the factors/.test(limitsText))
+    fails.push("content/history.ts: TIER_LIMITS still apologises for the absence of the objective switch, which now exists (N-170/N-171)");
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/history: the ruleset header renders at ${headerAt}, above the first placement at ${firstPlacementAt} and the first tier letter at ${firstBadgeAt}`,
+      "it declares the objective, the unit, the priority factors, all seven not-measured items, and the evidence state",
+      "the standing disclaimer and TIER_LIMITS both still render; TIER_LIMITS no longer apologises for a switch that exists",
+    ],
+  };
+}
+
 export const GATES: CGate[] = [
   { id: 1, row: "N-226", name: "A failed or unverified write never reports saved", proof: "record", run: c1 },
   { id: 2, row: "N-190", name: "A rendered failure mode carries its tied recovery route", proof: "probe", run: c2 },
@@ -2161,15 +2949,15 @@ export const GATES: CGate[] = [
   { id: 33, row: "N-321", name: "The single-home invariant renders on every topic route", proof: "probe", run: c33 },
   { id: 34, row: "N-326", name: "The term marker never renders in Standard or on set-down routes", proof: "probe", run: c34 },
   { id: 35, row: "N-329", name: "No comic-register route is set-down or loss-adjacent", proof: "probe", run: c35 },
-  { id: 36, row: "N-072", name: "Every classifying surface offers a rejection honoured in rendering", proof: "probe", run: NA },
-  { id: 37, row: "N-074", name: "The export path issues no network request", proof: "record", run: NA },
-  { id: 38, row: "N-077", name: "Every planned task declares a stop condition", proof: "probe", run: NA },
-  { id: 39, row: "N-080", name: "No ranked output without objective, constraints and horizon above it", proof: "probe", run: NA },
-  { id: 40, row: "N-091", name: "No sim token or class on the daily plan", proof: "probe", run: NA },
-  { id: 41, row: "N-093", name: "Every comparison closes with the no-winner panel", proof: "probe", run: NA },
-  { id: 42, row: "N-150", name: "Position produces no rank, band or comparison and never enters a URL", proof: "probe", run: NA },
-  { id: 43, row: "N-170", name: "Every placement belongs to a named objective; changing it changes the board", proof: "probe", run: NA },
-  { id: 44, row: "N-171", name: "No placement renders without the ruleset header", proof: "probe", run: NA },
+  { id: 36, row: "N-072", name: "Every classifying surface offers a rejection honoured in rendering", proof: "probe", run: c36 },
+  { id: 37, row: "N-074", name: "The export path issues no network request", proof: "record", run: c37 },
+  { id: 38, row: "N-077", name: "Every planned task declares a stop condition", proof: "probe", run: c38 },
+  { id: 39, row: "N-080", name: "No ranked output without objective, constraints and horizon above it", proof: "probe", run: c39 },
+  { id: 40, row: "N-091", name: "No sim token or class on the daily plan", proof: "probe", run: c40 },
+  { id: 41, row: "N-093", name: "Every comparison closes with the no-winner panel", proof: "probe", run: c41 },
+  { id: 42, row: "N-150", name: "Position produces no rank, band or comparison and never enters a URL", proof: "probe", run: c42 },
+  { id: 43, row: "N-170", name: "Every placement belongs to a named objective; changing it changes the board", proof: "probe", run: c43 },
+  { id: 44, row: "N-171", name: "No placement renders without the ruleset header", proof: "probe", run: c44 },
   { id: 45, row: "N-281", name: "Disanalogy entries and their inheriting routes resolve both ways", proof: "probe", run: NA },
   { id: 46, row: "N-290", name: "The retractions register renders when empty", proof: "probe", run: NA },
   { id: 47, row: "N-291", name: "A page changed by a logged correction renders a revision note", proof: "probe", run: NA },

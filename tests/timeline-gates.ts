@@ -648,9 +648,27 @@ function proseFields(m: Milestone): { path: string; text: string }[] {
   let ok = true;
   if (!contentPresent) NA.push("T-4 (no compiled timeline content yet)");
   else {
+    /*
+     * N-379 — T-4 IS EXTENDED, NOT RELAXED.
+     *
+     * A route entry may now be a bare sentence or `{ route, grade }`. The
+     * PREDICATE is untouched: a branch that names a cost still has to render at
+     * least one route in the same view, and a route still has to be a non-empty
+     * sentence. What changed is the ACCESSOR — the gate reads through the grade
+     * to the sentence instead of demanding a string. A grade never satisfies the
+     * rule on its own; `{ grade: "closed" }` with no sentence fails exactly as a
+     * missing route always has, and so does `{ route: "" }`.
+     */
+    const GRADES = ["easy", "costly", "partial", "closed"];
+    const routeSentence = (r: any): string | null => {
+      if (typeof r === "string") return r;
+      if (r && typeof r === "object" && typeof r.route === "string") return r.route;
+      return null;
+    };
     let branches = 0;
     let withCosts = 0;
     let nevers = 0;
+    let graded = 0;
     for (const m of MILESTONES) {
       const a: any = (m as any).analysis;
       if (!a) continue;
@@ -658,7 +676,7 @@ function proseFields(m: Milestone): { path: string; text: string }[] {
         if (!b) continue;
         branches++;
         const costs: string[] = b.costs ?? [];
-        const routes: string[] = b.routes ?? [];
+        const routes: any[] = b.routes ?? [];
         if (costs.length) {
           withCosts++;
           if (routes.length === 0) {
@@ -667,9 +685,26 @@ function proseFields(m: Milestone): { path: string; text: string }[] {
           }
         }
         for (const r of routes) {
-          if (!r || !r.trim()) {
+          const text = routeSentence(r);
+          if (text === null) {
+            ok = false;
+            details.push(
+              `${m.id}.analysis.${name}: a route entry is neither a sentence nor { route, grade } — a grade describes a route and never replaces one (N-379)`,
+            );
+            continue;
+          }
+          if (!text.trim()) {
             ok = false;
             details.push(`${m.id}.analysis.${name}: empty route`);
+          }
+          if (typeof r === "object" && r !== null) {
+            graded++;
+            if (!GRADES.includes(r.grade)) {
+              ok = false;
+              details.push(
+                `${m.id}.analysis.${name}: route grade "${r.grade}" is not one of ${GRADES.join(" | ")} (N-379)`,
+              );
+            }
           }
         }
       }
@@ -682,7 +717,8 @@ function proseFields(m: Milestone): { path: string; text: string }[] {
     }
     details.push(
       `${branches} branches; ${withCosts} name a cost and every one of them renders a route in the same view; ` +
-        `${nevers} optional records carry a "never" branch.`,
+        `${nevers} optional records carry a "never" branch; ${graded} route(s) carry a grade, ` +
+        `each of which still carries its own sentence (N-379 extends the accessor, never the predicate).`,
     );
     results.push({ id: 4, name: "T-4 · Recovery adjacency & never-is-not-failure", pass: ok, details });
   }
@@ -1079,9 +1115,71 @@ function proseFields(m: Milestone): { path: string; text: string }[] {
         details.push(`the lens note says ${claimed[1]} diverging records; the content has ${diverging.length}`);
       }
     }
+
+    /*
+     * N-386 — THE SAME DISCIPLINE, EXTENDED FROM `measures` TO `timing`.
+     *
+     * T-9 has always said: a record may not claim a difference unless its source
+     * stated what it measured. The expectation channel needs the same rule about
+     * WHEN the source was speaking, for the same reason — a source that is
+     * looking back at what people used to expect is evidence about the present
+     * perception of a past expectation, and nostalgia is the source most likely
+     * to be cited here and least likely to be true.
+     *
+     * EXTENDED, NEVER RELAXED: the `measures` requirement above is untouched and
+     * this is added beside it. The requirement follows the CITATION rather than
+     * the source, because the same page can be an ordinary statistical source
+     * for one record and a claim of a different kind when cited about an
+     * expectation.
+     */
+    const TIMINGS = ["contemporaneous", "retrospective"];
+    const expectationRecords = MILESTONES.filter((m) => (m as any).kind === "cultural-expectation");
+    let citedPairs = 0;
+    let retrospectiveCited = 0;
+    for (const m of expectationRecords) {
+      const cited = new Set<string>([
+        ...(((m as any).sources ?? []) as string[]),
+        ...(((m as any).bySex?.sources ?? []) as string[]),
+        ...Object.values<any>((m as any).analysis ?? {}).flatMap((b: any) => (b?.sources ?? []) as string[]),
+      ]);
+      for (const sid of cited) {
+        const s: any = SOURCES[sid];
+        if (!s) {
+          ok = false;
+          details.push(`${m.id}: cites unresolvable source "${sid}"`);
+          continue;
+        }
+        citedPairs++;
+        if (!s.timing) {
+          ok = false;
+          details.push(
+            `${m.id}: cultural-expectation record citing source "${sid}", which does not state its timing ` +
+              `(contemporaneous | retrospective) — N-386`,
+          );
+        } else if (!TIMINGS.includes(s.timing)) {
+          ok = false;
+          details.push(`${m.id}: source "${sid}" has timing "${s.timing}", which is not one of ${TIMINGS.join(" | ")}`);
+        } else if (s.timing === "retrospective") {
+          retrospectiveCited++;
+        }
+      }
+    }
+    if (renderedPresent && retrospectiveCited > 0 && timelineIndex) {
+      // Where a retrospective source is cited, the label has to reach a reader.
+      const anyRendered = /data-tl-source-timing="retrospective"/.test(timelineIndex.html);
+      if (!anyRendered) {
+        details.push(
+          `note: ${retrospectiveCited} retrospective citation(s) exist and none renders on /timeline itself; ` +
+            `the label renders on the milestone pages, which this gate does not read.`,
+        );
+      }
+    }
+
     details.unshift(
       `${diverging.length} record(s) carry a sourced sex-lens divergence, each with a source that states what it measured; ` +
-        `the rendered count equals the content count.`,
+        `the rendered count equals the content count. ` +
+        `${expectationRecords.length} cultural-expectation record(s) make ${citedPairs} source citation(s), ` +
+        `every one of which states when the source was speaking (${retrospectiveCited} retrospective).`,
     );
     results.push({ id: 9, name: "T-9 · Sex-lens honesty (a divergence only where a source says what it measured)", pass: ok, details });
   }

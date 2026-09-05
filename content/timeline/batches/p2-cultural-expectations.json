@@ -10,6 +10,7 @@
       "publicationYear": 2026,
       "dataYear": 2026,
       "measures": "the age at which the federal health insurance program covers people, stated as a rule on the program's own page",
+      "timing": "contemporaneous",
       "retrievedOn": "2026-09-03",
       "excerpt": "Medicare is health insurance for people 65 or older who meet citizenship or residency requirements.",
       "notes": "The page prints no publication date; the year recorded here is the most recent year stamped on the page's own assets."
@@ -23,6 +24,7 @@
       "publicationYear": 1967,
       "dataYear": 1967,
       "measures": "the age from which the federal age discrimination statute covers applicants and employees, as the enforcing agency states it",
+      "timing": "contemporaneous",
       "retrievedOn": "2026-09-03",
       "excerpt": "The Age Discrimination in Employment Act (ADEA) forbids age discrimination against people who are age 40 or older.",
       "notes": "The years recorded are the statute's own year, which is the only year the page states for the rule; the agency page itself carries no publication date."

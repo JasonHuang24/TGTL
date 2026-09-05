@@ -53,7 +53,9 @@ because a save from a different content version is declared unresumable (4.0 §2
 let a mixed record resume is the owner's; and the Life Arc's per-save delete does not yet arm the
 way the campaign's does (N-227), a candidate for the register. Found in batch 4: the search index jumps to a heading only where the page's source carries an
 id (sixty-four of the hundred and fifteen headings indexed); the five frozen pages cannot gain
-ids, so the rest land at the top of their page and the result says so. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+ids, so the rest land at the top of their page and the result says so. Found in batch 5: the guidance flow's disclosure states the ruleset's horizon because the flow
+has never asked the reader for one; a reader-set horizon would be a new enumerated input and is a
+candidate for the register, not built. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
 
 ---
 

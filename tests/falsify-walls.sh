@@ -120,7 +120,16 @@ elif [ ! -f "$TL_HTML" ]; then
   FAILED=1
 else
 
+# 6.0 batch 5 (N-386): T-9's extension reads the compiled SOURCES, so that file
+# joins the backed-up set. Same discipline: plant, require red, restore, verify
+# byte-identity AND the modification time (T-16 fails on a source newer than the
+# export, and a probe that promises an unchanged tree should not leave one
+# looking rebuilt).
+TL_SOURCES="content/timeline/generated/sources.ts"
+
 CBAK="$(mktemp)"; cp "$TL_CONTENT" "$CBAK"; CBEFORE="$(sha256sum "$TL_CONTENT" | cut -d' ' -f1)"
+SBAK="$(mktemp)"; cp "$TL_SOURCES" "$SBAK"; SBEFORE="$(sha256sum "$TL_SOURCES" | cut -d' ' -f1)"
+SREF="$(mktemp)"; touch -r "$TL_SOURCES" "$SREF"
 HBAK="$(mktemp)"; cp "$TL_HTML" "$HBAK"; HBEFORE="$(sha256sum "$TL_HTML" | cut -d' ' -f1)"
 # Restore the MODIFICATION TIMES too, not just the bytes. T-16 fails when a timeline
 # source is newer than the export, and a probe that promises byte-identical
@@ -162,6 +171,14 @@ tl_probe () {
 tl_probe "T-1 · numeric timing with no source"                   1 "$TL_CONTENT" "$CBAK" t1 "numeric timing with NO source"
 tl_probe "T-3 · normative language in a content field"           3 "$TL_CONTENT" "$CBAK" t3 "entry \"should have\""
 tl_probe "T-4 · a cost with no recovery route"                   4 "$TL_CONTENT" "$CBAK" t4 "and no route"
+# 6.0 batch 5 — the two schema extensions, each proven red on its own half.
+# N-379 EXTENDS T-4's accessor and never its predicate: a grade describes a
+# route and does not replace one, so a grade with no sentence has to fail
+# exactly as a missing route always did.
+tl_probe "T-4 · a graded route with no route in it (N-379)"        4 "$TL_CONTENT" "$CBAK" t4b "neither a sentence nor"
+# N-386 EXTENDS T-9's `measures` discipline to `timing`: a source cited about
+# what people used to expect has to say whether it was speaking at the time.
+tl_probe "T-9 · an expectation source with no timing (N-386)"      9 "$TL_SOURCES" "$SBAK" t9 "does not state its timing"
 tl_probe "T-6 · sensitive record with no care note"              6 "$TL_CONTENT" "$CBAK" t6 "with no careNote"
 tl_probe "T-7 · a year claiming an event its records deny"       7 "$TL_HTML"    "$HBAK" t7 "ms-planted-invention"
 tl_probe "T-8 · a percentage on a timeline surface"              8 "$TL_HTML"    "$HBAK" t8 "percent sign"
@@ -179,7 +196,13 @@ if [ "$HBEFORE" = "$HAFTER" ]; then
 else
   echo "!!!! RESTORE FAILED — $TL_HTML $HBEFORE != $HAFTER"; exit 2
 fi
-rm -f "$CBAK" "$HBAK" "$CREF" "$HREF"
+cp "$SBAK" "$TL_SOURCES"; touch -r "$SREF" "$TL_SOURCES"; SAFTER="$(sha256sum "$TL_SOURCES" | cut -d' ' -f1)"
+if [ "$SBEFORE" = "$SAFTER" ]; then
+  echo "restore verified: $TL_SOURCES is byte-identical (sha256 $SBEFORE)"
+else
+  echo "!!!! RESTORE FAILED — $TL_SOURCES $SBEFORE != $SAFTER"; exit 2
+fi
+rm -f "$CBAK" "$HBAK" "$SBAK" "$CREF" "$HREF" "$SREF"
 fi
 
 # ============================================================================
@@ -591,6 +614,140 @@ c_probe "C-35 · the comic register flagged on a loss-adjacent route" "C-35" \
   '    systems: ["party", "money", "time"],
     register: "comic",' \
   "is flagged comic and is loss-adjacent"
+
+
+# ---- batch 5 (board, logs, guidance, position, timeline, history): C-36, C-38 … C-44 ----
+#
+# C-37 (N-074) is this batch's one "record" gate: its subject is a clipboard
+# write in a real browser and the silence of the wire while it happens, which no
+# file plant can reproduce. Its proven red is browser gate 137 run with a fetch
+# planted in the copy handler, pasted into DECISIONS.md section 8.
+
+# C-36 (N-072) — the rejection control taken off ONE of the three classifying
+# surfaces. The row's whole point is that every surface that tells a reader what
+# kind of thing their situation is has to let them say it is wrong; one surface
+# without it is one place where the site's authority is a verdict.
+c_probe "C-36 · a classifying surface with no rejection control" "C-36" \
+  "components/CharacterSheet.tsx" \
+  'data-reject={l.id}' \
+  'data-reject-REMOVED={l.id}' \
+  "renders NO [data-reject] control"
+
+# C-36 again — the control kept and the RENDERING no longer honouring it. This
+# is the worse failure and the one a reviewer would not see: the button is
+# there, the reader presses it, and the reading carries on standing.
+c_probe "C-36 · a rejection collected and not honoured" "C-36" \
+  "components/Board.tsx" \
+  'className={`board-reading-result${rejected ? " is-rejected" : ""}`}' \
+  'className="board-reading-result"' \
+  "the disagreement is collected and not honoured"
+
+# C-38 (N-077) — one lane's stop condition emptied. A task with no declared end
+# has no state in which it is finished, which makes every state a state of not
+# having done enough; the cell staying present and empty is exactly how that
+# would ship.
+c_probe "C-38 · a planned lane with an empty stop condition" "C-38" \
+  "out/guidance/daily-plan/index.html" \
+  'When it is submitted, or when the office you need is shut.' \
+  '' \
+  "renders a stop cell with nothing in it"
+
+# C-39 (N-080) — a ranked card rendered ABOVE the disclosure that states the
+# rule producing it. The reader then meets an order before the reason for it,
+# which is the arrangement that makes a ranking read as the site's opinion of
+# their life.
+c_probe "C-39 · a ranked plan rendered above its disclosure" "C-39" \
+  "components/Guidance.tsx" \
+  '<section className="guidance-result">' \
+  '<section className="guidance-result"><PlanCard plan={experiment} rank="Ranked first" avail={AVAIL_LABEL} rejected={false} onReject={() => {}} />' \
+  "the ranking renders ABOVE the rule that produced it"
+
+# C-39 again — the panel kept and the horizon dropped out of it. Objectives and
+# constraints are the easy two to remember; the horizon is the one that goes
+# quietly, and a ranking without a stated horizon is a ranking for no particular
+# stretch of time.
+c_probe "C-39 · a disclosure that no longer states its horizon" "C-39" \
+  "components/Guidance.tsx" \
+  '<dt data-disclosure-horizon>Horizon and ruleset</dt>' \
+  '<dt>Horizon and ruleset</dt>' \
+  "does not name the horizon and the ruleset"
+
+# C-40 (N-091) — a sim class on the real-world planner. Free to forbid now and
+# expensive later: the closer the daily plan and the simulation get, the more
+# the fiction's presentation on a real Tuesday reads as a claim about the reader.
+c_probe "C-40 · a sim class on the daily plan" "C-40" \
+  "out/guidance/daily-plan/index.html" \
+  'class="lanes-table"' \
+  'class="lanes-table sim-panel"' \
+  "renders the sim class"
+
+# C-41 (N-093) — the no-winner panel removed from one comparison surface. The
+# plant renames the attribute on its boundary rather than deleting the block,
+# because that is how this actually disappears: a rename in a refactor, with the
+# markup still on the page.
+c_probe "C-41 · a comparison closing without the refusal" "C-41" \
+  "out/history/index.html" \
+  'data-no-winner="true"' \
+  'data-no-winner-RENAMED="true"' \
+  "does not close with the no-winner panel"
+
+# C-42 (N-150) — a THIRD component reading the reader's position. It is a
+# well-behaved read, which is the point: a well-behaved third reader is how a
+# filter over authored paragraphs becomes an input to a score, one honest commit
+# at a time.
+c_probe "C-42 · a third component reading the reader's position" "C-42" \
+  "components/CharacterSheet.tsx" \
+  '  const { edition } = useGuide();' \
+  '  const { edition, position } = useGuide();' \
+  "reads the reader's position"
+
+# C-42 again — the position written into the URL. Gate 9's runtime walk covers
+# the live half; this covers the source, where it would be added.
+c_probe "C-42 · the position written into the URL" "C-42" \
+  "components/PositionNote.tsx" \
+  '  const { position } = useGuide();' \
+  '  const { position } = useGuide();
+  if (typeof window !== "undefined") window.location.hash = position.floor;' \
+  "Position never enters a URL"
+
+# C-43 (N-170) — a placement that belongs to no objective. Renaming one key
+# under one objective produces both halves of the failure at once: an archetype
+# on the board with no ruling under that objective, and a ruling attached to
+# nothing.
+c_probe "C-43 · a placement belonging to no objective" "C-43" \
+  "content/history.ts" \
+  '      landowning: {
+        before: "S",' \
+  '      landowner: {
+        before: "S",' \
+  "has no placement for archetype"
+
+# C-43 again — the switch made decorative. Two objectives producing the same
+# board is the failure that would teach the opposite of the lesson: that the
+# ranking is the ranking and the stated objective is scenery.
+c_probe "C-43 · an objective switch that changes nothing" "C-43" \
+  "content/history.ts" \
+  'export const TIER_OBJECTIVES: TierObjective[] = [' \
+  'export const TIER_OBJECTIVES: TierObjective[] = [
+  { id: "planted-copy", label: "Planted copy", unit: TIER_UNIT, question: "A planted objective whose placements were copied from another and never adjusted.", factors: [{ name: "Material resources", weight: "high" }], notMeasured: TIER_NOT_MEASURED, evidence: "illustrative", placements: { landowning: { before: "A", after: "S", ruling: "A planted ruling for the falsifiability probe." }, industrialist: { before: "B", after: "S", ruling: "A planted ruling for the falsifiability probe." }, artisan: { before: "B", after: "D", ruling: "A planted ruling for the falsifiability probe." }, laborer: { before: "D", after: "C", ruling: "A planted ruling for the falsifiability probe." }, extracted: { before: "F", after: "F", ruling: "A planted ruling for the falsifiability probe." } } },' \
+  "distinct board"
+
+# C-44 (N-171) — a tier letter rendered above the ruleset header. By the time a
+# reader reaches a caveat under the board they have read five letters and
+# decided what they mean; this is the arrangement the row exists to reverse.
+c_probe "C-44 · a tier letter above the ruleset header" "C-44" \
+  "out/history/index.html" \
+  '<p class="tier-disclaimer"' \
+  '<span class="tier-badge tier-S">S</span><p class="tier-disclaimer"' \
+  "above the ruleset header"
+
+# C-44 again — an item quietly dropped from the not-measured list. The list is
+# LITERAL, and "happiness" is the one a well-meaning edit would trim as obvious.
+c_probe "C-44 · the not-measured list missing an item" "C-44" \
+  "out/history/index.html" \
+  'Human worth · Happiness · Moral value' \
+  'Human worth · Moral value' \
+  'omits "Happiness"'
 
 fi
 

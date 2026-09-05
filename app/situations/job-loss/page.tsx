@@ -13,6 +13,7 @@ import {
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
+import { PositionNote } from "@/components/PositionNote";
 import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
@@ -132,6 +133,17 @@ export default function JobLossPage() {
         pretending the spreadsheet fixed it is how people get ambushed months later. Do the arithmetic{" "}
         <em>and</em> name the other thing; confusing them makes both worse.
       </p>
+
+      {/* N-150 (C-42) — the runway arithmetic above is the same arithmetic for
+          everybody and means something completely different depending on what
+          sits under it. */}
+      <PositionNote
+        notes={{
+          yes: "With a floor beneath a serious failure, the runway you just worked out is longer than the number says, and that changes what to do with it: you can afford to decline the first offer that ends the fear, and taking the fortnight before any large decision is genuinely available to you. The risk from here is not ruin; it is accepting something too quickly because the uncertainty is unpleasant.",
+          no: "Without a floor beneath a serious failure, the runway is the whole picture and the advice to wait a fortnight has to bend around that. What still holds: the deadline-bearing items above come first, because a missed election window costs real money you will need. What changes: income sooner outranks income better, taking something interim is not a concession, and claiming everything you are entitled to claim is the single highest-return use of this week.",
+          unsure: "Whether there is a floor beneath a serious failure changes what your runway means more than the figure itself does. It decides whether the fortnight before large decisions is available to you, and it is worth settling before deciding anything on the strength of the arithmetic above.",
+        }}
+      />
 
       <MentorNote provenance="editorial-synthesis">
         <p>

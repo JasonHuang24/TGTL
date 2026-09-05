@@ -350,6 +350,54 @@ export function TryInPlay({ href, children }: { href: string; children?: React.R
   );
 }
 
+/**
+ * N-093 (6.0 §3.4, C-41) — THE PANEL THAT CLOSES A COMPARISON.
+ *
+ * A comparison that simply stops reads as unfinished, and an unfinished
+ * comparison invites the reader to supply the missing verdict themselves —
+ * usually the one they arrived with. The refusal has to BE the closing element,
+ * not an absence where one would go.
+ *
+ * So it names what each side actually emphasises, which is the only honest thing
+ * left to say once you have refused to rank them: not "it depends", which tells
+ * the reader nothing, but the specific axis each option is strong on and the
+ * specific price it charges for that.
+ *
+ * NO SIDE IS MARKED. There is no ordering here, no first position, no highlight,
+ * and `sides` renders in the order the page passes them, which is the order the
+ * page already used above. C-41 asserts it renders LAST on every comparison
+ * surface, because a refusal placed in the middle is a caption, not a close.
+ */
+export function NoWinner({
+  sides,
+  title = "No overall winner",
+  note,
+}: {
+  sides: { name: string; emphasises: string }[];
+  title?: string;
+  /** One page-specific sentence, where the comparison needs one. */
+  note?: string;
+}) {
+  return (
+    <aside className="no-winner" data-no-winner aria-label={title}>
+      <h3 className="no-winner-title">{title}</h3>
+      <p className="no-winner-lead">
+        These are not versions of one thing at different qualities, so there is no best of them to
+        report. What differs is what each one emphasises, and what it charges for the emphasis.
+      </p>
+      <dl className="no-winner-sides">
+        {sides.map((s) => (
+          <div key={s.name} data-no-winner-side>
+            <dt>{s.name}</dt>
+            <dd>{s.emphasises}</dd>
+          </div>
+        ))}
+      </dl>
+      {note && <p className="no-winner-note">{note}</p>}
+    </aside>
+  );
+}
+
 /** The standing crisis note used at the foot of triage states and top of depression (§5.4). */
 export function CrisisNote() {
   return (

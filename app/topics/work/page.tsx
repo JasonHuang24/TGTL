@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
 import { SingleHomeNote } from "@/components/SingleHomeNote";
+import { PositionNote } from "@/components/PositionNote";
 import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
@@ -242,6 +243,16 @@ export default function WorkPage() {
         past rather than the future is sunk cost. The question underneath all of it is whether the cost of
         staying now exceeds the cost of changing, and that calculation is personal.
       </p>
+
+      {/* N-150 (C-42) — the cost of a change of direction is the clearest case
+          on this guide of a move whose price is set by position, not by will. */}
+      <PositionNote
+        notes={{
+          yes: "With a floor beneath a serious failure, a change of direction is a bounded experiment: the gap year of lower income is survivable, so the honest question is the one above — whether the cost of staying exceeds the cost of changing — and you get to answer it on the merits. That is a genuinely unusual position to be in, and it is worth knowing you are in it before reading anyone's advice about courage.",
+          no: "Without a floor beneath a serious failure, the gap is the whole problem, and advice to just make the leap is written for somebody else's circumstances. The version that works from here is the overlapping one: build the new capability while the old income continues, get the first paid piece of the new work before leaving the old, and treat every month of overlap as buying down a risk you cannot afford to carry outright. Slower is not more timid; it is the same move, financed differently.",
+          unsure: "How expensive a change of direction is depends far more on whether there is a floor beneath a serious failure than on how transferable your skills are. It decides whether the gap is an inconvenience or a cliff, so it is worth settling before weighing anything on this page.",
+        }}
+      />
 
       <MentorNote provenance="experiential-pattern">
         <p>

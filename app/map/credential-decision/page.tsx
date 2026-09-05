@@ -8,6 +8,7 @@ import {
   NextSteps,
   NextStep,
   TryInPlay,
+  NoWinner,
 } from "@/components/primitives";
 import Link from "next/link";
 import { CredentialFilter } from "@/components/CredentialFilter";
@@ -86,12 +87,47 @@ export default function CredentialDecisionPage() {
         </p>
       </Callout>
 
+      {/* N-094 — the rule the reversibility section above has always implied and
+          never stated, put where a real one-way door is being considered. */}
       <p>
-        So set your position, and read each path&rsquo;s cost and risk note as it re-resolves. Nothing here is
+        Which gives the general rule, worth carrying past this page: apply rigour in proportion to how
+        hard a decision is to undo. Spend the extra week, the third conversation and the question you are
+        avoiding on the one-way doors; decide the two-way ones fast, because on those the deliberation
+        costs more than the mistake would. Most people have this backwards, and agonise over the
+        reversible choices while walking through the irreversible ones on momentum.
+      </p>
+
+      <p id="position">
+        So set your position, and read each path&rsquo;s cost and risk note as it re-resolves. This is the
+        one place the setting is made, and it changes every position note on the site. Nothing here is
         stored anywhere but this browser, and nothing is scored.
       </p>
 
       <CredentialFilter />
+
+      {/* N-093 (C-41) — the comparison closes on the refusal, naming what each
+          path emphasises rather than which is better. It renders after the
+          paths, because a refusal placed anywhere else is a caption. */}
+      <NoWinner
+        sides={[
+          {
+            name: "College / university",
+            emphasises:
+              "a high floor and a durable signal, bought with years and often debt, spent up front and hardest to walk back once the sunk investment has converted into identity.",
+          },
+          {
+            name: "Trade / apprenticeship",
+            emphasises:
+              "earning while learning and a skill that is hard to offshore, bought with a narrower field of entry and a longer-run dependence on the body holding up.",
+          },
+          {
+            name: "Work first",
+            emphasises:
+              "immediate income and real information about what the work is actually like, bought by forgoing the ready-made network and by an entry window into credentialed paths that narrows with time.",
+          },
+        ]}
+        note="The one thing that genuinely reorders them is not on this list: it is whether there is a floor beneath a serious failure, which is a fact about your position rather than about the paths."
+      />
 
       {/* N-124 and N-137 — two one-line handoffs to mechanisms that belong on
           the work guide and are decision-relevant here. */}

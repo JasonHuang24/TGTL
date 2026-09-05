@@ -1802,3 +1802,62 @@ same page renders an evidence record whose status is `researched`. It is proven 
 planting `Maslach` into the breakup page, which carries no such record. The list is short and
 extensible on purpose: a name that is not on it is not thereby allowed, it is only not yet
 caught, and the register is where one gets added.
+
+---
+
+## Consolidation batch 5 (2026-09-04) — N-386 source timing
+
+**No fetch was made for this batch, and none was needed.** N-386 adds a field to sources
+that already exist in the pool and were already fetched, quoted and verified — it records
+*when the source was speaking*, which is a property of the page as it was already read.
+Nothing in this batch changes a figure, an excerpt, a `retrievedOn`, a record's timing or a
+record's prose. The compiler was re-run and the compiled diff is two lines.
+
+### The rule
+
+`Source` gains `timing?: "contemporaneous" | "retrospective"`, and the compiler **requires**
+it on every source cited by a `cultural-expectation` record (and on no other source, because
+that is the channel where the failure happens). T-9's `measures` discipline is extended to it
+— extended, not relaxed: the `measures` requirement is untouched and this sits beside it. The
+rule is written into `content/timeline/AUTHORING.md` §7A.
+
+The reason is the one the master brief names: a later reflection about what people used to
+expect is evidence about **how the past is perceived now**, and not direct evidence of the
+expectation. Nostalgia is the source most likely to be cited about an earlier expectation and
+the least likely to be true. Retrospective sources stay usable and are **labelled rather than
+excluded** — the word renders beside the source's own stamp so a reader can discount it.
+
+### Every source this batch stamped, and why
+
+The pool holds twenty `cultural-expectation` records. Eighteen of them cite no source at all —
+they are `heard` quotations under the standing line *"an expectation is a thing said to you,
+not a fact about you"*, which is the channel working as designed. **Two** records cite a
+source between them, and those two sources are the whole of this batch.
+
+| source | cited by | stamped | reasoning |
+|---|---|---|---|
+| `src-medicare-eligibility-age` | `ms-heard-retirement-timing` | `contemporaneous` | The recorded excerpt is a present-tense statement of a currently-in-force rule, published by the body that administers the programme, on that programme's own page: *"Medicare is health insurance for people 65 or older…"*. It is not a recollection of a past rule and makes no claim about what anybody used to expect; it is the rule, stated by its administrator, read during the build window. |
+| `src-eeoc-adea-age-forty` | `ms-heard-too-late-to-switch` | `contemporaneous` | The excerpt is the enforcing agency's own present-tense statement of the coverage of a statute currently in force: *"The Age Discrimination in Employment Act (ADEA) forbids age discrimination against people who are age 40 or older."* **This is the batch's one judgement call and it is recorded as such:** the record's `publicationYear` and `dataYear` are both 1967, which is the statute's year rather than the page's, so the stamp could be read as a modern page looking back at an old law. It is not treated that way here, because what the source is being cited *for* is the protection as it stands now — the page states a live rule, not a memory of one — and `contemporaneous` describes the relationship between the source and the claim it supports rather than the age of the underlying statute. A reviewer who reads it the other way should change one word in `content/timeline/batches/p2-cultural-expectations.json`; nothing else in the build depends on it. |
+
+Neither is `retrospective`, so nothing new renders on any surface in this build. The rendering
+half of the row is built and currently has no subject: `SourceStamp` in
+`components/timeline/YearCard.tsx` and the source list on `app/timeline/[id]/page.tsx` both
+render `data-tl-source-timing="retrospective"` and the word beside the stamp when the field is
+set, and T-9 reports the retrospective count so the first retrospective citation authored
+after this batch is visible in the gate output rather than silent.
+
+### What was edited, exactly
+
+The pipeline has **no source-override mechanism** — a second batch file declaring a source id
+that already exists is a hard `duplicate source id` error in
+`tools/timeline-build-content.mjs`. So no new batch file was created, and the minimum was
+edited in place instead:
+
+- `content/timeline/batches/p2-cultural-expectations.json`, line 14 — `"timing":
+  "contemporaneous",` added to `src-medicare-eligibility-age`.
+- `content/timeline/batches/p2-cultural-expectations.json`, line 28 — `"timing":
+  "contemporaneous",` added to `src-eeoc-adea-age-forty`.
+
+Two lines. No other field of either source, and no milestone in the file, was touched. The
+compiled diff after `npm run content:timeline` is the corresponding two lines in
+`content/timeline/generated/sources.ts` and nothing else.

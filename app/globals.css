@@ -2268,12 +2268,36 @@ legend {
 }
 .lane-row {
   display: grid;
+  /* N-077 — six cells now: name, note, example, then minimum / alternative /
+     stop on a second row of the same card, so the three that keep a lane from
+     becoming a stick sit together rather than being read as more examples. */
   grid-template-columns: 10rem 1fr 1.2fr;
   gap: 0.8rem;
   padding: 0.8rem 1rem;
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+}
+.lane-minimum,
+.lane-alternative,
+.lane-stop {
+  grid-column: 2 / -1;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  border-top: 1px dotted var(--line);
+  padding-top: 0.4rem;
+}
+.lane-minimum {
+  grid-column: 1 / -1;
+}
+.lane-cell-label {
+  display: inline-block;
+  min-width: 6.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
 }
 .lane-name {
   font-family: var(--serif);
@@ -3100,4 +3124,495 @@ legend {
   font-size: 0.86rem;
   color: var(--muted);
   line-height: 1.45;
+}
+
+/* =========================================================================
+   6.0 batch 5 — board, logs, guidance, position, history.
+   Tokens only; no new colour is introduced and no meaning is carried by
+   colour alone (every state below also changes text, weight, or decoration).
+   ========================================================================= */
+
+/* N-064, N-066, N-075, N-411 · the procedure beside a board question. */
+.board-step-help {
+  margin: 0.7rem 0 0.9rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--paper-sunk);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.board-step-help-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.board-step-help-list {
+  margin: 0 0 0.5rem;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.board-step-help-note,
+.board-step-help-warning {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.board-step-help-warning {
+  border-top: 1px dotted var(--line-strong);
+  padding-top: 0.45rem;
+}
+
+/* N-073 · the borderline note on a reading. */
+.board-borderline-note,
+.guidance-borderline-note {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--line-strong);
+  padding-left: 0.7rem;
+  margin: 0 0 0.8rem;
+}
+
+/* N-072 (C-36) · rejection, honoured in the rendering. The struck state is
+   never carried by colour alone — the text is struck through and dimmed. */
+.board-reject {
+  margin-top: 0.7rem;
+  background: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.board-reject:hover {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.board-reject[aria-pressed="true"] {
+  border-style: dashed;
+  font-weight: 700;
+}
+.board-reject-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.board-reading-result.is-rejected > p,
+.board-reading-result.is-rejected > a,
+.plan-card.is-rejected > h3,
+.plan-card.is-rejected > .plan-summary,
+.plan-card.is-rejected > .plan-favors,
+.sheet-layer.is-rejected > h3,
+.sheet-layer.is-rejected > .sheet-layer-what,
+.sheet-layer.is-rejected > .sheet-layer-examples,
+.sheet-layer.is-rejected > .sheet-layer-confused {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.plan-card.is-rejected .plan-rank {
+  text-decoration: line-through;
+}
+.board-reading-none,
+.sheet-none-fit,
+.guidance-none-fit {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+
+/* N-080 (C-39) · the disclosure header above every ranking. */
+.disclosure-scope {
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+.disclosure-scope dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.disclosure-scope dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.disclosure-rules {
+  margin: 0.4rem 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+/* N-084, N-089, N-093, N-094, N-095 · closing and framing panels. */
+.guidance-next-move-line,
+.guidance-pivot-line,
+.logs-pivot-line {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.guidance-moves-line {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.no-winner {
+  margin: 1.4rem 0 0;
+  padding: 1rem 1.1rem;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.no-winner-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+}
+.no-winner-lead {
+  margin: 0 0 0.7rem;
+  color: var(--ink-soft);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.no-winner-sides {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.no-winner-sides dt {
+  font-weight: 700;
+}
+.no-winner-sides dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.no-winner-note {
+  margin: 0.8rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dotted var(--line-strong);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+/* On the dark instrument panels the tier board sits in. */
+.tier-board .no-winner {
+  background: var(--atlas-raised);
+  border-color: var(--atlas-line);
+  color: var(--atlas-ink);
+}
+.tier-board .no-winner-lead,
+.tier-board .no-winner-sides dd,
+.tier-board .no-winner-note {
+  color: var(--atlas-muted);
+}
+
+/* N-408 · the scorecard taxonomy, read and never selected. */
+.scorecard-list {
+  margin: 0.6rem 0 0.8rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.scorecard-list dt {
+  font-weight: 700;
+}
+.scorecard-list dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* N-074 (C-37), N-078, N-371, N-075 · the logs. */
+.logs-export {
+  margin: 1.4rem 0 0.6rem;
+  padding: 1rem 1.1rem;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.logs-export-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+.logs-export-text {
+  display: block;
+  margin-top: 0.8rem;
+}
+.logs-export-text span {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.logs-export-text textarea {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.log-empty,
+.logs-debt-note,
+.logs-alignment-question {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.log-empty {
+  padding: 0.7rem 0.9rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+.logs-debt-note {
+  border-left: 3px solid var(--caution);
+  padding-left: 0.75rem;
+}
+
+/* N-091 · the daily plan says what it is not. */
+.plan-separation {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.8rem;
+  color: var(--ink-soft);
+}
+
+/* N-399, N-403, N-405, N-127 · the character sheet's layers. */
+.sheet-layer-list {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.8rem;
+}
+.sheet-layer {
+  padding: 0.8rem 0.9rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.sheet-layer h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+.sheet-layer p {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.sheet-layer-examples,
+.sheet-layer-confused {
+  color: var(--atlas-muted);
+}
+.sheet-layer-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.sheet-need-state,
+.not-a-stat-close {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px dotted var(--atlas-line);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.stat-population {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--atlas-muted);
+}
+.stat-population-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* N-150 (C-42) · the position note, wherever it re-resolves. */
+.position-note {
+  margin: 1.1rem 0;
+  padding: 0.85rem 1rem;
+  background: var(--paper-sunk);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.position-note-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.position-note-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.position-note-provenance {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+/* N-176 · official rules, practical effects, rollout — three parallel panels. */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 0.9rem 0;
+}
+.rules-panel {
+  padding: 0.85rem 0.95rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.rules-panel h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+.rules-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.rules-panel p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.rules-grid-note {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--atlas-muted);
+}
+
+/* N-170, N-171, N-172 · the ruleset header and the objective switch. */
+.tier-ruleset {
+  margin: 0.8rem 0 1rem;
+  padding: 0.9rem 1rem;
+  background: var(--atlas-raised);
+  border: 1px solid var(--atlas-line);
+  border-radius: var(--radius);
+}
+.tier-ruleset dl {
+  margin: 0.6rem 0 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.tier-ruleset dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--atlas-muted);
+}
+.tier-ruleset dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.tier-objective-select {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.tier-factor-weights {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+.tier-weight-word {
+  font-weight: 700;
+}
+.tier-row-item.is-empty-tier {
+  opacity: 0.85;
+}
+.tier-empty-ruling {
+  font-style: italic;
+}
+
+@media (max-width: 40rem) {
+  .rules-grid {
+    grid-template-columns: 1fr;
+  }
+  .lane-row {
+    grid-template-columns: 1fr;
+  }
+  .lane-minimum,
+  .lane-alternative,
+  .lane-stop {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================================
+   N-074 (C-37) — PRINT.
+   =========================================================================
+   The second way a decision record outlives the cache, and the one that needs
+   no clipboard permission. Everything that is chrome, navigation, or a control
+   is removed; what remains is the reader's own records, on paper, in ink that
+   does not depend on a theme. Nothing here is sent anywhere: a print is a
+   local operation, and this stylesheet is the whole of it.
+   ========================================================================= */
+@media print {
+  :root {
+    --paper: #ffffff;
+    --paper-raised: #ffffff;
+    --paper-sunk: #ffffff;
+    --ink: #000000;
+    --ink-soft: #222222;
+    --muted: #444444;
+    --atlas: #ffffff;
+    --atlas-raised: #ffffff;
+    --atlas-ink: #000000;
+    --atlas-muted: #333333;
+    --atlas-line: #999999;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  .site-header,
+  .site-footer,
+  .site-nav,
+  .quick-exit,
+  .preference-bar,
+  .next-steps,
+  .logs-export-controls,
+  .logs-reset,
+  .log-form,
+  .log-remove,
+  .board-reject,
+  .reset-button,
+  .try-in-play,
+  .search-form {
+    display: none !important;
+  }
+  .log-list,
+  .log-entry,
+  .panel,
+  .logs-export {
+    break-inside: avoid;
+    border-color: #999999;
+    background: #ffffff;
+  }
+  .prose-page,
+  .instrument-page {
+    max-width: none;
+    padding: 0;
+  }
 }

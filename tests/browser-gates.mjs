@@ -277,9 +277,190 @@ async function labTo(page, opts = {}) {
     consoleErrors.length === 0,
     consoleErrors.length ? consoleErrors.slice(0, 10) : [`Zero console errors across ${ROUTES.length * 2} page loads, including all three play modes.`],
   );
-  const localOk = offOrigin.length === 0 && urlLeaks.length === 0;
-  record(9, "Local-only at runtime (no off-origin loads; no state in URL)", localOk,
-    localOk ? ["No off-origin requests on load or interaction; no stored value in any URL, in any mode."] : [...offOrigin.slice(0, 6), ...urlLeaks.slice(0, 6)]);
+
+  /*
+   * N-150 (C-42), gate 9's extension — THE POSITION NEVER REACHES A URL.
+   *
+   * Until this version the reader's position was written by one page and read by
+   * the same page. It is now shared state that five more pages re-resolve prose
+   * from, which means it travels: a reader sets it once and then walks the site
+   * with it. So the walk is done for real — set it through the control, then
+   * navigate every page that renders a note — and every URL landed on is checked
+   * for the key and for its value. A stored value that reaches a URL has left the
+   * device, whatever the page believes about itself.
+   */
+  const posDetails = [];
+  {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    const seen = [];
+    page.on("framenavigated", () => seen.push(page.url()));
+    await page.goto(BASE + "/map/credential-decision", { waitUntil: "networkidle" });
+    // Set it through the control, not by writing storage: the control is what a
+    // reader touches, and a handler is where a URL write would be added.
+    await page.locator('.position-controls input[name="floor"]').first().click();
+    await page.locator('.position-controls input[name="dependents"]').last().click();
+    await sleep(160);
+    const stored = await page.evaluate(() => {
+      try {
+        return localStorage.getItem("tgtl:credential-position");
+      } catch {
+        return null;
+      }
+    });
+    if (!stored) posDetails.push("the position control wrote nothing to tgtl:credential-position — the walk proved nothing");
+    for (const route of ["/map/launch", "/topics/work", "/topics/money", "/situations/job-loss", "/guidance", "/map/credential-decision"]) {
+      await page.goto(BASE + route, { waitUntil: "networkidle" });
+      seen.push(page.url());
+      // The note has to have re-resolved from the shared value, or the row did
+      // not ship — a URL-clean feature that does not work is not a pass. Two
+      // routes are exempt and for different reasons: /map/credential-decision
+      // hosts the CONTROL and its own per-path notes rather than a PositionNote,
+      // and /guidance's note is on the second step of a walkthrough that has to
+      // be walked to. Both are covered by C-42's source assertion instead.
+      if (route !== "/guidance" && route !== "/map/credential-decision") {
+        const noteCount = await page.locator("[data-position-note]").count();
+        if (noteCount === 0) posDetails.push(`${route}: renders no position note, so the shared position reaches nothing there (N-150)`);
+      }
+    }
+    for (const u of seen) {
+      if (/credential-position|tgtl%3A|tgtl:/.test(u)) urlLeaks.push(`position in URL: ${u}`);
+      for (const v of ["floor=", "dependents=", "debt=", "position="]) if (u.includes(v)) urlLeaks.push(`position in URL: ${u}`);
+    }
+    const stillThere = await page.evaluate(() => {
+      try {
+        return localStorage.getItem("tgtl:credential-position");
+      } catch {
+        return null;
+      }
+    });
+    if (stored && stillThere !== stored) posDetails.push("the position did not survive navigation, so it is not shared state (N-150)");
+    if (posDetails.length === 0)
+      posDetails.push(`the position was set through the control, survived ${seen.length} navigations, re-resolved a note on every page that carries one, and reached no URL`);
+    await ctx.close();
+  }
+
+  const localOk = offOrigin.length === 0 && urlLeaks.length === 0 && !posDetails.some((d) => d.includes("N-150") || d.includes("proved nothing"));
+  record(9, "Local-only at runtime (no off-origin loads; no state in URL; N-150's position included)", localOk,
+    localOk
+      ? ["No off-origin requests on load or interaction; no stored value in any URL, in any mode.", ...posDetails]
+      : [...offOrigin.slice(0, 6), ...urlLeaks.slice(0, 6), ...posDetails]);
+}
+
+/* ============================================================
+   C-37 (N-074): the export path issues no network request.
+   ============================================================
+   2.0's KNOWN_LIMITATIONS named the cost — the decision record is most useful
+   years later, which is exactly the horizon over which browser storage does not
+   survive — and did nothing about it, because doing something looked like
+   breaking local-only. It does not, and this is the assertion that keeps that
+   true: a record is written, the copy control is pressed, and the wire is
+   watched while it happens. Zero requests, and the URL identical before and
+   after.
+
+   Proven red by planting a fetch into the copy handler.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext({ permissions: ["clipboard-read", "clipboard-write"] });
+  const page = await ctx.newPage();
+  /*
+   * WHAT IS ACTUALLY BEING ASSERTED, and why it is not "zero requests".
+   *
+   * Next's router prefetches the routes a page links to, on its own schedule,
+   * to same-origin static files (`/_next/…`, `…/index.txt?_rsc=…`). Those are
+   * the framework fetching its own export and they are not this row's subject —
+   * an assertion of literal silence would be red on a timer rather than on a
+   * breach, which is the fastest way to get a gate deleted.
+   *
+   * The property that matters is that NOTHING THE READER WROTE LEAVES THE
+   * DEVICE. So: no off-origin request of any kind, no request with a body, no
+   * request whose URL carries any of the record's own words, and every
+   * same-origin request accounted for as a router prefetch of the static export.
+   * A fetch planted in the copy handler fails all three of the first tests.
+   */
+  const requests = [];
+  page.on("request", (req) => requests.push({ method: req.method(), url: req.url(), data: req.postData() }));
+  const isPrefetch = (u) => /\/_next\//.test(u) || /[?&]_rsc=/.test(u);
+
+  await page.goto(BASE + "/character/logs", { waitUntil: "networkidle" });
+
+  // A real record, entered the way a reader enters one.
+  await page.locator(".log-form").first().locator("input").first().fill("Taking the role in Manchester");
+  await page.locator(".log-form").first().locator("textarea").first().fill("What I knew at the time.");
+  await page.locator(".log-form").first().locator('button[type="submit"]').click();
+  await sleep(200);
+  if ((await page.locator(".log-entry").count()) === 0) problems.push("/character/logs: the decision record did not save, so the export had nothing to export");
+
+  const urlBefore = page.url();
+  requests.length = 0; // everything up to here is the page loading itself
+  await page.locator("[data-copy-out]").click();
+  await sleep(400);
+  const urlAfter = page.url();
+
+  const SECRET_WORDS = ["Manchester", "What%20I%20knew", "What+I+knew", "Knew"];
+  for (const r of requests) {
+    const off = !r.url.startsWith(BASE);
+    if (off) problems.push(`/character/logs: the copy control issued an OFF-ORIGIN request — ${r.method} ${r.url}. Nothing leaves the device (N-074, gate 9).`);
+    if (r.data) problems.push(`/character/logs: the copy control issued a request with a body — ${r.method} ${r.url}. The record is not sent anywhere (N-074).`);
+    if (SECRET_WORDS.some((w) => r.url.includes(w)))
+      problems.push(`/character/logs: a request URL carries the reader's own record text — ${r.url} (N-074).`);
+    if (!off && !isPrefetch(r.url))
+      problems.push(
+        `/character/logs: the copy control issued a same-origin request that is not a router prefetch of the static ` +
+          `export — ${r.method} ${r.url}. Nothing here should be talking to anything (N-074).`,
+      );
+  }
+  if (problems.length === 0)
+    details.push(
+      `the copy control issued ${requests.length} request(s), every one of them a same-origin router prefetch of the static export ` +
+        `(${requests.length === 0 ? "none at all" : "no off-origin request, no request body, and nothing from the record in any URL"})`,
+    );
+  if (urlBefore !== urlAfter) problems.push(`/character/logs: the copy control changed the URL (${urlBefore} → ${urlAfter}); nothing enters a URL (N-074)`);
+  else details.push(`the URL is unchanged by the copy (${urlAfter})`);
+
+  // It has to actually copy something, or the gate is guarding an inert button.
+  const copied = await page.evaluate(async () => {
+    try {
+      return await navigator.clipboard.readText();
+    } catch {
+      return null;
+    }
+  });
+  if (copied === null) details.push("the clipboard could not be read back in this context; the fallback path is asserted instead");
+  else if (!copied.includes("Manchester")) problems.push("/character/logs: the copy control copied nothing containing the record just written");
+  else details.push(`the clipboard holds the reader's own record as plain text (${copied.split("\n").length} lines)`);
+
+  // The fallback: shown on request, read-only, and never read back.
+  requests.length = 0;
+  await page.locator("[data-copy-show]").click();
+  await sleep(200);
+  const box = page.locator("[data-copy-text]");
+  if ((await box.count()) === 0) problems.push("/character/logs: no plain-text fallback is offered for a browser that refuses the clipboard (N-074)");
+  else {
+    // The DOM property, not the attribute: `readonly` is a boolean attribute and
+    // getAttribute returns the empty string for it, which is falsy — a check
+    // written that way fails on a read-only box and would have been "fixed" by
+    // relaxing it.
+    const ro = await box.first().evaluate((el) => el.readOnly === true);
+    if (!ro) problems.push("/character/logs: the plain-text fallback is editable — it would be an input the site could interpret (S-6)");
+    else details.push("the plain-text fallback renders read-only");
+    for (const r of requests)
+      if (!r.url.startsWith(BASE) || r.data)
+        problems.push(`/character/logs: showing the plain text issued ${r.method} ${r.url}`);
+  }
+
+  // And the print stylesheet is real, not just present.
+  await page.emulateMedia({ media: "print" });
+  await sleep(120);
+  const chromeVisible = await page.locator(".log-form").first().isVisible().catch(() => false);
+  if (chromeVisible) problems.push("/character/logs: the entry form still renders under print media — a printed record should carry no controls (N-074)");
+  else details.push("under print media the entry forms and controls are gone and the records remain");
+  await page.emulateMedia({ media: "screen" });
+
+  await ctx.close();
+  record(137, "C-37 (N-074): the copy-out and print paths touch no network and no URL", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ============================================================
@@ -1017,6 +1198,87 @@ async function labTo(page, opts = {}) {
   }
   await ctx.close();
   record(127, "C / N-227: erasing arms first, and the armed state says what survives", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-43 / C-44 (N-170, N-171, N-172): the tier board's switch, live.
+   ============================================================
+   The rendered half the C suite cannot read. The board is a client component
+   whose objective defaults to era power, so the exported HTML shows one board
+   and the whole claim of these rows is about what happens when a reader changes
+   it. Watching the same five positions reorder is the demonstration; a switch
+   that produced the same letters would teach the opposite of the lesson.
+
+   Three things are asserted here and nowhere else: the letters actually move,
+   the ruleset header moves with them (so it can never describe the previous
+   question), and the objective that refuses its top tier renders that refusal
+   with the evidence label that justifies it.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/history", { waitUntil: "networkidle" });
+
+  const readBoard = async () =>
+    page.evaluate(() => ({
+      objective: document.querySelector("[data-tier-ruleset]")?.getAttribute("data-tier-ruleset") ?? null,
+      headerText: document.querySelector("[data-ruleset-objective]")?.textContent?.trim() ?? "",
+      notMeasured: document.querySelector("[data-ruleset-not-measured]")?.textContent?.trim() ?? "",
+      evidence: document.querySelector("[data-ruleset-evidence]")?.textContent?.trim() ?? "",
+      letters: [...document.querySelectorAll("[data-tier-placement]")].map(
+        (li) => `${li.getAttribute("data-tier-placement")}:${li.querySelector(".tier-badge")?.textContent?.trim()}`,
+      ),
+      emptyTop: document.querySelector("[data-empty-tier]")?.getAttribute("data-empty-tier") ?? null,
+      emptyEvidence: document.querySelector("[data-empty-tier-evidence]")?.getAttribute("data-empty-tier-evidence") ?? null,
+      headerBeforeFirstLetter: (() => {
+        const h = document.querySelector("[data-tier-ruleset]");
+        const first = document.querySelector(".tier-badge");
+        if (!h || !first) return null;
+        return h.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING ? true : false;
+      })(),
+    }));
+
+  const options = await page.locator("#tier-objective option").evaluateAll((els) => els.map((e) => e.value));
+  if (options.length < 3) problems.push(`/history: the objective control offers ${options.length} objective(s); §3.8 asks for three`);
+
+  const boards = [];
+  for (const value of options) {
+    await page.selectOption("#tier-objective", value);
+    await sleep(180);
+    const b = await readBoard();
+    boards.push(b);
+    if (b.objective !== value) problems.push(`/history: choosing "${value}" left the ruleset header describing "${b.objective}" — the header would be describing the previous question (N-171)`);
+    if (b.letters.length === 0) problems.push(`/history: objective "${value}" renders no placements at all`);
+    if (b.headerBeforeFirstLetter !== true) problems.push(`/history: under "${value}" a tier letter renders before the ruleset header (C-44)`);
+    for (const item of ["Human worth", "Happiness", "Moral value"])
+      if (!b.notMeasured.includes(item)) problems.push(`/history: under "${value}" the not-measured list above the board omits "${item}" (N-171)`);
+  }
+
+  const distinct = new Set(boards.map((b) => b.letters.join("|")));
+  if (distinct.size < boards.length)
+    problems.push(
+      `/history: ${boards.length} objectives produced ${distinct.size} distinct board(s) in the browser. Watching the same ` +
+        `positions reorder is the demonstration; a switch that changes nothing teaches that the objective is scenery (N-170).`,
+    );
+  else details.push(`${boards.length} objectives, ${distinct.size} distinct boards in the browser: ${boards.map((b) => `${b.objective} → ${b.letters.join(" ")}`).join(" · ")}`);
+
+  const refusing = boards.filter((b) => b.emptyTop);
+  if (refusing.length === 0)
+    problems.push("/history: no objective renders an empty top tier. N-172: an instrument visibly declining to answer is the most persuasive thing on the page.");
+  else {
+    for (const b of refusing) {
+      if (b.emptyTop !== "S") problems.push(`/history: "${b.objective}" renders an empty-tier card for ${b.emptyTop} rather than the top tier — an ordinary mid-board gap is not a refusal (N-172)`);
+      if (b.emptyEvidence !== "insufficient-evidence")
+        problems.push(`/history: "${b.objective}" renders an empty top tier badged "${b.emptyEvidence}" — a refusal has to say why it is refusing (N-172)`);
+    }
+    if (problems.length === 0)
+      details.push(`${refusing.map((b) => b.objective).join(", ")} renders an empty top tier badged insufficient-evidence, and the other boards render none`);
+  }
+
+  await ctx.close();
+  record(143, "C-43 / C-44 (N-170..N-172): the objective switch changes the board, the header follows it, and the empty top tier is badged", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */

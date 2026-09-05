@@ -61,6 +61,10 @@ const SOURCE_KINDS = [
 ];
 const MEASURES = ["median", "mean", "typical-range", "most-by", "legal-rule", "share-at-age", "modal"];
 const STATUSES = ["illustrative", "editorial", "researched"];
+/** N-379 — the four grades a catch-up route may carry. */
+const ROUTE_GRADES = ["easy", "costly", "partial", "closed"];
+/** N-386 — when the source was speaking. Required on cultural-expectation sources. */
+const SOURCE_TIMINGS = ["contemporaneous", "retrospective"];
 /** `calibrated` is deliberately ABSENT: it is reserved, and claiming it is an error. */
 const EVIDENCE = [
   "evidence-informed",
@@ -179,6 +183,11 @@ function validateSource(s) {
     if (n === 0) fail(id, `excerpt is empty — §4.1 requires a verbatim excerpt CONTAINING the figure`);
     if (n > 25) fail(id, `excerpt is ${n} words; the limit is 25 (§4.1)`);
   }
+  // N-386 — the value, where one is given. Whether it is REQUIRED depends on
+  // which records cite it, which is a cross-record question answered below.
+  if (s.timing !== undefined && !SOURCE_TIMINGS.includes(s.timing)) {
+    fail(id, `source "timing" is "${s.timing}"; it must be one of ${SOURCE_TIMINGS.join(" | ")} (§7.1, N-386).`);
+  }
   if (typeof s.retrievedOn === "string") {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(s.retrievedOn)) {
       fail(id, `retrievedOn "${s.retrievedOn}" must be an ISO date`);
@@ -214,7 +223,35 @@ function validateBranch(id, name, b, sensitivity, sourceIds) {
   const costs = Array.isArray(b.costs) ? b.costs : [];
   const routes = Array.isArray(b.routes) ? b.routes : [];
   costs.forEach((c, i) => proseField(id, `analysis.${name}.costs[${i}]`, c, sensitivity));
-  routes.forEach((r, i) => proseField(id, `analysis.${name}.routes[${i}]`, r, sensitivity));
+  /*
+   * N-379 — a route entry is a bare string or `{ route, grade }`. Both shapes
+   * are accepted; the PROSE is linted identically either way, so the grade
+   * cannot be used to smuggle an unlinted sentence past the walls, and an
+   * unknown grade is a hard error rather than a shrug.
+   */
+  routes.forEach((r, i) => {
+    const where = `analysis.${name}.routes[${i}]`;
+    if (typeof r === "string") {
+      proseField(id, where, r, sensitivity);
+      return;
+    }
+    if (!r || typeof r !== "object" || Array.isArray(r)) {
+      fail(id, `${where} must be a route sentence, or an object of the shape { route, grade } (§7.1, N-379).`);
+      return;
+    }
+    for (const k of Object.keys(r)) {
+      if (k !== "route" && k !== "grade")
+        fail(id, `${where} carries unknown field "${k}"; a graded route has exactly "route" and "grade".`);
+    }
+    if (typeof r.route !== "string" || !r.route.trim())
+      fail(id, `${where} is graded and carries no route sentence — the grade describes a route, it does not replace one.`);
+    else proseField(id, where, r.route, sensitivity);
+    if (!ROUTE_GRADES.includes(r.grade))
+      fail(
+        id,
+        `${where} has grade "${r.grade}", which is not one of ${ROUTE_GRADES.join(" | ")} (§7.1, N-379).`,
+      );
+  });
   if (costs.length > 0 && routes.length === 0) {
     fail(
       id,
@@ -238,7 +275,7 @@ const MILESTONE_KEYS = new Set([
 ]);
 const SOURCE_KEYS = new Set([
   "id", "title", "publisher", "url", "kind", "publicationYear", "dataYear", "measures",
-  "retrievedOn", "excerpt", "notes",
+  "timing", "retrievedOn", "excerpt", "notes",
 ]);
 
 /**
@@ -520,6 +557,38 @@ for (const [mid, patch] of allPatches.entries()) {
 
 for (const s of allSources.values()) validateSource(s);
 for (const m of allMilestones.values()) validateMilestone(m, sourceIds);
+
+/*
+ * N-386 (cross-record) — EVERY SOURCE A CULTURAL-EXPECTATION RECORD CITES MUST
+ * SAY WHEN IT WAS SPEAKING.
+ *
+ * It cannot be checked on the source alone: the same page can be a perfectly
+ * ordinary statistical source for one record and, cited about what people used
+ * to expect, a claim of a completely different kind. So the requirement follows
+ * the CITATION, and the compiler names both the record and the source when it
+ * refuses — the author needs to know which pairing tripped it.
+ */
+for (const m of allMilestones.values()) {
+  if (m.kind !== "cultural-expectation") continue;
+  const cited = new Set([
+    ...(m.sources ?? []),
+    ...(m.bySex?.sources ?? []),
+    ...Object.values(m.analysis ?? {}).flatMap((b) => b?.sources ?? []),
+  ]);
+  for (const sid of cited) {
+    const s = allSources.get(sid);
+    if (!s) continue; // an unresolvable id is already an error above
+    if (!s.timing) {
+      fail(
+        m.id,
+        `is a cultural-expectation record citing source "${sid}", which does not state its "timing" ` +
+          `(contemporaneous | retrospective). §3.7 (N-386): a later reflection is evidence of how a past ` +
+          `expectation is perceived now, not direct evidence of the expectation, and the difference has to ` +
+          `be on the record before it can be shown to a reader.`,
+      );
+    }
+  }
+}
 
 /* cross-record: affectsLater must resolve (T-10) */
 for (const m of allMilestones.values()) {

@@ -1,21 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
+import { useGuide, type Floor, type Dependents, type Debt, type Position } from "@/lib/guide-context";
 
 /**
- * The site's one interactive position filter (§6.3, triage §10 Add). The reader
- * sets their floor/backing position and the cost-and-risk note on each credential
- * path re-resolves. Everything else on the site does this as written-in inline
- * notes; this is the recorded exception (DECISIONS.md). Local-only; no scoring.
+ * The site's position control and the credential comparison it was built for.
+ *
+ * N-150 (6.0 §3.6, C-42): until this version the reader's position lived here
+ * and nowhere else — one page read the key, and every other page's position
+ * sensitivity was prose the reader had to apply to themselves. The state has
+ * moved to `lib/guide-context.tsx` (the SAME `STORAGE_KEYS.credentialPosition`
+ * key — §7.1 adds none), the control below is exported as `PositionControl` for
+ * any page that wants to offer the setting, and `PositionNote` re-resolves prose
+ * from it everywhere else.
+ *
+ * What did NOT change: it is enumerated, local-only, never in a URL, and it
+ * produces no rank, band, score or comparison between readers. It selects which
+ * authored paragraph is true for this reader; that is all it has ever done and
+ * all it may ever do.
  */
-
-type Floor = "unsure" | "yes" | "no";
-type Dependents = "no" | "yes";
-type Debt = "some" | "none";
-type Position = { floor: Floor; dependents: Dependents; debt: Debt };
-
-const DEFAULT: Position = { floor: "unsure", dependents: "no", debt: "some" };
 
 type Path = {
   id: string;
@@ -101,31 +103,30 @@ function resolveNote(pos: Position, path: Path): string {
   return parts.join(" ");
 }
 
-export function CredentialFilter() {
-  const [pos, setPos] = useState<Position>(DEFAULT);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setPos(readJSON<Position>(STORAGE_KEYS.credentialPosition, DEFAULT));
-    setHydrated(true);
-    const onReset = () => setPos(DEFAULT);
-    window.addEventListener("tgtl:reset", onReset);
-    return () => window.removeEventListener("tgtl:reset", onReset);
-  }, []);
-
-  useEffect(() => {
-    if (hydrated) writeJSON(STORAGE_KEYS.credentialPosition, pos);
-  }, [pos, hydrated]);
+/**
+ * N-150 — THE SHARED POSITION CONTROL.
+ *
+ * The same three enumerated questions, reading and writing the one shared
+ * position. `eyebrow` lets a host page say what re-resolves nearby without the
+ * control claiming to be about that page's own content.
+ */
+export function PositionControl({
+  eyebrow = "Your position — set this once, and every position note on the site re-resolves",
+}: {
+  eyebrow?: string;
+}) {
+  const { position: pos, setPosition } = useGuide();
+  const setPos = (fn: (p: Position) => Position) => setPosition(fn(pos));
 
   return (
-    <div className="credential-filter">
-      <div className="position-controls panel" role="group" aria-label="Your position">
-        <p className="eyebrow">Your position — set this, and the notes below re-resolve</p>
-        <p className="position-privacy">
-          These stay in this browser. Nothing is sent anywhere, put in the address bar, or scored.
-        </p>
+    <div className="position-controls panel" role="group" aria-label="Your position" data-position-control>
+      <p className="eyebrow">{eyebrow}</p>
+      <p className="position-privacy">
+        These stay in this browser. Nothing is sent anywhere, put in the address bar, or scored — this
+        chooses which paragraph is true for you, and it never compares you to anybody.
+      </p>
 
-        <fieldset>
+      <fieldset>
           <legend>Is there a floor beneath a serious failure?</legend>
           {(
             [
@@ -185,7 +186,17 @@ export function CredentialFilter() {
             </label>
           ))}
         </fieldset>
-      </div>
+    </div>
+  );
+}
+
+/** The credential comparison — the one page that also renders the control itself. */
+export function CredentialFilter() {
+  const { position: pos } = useGuide();
+
+  return (
+    <div className="credential-filter">
+      <PositionControl eyebrow="Your position — set this, and the notes below (and every position note on the site) re-resolve" />
 
       <div className="credential-paths">
         {PATHS.map((path) => (

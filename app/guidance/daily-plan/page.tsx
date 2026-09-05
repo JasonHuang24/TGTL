@@ -14,13 +14,66 @@ export const metadata: Metadata = {
     "One plan turned into a real Tuesday — with a minimum viable day for when capacity is the constraint, and the anti-shame rules stated plainly.",
 };
 
+/*
+ * N-077 (6.0 §3.4, C-38) — MINIMUM, ALTERNATIVE, STOP, per lane.
+ *
+ * Three cells that between them decide whether a plan can survive a bad day.
+ * The minimum is what still counts when almost nothing is available, so a hard
+ * day ends with the plan intact rather than with the plan as evidence against
+ * you. The alternative is what to do instead when the planned form is blocked,
+ * so a blocked lane does not become an empty one. And the stop condition is what
+ * keeps a lane from becoming a stick: a task with no declared end has no state
+ * in which it is finished, which means every state is a state of not enough.
+ */
 const LANES = [
-  { lane: "Critical today", note: "The thing with a deadline or a signature on it.", example: "Return the benefits form before the window closes." },
-  { lane: "Primary goal move", note: "One real step on the thing this stretch is actually about.", example: "Send the second of the three reality-check messages from the pilot." },
-  { lane: "Maintenance", note: "One item off the upkeep list — not to clear it, just to keep it from accruing.", example: "Book the dentist you've deferred for two years." },
-  { lane: "Health & recovery", note: "The thing that protects tomorrow's capacity.", example: "A walk, real food, and a hard stop on the search at 6pm." },
-  { lane: "Relationships", note: "One turn toward a person, not an errand.", example: "Call your sister back — not about logistics." },
-  { lane: "Buffer", note: "Deliberately unplanned. The margin that absorbs the day going sideways.", example: "An hour left empty on purpose." },
+  {
+    lane: "Critical today",
+    note: "The thing with a deadline or a signature on it.",
+    example: "Return the benefits form before the window closes.",
+    minimum: "Find out the actual deadline and write it down.",
+    alternative: "If it cannot be finished, send the holding message that buys time.",
+    stop: "When it is submitted, or when the office you need is shut.",
+  },
+  {
+    lane: "Primary goal move",
+    note: "One real step on the thing this stretch is actually about.",
+    example: "Send the second of the three reality-check messages from the pilot.",
+    minimum: "One message, or fifteen honest minutes on it.",
+    alternative: "Prepare the next step so tomorrow starts warm.",
+    stop: "When the step you named is done — not when the day runs out.",
+  },
+  {
+    lane: "Maintenance",
+    note: "One item off the upkeep list — not to clear it, just to keep it from accruing.",
+    example: "Book the dentist you've deferred for two years.",
+    minimum: "One phone call, or finding the number.",
+    alternative: "Move the item to a day it is actually possible on.",
+    stop: "When one item has moved. The list is not meant to be cleared.",
+  },
+  {
+    lane: "Health & recovery",
+    note: "The thing that protects tomorrow's capacity.",
+    example: "A walk, real food, and a hard stop on the search at 6pm.",
+    minimum: "Food, water, and going outside once.",
+    alternative: "Rest that is not restful still counts; lying down is a legitimate version.",
+    stop: "At the hard stop you set, whether or not the day went well.",
+  },
+  {
+    lane: "Relationships",
+    note: "One turn toward a person, not an errand.",
+    example: "Call your sister back — not about logistics.",
+    minimum: "A message that is not about admin.",
+    alternative: "Answer someone who reached out to you instead of initiating.",
+    stop: "When the conversation ends. This one is not a task and has no target.",
+  },
+  {
+    lane: "Buffer",
+    note: "Deliberately unplanned. The margin that absorbs the day going sideways.",
+    example: "An hour left empty on purpose.",
+    minimum: "Leave it empty. Spending it is what it is for.",
+    alternative: "If the day did not go sideways, it is yours and nothing is owed.",
+    stop: "It has no work in it, so there is nothing here to stop.",
+  },
 ];
 
 export default function DailyPlanPage() {
@@ -51,9 +104,49 @@ export default function DailyPlanPage() {
             <span className="lane-example" role="cell">
               {l.example}
             </span>
+            <span className="lane-minimum" role="cell" data-lane-minimum>
+              <span className="lane-cell-label">Minimum</span> {l.minimum}
+            </span>
+            <span className="lane-alternative" role="cell" data-lane-alternative>
+              <span className="lane-cell-label">Alternative</span> {l.alternative}
+            </span>
+            <span className="lane-stop" role="cell" data-lane-stop>
+              <span className="lane-cell-label">Stops</span> {l.stop}
+            </span>
           </div>
         ))}
       </div>
+      {/* N-077 — why the three extra cells are there, said once. */}
+      <p>
+        Each lane carries three things besides the example, and they are the part that decides whether
+        this survives a bad week. The <strong>minimum</strong> is what still counts on a day when almost
+        nothing is available, so the day ends with the plan intact rather than with the plan as evidence
+        against you. The <strong>alternative</strong> is what to do when the planned form is blocked, so
+        a blocked lane does not silently become an empty one. And the <strong>stop condition</strong> is
+        what keeps a lane from becoming a stick: a task with no declared end has no state in which it is
+        finished, which makes every state a state of not having done enough.
+      </p>
+
+      {/* N-091 (C-40) — the separation, stated. The closer the real planner and
+          the fiction get, the more explicitly they have to look different. */}
+      <p className="plan-separation" data-plan-separation>
+        One thing about what this page is. This is a real day, not a fiction: there is no draw here,
+        nothing is randomised, no outcome is generated, and nothing on it is a model of you. It is
+        deliberately built to look nothing like the play surfaces elsewhere on this site, and that
+        distance is a safety rule rather than a style choice — the moment a real Tuesday borrows the
+        presentation of a simulation, the simulation starts reading as a claim about your life.
+      </p>
+
+      {/* N-411 — the caveat that has to travel with "look at where your time
+          goes", because without it that advice blames a person for a constraint. */}
+      <p>
+        A plan will show you the gap between what you say matters and where the hours actually go, and
+        that gap is worth looking at honestly. It is also worth reading carefully. Behaviour does not
+        reveal values cleanly: obligation, illness, addiction, money, care for somebody else and plain
+        lack of opportunity all override preference, and a person with no slack has almost no room in
+        which a preference could show up at all. Where the hours go is evidence about your constraints at
+        least as much as about your wants, and the honest reading names both.
+      </p>
       {/* N-127 — the distinction the lanes are actually enforcing, said out
           loud: time and attention are not the same stat, and only one of them
           can be scheduled. The time diary is named as EXTERNAL instrumentation
@@ -86,7 +179,11 @@ export default function DailyPlanPage() {
       <p className="lane-integration">
         The maintenance lane&rsquo;s contents are exactly the kind of thing your{" "}
         <Link href="/character/logs">upkeep list</Link> holds — a plan is where a list item finally gets a
-        day.
+        day. {/* N-371 — the debt, and its caveat, in the same breath. */}
+        What is on that list is maintenance debt: deferred upkeep compounds quietly and tends to arrive
+        as several things failing in the same month rather than as a bill. And in the same breath,
+        because the two belong together: not every unmet need is neglect, and people deferring
+        maintenance are frequently people without the money, time, health or help to do it.
       </p>
 
       <Callout tone="warm" title="The minimum viable day">

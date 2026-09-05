@@ -5,7 +5,7 @@
       "kind": "route",
       "path": "/play",
       "title": "The Playthrough",
-      "summary": "Three ways to play a life: the whole shape of one fast, twelve years as a sandbox campaign, or a single decision forked and compared.",
+      "summary": "Three ways to play a life: the whole shape of one fast, twelve years as a sandbox campaign, or a single decision forked and compared. The worked daily plan is not one of them — it is the real-world planner, and it is deliberately not a mode.",
       "keywords": [
         "play",
         "playthrough",
@@ -1290,6 +1290,14 @@
       "title": "Exchange rates, and why they belong to your position",
       "onPage": "Money and slack",
       "level": "h2"
+    },
+    {
+      "kind": "heading",
+      "path": "/topics/money",
+      "anchor": "/topics/money#opportunity-cost",
+      "title": "Opportunity cost is a decision tool, not a regret tool",
+      "onPage": "Money and slack",
+      "level": "h3"
     },
     {
       "kind": "heading",

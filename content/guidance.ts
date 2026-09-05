@@ -177,4 +177,102 @@ export const NO_RECOMMENDATION = {
     "Which of the options are you avoiding because of how they'd feel, rather than what they'd cost?",
     "What is the smallest thing you could do this week that would tell you the most?",
   ],
-};
+  /**
+   * N-088 (6.0 §3.4) — THE REFUSAL MADE USEFUL.
+   *
+   * The trunk already refuses to rank without enough context, which is honest
+   * and leaves the reader holding nothing. Three moves that are available with
+   * no inputs at all, and that are worth making whether or not the reader ever
+   * comes back to this page.
+   */
+  movesAnyway: [
+    "Name the decision in one sentence. If it takes a paragraph, it is more than one decision, and the paragraph is why it will not resolve.",
+    "Separate a deadline from a feeling of urgency. A deadline has a date and somebody who set it; urgency has neither, and the two are experienced identically.",
+    "Choose one fact you could verify without committing to anything — and go and find it out.",
+  ],
+  movesTitle: "Three moves that do not need any of this filled in",
+} as const;
+
+/**
+ * N-080 (6.0 §3.4, C-39) — THE RULESET, ECHOED BACK ABOVE THE RANKING.
+ *
+ * A ranked list with a hidden rule behind it reads as an opinion the site holds
+ * about the reader's life. The same list with its rule printed above it reads
+ * as what it is: arithmetic over inputs the reader chose, which changed because
+ * THEY changed something. This is the ordering `rankPlans` actually performs,
+ * written out in words — it is not decoration, and if the code and this text
+ * ever diverge, this text is the bug report.
+ *
+ * The horizon is the ruleset's, not the reader's: nothing in this flow asks the
+ * reader for one, and saying so is more honest than inventing a control.
+ */
+export const RANKING_RULESET = {
+  horizon:
+    "Written for the next season or two, not for a life. Every plan here is judged on what it does to your position within about a year, and on what it leaves open after that.",
+  rules: [
+    "Capacity first: limited health or no slack puts the holding plan at the top, whatever the objectives say, because a move made without capacity tends to get undone.",
+    "Then the objectives you weighted, compared against each other — never summed into a total, and never compared against anyone else's.",
+    "An unknown never counts as a zero. Where you preferred not to say, the plan that depends on it is marked as having unknown availability instead of being quietly demoted.",
+    "Vetoes remove, they do not penalise. A vetoed option leaves the list rather than sinking down it.",
+  ],
+  note: "None of this is a score. There is no number behind the order, and nothing here is compared to another reader.",
+} as const;
+
+/**
+ * N-094 (6.0 §3.4) — THE RULE THE `reversibility` FIELD HAS ALWAYS SAT UNDER.
+ *
+ * The trunk computes a reversibility line per plan and never states what to do
+ * with it. Named, it stops being a field the reader reads and becomes a rule
+ * the reader can apply to the next decision this site never sees.
+ */
+export const REVERSIBILITY_RULE = {
+  title: "One-way doors and two-way doors",
+  body:
+    "Apply rigour in proportion to how hard a decision is to undo. A two-way door — a thing you can walk back with time and a little embarrassment — should be decided fast, because the deliberation costs more than the mistake. A one-way door deserves the slow version: the extra week, the third conversation, the question you are avoiding asking. The common failure is not being reckless or being cautious; it is applying the wrong one to the wrong door, and agonising over the reversible choices while walking through the irreversible ones on momentum.",
+  caveat:
+    "Reversible in principle is not reversible in practice. A move you could undo, but only by spending money you will not have or asking for something back that will not be given, is a one-way door with a two-way label on it.",
+} as const;
+
+/**
+ * N-095 (6.0 §3.4) — OPPORTUNITY COST IS A DECISION TOOL, NOT A REGRET TOOL.
+ *
+ * The shut-off valve. Half of what opportunity cost is used for is legitimate
+ * and happens before the choice; the other half happens at three in the morning
+ * years later and is not analysis at all.
+ */
+export const OPPORTUNITY_COST = {
+  title: "What the alternatives cost, and when to stop counting",
+  body:
+    "Every one of these plans is also a decision not to run the other two, and that forgone version is a real cost that no list of benefits shows you. It is worth thinking about hard, once, and hardest before a door that only opens one way.",
+  shutoff:
+    "And then it is worth stopping. Once the information window has closed — once the choice is made and the alternative is no longer available to you — comparing what happened to a version you cannot inspect is not analysis, because the comparison has no data on its other side. The imagined alternative has no bad Tuesdays in it and never gets ill. Weighing it against your actual life at three in the morning is rumination wearing the clothes of rigour, and the honest move is to notice the difference and put it down.",
+} as const;
+
+/**
+ * N-408 (6.0 §3.4) — WHOSE SCORECARD IS THIS.
+ *
+ * A TAXONOMY THE READER READS, NEVER A CONTROL. There is no button here, no
+ * selection, nothing recorded: the moment it became an input it would be an
+ * assessment of the reader, which is the one thing this site does not do. It is
+ * here for the person who is succeeding and miserable, which is a situation the
+ * rest of this page cannot even see.
+ */
+export const SCORECARD_KINDS: { name: string; what: string }[] = [
+  { name: "Intrinsic", what: "you would want it with nobody watching, and there is no version of you that stops caring." },
+  { name: "Extrinsic", what: "the reward is somebody else's response — money, standing, a title, being picked." },
+  { name: "Internalised", what: "it came from outside, and it has been inside so long it now feels like yours." },
+  { name: "Inherited", what: "it was handed to you by a family, a class, a country or a faith, and was never up for discussion." },
+  { name: "Chosen", what: "you looked at the alternatives and picked this one, knowing what it cost." },
+  { name: "Performed", what: "it is the one you say out loud, which is not always the one you are actually playing toward." },
+  { name: "Conflicted", what: "two of the above, pulling in different directions, which is the ordinary case and not a defect." },
+];
+
+export const SCORECARD_LEAD =
+  "Before the ranking means anything, one question worth sitting with: whose scorecard are you being measured against here? These are kinds of win condition, not grades — most people are carrying several at once, and the useful move is naming which one is doing the work today.";
+
+export const SCORECARD_CLOSE =
+  "None of these is the good one. An inherited criterion can be excellent and a chosen one can be a mistake. The only failure mode worth watching for is spending years on a scorecard you have never once read aloud.";
+
+/** N-089 — the sentence that is a whole decision method. */
+export const CHEAPEST_QUESTION =
+  "Choose the cheapest question whose answer could change your decision. Ask it before adding more commitment.";
