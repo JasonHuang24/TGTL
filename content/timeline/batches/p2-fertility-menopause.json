@@ -1,0 +1,178 @@
+{
+  "key": "p2-fertility-menopause",
+  "sources": [
+    {
+      "id": "src-asrm-best-reproductive-years",
+      "title": "Age and Fertility: A Guide for Patients",
+      "publisher": "American Society for Reproductive Medicine",
+      "url": "https://www.reproductivefacts.org/globalassets/_rf/news-and-publications/bookletsfact-sheets/english-pdf/Age_and_Fertility.pdf",
+      "kind": "reputable-secondary",
+      "publicationYear": 2012,
+      "dataYear": 2012,
+      "measures": "Patient-education guidance from a professional body naming the decade of life it describes as a woman's best reproductive years.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "A woman's best reproductive years are in her 20s. Fertility gradually declines in the 30s, particularly after age 35."
+    },
+    {
+      "id": "src-asrm-conception-chance-by-age",
+      "title": "Age and Fertility: A Guide for Patients",
+      "publisher": "American Society for Reproductive Medicine",
+      "url": "https://www.reproductivefacts.org/globalassets/_rf/news-and-publications/bookletsfact-sheets/english-pdf/Age_and_Fertility.pdf",
+      "kind": "reputable-secondary",
+      "publicationYear": 2012,
+      "dataYear": 2012,
+      "measures": "Patient-education guidance stating the per-cycle chance of conception at a named age.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "By age 40, a woman's chance is less than 5% per cycle"
+    },
+    {
+      "id": "src-nichd-menopause-age",
+      "title": "About Menopause",
+      "publisher": "Eunice Kennedy Shriver National Institute of Child Health and Human Development (NICHD), NIH",
+      "url": "https://www.nichd.nih.gov/health/topics/menopause/conditioninfo",
+      "kind": "official-statistics",
+      "publicationYear": 2021,
+      "dataYear": 2021,
+      "measures": "Federal health institute summary of the ages at which menopause usually occurs and its average age.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "All women experience menopause, usually between ages 45 and 55. The average age of menopause is 51, but it occurs earlier in some women."
+    },
+    {
+      "id": "src-owh-menopause-range",
+      "title": "Menopause basics",
+      "publisher": "Office on Women's Health, U.S. Department of Health and Human Services",
+      "url": "https://womenshealth.gov/menopause/menopause-basics",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "Federal office summary of the average age and usual range of menopause in the United States.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The average age of menopause in the United States is 52. The range for women is usually between 45 and 58."
+    },
+    {
+      "id": "src-owh-perimenopause-onset",
+      "title": "Menopause basics",
+      "publisher": "Office on Women's Health, U.S. Department of Health and Human Services",
+      "url": "https://womenshealth.gov/menopause/menopause-basics",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "Federal office summary of the decade of life in which the transition to menopause usually starts.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Perimenopause, the transition to menopause, usually starts in a woman's mid- to late 40s."
+    },
+    {
+      "id": "src-medlineplus-menopause-common-age",
+      "title": "Menopause",
+      "publisher": "MedlinePlus, National Library of Medicine, NIH",
+      "url": "https://medlineplus.gov/menopause.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "National Library of Medicine summary of the most common age range for reaching menopause.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The most common age for reaching menopause is between 45 and 55 years old."
+    },
+    {
+      "id": "src-timing-natural-menopause-review",
+      "title": "The Timing of the Age at Which Natural Menopause Occurs",
+      "publisher": "Obstetrics and Gynecology Clinics of North America (via PubMed Central)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3285482/",
+      "kind": "peer-reviewed",
+      "publicationYear": 2011,
+      "dataYear": 2011,
+      "measures": "Peer-reviewed review of the timing of natural menopause, reporting the age at which perimenopausal endocrine change begins across studies.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Results from cross-sectional studies have indicated that endocrine changes characteristic of the onset of the perimenopause begin at around age 45."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-reproductive-years-and-age",
+      "label": "Fertility changes across the reproductive years",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": true,
+      "timing": {
+        "window": { "from": 20, "to": 40 },
+        "typical": { "from": 20, "to": 29 }
+      },
+      "measure": "typical-range",
+      "population": "Women, as described in patient guidance from a professional body in reproductive medicine; the guidance names the twenties as the best reproductive years, so the inner band is that named decade rather than any endpoint the guidance sets, and it describes the years after as a gradual decline rather than a cliff. The reproductive years themselves continue past the window shown here, closing at menopause.",
+      "sources": [
+        "src-asrm-best-reproductive-years",
+        "src-asrm-conception-chance-by-age"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "fertility",
+      "careNote": "These figures describe patterns across many people rather than any one body, and a clinician can speak to an individual situation.",
+      "whatChanges": [
+        "The chance of conceiving in a given cycle shifts gradually across these years rather than at any single point, and the source describes the later change as a steepening of a decline already under way.",
+        "A clinician can discuss conception, contraception, or fertility testing at any point in this range; the range is a description of a population, not a prompt to act.",
+        "Many people never set out to conceive, and this timing says nothing about whether anyone will or wishes to."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-menopausal-transition",
+      "label": "The menopausal transition, or perimenopause, and the years it usually spans",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": true,
+      "timing": {
+        "window": { "from": 45, "to": 55 },
+        "typical": { "from": 45, "to": 51 }
+      },
+      "measure": "typical-range",
+      "population": "Women, as described by federal health information and a peer-reviewed review of menopause timing. This is a span rather than a starting point: it opens in the middle to later forties, where those sources place the first perimenopausal changes, and it closes at menopause itself, whose average age federal sources give in the low fifties and whose usual upper bound they give in the middle fifties. Federal sources also note that it can open earlier for some people.",
+      "sources": [
+        "src-owh-perimenopause-onset",
+        "src-timing-natural-menopause-review",
+        "src-nichd-menopause-age",
+        "src-medlineplus-menopause-common-age"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "fertility",
+      "careNote": "This describes a span observed across many people, not a timetable for anyone in particular, and a clinician is the right place to bring a question about one body.",
+      "whatChanges": [
+        "Cycles often become irregular before they stop, and hormone levels fluctuate rather than falling steadily.",
+        "The transition can run for several years, and its length differs widely from one person to the next.",
+        "Pregnancy remains possible during this stretch for many people, so contraception is still a live question for anyone who wants it answered."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-menopause-typical-age",
+      "label": "The age range in which menopause most commonly occurs",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": true,
+      "timing": {
+        "window": { "from": 45, "to": 58 },
+        "typical": { "from": 45, "to": 55 }
+      },
+      "measure": "typical-range",
+      "population": "Women in the United States, as described by federal health agencies; the agencies give slightly different outer bounds and slightly different averages, so the wider bound is carried in the window.",
+      "sources": [
+        "src-nichd-menopause-age",
+        "src-owh-menopause-range",
+        "src-medlineplus-menopause-common-age"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "contested",
+      "sensitivity": "fertility",
+      "careNote": "Timing varies a great deal between people, and this range describes a population rather than a schedule for any individual; a clinician can answer questions about one person.",
+      "whatChanges": [
+        "Menstrual periods stop, and the point is marked in retrospect once a full year has passed without one.",
+        "The years that follow are simply later adult years; this is an ordinary part of aging rather than an illness.",
+        "Clinicians can discuss symptoms and the options for managing them with anyone who wants that conversation."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

@@ -1,0 +1,514 @@
+{
+  "key": "p3-analyses-family-body",
+  "analyses": {
+    "ms-first-marriage-median-age-women": {
+      "major": true,
+      "affectsLater": ["ms-first-birth-mean-age"],
+      "analysis": {
+        "early": {
+          "tends": "Marrying earlier in adult life tends to mean two people build their adult footing together rather than arriving with one already formed. Housing, credit, insurance, and where to live for work get decided jointly from the start, and each person's plans stay visible to the other while those plans are still forming.",
+          "costs": [
+            "Household income in the first years is commonly lower, since earnings for most workers rise across the bands that follow.",
+            "There is less separate adult experience to draw on when a couple negotiates money, work location, or whose job moves first."
+          ],
+          "routes": [
+            "Prenuptial agreements are drawn up before a wedding and postnuptial agreements after one; both are ordinary instruments handled by family-law attorneys.",
+            "Premarital and couples counseling run through licensed therapists, community organizations, and many religious congregations.",
+            "Every state allows a marriage to be ended without proving fault, and court self-help centers publish the forms."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "The survey figure is a median for women, so half of first marriages among women happen on either side of it, in the later twenties. Around there, a first marriage commonly follows the end of formal schooling and a first stretch of paid work, so two people arrive with some earning history and some separate savings already in place. The legal defaults change at once: taxes, property, health decisions, and next-of-kin standing all shift when the license is filed.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "Marrying later tends to mean each person arrives with settled work, separate accounts, sometimes property, and sometimes children from an earlier relationship. The legal and financial merge is then a deliberate piece of work rather than a default, and much of it consists of choosing what to combine and what to leave separate.",
+          "costs": [
+            "Titles, beneficiary designations, and existing obligations all have to be reconciled, which is paperwork a couple with little of either does not face."
+          ],
+          "routes": [
+            "Estate and family-law attorneys handle exactly this merge, and prenuptial agreements are commonly used where each person brings existing assets or children.",
+            "Beneficiary designations on retirement accounts and life insurance are changed directly with the account provider and pass outside a will."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Engagements end and marriages end, and either returns two people to separate legal standing. When a marriage ends, the untangling runs through state family law rather than through either person alone: property division, any support, and parenting arrangements go through a court process even where both people agree.",
+          "costs": [
+            "Two households cost more to run than one, and a home and retirement accounts are divided under state rules rather than by preference alone."
+          ],
+          "routes": [
+            "Divorce mediation and collaborative-law practices settle most cases without a trial and cost less than a contested one.",
+            "Legal aid organizations and court self-help centers assist people without an attorney, and a qualified domestic relations order divides a retirement account without triggering the extra early-withdrawal tax."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Long-term partnership without a marriage license is common, and it carries none of the automatic legal defaults. Couples who want those effects assemble them one document at a time, and a small number of states still recognize a common-law marriage formed under their own rules.",
+          "costs": [
+            "Without a marriage or the documents that stand in for one, a partner has no automatic standing to make health decisions, to inherit, or to be treated as next of kin."
+          ],
+          "routes": [
+            "A health care proxy, a durable power of attorney, a will, and updated beneficiary designations reproduce most of the practical effects, and are drawn up by an attorney or from state-published forms.",
+            "Cohabitation agreements set out what happens to property and shared costs, and domestic partnership registries operate in some cities and states."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults never marry. Households form around one person, around friends, around siblings, or around a partner without a license, and the legal shape of any of them is whatever its members write down. What a marriage supplies automatically — a default decision-maker, a default heir, a default next of kin — is otherwise supplied by naming someone.",
+          "costs": [
+            "Hospitals, benefit programs, and probate courts fall back on a legal spouse first and on blood relatives after that when no document says otherwise."
+          ],
+          "routes": [
+            "Naming a health care proxy and a durable power of attorney puts those decisions with whoever the person actually chooses.",
+            "A will directs an estate to anyone, related or not, and beneficiary designations do the same for retirement accounts and insurance."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-first-marriage-median-age-men": {
+      "major": true,
+      "affectsLater": ["ms-first-birth-mean-age"],
+      "analysis": {
+        "early": {
+          "tends": "Marrying earlier in adult life tends to mean two people build their adult footing together rather than arriving with one already formed. Housing, credit, insurance, and where to live for work get decided jointly from the start, and each person's plans stay visible to the other while those plans are still forming.",
+          "costs": [
+            "Household income in the first years is commonly lower, since earnings for most workers rise across the bands that follow.",
+            "There is less separate adult experience to draw on when a couple negotiates money, work location, or whose job moves first."
+          ],
+          "routes": [
+            "Prenuptial agreements are drawn up before a wedding and postnuptial agreements after one; both are ordinary instruments handled by family-law attorneys.",
+            "Premarital and couples counseling run through licensed therapists, community organizations, and many religious congregations.",
+            "Every state allows a marriage to be ended without proving fault, and court self-help centers publish the forms."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "The survey figure is a median for men, so half of first marriages among men happen on either side of it, around the turn of the thirties. Around there, a first marriage commonly follows the end of formal schooling and a first stretch of paid work, so two people arrive with some earning history and some separate savings already in place. The legal defaults change at once: taxes, property, health decisions, and next-of-kin standing all shift when the license is filed.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "Marrying later tends to mean each person arrives with settled work, separate accounts, sometimes property, and sometimes children from an earlier relationship. The legal and financial merge is then a deliberate piece of work rather than a default, and much of it consists of choosing what to combine and what to leave separate.",
+          "costs": [
+            "Titles, beneficiary designations, and existing obligations all have to be reconciled, which is paperwork a couple with little of either does not face."
+          ],
+          "routes": [
+            "Estate and family-law attorneys handle exactly this merge, and prenuptial agreements are commonly used where each person brings existing assets or children.",
+            "Beneficiary designations on retirement accounts and life insurance are changed directly with the account provider and pass outside a will."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Engagements end and marriages end, and either returns two people to separate legal standing. When a marriage ends, the untangling runs through state family law rather than through either person alone: property division, any support, and parenting arrangements go through a court process even where both people agree.",
+          "costs": [
+            "Two households cost more to run than one, and a home and retirement accounts are divided under state rules rather than by preference alone."
+          ],
+          "routes": [
+            "Divorce mediation and collaborative-law practices settle most cases without a trial and cost less than a contested one.",
+            "Legal aid organizations and court self-help centers assist people without an attorney, and a qualified domestic relations order divides a retirement account without triggering the extra early-withdrawal tax."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Long-term partnership without a marriage license is common, and it carries none of the automatic legal defaults. Couples who want those effects assemble them one document at a time, and a small number of states still recognize a common-law marriage formed under their own rules.",
+          "costs": [
+            "Without a marriage or the documents that stand in for one, a partner has no automatic standing to make health decisions, to inherit, or to be treated as next of kin."
+          ],
+          "routes": [
+            "A health care proxy, a durable power of attorney, a will, and updated beneficiary designations reproduce most of the practical effects, and are drawn up by an attorney or from state-published forms.",
+            "Cohabitation agreements set out what happens to property and shared costs, and domestic partnership registries operate in some cities and states."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults never marry. Households form around one person, around friends, around siblings, or around a partner without a license, and the legal shape of any of them is whatever its members write down. What a marriage supplies automatically — a default decision-maker, a default heir, a default next of kin — is otherwise supplied by naming someone.",
+          "costs": [
+            "Hospitals, benefit programs, and probate courts fall back on a legal spouse first and on blood relatives after that when no document says otherwise."
+          ],
+          "routes": [
+            "Naming a health care proxy and a durable power of attorney puts those decisions with whoever the person actually chooses.",
+            "A will directs an estate to anyone, related or not, and beneficiary designations do the same for retirement accounts and insurance."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-first-birth-mean-age": {
+      "major": true,
+      "affectsLater": ["ms-becoming-a-grandparent"],
+      "analysis": {
+        "early": {
+          "tends": "A first birth earlier in adult life tends to arrive while schooling or a first stretch of paid work is still under way, so care and hours get arranged around an income that is usually still climbing. Parents who start earlier are commonly younger when their children reach adulthood, and their own parents are more often nearby and able to help with daily care.",
+          "costs": [
+            "Child care lands in the years when earnings are typically lowest, so it takes a larger share of what a household brings in.",
+            "Schooling or training in progress often has to be rearranged around care."
+          ],
+          "routes": [
+            "State child care subsidy agencies, Head Start, and Early Head Start are means-tested programs built for exactly these years.",
+            "Campus child care centers, part-time and evening enrollment, and stop-out-and-return policies are standard at community colleges and many public universities.",
+            "Family and Medical Leave Act job protection and state paid-family-leave programs cover some workers; eligibility turns on employer size and tenure."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Around the national average, a first birth commonly follows a stretch of paid work and often a partnership, so care and hours are arranged against a known income. The report gives a higher average in large metropolitan counties than in the least urban ones, which tracks local housing costs and the local mix of work rather than anything about individual bodies.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "A first birth later in adult life tends to arrive with income and housing already settled, and with the new parent's own parents older and less often available for daily help. Across a population, conception takes longer on average as the reproductive years go on — the professional guidance describes a gradual change rather than a single point — so a clinician is more often part of the ordinary route.",
+          "costs": [
+            "Daily help from a grandparent generation is less often available, so paid or arranged care carries more of the load."
+          ],
+          "routes": [
+            "Reproductive endocrinologists and fertility clinics are a routine medical route rather than a last resort; some employer plans and some states' insurance mandates cover part of the cost.",
+            "Adoption and foster-to-adopt licensing carry no general upper age bar, and each agency publishes its own criteria.",
+            "Paid care, nanny shares, and after-school programs substitute for family help where family help is not close by."
+          ],
+          "evidence": "evidence-informed",
+          "sources": ["src-asrm-best-reproductive-years"]
+        },
+        "interrupted": {
+          "tends": "Paths toward a first child stop and restart for many reasons: a partnership ends, a course of treatment is stopped, an adoption match does not go through, or a pregnancy does not continue. What tends to follow is a stretch with no institutional marker in it, since none of these is recorded anywhere the way a birth is.",
+          "costs": [
+            "Treatment cycles and adoption processes cost money and time, and neither is returned when a path stops."
+          ],
+          "routes": [
+            "Fertility clinics report their outcomes to a federal reporting program, and a second clinical opinion is an ordinary step rather than a complaint.",
+            "RESOLVE, the national infertility association, runs peer support groups across the country, and therapists who specialize in reproductive health are listed through professional directories.",
+            "Licensed adoption agencies and state foster care systems treat a match that does not go through as routine, and a family stays in the process rather than starting it over."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Becoming a parent takes forms other than a first birth on a birth certificate: adoption, fostering, step-parenting, kinship care, donor conception, surrogacy, and shared parenting arrangements. Each has its own legal route, and the parental standing each creates differs from state to state rather than following automatically from the caregiving itself.",
+          "costs": [
+            "Legal parentage is not automatic in several of these routes and has to be established, which takes time and usually an attorney."
+          ],
+          "routes": [
+            "Second-parent adoption, stepparent adoption, adoption decrees, and parentage judgments are the standard instruments.",
+            "Family-law attorneys and state court self-help centers handle them, and state foster care agencies license kinship caregivers directly."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults never have a child, by decision or by circumstance, and the household that results is an ordinary household rather than an unfinished one. Time, money, and housing are arranged around adult needs; care later in life is more often arranged through paid services, siblings, friends, nieces and nephews than through adult children, and households that expect that tend to write the arrangement down rather than assume it.",
+          "costs": [
+            "Hospitals, benefit programs, and courts often reach for an adult child as next of kin or as a default decision-maker."
+          ],
+          "routes": [
+            "A health care proxy and a durable power of attorney put decisions with whoever the person actually names, and a will directs an estate anywhere.",
+            "Professional fiduciaries, geriatric care managers, and elder-law attorneys take on the roles adult children otherwise fill, and are engaged the way any professional is."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-becoming-a-grandparent": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "Becoming a grandparent is timed by two generations of first births rather than by any decision of the grandparent's own. Arriving at it earlier tends to mean the grandparent is still in paid work and still some years from any retirement income, so help with a grandchild competes directly with working hours.",
+          "costs": [
+            "Regular care for a grandchild lands during the working years, when hours given up are hours of pay given up."
+          ],
+          "routes": [
+            "Flexible-schedule and reduced-hours arrangements are negotiated through an employer's human resources process, and some employers offer backup care benefits.",
+            "Where a grandparent is raising a grandchild rather than helping, state kinship navigator programs, child-only assistance grants, and school enrollment affidavits are the mechanisms built for it."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Around the average age at a first grandchild reported in the study, a grandparent is commonly still working, often also helping an older relative, and living independently. The role carries no legal duty of care by default, so how much of it anyone takes on is negotiated inside a family rather than set anywhere outside it.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "Coming to it later tends to mean more free hours and less pull from paid work, and it also tends to mean that stamina and travel shape what is practical more than willingness does. Distance is usually the larger factor: the study found involvement ranging widely, and where a family lives explains much of that range.",
+          "costs": [
+            "Long travel and limited energy can make daily or weekly care impractical even where the wish is there."
+          ],
+          "routes": [
+            "Video calls, school-year or summer stays, and visits timed around a parent's work are how distant grandparents commonly hold regular contact.",
+            "Senior centers and Area Agencies on Aging arrange transportation, which is often the practical obstacle rather than the relationship itself."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Contact can stop for reasons that have nothing to do with the grandparent: a separation in the child's household, a move across the country, or a rift between adults. Because the relationship carries no default legal standing, an interruption is not automatically repairable through any institution.",
+          "costs": [
+            "A grandparent has no automatic right of contact, and the standard a court applies before ordering any is set by state statute and is generally a high one."
+          ],
+          "routes": [
+            "Every state has some form of grandparent visitation statute, and family-law attorneys and court self-help centers explain what the local standard requires.",
+            "Family mediation services work with adults who are not speaking, and are usually far cheaper and faster than a contested petition."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "The role arrives by routes other than a grandchild born to an adult child: step-grandchildren through a later marriage, grandchildren by adoption, kinship arrangements, and the informal grandparent standing that neighbors and family friends hold. None of these is a lesser version of the role in practice, though only some of them create any legal relationship.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Plenty of people never become grandparents, because they had no children or because their children had none, and in neither case was it their own decision. Time with children is not confined to a family line: structured programs place older adults with children who want the attention, and those relationships are ordinary ones rather than a substitute for something missing.",
+          "routes": [
+            "The Foster Grandparent Program, run through AmeriCorps Seniors, places older adults with children in schools and community programs and pays a stipend to volunteers who qualify.",
+            "School volunteer programs, public library reading programs, and mentoring organizations such as Big Brothers Big Sisters recruit older volunteers directly."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-caregiving-onset-age": {
+      "major": true,
+      "affectsLater": ["ms-leaving-paid-work"],
+      "analysis": {
+        "early": {
+          "tends": "Taking on unpaid care for an adult relative in the twenties or thirties tends to happen while a career is still forming and while few people of the same age are doing anything similar, so the role is largely invisible at work and among friends. Hours come out of paid work or study rather than out of leisure, because there is little slack in either.",
+          "costs": [
+            "Hours given to care come out of the years when earnings usually climb fastest, and the effect on lifetime pay and retirement savings compounds quietly.",
+            "Younger caregivers are rarely recognized as caregivers by employers or by programs, so the support that exists is often never offered."
+          ],
+          "routes": [
+            "The Eldercare Locator connects anyone to the Area Agency on Aging for a relative's county, which is the front door to respite funding under the National Family Caregiver Support Program.",
+            "Family and Medical Leave Act leave covers care for a parent or a spouse at covered employers, and several states run paid family leave that includes caregiving.",
+            "Medicaid home and community-based services waivers pay a family caregiver directly in a number of states, through programs usually named self-directed or consumer-directed care."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Where the role begins during the years of paid work and children at home, three sets of obligations run at once and the care is fitted into evenings, weekends, and unused leave. Almost none of it appears in any public statistic, because those statistics count paid work; the surveys in hand count who is caregiving at a given moment rather than when anyone started.",
+          "evidence": "insufficient-evidence"
+        },
+        "late": {
+          "tends": "Care taken on later in life is most often care by a spouse or by a sibling of similar age, so the person providing it is managing their own health needs at the same time. Help from the next generation is more often at a distance, which shifts the work toward coordinating services rather than performing them.",
+          "costs": [
+            "An older caregiver carries lifting, driving, and overnight hours that are physically demanding, with no backup inside the household."
+          ],
+          "routes": [
+            "Adult day programs, in-home aide hours, and short respite stays are arranged through Area Agencies on Aging and home care agencies.",
+            "The Program of All-Inclusive Care for the Elderly coordinates medical and daily care for people who qualify, in the places where it operates."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "The role often ends more abruptly than it began — a relative moves into a residential care community, recovers, or another family member takes it over — and the hours it occupied do not automatically convert back into anything. People who stepped away from paid work commonly find the return harder than the departure, because the gap sits on a work history without an explanation anyone asks for.",
+          "costs": [
+            "A stretch out of paid work leaves a gap in earnings history and in retirement contributions that a later return does not backfill."
+          ],
+          "routes": [
+            "State workforce agencies and American Job Centers run return-to-work and retraining programs, and some employers recruit specifically from career gaps.",
+            "Caregiver support groups through Area Agencies on Aging and condition-specific organizations continue after the role ends, which is when many people first use them."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Care is often not carried by one person: siblings split it by task, distant relatives handle bills and appointments by phone, and paid aides cover the hours nobody in the family can. Coordinating care from a distance is a real form of it, and families that split it this way tend to write down who does what rather than leave it to whoever lives closest.",
+          "routes": [
+            "Geriatric care managers, listed in some places as aging life care professionals, are hired to assess a situation and coordinate services, including for families spread across states.",
+            "Home care agencies, meal delivery through Meals on Wheels, and medical transportation services fill specific hours rather than all of them."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults never take this role on, and where they do not, the same needs get met through paid services, public programs, and other relatives. Families that expect that arrangement tend to settle it in advance — who holds the power of attorney, who is on the accounts, which agency is engaged — rather than leave it to whoever happens to live closest when something changes.",
+          "costs": [
+            "Relatives and hospital staff often assume the nearest adult child or the unmarried sibling is available, and act on that assumption without asking."
+          ],
+          "routes": [
+            "A durable power of attorney and a health care proxy name the actual decision-maker, and hospital social workers arrange a discharge around whatever is in writing.",
+            "A family meeting facilitated by a social worker or a care manager is a standard service, and is how many families divide responsibilities explicitly."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-death-of-a-spouse-later-life": {
+      "major": true,
+      "affectsLater": [
+        "ms-p1fr-ss-survivor-earliest-claim",
+        "ms-living-alone-later-life"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "When a husband or wife dies earlier in adult life, the household is more often still carrying a mortgage, still raising children, and still built on two earnings. Several of the survivor routes are structured by age, so a younger surviving spouse reaches some of them through a child in the household rather than through their own age.",
+          "costs": [
+            "Household income can drop while a mortgage, child care, and paid work all continue unchanged."
+          ],
+          "routes": [
+            "Social Security pays a surviving spouse who is caring for the couple's young child whatever the survivor's own age, and pays a survivor benefit on the survivor's own age from a set age onward; both are claimed through the Social Security Administration.",
+            "Life insurance proceeds, employer benefits, and pension survivor elections are claimed through the employer's benefits office, and each has its own filing window.",
+            "Legal aid organizations and probate court self-help centers handle estate paperwork for people without an attorney."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Outliving a husband or wife is a common later-life event, though no source read in this build prints an age at which it happens. What follows is much the same whenever it arrives: a household of two becomes a household of one, benefits and titles have to be redirected, and the tasks the other person handled land on one person at once.",
+          "evidence": "insufficient-evidence"
+        },
+        "late": {
+          "tends": "At the oldest ages, a spouse's death tends to arrive when the surviving person has care needs of their own and a thinner circle of friends of the same age, so living alone becomes the common arrangement and housing decisions often follow within the first year. Driving, medications, bills, and the house are the practical things that change hands.",
+          "costs": [
+            "Two Social Security payments become one, since a surviving spouse receives the higher of the two amounts rather than both, while housing costs stay where they were."
+          ],
+          "routes": [
+            "The Eldercare Locator and Area Agencies on Aging arrange transportation, meals, and in-home help, and can be called before anything is decided about housing.",
+            "Grief support groups run through hospice organizations, hospitals, and community and faith organizations, and most are open to anyone rather than only to the families of former patients.",
+            "The Social Security Administration handles the benefit change by phone or in an office, and the funeral home usually reports the death to it directly."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "What follows a spouse's death often stalls rather than proceeds. An estate sits in probate for months, accounts are frozen because a title was in one name only, or a couple was separated but not divorced, which changes who inherits and who may claim. None of this is unusual, and none of it is fixed by acting faster.",
+          "costs": [
+            "Money that is legally the survivor's can be out of reach for months while an estate is open."
+          ],
+          "routes": [
+            "Small-estate affidavits and simplified probate exist in every state and clear modest estates without a full proceeding.",
+            "Accounts with a named beneficiary, and homes held with a transfer-on-death deed or in joint tenancy, pass outside probate entirely and are claimed with the provider or the recorder's office directly.",
+            "State unclaimed property offices hold accounts nobody claimed, and searching them costs nothing."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Long-term partners who never married reach the same event with none of the automatic standing. Survivor benefits, inheritance without a will, and next-of-kin authority follow a marriage or a document, not the length of a relationship, so a surviving partner's position rests entirely on what was written down beforehand.",
+          "costs": [
+            "Without a will or a beneficiary designation, an unmarried partner inherits nothing under state intestacy rules, which pass an estate to blood relatives."
+          ],
+          "routes": [
+            "A will, beneficiary designations, a transfer-on-death deed, and joint ownership with right of survivorship each direct specific assets to a partner, and any of them can be put in place at any point.",
+            "A health care proxy and a durable power of attorney operate while both people are living; a will, beneficiary designations and a transfer-on-death deed are what carry effect afterward."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Outliving a spouse is not a stage anyone passes through; it happens in some households and not in others. People reach the oldest ages never having been widowed for many different reasons: they did not marry, a marriage ended by divorce, they partnered without a license, or theirs was the death that came first. The paperwork that makes any of these easier for whoever remains is the same in every case.",
+          "routes": [
+            "Beneficiary designations on retirement accounts and life insurance pass outside a will and are updated in minutes with the account provider.",
+            "A will, a durable power of attorney, and a health care proxy are the standard set, and state court self-help centers publish forms for all three."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-reproductive-years-and-age": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "Attempting conception in the earlier part of these years is associated with conceiving sooner, on average, and with fewer clinical steps along the way — the professional guidance names this stretch directly. What tends to be harder in these years is rarely biological: income, housing, and schooling are usually less settled than they will be later.",
+          "costs": [
+            "Pregnancy and an infant arrive during the years when earnings and housing are least settled for most households."
+          ],
+          "routes": [
+            "Medicaid covers pregnancy care at incomes above the usual threshold in every state, and applications are taken year-round rather than in an enrollment period.",
+            "WIC provides food benefits and nutrition support through pregnancy and early childhood, and community health centers provide prenatal care on a sliding scale."
+          ],
+          "evidence": "evidence-informed",
+          "sources": ["src-asrm-best-reproductive-years"]
+        },
+        "window": {
+          "tends": "The guidance names the twenties as the years of highest fertility and describes the years after as a gradual change rather than a threshold that gets crossed. Within this span the practical questions are the ordinary ones — contraception for people who want it, preconception care for people who are trying — and a clinician answers either at any point in it.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "The professional guidance describes a gradual change across these years that steepens in the later part of them. A window narrowing is a fact about a population's biology and says nothing about any one body or any one life.",
+          "routes": [
+            "A fertility evaluation is a routine appointment with a gynecologist or a reproductive endocrinologist, and it looks at both partners rather than one.",
+            "Treatment, egg and embryo freezing, donor eggs or sperm, adoption, fostering, and a life without children are all routes, and none of them ranks above another.",
+            "Some employer plans and some states' insurance mandates cover part of fertility treatment, and a benefits administrator can say which applies."
+          ],
+          "evidence": "evidence-informed",
+          "sources": ["src-asrm-best-reproductive-years"]
+        },
+        "interrupted": {
+          "tends": "Plans around conception are interrupted often: a partnership ends, a course of medical treatment affects fertility, a health condition changes what is advisable, or trying stops for a while and resumes. Interruption is a common shape here rather than an unusual one, and clinics are organized around people arriving in the middle of a story rather than at the start of one.",
+          "costs": [
+            "Treatment cycles cost money that insurance frequently does not cover, and a paused course is not always resumed where it stopped."
+          ],
+          "routes": [
+            "Fertility preservation — freezing eggs, sperm, or embryos — is offered ahead of treatments known to affect fertility, and specialist clinics coordinate it quickly where time is short.",
+            "A second clinical opinion is ordinary practice, and clinics report their outcomes to a federal reporting program that anyone can read.",
+            "RESOLVE, the national infertility association, runs peer support groups nationwide, and therapists who specialize in reproductive health are listed through professional directories."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Families form by routes that do not run through these years at all: donor eggs or sperm, gestational surrogacy, adoption, foster care, step-parenting, and kinship care. Donor eggs in particular do not follow the recipient's own reproductive timing, which is why clinics treat that as a separate route rather than a fallback inside the same one.",
+          "costs": [
+            "Legal parentage in donor and surrogacy arrangements is established under state law that varies widely, and what these routes cost differs by more than is obvious at the outset."
+          ],
+          "routes": [
+            "Attorneys who practice assisted reproduction law handle parentage orders, and agencies publish their fee structures before anyone commits.",
+            "State foster care licensing is free to complete, and adopting a child from foster care through a public agency carries little or no fee and often an ongoing subsidy."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults never try to conceive, and many who wanted to did not. A life without children is one of the ordinary shapes of an adult life rather than a subtraction from another one: time and money stay committed to adult obligations, care later on is arranged deliberately instead of assumed, and relationships with nieces, nephews, students, friends, and neighbors carry weight that adult children carry in other households.",
+          "costs": [
+            "Workplaces, benefit programs, and medical settings are often built around households with children and can assume one is there."
+          ],
+          "routes": [
+            "A health care proxy and a durable power of attorney name whoever a person chooses as decision-maker, and elder-law attorneys and professional fiduciaries take on roles families otherwise fill.",
+            "Peer groups exist both for people who chose this and for people who did not, and therapists who specialize in reproductive health work with both; either is an ordinary route rather than a last resort."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+
+    "ms-menopausal-transition": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "Federal health sources say plainly that this transition opens earlier for some people. What tends to follow is practical rather than medical: changes that arrive during the busiest years of paid work and family care are more often attributed to stress or to something else entirely, so the conversation with a clinician tends to start later than the changes themselves do.",
+          "costs": [
+            "Symptoms that arrive earlier are commonly put down to other causes, by the person and by clinicians alike, which delays a straightforward conversation."
+          ],
+          "routes": [
+            "A primary care clinician or a gynecologist can evaluate symptoms at any age, and the Menopause Society maintains a directory of clinicians who specialize in this.",
+            "Schedule, temperature, and workload adjustments are handled through an employer's human resources process like any other accommodation request."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Within the span these sources describe, cycles commonly become irregular before they stop and hormone levels fluctuate rather than falling steadily, which is why the transition is recognized as a stretch of years rather than an event. Pregnancy remains possible through much of it, so contraception stays a live question for anyone who wants it answered.",
+          "evidence": "evidence-informed"
+        },
+        "late": {
+          "tends": "For some people the changes begin later than the span these sources describe. The practical effect is that the same questions — irregular cycles, contraception, symptom management — stay open for longer, and that a clinician looks at other explanations for a change in cycles at those ages before settling on this one.",
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Cycles sometimes end abruptly rather than over years, after surgery that removes the ovaries or after a course of medical treatment. The change then arrives without the gradual run-up these sources describe, and symptoms can be more pronounced because the shift is sudden rather than staged.",
+          "costs": [
+            "There is no gradual stretch in which to learn what helps, and the change is not anticipated the way a gradual transition is."
+          ],
+          "routes": [
+            "Clinicians discuss hormone therapy and non-hormonal options before a planned procedure as well as after one, and the Menopause Society directory lists specialists.",
+            "Where a procedure is planned in advance, fertility preservation and the timing of the procedure are both ordinary things to raise with the surgical team."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "People move through this stretch in different ways: hormone therapy, non-hormonal prescription options, changes to sleep and temperature and exercise, or nothing at all. The sources describe symptoms that differ widely from one person to the next, and no single route through it is the standard one.",
+          "routes": [
+            "A clinician can lay out hormonal and non-hormonal options together, including what each one is and is not indicated for.",
+            "Treating nothing is a route people take deliberately, and it does not close off starting something later."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Not everyone experiences this as a transition. For some, cycles simply stop with few of the changes described around them; for others, cycles ended earlier for another reason and this span never happens in the form these sources describe. Neither is a step that got missed — the span is measured across a population, and it is not a sequence a body has to move through.",
+          "evidence": "speculative"
+        }
+      }
+    }
+  }
+}

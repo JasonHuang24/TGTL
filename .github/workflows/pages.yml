@@ -1,0 +1,63 @@
+# Deploys the static export to GitHub Pages as a PROJECT site, served under /TGTL/
+# on the owner's custom domain (https://jasonhchronicles.com/TGTL/).
+#
+# What this deploys is a LABELLED PREVIEW behind the human review gates listed in
+# KNOWN_LIMITATIONS.md §0.1 and §1. The footer stamp, /methodology#preview-status
+# and the README say so; the pages carry noindex. Publish pass, 2026-09-04.
+#
+# Two builds on purpose: the gate roster was written against a root-mounted
+# export, so the static gates run on a root build first; the build that ships is
+# then made with TGTL_BASE_PATH=/TGTL so every link and asset carries the path.
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/configure-pages@v5
+      - run: npm ci
+      - name: Root build + typecheck + static gates (the roster's mount)
+        run: |
+          npm run build
+          npm run typecheck
+          npm run gates
+      - name: Build the export that ships, under /TGTL
+        env:
+          TGTL_BASE_PATH: /TGTL
+        run: |
+          rm -rf out .next
+          npm run build
+          test -f out/.nojekyll
+          test -f out/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

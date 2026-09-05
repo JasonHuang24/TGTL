@@ -1,0 +1,358 @@
+{
+  "key": "p2-later-health",
+  "sources": [
+    {
+      "id": "src-nchs-mortality-brief-total",
+      "title": "Mortality in the United States, 2023",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db521.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2023,
+      "measures": "Life expectancy at birth for the total United States population, defined by the report as the average number of years of life remaining at a given age",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In 2023, life expectancy at birth was 78.4 years for the total U.S. population—an increase of 0.9 year from 77.5 in 2022."
+    },
+    {
+      "id": "src-nchs-mortality-brief-male",
+      "title": "Mortality in the United States, 2023",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db521.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2023,
+      "measures": "Life expectancy at birth for males in the United States, reported by the brief as a separate average and not as one edge of a range",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For males, life expectancy increased 1.0 year from 74.8 in 2022 to 75.8 in 2023."
+    },
+    {
+      "id": "src-nchs-mortality-brief-female",
+      "title": "Mortality in the United States, 2023",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db521.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2023,
+      "measures": "Life expectancy at birth for females in the United States, reported by the brief as a separate average and not as one edge of a range",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For females, life expectancy increased 0.9 year from 80.2 in 2022 to 81.1 in 2023."
+    },
+    {
+      "id": "src-nei-presbyopia-onset",
+      "title": "Presbyopia",
+      "publisher": "National Eye Institute, National Institutes of Health",
+      "url": "https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/presbyopia",
+      "kind": "reputable-secondary",
+      "publicationYear": 2024,
+      "dataYear": 2024,
+      "measures": "The age after which the national eye institute states people generally develop presbyopia, the loss of near focusing ability",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Everyone gets presbyopia as they get older — usually after age 45."
+    },
+    {
+      "id": "src-nei-presbyopia-plateau",
+      "title": "Presbyopia",
+      "publisher": "National Eye Institute, National Institutes of Health",
+      "url": "https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/presbyopia",
+      "kind": "reputable-secondary",
+      "publicationYear": 2024,
+      "dataYear": 2024,
+      "measures": "The age after which the national eye institute states presbyopia usually stops progressing",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Presbyopia gets worse over time, but it usually stops getting worse after age 65."
+    },
+    {
+      "id": "src-nidcd-hearing-midlife",
+      "title": "Quick Statistics About Hearing, Balance, & Dizziness",
+      "publisher": "National Institute on Deafness and Other Communication Disorders, National Institutes of Health",
+      "url": "https://www.nidcd.nih.gov/health/statistics/quick-statistics-hearing",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2020,
+      "measures": "Share of United States adults with disabling hearing loss in the midlife age bands, from the national health and nutrition examination survey. The page defines disabling hearing loss as hearing loss of thirty-five decibels or more in the better ear, so milder loss is excluded from these shares.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "About 5% of adults ages 45-54 have disabling hearing loss. The rate increases to 10% for adults ages 55-64."
+    },
+    {
+      "id": "src-nidcd-hearing-older",
+      "title": "Quick Statistics About Hearing, Balance, & Dizziness",
+      "publisher": "National Institute on Deafness and Other Communication Disorders, National Institutes of Health",
+      "url": "https://www.nidcd.nih.gov/health/statistics/quick-statistics-hearing",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2020,
+      "measures": "Share of United States adults with disabling hearing loss in the older age bands, from the national health and nutrition examination survey. The page defines disabling hearing loss as hearing loss of thirty-five decibels or more in the better ear, so milder loss is excluded from these shares.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "22% of those ages 65-74 and 55% of those who are 75 and older have disabling hearing loss."
+    },
+    {
+      "id": "src-jama-hearing-oldest-old",
+      "title": "Prevalence of Hearing Loss and Hearing Aid Use Among US Medicare Beneficiaries Aged 71 Years and Older",
+      "publisher": "JAMA Network Open",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10383002/",
+      "kind": "peer-reviewed",
+      "publicationYear": 2023,
+      "dataYear": 2021,
+      "measures": "Audiometrically measured hearing loss by age stratum among United States medicare beneficiaries in the national health and aging trends study. The study counts any better-ear pure-tone average above twenty-five decibels as hearing loss, so mild loss is included and these shares are not comparable with a disabling-hearing-loss series.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "91.0% (95% CI, 88.1%-93.9%) of participants aged 85 to 90 years, and 96.2% (95% CI, 93.9%-98.6%) of participants aged 90 years and older"
+    },
+    {
+      "id": "src-cdc-multimorbidity-older-adults",
+      "title": "Multimorbidity and Functional Limitations Among Adults 65 or Older, NHANES 2005–2012",
+      "publisher": "Preventing Chronic Disease, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/pcd/issues/2016/16_0174.htm",
+      "kind": "peer-reviewed",
+      "publicationYear": 2016,
+      "dataYear": 2012,
+      "measures": "Share of United States older adults with multimorbidity, defined by the study as having two or more co-occurring chronic diseases, reported for the younger old band and for the older band, from the national health and nutrition examination survey",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "it was 64% (95% CI, 61%–66%) among participants aged 65 to 74 and 71% (95% CI, 68%–73%) among those aged 75 or older."
+    },
+    {
+      "id": "src-nchs-chronic-conditions-oldest",
+      "title": "Chronic Conditions in Adults Age 85 and Older: United States, 2022−2023",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/data/hestat/hestat105.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2023,
+      "measures": "Number of selected chronic conditions reported by United States adults in the oldest age band, from the national health interview survey. The page reports a distribution across condition counts and does not itself print a combined two-or-more share.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Among adults age 85 and older, 7.4% reported none of the selected chronic conditions, 12.1% reported one condition, 20.8% reported two conditions"
+    },
+    {
+      "id": "src-mmwr-adl-help",
+      "title": "QuickStats: Percentage of Adults with Activity Limitations, by Age Group and Type of Limitation — National Health Interview Survey, United States, 2014",
+      "publisher": "Morbidity and Mortality Weekly Report, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/mmwr/volumes/65/wr/mm6501a6.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2016,
+      "dataYear": 2014,
+      "measures": "Share of United States adults by age group who require the help of another person with activities of daily living and instrumental activities of daily living",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Adults aged ≥75 years were most likely to require the help of another person when performing ADLs (10.6%) and IADLs (18.8%)."
+    },
+    {
+      "id": "src-mmwr-home-care-family",
+      "title": "QuickStats: Percentage of Adults Aged ≥18 Years Who Received Care at Home from a Friend or Family Member During the Past 12 Months, by Age Group — National Health Interview Survey, United States, 2021",
+      "publisher": "Morbidity and Mortality Weekly Report, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7223a8.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2023,
+      "dataYear": 2021,
+      "measures": "Share of United States adults by age group who answered yes to receiving care at home from a friend or family member during the past year. The survey left the meaning of care largely to the respondent, and the question does not ask whether help was needed or who else provided it.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "to 13.8% among those aged 65–74 years, 19.4% among those aged 75–84 years, and more than doubled to 39.8% among those aged ≥85 years."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-life-expectancy-at-birth",
+      "label": "Life expectancy at birth in the United States",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "typical": {
+          "from": 78.4,
+          "to": 78.4
+        }
+      },
+      "measure": "mean",
+      "measures": "Life expectancy at birth from national vital statistics, reported for the total population and separately for males and for females",
+      "bySex": {
+        "female": {
+          "typical": {
+            "from": 81.1,
+            "to": 81.1
+          }
+        },
+        "male": {
+          "typical": {
+            "from": 75.8,
+            "to": 75.8
+          }
+        },
+        "measures": "The national mortality brief reports life expectancy at birth separately for males and for females, in those terms, from death certificate records filed in the states.",
+        "sources": [
+          "src-nchs-mortality-brief-female",
+          "src-nchs-mortality-brief-male"
+        ]
+      },
+      "population": "The whole United States population in the reference year, from national vital statistics. The figure is the average number of years of life remaining at birth for the total population, and the report states separate averages for males and for females.",
+      "sources": [
+        "src-nchs-mortality-brief-total",
+        "src-nchs-mortality-brief-male",
+        "src-nchs-mortality-brief-female"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "careNote": "This is a population average built from one year of national rates, not a prediction about any individual, and a clinician is the right place for a question about one person.",
+      "whatChanges": [
+        "This figure summarises one year of national conditions rather than tracing any single life, and it moves from year to year as those conditions move.",
+        "Actual lifespans spread very widely around the average, so the number describes a population and not a person.",
+        "The report states one average for males and another for females; those are two separate averages, and not the two edges of a range."
+      ],
+      "lastReviewed": "2026-09-03",
+      "renderAs": "stage-intro-note",
+      "stageId": "stage-later",
+      "notes": "Placed in the later-life stage intro rather than on the spine. A population average lifespan drawn as a span becomes an average-age-at-death marker on a timeline, which the blueprint forbids outright; the figure itself is sourced and kept."
+    },
+    {
+      "id": "ms-remaining-years-at-sixty-five",
+      "label": "Years of life still ahead for people who reach sixty-five",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": false,
+      "researchRequired": true,
+      "researchNote": "The national mortality data brief from the National Center for Health Statistics prints remaining life expectancy at age sixty-five in years, but it does not print the age that span reaches. Needed: a source that itself states the reached age, such as a life table narrative or a Health, United States table caption giving the age rather than the remaining years, so no arithmetic is performed by the timeline.",
+      "windowInWords": "Nationally, people who reach sixty-five have a further average span of remaining years, but the source states that span as remaining years and does not state the age it reaches.",
+      "readRef": "/topics/health",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "sensitivity": "health-decline",
+      "careNote": "This entry is a population average that has not yet been found stated in the form the timeline needs, and a clinician is the right place for a question about one person.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-presbyopia-near-focus",
+      "label": "Near focus changes and reading distance gets longer",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 45,
+          "to": 65
+        },
+        "typical": {
+          "from": 45,
+          "to": 65
+        }
+      },
+      "measure": "typical-range",
+      "population": "People in the United States as described by the national eye institute, which states that everyone develops presbyopia with age, usually after the mid forties, and that it usually stops getting worse after the mid sixties.",
+      "sources": [
+        "src-nei-presbyopia-onset",
+        "src-nei-presbyopia-plateau"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "careNote": "This is a common age-related change in near focus described across a population, not a test anyone passes or fails, and an eye care professional is the right place for a question about one person.",
+      "whatChanges": [
+        "Small print at close range gets harder to hold in focus, and many people start holding text further away or reaching for reading glasses.",
+        "The change arrives gradually rather than on a date, and the source describes it as something that eventually reaches everyone.",
+        "It levels off rather than continuing without end, which is why the band has an upper edge as well as a lower one."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-age-related-hearing-loss",
+      "label": "Age-related hearing loss becomes widespread",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 45,
+          "to": 90
+        },
+        "typical": {
+          "from": 65,
+          "to": 90
+        }
+      },
+      "measure": "share-at-age",
+      "population": "Adults in the United States, counted by two surveys that do not count the same thing. The national institute on deafness and other communication disorders reports the share with disabling hearing loss, its threshold being thirty-five decibels or more in the better ear. A peer-reviewed study of medicare beneficiaries reports measured hearing loss at a lower threshold in the better ear, so its shares include mild loss and cannot be read as a continuation of the first series.",
+      "sources": [
+        "src-nidcd-hearing-midlife",
+        "src-nidcd-hearing-older",
+        "src-jama-hearing-oldest-old"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "careNote": "These are shares measured across a population rather than a schedule any individual follows, and an audiologist or clinician is the right place for a question about one person's hearing.",
+      "whatChanges": [
+        "Following speech in a noisy room usually gets harder before quiet conversation does, and the change tends to arrive slowly enough to be easy to miss.",
+        "Within each survey the share rises from one age band to the next older one, but the two surveys use different decibel thresholds, so their shares are two series and not one.",
+        "Hearing aids, captions, and choosing quieter rooms are the routes people use; an audiologist assesses an individual."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-multiple-chronic-conditions",
+      "label": "Living with more than one long-term condition becomes common",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 65,
+          "to": 85
+        },
+        "typical": {
+          "from": 75,
+          "to": 85
+        }
+      },
+      "measure": "share-at-age",
+      "population": "Older adults in the United States, from two national surveys that count differently. The examination survey study reports multimorbidity, which it defines as two or more co-occurring chronic diseases, for the younger old band and for the older band. The interview survey covering the oldest band instead reports how many of a selected list of conditions people report, as a distribution across counts rather than as a combined two-or-more share.",
+      "sources": [
+        "src-cdc-multimorbidity-older-adults",
+        "src-nchs-chronic-conditions-oldest"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "careNote": "These are counts made across a population and not a forecast for anyone in particular, and a clinician is the right place for a question about one person's health.",
+      "whatChanges": [
+        "Care shifts from treating one problem at a time toward managing several at once, with more appointments and more medicines to keep in step.",
+        "The share carrying two or more co-occurring conditions rises from the younger old band to the older one in the study that measures multimorbidity directly.",
+        "What a survey counts depends on which conditions it asks about, and the oldest band's survey reports a count of conditions rather than a two-or-more share, so the two are not one number."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-help-with-daily-activities",
+      "label": "Help from another person with everyday tasks becomes more common",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 65,
+          "to": 85
+        },
+        "typical": {
+          "from": 75,
+          "to": 85
+        }
+      },
+      "measure": "share-at-age",
+      "population": "Adults in the United States answering the national health interview survey, reported by age band, from two different questions. One counts adults who require the help of another person with activities of daily living and with instrumental activities of daily living. The other, which supplies the age bands used here, counts adults who received care at home from a friend or family member during the past year; it records receipt of care over a year and not whether help was needed.",
+      "sources": [
+        "src-mmwr-adl-help",
+        "src-mmwr-home-care-family"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "careNote": "This describes how often help is present across a population, not a judgment about anyone's independence, and a clinician or a local aging services office is the right place for a question about one person.",
+      "whatChanges": [
+        "Everyday routines such as bathing, dressing, shopping, or getting around start to involve another person for part of the task.",
+        "The care counted across the older bands is care received at home from a friend or family member, which the survey does not compare with any other kind of care.",
+        "The share of people receiving that care rises with each older age band, and rises most sharply in the oldest one."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

@@ -1,0 +1,507 @@
+{
+  "key": "p3-analyses-launch-learning",
+  "analyses": {
+    "ms-compulsory-attendance-ends": {
+      "major": true,
+      "affectsLater": [
+        "ms-completing-twelfth-grade"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "In the states where the duty lifts at its youngest, an exit at that point is lawful and the district's obligation to enroll ends with it. What follows is that the exit is a legal event rather than an educational one: the credential is untouched by the duty ending, so leaving lawfully and leaving with a diploma are two separate questions that happen to sit near the same age.",
+          "costs": [
+            "Several states condition an early exit on a parent's consent, an exit interview, or enrollment in an approved alternative program.",
+            "A number of states tie a driver permit or license to being enrolled, so the two thresholds pull against each other."
+          ],
+          "routes": [
+            "State adult education programs and high school equivalency testing, which enroll after the duty has lifted.",
+            "Community college dual enrollment and early college programs, which continue coursework outside the high school building.",
+            "A district counselor, who can name which statutory exemption a given state actually uses."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "In most states the duty runs into the late teens, which places its end close to the end of the secondary sequence. The alignment is deliberate: raising the leaving age moves it toward graduation, so for most students the two arrive together and the legal question stops being live before anyone asks it.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "In the states with the highest leaving age the duty runs almost to legal adulthood, so an exit before that requires a specific statutory exemption rather than a decision. The practical effect is that students who would have left earlier elsewhere stay enrolled, and the district keeps an obligation to serve them for longer.",
+          "costs": [
+            "A student the standard timetable does not fit stays formally enrolled, and attendance enforcement rather than program fit becomes the main point of contact."
+          ],
+          "routes": [
+            "Alternative and continuation high schools, which districts operate for students the standard timetable does not fit.",
+            "Career and technical education centers, which many districts run as a partial-day placement.",
+            "Statutory exemption routes, which every state defines and which a district counselor can identify."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Attendance broken by illness, a move between districts, work, or family caregiving is handled by the state's own machinery rather than as an exception: districts run truancy processes, homebound instruction, and re-enrollment procedures. Because the duty attaches to an age and not to a grade, an interruption does not extend it, so a student who returns late in the band can find the duty lifting before the sequence is finished.",
+          "costs": [
+            "Once the duty ends the district's obligation to enroll ends too, so a return after that point is not automatic anywhere."
+          ],
+          "routes": [
+            "Adult high school and evening programs, which enroll past the compulsory band.",
+            "Homebound and remote instruction, which districts provide for documented medical absence.",
+            "State high school equivalency testing, which stays available to adults with no upper age."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Home instruction, private schooling, full-time online public schools, and approved alternative programs all satisfy the same duty. What differs from state to state is the reporting: some require notification and a portfolio review, some require standardized assessment, and a few require very little. The duty is to be educated in an approved way, not to sit in a particular building.",
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-completing-twelfth-grade": {
+      "major": true,
+      "affectsLater": [
+        "ms-enrolling-in-college"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Some students reach the end of the secondary sequence sooner than the class around them, through accelerated coursework, an early graduation policy, or a state equivalency test taken young. What tends to follow is that the credential arrives while the legal and financial machinery around it is still keyed to older ages, so signing a lease, drawing student aid on one's own means, and hiring rules all lag the diploma.",
+          "costs": [
+            "Institutions that ask for a guardian's signature or a parent's income keep asking for them after the credential is in hand.",
+            "The cohort that would otherwise be applying, moving and starting work at the same moment is still enrolled."
+          ],
+          "routes": [
+            "Dual enrollment at a community college, which lets coursework continue without a full college admission.",
+            "Deferred admission, which most colleges grant in writing and hold open for a stated period.",
+            "Registered apprenticeship and paid pre-apprenticeship programs, which set their own entry ages."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Most people who finish do so at the end of the standard sequence, and the institutions downstream are built around exactly that timing: admission cycles, aid application windows, entry-level hiring, and enlistment all assume an applicant arriving from the previous step. The path is smoothest here because everything else is scheduled to meet it, not because the credential is different.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Finishing later comes about through repeated coursework, a move between districts, a return after leaving, or an equivalency route taken as an adult. The credential itself is not time-stamped in a way most employers read. What differs is that the scaffolding around it — counselors, application help, a cohort applying together — belongs to the school year rather than to the person, so every next step is arranged individually.",
+          "costs": [
+            "The supports attached to the school year are gone, so applications, transcripts and deadlines are self-managed.",
+            "Some scholarship and grant programs restrict eligibility to applicants entering directly from secondary school."
+          ],
+          "routes": [
+            "Adult education programs run by school districts and community colleges, which prepare candidates for a state equivalency test.",
+            "Adult diploma programs, which award the state diploma itself rather than an equivalency.",
+            "Community college open admission, which in most states accepts an equivalency credential on the same footing as a diploma.",
+            "Federal and state adult education funding, which makes many of these programs free to the student."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Leaving partway and returning is common enough that states run parallel machinery for it. Credits already earned usually persist on a transcript and transfer, which makes a return shorter than a restart. What is lost is continuity rather than coursework: a district may not re-enroll someone past its compulsory age, so the way back often runs through adult programs rather than the original school.",
+          "costs": [
+            "Re-enrollment in a traditional high school can be closed once the state compulsory age has passed.",
+            "Credits do not always map cleanly across a district or a state line, so some coursework is repeated."
+          ],
+          "routes": [
+            "Requesting an official transcript, which fixes what has already been earned before any re-entry is negotiated.",
+            "Adult high school and evening programs, which enroll past the compulsory age.",
+            "The state high school equivalency test, which examines subject knowledge without requiring seat time.",
+            "Community college ability-to-benefit provisions, a federal route into aid-eligible coursework for applicants without a secondary credential."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Equivalency credentials, adult diplomas, competency-based programs, and career and technical certificates all reach the place the diploma reaches — evidence of secondary learning that later institutions accept — by different means. Which one fits depends on where it is going next, because the rule sits with the receiving institution rather than with the credential.",
+          "costs": [
+            "Some employers, licensing boards and military entry paths treat an equivalency differently from a diploma."
+          ],
+          "routes": [
+            "Asking the licensing board, recruiter or admissions office directly, since each sets its own acceptance rule.",
+            "Completing an adult diploma program, which yields the diploma itself where an equivalency will not be accepted.",
+            "Career and technical certificate programs at community colleges, which stack toward a degree later."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Adults without a secondary credential work, raise families, own homes, run businesses and hold licenses. The credential functions as a filter at specific gates — many employer applications, most college admissions, some occupational licenses, enlistment — so its absence is felt at those gates and not continuously. Several skilled trades set their own entry requirements and admit on them.",
+          "costs": [
+            "A defined set of formal gates screens for the credential, and those gates do not reopen on their own."
+          ],
+          "routes": [
+            "Registered apprenticeships, a number of which admit on their own entry requirements and pay during training.",
+            "Occupational licensing routes that examine skill directly rather than schooling.",
+            "The state equivalency test, which stays open at every adult age and has no expiry."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-enrolling-in-college": {
+      "major": true,
+      "affectsLater": [
+        "ms-bachelors-degree-completed-by-early-twenties",
+        "ms-independent-status-federal-student-aid"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Enrolling in the months right after secondary school keeps a student inside arrangements built for continuity: a parent's health coverage, dependent status on the aid form, a cohort arriving all at once, and residence halls that supply housing without a lease or a credit history. Momentum is the mechanism — the fewer gaps between one enrollment and the next, the less has to be rebuilt from nothing.",
+          "costs": [
+            "A field of study gets chosen with little working exposure to what that work is actually like day to day."
+          ],
+          "routes": [
+            "Declaring or changing a major later, which most institutions permit into the second year.",
+            "Transferring between institutions, which a large share of students do at least once.",
+            "Cooperative education and internship placements, which put paid working exposure inside the degree."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "The months following secondary school are when admission cycles, aid application windows, orientation and housing assignment are all synchronized with one another. What follows is not a different education but a lower coordination cost, because every institution in the chain assumes an applicant arriving from the step before.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Enrolling after some years away tends to bring clearer purpose and worse fit with the machinery. Federal aid treats applicants under a threshold age as dependent on parental income whether or not that income is available, which is a common friction in the early twenties; older applicants are assessed on their own means. Coursework then has to be fitted around employment and dependents rather than the other way round.",
+          "costs": [
+            "Aid formulas can count a parent's income for applicants under the independence threshold even where none of it is shared.",
+            "Class schedules, advising hours and campus services are often built around students without jobs or children."
+          ],
+          "routes": [
+            "A dependency override, a documented appeal to a financial aid office for applicants the standard formula does not fit.",
+            "Community college evening, weekend and online sections, which are timetabled around employment.",
+            "Employer tuition assistance, which many large employers offer and which carries no age condition.",
+            "Credit for prior learning and credit-by-examination programs, which convert work knowledge into transcript credit."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Stopping partway is common, and credit already earned stays on a transcript. What decays is the surrounding structure rather than the learning: a federal loan enters repayment after a set period out of enrollment, some institutions time-limit how long old credit counts toward a degree, and program requirements change between catalogs. Returning to the same institution usually preserves the most credit.",
+          "costs": [
+            "Loans taken for the unfinished coursework come due whether or not the credential arrived.",
+            "Older credit can fall outside a program's currency limit in fast-moving fields, and catalog requirements shift underneath a returning student."
+          ],
+          "routes": [
+            "Requesting an official transcript and a degree audit, which print exactly what remains.",
+            "Income-driven repayment and deferment on federal loans, which set payments against earnings.",
+            "Reverse transfer, where credit earned at a four-year institution is applied backward to finish an associate degree already nearly complete.",
+            "Institutional readmission and adult completion programs, some of which set aside old failing grades on return."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Registered apprenticeship, occupational certificates, licensure examinations, military training and employer programs all route into skilled work without a college enrollment. They tend to pay during training rather than charge for it, and they tend to be narrower — tied to a trade or an employer — which is an advantage while that trade holds and a constraint when it does not.",
+          "costs": [
+            "A narrow occupational credential moves less easily into an unrelated field than a general degree does."
+          ],
+          "routes": [
+            "Articulation agreements, which many states maintain so apprenticeship hours and certificates convert into college credit later.",
+            "Community college transfer pathways, which admit adults at any point with no application deadline in the usual sense.",
+            "Portable industry certifications, which are recognized across employers rather than by one."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "A great many adults never enroll, and the work they do is sorted by license, trade and experience rather than by transcript. Enrollment is a gate to the occupations that require the credential by law or by employer rule, and it is not a gate to the rest of the labor market. Open admission at community colleges means the door has no closing age on it.",
+          "routes": [
+            "Community college open admission, which accepts applicants at any adult age and in any year.",
+            "Registered apprenticeship and employer training programs, which pay while teaching.",
+            "Occupational licensing routes, where the examination rather than the transcript is what is screened."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-bachelors-degree-completed-by-early-twenties": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "Finishing quickly usually means continuous full-time enrollment with credit already banked from dual enrollment or examination, and it compounds: fewer terms of tuition, fewer terms of forgone earnings, and a longer stretch of working life carrying the credential. The trade tends to be less time inside the institution for the parts that are not coursework — research placements, laboratory work, a year in another language.",
+          "costs": [
+            "Fewer terms remain for internships, research placements and the slow parts of a field that take a whole year to move through."
+          ],
+          "routes": [
+            "Post-baccalaureate certificates and returning for a second field, neither of which requires redoing the degree.",
+            "Cooperative education and paid fellowship programs that run after the credential rather than during it."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "The dense zone reflects continuous enrollment straight out of secondary school at institutions whose sequences are designed to fit that span. What sits downstream — graduate admission cycles, entry-level hiring, licensing examination calendars — is timed to graduates arriving then, so the handoff to whatever comes next is arranged rather than improvised.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Among people who reach the degree, a substantial share complete it in the second half of the twenties or at thirty and beyond, and for them the stretch between first enrolling and finishing runs much longer than it does for the youngest graduates. The mechanism is part-time enrollment layered over paid work and family, which converts the same credit total into more calendar years rather than more coursework.",
+          "costs": [
+            "More calendar years of enrollment status, which interacts with loan terms, dependent rules and employer benefits.",
+            "Credit earned long before the finish can fall outside a program's currency limit in fast-moving fields."
+          ],
+          "routes": [
+            "Prior learning assessment and credit by examination, which shorten the remaining coursework rather than the calendar.",
+            "Employer tuition benefits, which many employers extend to part-time students.",
+            "Adult completion and degree re-entry programs, built for students returning with substantial credit already earned."
+          ],
+          "evidence": "evidence-informed"
+        },
+        "interrupted": {
+          "tends": "Leaving before the finish leaves the credit intact and the credential absent, and those two things behave differently: transcripts are read by institutions, credentials by employers. Someone near the end is often closer than the transcript suggests, because remaining requirements tend to concentrate in a few courses rather than spread evenly across a program.",
+          "costs": [
+            "Debt taken on for the coursework does not scale down with an unfinished credential.",
+            "Employer screens that ask for the degree do not read partial credit at all."
+          ],
+          "routes": [
+            "A degree audit from the institution, which prints exactly what remains and often surprises people.",
+            "Reverse transfer into an associate degree, which many states now run automatically where enough credit exists.",
+            "Online completion programs designed for students returning with credit earned elsewhere.",
+            "Income-driven repayment on federal loans, which sets payments against earnings rather than against the balance."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Associate degrees, occupational certificates, apprenticeship, licensure and portfolio-based entry all lead into skilled and well-paid work, and in the licensed trades it is the license rather than the degree that is screened for. A general degree tends to travel more easily across fields; an occupational credential tends to reach its own field faster and cost less to get.",
+          "costs": [
+            "Some employers, and most graduate and professional programs, screen for the bachelor's degree specifically, and a certificate does not substitute at that gate."
+          ],
+          "routes": [
+            "Transfer articulation from an associate degree, which many states guarantee into a public university.",
+            "Employer-sponsored degree completion, offered by a number of large employers as a benefit.",
+            "Competency-based degree programs, which price by term rather than by credit and suit people who already know the material."
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Many adults work in occupations that never screen for a bachelor's degree — the licensed trades, transportation, public safety, much of health support work, and a large part of small business ownership. The degree acts as a gate on particular ladders rather than on working life in general, and open admission means that gate carries no closing age.",
+          "routes": [
+            "Community college certificate and associate programs, which admit at any adult age.",
+            "Registered apprenticeship, which pays during training and ends in a portable credential.",
+            "Occupational licensing examinations, which test the skill itself rather than the schooling that produced it."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-leaving-the-parental-home": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "An early departure usually attaches to something that supplies the housing — a campus residence, enlistment, a job with quarters, a partner's household — because a young adult's own income and credit rarely clear a landlord's screening alone. The first departure tends to be underwritten by an institution rather than by earnings, and it lasts as long as whatever underwrote it does.",
+          "costs": [
+            "A first tenancy without a credit history or a rental record usually requires a co-signer or a larger deposit.",
+            "A departure underwritten by a school, an employer or a partner ends when that arrangement ends, and the housing question returns intact."
+          ],
+          "routes": [
+            "Roommate arrangements and sublets, which spread landlord screening across more than one income.",
+            "Public housing authority and nonprofit programs for young adults leaving care, which do not require a rental history.",
+            "Campus and employer-provided housing, which substitutes an institutional relationship for a credit screen.",
+            "Rent reporting services, which turn on-time rent into the credit record a landlord asks for next time."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "The dense zone sits where earnings, the end of schooling and partnership formation converge for many people at once, which is what makes a lease affordable and a household stable. Housing cost moves this timing more than preference does, which is why the same event lands at different ages in different places and in different decades.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Departures continue through the late twenties, and the cohort study this record rests on found that nearly all had happened by thirty. A later departure is most often about the cost of the housing available rather than about readiness, and the arrangement runs in two directions — shared rent and shared care both — which is part of why it persists where housing is expensive.",
+          "costs": [
+            "Rental history and credit accumulate from a lease in one's own name, so those records start later and the first landlord screening is harder."
+          ],
+          "routes": [
+            "Rent reporting services, which report on-time rent payments to credit bureaus.",
+            "Credit-builder loans through credit unions, which establish a payment history without a lease.",
+            "Housing counseling agencies approved by the federal housing department, which advise at no cost.",
+            "Shared-household and roommate arrangements, which clear income-to-rent screens that a single income does not."
+          ],
+          "evidence": "evidence-informed"
+        },
+        "interrupted": {
+          "tends": "Returning to a parent's home after having left is ordinary and is counted as such — job loss, the end of a relationship, the end of a lease, a health matter, or a return to study all produce it. Because the first departure is usually underwritten by an income or an institution, losing either one returns the housing question to where it started.",
+          "costs": [
+            "A return everyone treats as brief often runs without any agreement about money, space or an end point, and the absence of that agreement is where friction starts.",
+            "Household composition is counted by several benefit and aid formulas, so the arrangement can change what an application shows."
+          ],
+          "routes": [
+            "A written household agreement covering contribution and duration, which family mediation services help draft.",
+            "Rapid rehousing and rental assistance programs administered by local housing agencies.",
+            "State and local emergency rental assistance, which most large jurisdictions operate in some form.",
+            "Legal aid tenant clinics, where a lease ended badly and the record needs repairing."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "The step does not have to be one move into a solo lease. Shared households with friends, a separate unit near family, employer or campus housing, and multigenerational households arranged deliberately are all durable long-run forms rather than waypoints toward some other one. Multigenerational living is common by preference and by culture, not only by constraint.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Living across adult life in the household one grew up in is an ordinary arrangement in a great many families, and in many cultures it is the arrangement people plan for. It concentrates resources rather than splitting them, and the questions it raises are practical ones: whose name is on the property, how care runs when it reverses direction, and what any of it says in writing.",
+          "costs": [
+            "Ownership, contribution and care arrangements inside a shared household are often left informal, and informality is where disputes begin."
+          ],
+          "routes": [
+            "Estate and property planning through a legal aid clinic or an attorney, which puts ownership and occupancy in writing.",
+            "Area Agency on Aging services, which advise on caregiving arrangements inside a household at no cost.",
+            "Written cost-sharing agreements, which family mediation services help households draft."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-learner-permit-minimum-age": {
+      "major": true,
+      "affectsLater": [
+        "ms-provisional-license-minimum-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Where a state issues a permit at its youngest age, the supervised phase begins earlier and usually runs longer before a license, because graduated licensing sets a minimum holding period and a supervised-hours requirement that must be satisfied whenever they start. More practice under a parent's or an instructor's eye is the direct consequence, and several states require driver education to be underway before the permit is issued at all.",
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Most states place the permit in the middle teens and pair it with a holding period, logged supervised hours, and night and passenger limits that lift in stages afterward. The design intent of graduated licensing is that exposure widens gradually rather than all at once, which is why the permit's issue date sets the clock for everything that follows it.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "A permit obtained in the late teens or in adulthood often skips much of the graduated structure, because most states apply holding periods and supervised-hour requirements only to applicants under a stated age. Adults commonly move from permit to full license quickly, which means less supervised practice is required of them rather than more, and any practice has to be arranged privately.",
+          "costs": [
+            "Driver education offered free or cheaply through a high school is generally unavailable to adults, so instruction is purchased.",
+            "A supervising licensed driver and an insured vehicle have to be found rather than assumed."
+          ],
+          "routes": [
+            "Commercial driving schools, which enroll adult beginners and often supply an insured vehicle for practice.",
+            "Insurance-recognized defensive driving courses, which some insurers discount for.",
+            "Public transit, rideshare and paratransit, which cover the mobility question while licensing is in progress."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Permits expire, and a lapse usually means retaking the knowledge test rather than starting the whole process again. Where a state ties permit eligibility to enrollment in driver education or in school, an interruption in that enrollment suspends eligibility too, which links driving to schooling in a way that stays invisible until it bites.",
+          "costs": [
+            "An expired permit means repeating the written test and paying its fee again.",
+            "Some states condition permit or license eligibility on school enrollment and attendance."
+          ],
+          "routes": [
+            "State licensing agency retest and reinstatement procedures, which are administrative rather than discretionary.",
+            "Adult education enrollment, which satisfies the enrollment condition in states that impose one.",
+            "Commercial driving schools, whose completion certificate substitutes for the school course in many states."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Identification, rather than driving, is what many licensing errands are actually for, and every state issues a non-driver identification card that serves that purpose. For mobility, transit passes, paratransit for people with qualifying conditions, and commercial licenses obtained later through employer-sponsored training are separate routes with their own requirements and their own funding.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Not driving is an ordinary arrangement, and in dense cities it is a common one. The consequences are geographic rather than personal: where a place is built around cars, not driving narrows which jobs, services and stores are reachable, and where transit is dense it costs close to nothing. Licensing carries no upper age, so this door stays open.",
+          "costs": [
+            "In car-dependent places the reachable set of jobs, health services and stores is materially smaller without a license."
+          ],
+          "routes": [
+            "State non-driver identification cards, which serve the identification purpose a license usually serves.",
+            "Public transit, paratransit, and volunteer driver programs run by many Area Agencies on Aging.",
+            "Driving schools that teach adult beginners, since no state sets an upper age on a learner permit."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-age-of-majority": {
+      "major": true,
+      "affectsLater": [
+        "ms-leaving-the-parental-home"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "In the states that set majority at the federal age of adulthood, legal capacity arrives while many people are still in the last year of secondary school. Contracts become enforceable, a signature stops needing a co-signer, and the same signature now binds: the protection that let a minor void an agreement ends on the very day the capacity to make one begins.",
+          "costs": [
+            "Contract voidability, the rule that shields minors from binding agreements, ends at once and with no notice given."
+          ],
+          "routes": [
+            "Free legal aid clinics and state consumer protection offices, which will read an agreement before it is signed.",
+            "Nonprofit credit counseling agencies, which advise on borrowing and contracts at no cost.",
+            "State attorney general consumer complaint processes, which handle agreements already entered into."
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Most states place majority at the same age the federal government uses for adulthood, which is why contract capacity, jury eligibility and registration duties tend to arrive together. Several other legal ages do not move with it — alcohol, some occupational licenses, dependent coverage rules — so legal adulthood arrives in pieces rather than in one step.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "A small number of states set majority above the common age, and particular consequences follow the state's own number rather than the federal one: how long a parental support order runs, when a custodial account transfers, where certain juvenile jurisdiction ends. Someone who moves between states can find the rule that governs them changing with the address rather than with anything about them.",
+          "costs": [
+            "A right or a protection assumed from one state's rule does not necessarily carry across a state line."
+          ],
+          "routes": [
+            "State bar association lawyer referral services, which identify which state's rule actually governs a situation.",
+            "Legal aid organizations, which take guardianship, custodial account and support questions without charge for eligible applicants.",
+            "Court self-help centers, which most large counties operate for people acting without an attorney."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "For a young person under guardianship, or in foster care, majority is administered rather than simply reached: agency involvement ends, and the supports attached to it end with it. Federal and state transition programs exist precisely because a whole structure lifts at one date, and enrollment in them generally has to happen before that date rather than after.",
+          "costs": [
+            "Housing, health coverage and casework attached to an agency relationship end at the threshold rather than tapering off.",
+            "The paperwork that proves identity and eligibility often lives with the agency rather than with the person."
+          ],
+          "routes": [
+            "Extended foster care, which many states offer past the ordinary transition age on a voluntary basis.",
+            "Independent living and transition services funded under federal foster care law.",
+            "Supported decision-making agreements, a legal alternative to guardianship now recognized in a growing number of states.",
+            "Requesting one's own records and identity documents from the agency before the transition date."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Emancipation, marriage where a state makes it confer majority, and military enlistment each grant some legal capacities before the age arrives, and each is granted for its own purpose rather than as a general upgrade. Guardianship and conservatorship run the other way, continuing a legal representative past the age for adults who need one, and supported decision-making sits between the two.",
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-voting-federal-elections": {
+      "major": true,
+      "analysis": {
+        "early": {
+          "tends": "Many states let registration be completed before the qualifying age is reached, so the paperwork is done and the registration activates on its own. Registration is address-bound, so one filed from an address that does not change soon after tends to need fewer later updates than one filed from an address still in flux. Schools, licensing offices and registration drives account for a large share of first registrations, because each is a moment when the paperwork is already open.",
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Reaching the qualifying age makes a person eligible; it does not register them. In most states registration is a separate step with its own deadline weeks before an election, and a frequent reason an eligible person cannot vote in a given year is a registration that no longer matches a current address rather than a decision not to take part.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Voting for the first time at an older age is ordinary, and what stands in the way is almost always administrative rather than motivational: the deadline, the address, the identification rule, and knowing which of them apply in a given state. Same-day registration in a number of states and online registration in most collapse several of those steps into one.",
+          "costs": [
+            "Registration deadlines in many states fall weeks before election day, so a late start can miss one cycle entirely."
+          ],
+          "routes": [
+            "Same-day or election-day registration, offered in a number of states.",
+            "Online voter registration through the state election office, available in most states.",
+            "State election office lookup tools, which show registration status, deadlines and identification rules for one address."
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Moving is what breaks a registration. Because registration attaches to an address, a move across a county or state line usually requires a new one and sometimes new documents, so people who move often — students, renters, service members — have their voting interrupted far more by logistics than by opinion. List maintenance can also remove a registration that has gone unused, and that tends to be discovered at the polling place.",
+          "costs": [
+            "A registration can lapse quietly after a move or a stretch of years without voting, and the discovery often comes too late in a cycle to fix it.",
+            "Identification and residency documents for a new address take time to assemble."
+          ],
+          "routes": [
+            "Provisional ballots, which every state must offer where a registration cannot be confirmed at the polls.",
+            "The federal write-in absentee ballot and the state department program for citizens abroad and for service members.",
+            "Updating registration during a licensing agency transaction, which most states process under the federal voter registration law.",
+            "State election office status lookups, which show a lapse before an election rather than on the day."
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Federal contests are the least frequent items on most ballots. School boards, municipal offices, judicial retention and ballot measures decide much of what is locally binding and are settled by far smaller electorates. Public comment periods, local board seats, jury service and petitioning act on the same institutions by routes that do not run through a ballot at all.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Not voting is common and lawful, and eligibility does not expire: someone who has never cast a ballot is not thereby outside the process, and registration stays open at any later age with no penalty for the years unused. Civic weight also travels by other means — local participation, organizing, service and advocacy act on the same institutions.",
+          "routes": [
+            "Voter registration through a state election office, which remains open at any adult age.",
+            "Local board, commission and public comment participation, which is open to residents regardless of registration.",
+            "Community organizations and volunteer service, which act on the same institutions by other routes."
+          ],
+          "evidence": "speculative"
+        }
+      }
+    }
+  }
+}

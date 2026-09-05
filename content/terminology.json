@@ -1,0 +1,16 @@
+{
+  "roadmap": { "standard": "Life roadmap", "game": "Life map" },
+  "stage": { "standard": "Life stage", "game": "Chapter" },
+  "branch": { "standard": "Pathway", "game": "Branch" },
+  "character": { "standard": "Personal picture", "game": "Character sheet" },
+  "attribute": { "standard": "Area of functioning", "game": "Attribute" },
+  "supports": { "standard": "Supports", "game": "Buffs" },
+  "pressures": { "standard": "Pressures", "game": "Debuffs" },
+  "goal": { "standard": "Goal", "game": "Main quest" },
+  "project": { "standard": "Project", "game": "Side quest" },
+  "guidance": { "standard": "Decision guide", "game": "Strategy guide" },
+  "plan": { "standard": "Daily plan", "game": "Daily route" },
+  "history": { "standard": "History and systems", "game": "Patches and metas" },
+  "recovery": { "standard": "Recovery route", "game": "Recovery route" },
+  "evidence": { "standard": "Evidence", "game": "Evidence" }
+}

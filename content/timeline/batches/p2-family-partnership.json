@@ -1,0 +1,187 @@
+{
+  "key": "p2-family-partnership",
+  "sources": [
+    {
+      "id": "src-census-first-marriage-2025",
+      "title": "Census Bureau Releases New Estimates on America's Families and Living Arrangements",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/newsroom/press-releases/2025/families-and-living-arrangements.html",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Estimated median age at first marriage, reported separately for men and for women, from the Current Population Survey Annual Social and Economic Supplement.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The estimated median age at first marriage increased to 30.8 for men and 28.4 for women"
+    },
+    {
+      "id": "src-nchs-mean-age-first-birth",
+      "title": "Trends in Mean Age of Mothers: United States, 2016-2023 (National Vital Statistics Reports, Vol. 74, No. 9)",
+      "publisher": "National Center for Health Statistics",
+      "url": "https://www.cdc.gov/nchs/data/nvsr/nvsr74/nvsr74-09.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2023,
+      "measures": "Mean age of mothers at first birth, computed directly from the frequency of births by age of mother in all United States birth records.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Mean age at first birth increased over time and rose 0.9 year from 26.6 in 2016 to 27.5 in 2023."
+    },
+    {
+      "id": "src-nchs-first-birth-urbanicity",
+      "title": "Trends in Mean Age of Mothers: United States, 2016-2023 (National Vital Statistics Reports, Vol. 74, No. 9)",
+      "publisher": "National Center for Health Statistics",
+      "url": "https://www.cdc.gov/nchs/data/nvsr/nvsr74/nvsr74-09.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2023,
+      "measures": "Mean age of mothers at first birth by urbanicity of county of residence, from all United States birth records. The report prints a group average for each level of urbanicity; it does not report the spread of maternal age itself.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In 2023, mothers in large metropolitan counties had the highest mean age at first birth (28.5), while those in noncore counties had the lowest (24.8)."
+    },
+    {
+      "id": "src-aarp-grandparents-average-age",
+      "title": "2019 AARP Grandparenting Study",
+      "publisher": "AARP Research",
+      "url": "https://www.aarp.org/content/dam/aarp/research/surveys_statistics/life-leisure/2019/aarp-grandparenting-study.doi.10.26419-2Fres.00289.001.pdf",
+      "kind": "reputable-secondary",
+      "publicationYear": 2019,
+      "dataYear": 2018,
+      "measures": "Average age at first grandchild, reported by grandparents in a national online panel survey whose stated qualification was being above a set age and having at least one grandchild.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The youngest grandparents are about 38 years of age, with the average age at first grandchild being 50 (an increase of two years since 2011)."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-first-marriage-median-age-women",
+      "label": "Women marrying for the first time",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "typical": { "from": 28.4, "to": 28.4 }
+      },
+      "measure": "median",
+      "population": "Women in the United States marrying for the first time, as estimated in the Current Population Survey; the figure is a median, so half of first marriages among women happen on either side of it.",
+      "sources": ["src-census-first-marriage-2025"],
+      "readRef": "/topics/relationships",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Legal defaults shift: property, taxes, health decisions, and next-of-kin standing are handled differently for a married couple than for two single people.",
+        "The release reports one median for women and another for men; those are two separate medians, and not the two edges of a range.",
+        "Many people marry much earlier or much later than the median, and many never marry at all."
+      ],
+      "notes": "Split from a single record that had encoded the women's and men's medians as one range. The release publishes no combined median, so each median is its own record and neither is presented as a band.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-first-marriage-median-age-men",
+      "label": "Men marrying for the first time",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "typical": { "from": 30.8, "to": 30.8 }
+      },
+      "measure": "median",
+      "population": "Men in the United States marrying for the first time, as estimated in the Current Population Survey; the figure is a median, so half of first marriages among men happen on either side of it.",
+      "sources": ["src-census-first-marriage-2025"],
+      "readRef": "/topics/relationships",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Legal defaults shift: property, taxes, health decisions, and next-of-kin standing are handled differently for a married couple than for two single people.",
+        "The release reports one median for men and another for women; those are two separate medians, and not the two edges of a range.",
+        "Households often merge some money and keep other money separate, and the arrangement is usually negotiated rather than inherited."
+      ],
+      "notes": "Companion to the women's record. The same release is the source for both, and the median moved a long way later over the decades the survey covers.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-first-birth-mean-age",
+      "label": "Becoming a parent for the first time",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "typical": { "from": 27.5, "to": 27.5 }
+      },
+      "measure": "mean",
+      "population": "Mothers recorded on United States birth certificates; the figure is the national mean age at first birth for the reference year, an average rather than a range, and the report gives separate averages for each level of urbanicity.",
+      "sources": ["src-nchs-mean-age-first-birth", "src-nchs-first-birth-urbanicity"],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "fertility",
+      "careNote": "This is an average measured across a whole population rather than a schedule for any one person, and a clinician is the right place for a question about a particular body.",
+      "whatChanges": [
+        "Sleep, daily time, and household spending reorganize around an infant, and one or both parents commonly change their working hours.",
+        "The average has moved later over recent years, and the report gives a higher average in large metropolitan counties than in the least urban ones.",
+        "Fathers are not counted in this measure, which is drawn from the mother's age on the birth record."
+      ],
+      "notes": "The urbanicity figures are a variation note in the drawer, not an outer extent. They are the averages of two groups of counties, and the report itself shows first births at both younger and older ages than either of them.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-caregiving-onset-age",
+      "label": "When caring unpaid for an adult relative first begins",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Need a source measuring age at ONSET of unpaid care for an adult, not the age distribution of people who are caregiving at the moment of the survey. Try the American Time Use Survey eldercare module (bls.gov/tus/eldercare.htm) for age-specific eldercare provider rates, or the Health and Retirement Study for transitions into caregiving. The National Alliance for Caregiving and AARP survey reports only the average and median age of current caregivers, which is a stock and not an onset; its own age bands run from young adulthood into the oldest group it counts.",
+      "windowInWords": "The age at which people first take on unpaid care for an adult relative, as distinct from the age of everyone who is caregiving at a given moment; the survey evidence in hand measures only the second.",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "Rides, meals, medicines, and paperwork for another household become a recurring part of the week.",
+        "Time, money, and travel get rearranged around someone else's needs, often alongside paid work.",
+        "The role is unpaid and mostly invisible to employers and to public statistics that count only paid work."
+      ],
+      "notes": "This record absorbed a sourced record that had placed caregiving on the spine at the average and median age of current caregivers. Those two figures are the center of one distribution rather than its two ends, and the survey counts caregivers across every adult age band, so the span excluded most of the people it was drawn from.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-becoming-a-grandparent",
+      "label": "Becoming a grandparent",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "typical": { "from": 50, "to": 50 }
+      },
+      "measure": "mean",
+      "population": "Grandparents in a national online panel survey of United States adults with at least one grandchild; the figure is the average age at a first grandchild reported by that sample, which was recruited above a stated age floor.",
+      "sources": ["src-aarp-grandparents-average-age"],
+      "readRef": "/topics/relationships",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A generation is added to the family, and the relationship carries no legal duty of care by default.",
+        "Some grandparents provide regular childcare and some live far away; the study finds a wide range of involvement.",
+        "The survey recruited only adults above a stated age floor, so the youngest grandparents are underrepresented in it and the reported average sits later than it otherwise might."
+      ],
+      "notes": "Encoded as the reported average only. No outer extent is sourced: the study's youngest reported grandparents sit at its own recruitment floor, and its statement about the share who are grandparents in the mid-sixties names no base population, so neither figure can carry a window.",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-death-of-a-spouse-later-life",
+      "label": "Outliving a husband or wife",
+      "lane": "people-family",
+      "kind": "statistical-norm",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Need a source that prints an age at which people are widowed, rather than the share of a fixed age band that is currently widowed. Try the Health and Retirement Study for transitions into widowhood by age, or a Census Survey of Income and Program Participation report giving a median age at widowhood, and look for one that reports women and men separately, since every marital-status tabulation found in this build shows a large divergence between them. The American Community Survey indicator and the Census story read in this build both tabulate marital status inside age groups only.",
+      "windowInWords": "The age at which people outlive a husband or wife. The sources read here report only how large a share of each older age band is widowed, which is a different claim, and their oldest band is open-ended.",
+      "readRef": "/situations/a-death",
+      "alsoRead": ["/situations/grief"],
+      "sensitivity": "dying",
+      "careNote": "This names a common later-life event rather than forecasting anything for anyone, and the pages linked here are about what actually helps afterward.",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "notes": "Previously carried a span built from survey age universes: the lower edge of a Census denominator and the edges of American Community Survey age groups, with an open-ended oldest band truncated to make an upper bound. No source read in this build states an age at which this happens, so the record states its shape in words and carries no digits.",
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

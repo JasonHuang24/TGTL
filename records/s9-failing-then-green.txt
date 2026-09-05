@@ -1,0 +1,70 @@
+S-9 · UI INTEGRITY — THE FAILING-THEN-GREEN PROOF (blueprint 4.0 §2.2, §8)
+================================================================================
+
+Gate S-9 was written against the defect the owner personally hit, and run against
+the shipped 3.0 static export BEFORE the fix was made. Run 1 is that run. It
+reproduces both halves of the owner's screenshot as gate output:
+
+  * the weight buttons, spilling 18-20px past a 44px box
+  * the step heading, at a measured contrast of 1.06 : 1
+
+Run 1 is restricted to the creation surface because the 3.0 build has only the
+surfaces 3.0 had; run 2 is the full 4.0 roster, all sixteen play screens.
+
+--- RUN 1: node tests/s9-ui.mjs <3.0 export> --surfaces=creation-weights ---
+
+[FAIL] Gate 109: S-9 · UI integrity (clip / contrast / tap-target)
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=18x0px — "none"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=20x0px — "some"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=1x22px — "a lot"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=17x0px — "most"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=18x0px — "none"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=20x0px — "some"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=1x22px — "a lot"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=17x0px — "most"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=18x0px — "none"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=20x0px — "some"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=1x22px — "a lot"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=17x0px — "most"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=18x0px — "none"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=20x0px — "some"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=1x22px — "a lot"
+   creation-weights · light · 320px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=17x0px — "most"
+   creation-weights · light · 320px: CONTRAST 1.06:1 < 3:1 div.play-app > div.creation > section.creation-panel > h2 color=rgb(36, 31, 26) on rgb(29, 37, 48) — "Decide what winning means"
+   creation-weights · light · 320px: TAP TARGET 108x36 < 44x44 div.play-page > div.play-app > div.play-bar > button.play-exit — "Pause & exit"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "none"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "some"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "a lot"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "most"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "none"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "some"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "a lot"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "most"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "none"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "some"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "a lot"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "most"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "none"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "some"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "a lot"
+   creation-weights · light · 320px: TAP TARGET 44x40 < 44x44 div.weight-rows > div.weight-row > div.weight-buttons > button — "most"
+   creation-weights · light · 320px: TAP TARGET 176x44 < 44x44 div.creation > section.creation-panel > div.creation-nav > button.primary-btn — "Next: your leaning"
+   creation-weights · light · 768px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=19x0px — "none"
+   creation-weights · light · 768px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=21x0px — "some"
+   creation-weights · light · 768px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=1x23px — "a lot"
+   creation-weights · light · 768px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=18x0px — "most"
+   creation-weights · light · 768px: CLIPPED TEXT (text-spill) div.weight-rows > div.weight-row > div.weight-buttons > button box=44x40 spill=19x0px — "none"
+   ... and 167 more
+   207 S-9 violations across 6 audits.
+
+--- RUN 2: node tests/s9-ui.mjs <4.0 export>  (every play surface) ---
+
+[PASS] Gate 109: S-9 · UI integrity (clip / contrast / tap-target)
+   17 play surfaces x 2 themes x 3 viewports = 102 audits: no clipped text, every text/background pair at WCAG AA, every control >= 44x44, 18 marked scroll regions genuinely scrollable and keyboard-reachable.
+
+Re-run after the pre-handback review, 2026-08-27. The surface count rose by one:
+the campaign's CLOSING SCREEN had never been audited, because reaching it through
+the UI means driving twenty-four seasons. It is reached now by seeding a finished
+run built by the real engine (tools/make-parse-fixture.ts), which is also how it
+came to be screenshotted for the art checkpoint. It is the longest surface in the
+build and it was the one nothing had looked at.

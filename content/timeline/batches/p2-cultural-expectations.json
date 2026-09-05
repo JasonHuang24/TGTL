@@ -1,0 +1,457 @@
+{
+  "key": "p2-cultural-expectations",
+  "sources": [
+    {
+      "id": "src-medicare-eligibility-age",
+      "title": "Get started with Medicare",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "url": "https://www.medicare.gov/basics/get-started-with-medicare",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the age at which the federal health insurance program covers people, stated as a rule on the program's own page",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Medicare is health insurance for people 65 or older who meet citizenship or residency requirements.",
+      "notes": "The page prints no publication date; the year recorded here is the most recent year stamped on the page's own assets."
+    },
+    {
+      "id": "src-eeoc-adea-age-forty",
+      "title": "Age Discrimination",
+      "publisher": "U.S. Equal Employment Opportunity Commission",
+      "url": "https://www.eeoc.gov/age-discrimination",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1967,
+      "dataYear": 1967,
+      "measures": "the age from which the federal age discrimination statute covers applicants and employees, as the enforcing agency states it",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The Age Discrimination in Employment Act (ADEA) forbids age discrimination against people who are age 40 or older.",
+      "notes": "The years recorded are the statute's own year, which is the only year the page states for the rule; the agency page itself carries no publication date."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-heard-permanent-record",
+      "label": "What gets said about school records in the teenage years",
+      "lane": "learning",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "These years go on your permanent record.",
+        "One bad semester and you close doors you can't reopen."
+      ],
+      "researchRequired": true,
+      "researchNote": "A measured distribution of the ages at which this is said to adolescents is needed. A nationally representative adolescent survey module on academic pressure and its sources — the National Center for Education Statistics longitudinal study items on perceived consequences of grades — would supply the age band; no fetchable page stated one in quotable prose.",
+      "windowInWords": "the secondary school years, while a transcript is being written",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying treats a school transcript as a permanent verdict, while admissions offices, employers, and community colleges routinely read later work instead."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-college-as-default",
+      "label": "What gets said about college as the default route",
+      "lane": "learning",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Everyone goes to college.",
+        "So where are you applying?"
+      ],
+      "researchRequired": true,
+      "researchNote": "A survey measuring the ages at which young people report being asked about college plans is needed. A Pew Research Center or Gallup education survey reporting the age band of respondents asked about postsecondary expectations would resolve it; the Pew pages refused this fetcher.",
+      "windowInWords": "the last years of secondary school and the first years after it",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying names one route as the route, though people in the population reach the same occupations through apprenticeships, licences, military service, and employers who train."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-young-voters",
+      "label": "What gets said about young voters",
+      "lane": "civic-legal",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Young people don't vote.",
+        "It wouldn't change anything anyway."
+      ],
+      "researchRequired": true,
+      "researchNote": "The Census Bureau Current Population Survey Voting and Registration Supplement reports turnout by single year of age, which would give the age band this saying is aimed at; the published detailed tables are spreadsheets this fetcher could not read.",
+      "windowInWords": "from the first election a person is old enough to vote in, through the decade that follows",
+      "readRef": "/guidance",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying states a turnout habit as a fixed trait, though registration rules, ballot access, and moving between addresses explain much of the difference it points at."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-major-decides-everything",
+      "label": "What gets said about choosing a field of study",
+      "lane": "learning",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Pick a major and that's your life.",
+        "You can't change your mind once you've started."
+      ],
+      "researchRequired": true,
+      "researchNote": "A measured distribution of the ages at which students declare and change a field of study is needed. The NCES Beginning Postsecondary Students Longitudinal Study reports major changes, but its published tables are spreadsheets rather than quotable prose.",
+      "windowInWords": "the years around entering and moving through a first course of study",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying treats a first field as a permanent assignment, while people in the population change fields during study and change occupation again after it."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-first-job-sets-the-tone",
+      "label": "What gets said about a first full-time job",
+      "lane": "work-income",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Your first job sets the tone for everything after it.",
+        "Take anything, just get in the door."
+      ],
+      "researchRequired": true,
+      "researchNote": "The Bureau of Labor Statistics National Longitudinal Survey of Youth news release on the number of jobs held reports job changes by age band, which would give this saying its window; a fetchable page stating the band in quotable prose was not obtained.",
+      "windowInWords": "the years around a first full-time job and the working decade that follows it",
+      "readRef": "/topics/work",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying gives one early role the weight of a whole working life, though job changes during the first working decade are ordinary across the population."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-living-at-home",
+      "label": "What gets said about living with parents after school",
+      "lane": "home-independence",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "You're not still at home, are you?",
+        "When I was your age I had my own place."
+      ],
+      "researchRequired": true,
+      "researchNote": "Pew Research Center reports the share of Americans naming an age by which young adults reach financial independence, which is the age this saying carries. Every Pew page refused this fetcher with a forbidden response, so no verbatim sentence containing the age could be quoted.",
+      "windowInWords": "the years after finishing school, while a separate household is or is not being formed",
+      "readRef": "/topics/money",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying reads one living arrangement as a verdict on independence, while shared and multigenerational households are common and often a deliberate financial choice."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-taking-time-off",
+      "label": "What gets said about taking time away from study or work",
+      "lane": "inner-life",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Take a year off and you'll never go back.",
+        "Momentum is everything at your stage."
+      ],
+      "researchRequired": true,
+      "researchNote": "A measured distribution of the ages at which people interrupt and then resume study or paid work is needed: NCES stopout and re-enrollment tables, or Bureau of Labor Statistics labor force flows by age, published as quotable prose rather than as spreadsheets.",
+      "windowInWords": "the years of study and early working life, and again wherever a pause interrupts them",
+      "readRef": "/guidance",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying predicts a one-way exit from a pause, though people in the population return to study and to paid work after interruptions of many lengths."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-figured-out-by-thirty",
+      "label": "What gets said about certainty in the early thirties",
+      "lane": "inner-life",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "By thirty you're supposed to have it figured out.",
+        "I had all this sorted by your age."
+      ],
+      "researchRequired": true,
+      "researchNote": "A survey measuring the ages at which people report a felt deadline for settling work, housing and relationships is needed. A General Social Survey or Pew Research Center age-norms module reporting that band would resolve it; none quotable was found.",
+      "windowInWords": "the years on either side of the birthday the saying names",
+      "readRef": "/guidance",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying turns one birthday into a cutoff for certainty, while work, housing, and relationships keep changing across the decades that follow it."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-settle-down",
+      "label": "What gets said about settling down",
+      "lane": "people-family",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "When are you going to settle down?",
+        "Don't leave it too long."
+      ],
+      "researchRequired": true,
+      "researchNote": "A survey measuring the ages people name as the right time to marry or to have a first child is needed — a Pew Research Center or General Social Survey age-norms item — quoted verbatim with the age band it reports.",
+      "windowInWords": "the years across which partnership and childbearing questions are commonly put to a person",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying compresses several separate decisions into a single timetable, and the person saying it is usually describing their own sequence rather than a general one."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-renting-versus-buying",
+      "label": "What gets said about renting and buying",
+      "lane": "money-wealth",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Renting is throwing money away.",
+        "Get on the ladder while you still can."
+      ],
+      "researchRequired": true,
+      "researchNote": "The National Association of Realtors Profile of Home Buyers and Sellers reports the median age of first-time buyers, which is the band this saying is aimed at; a fetchable page carrying that age in a quotable sentence was not obtained.",
+      "windowInWords": "the years across which a first home purchase is commonly considered",
+      "readRef": "/topics/money",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying treats one form of housing as proof of adulthood, though which arrangement costs less depends on local prices, interest rates, and how long someone stays."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-savings-rules-of-thumb",
+      "label": "What gets said about savings rules of thumb",
+      "lane": "money-wealth",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "You should have a year of salary saved by thirty.",
+        "If you can't save, you're doing something wrong."
+      ],
+      "researchRequired": true,
+      "researchNote": "A survey measuring the ages at which people report hearing a savings target stated as a multiple of income would resolve this. The published brokerage guideline the saying borrows from does name ages, but those are the firm's own modelling assumption about a plan, not a measurement of when the expectation is said to anyone, so it cannot supply a window; a Pew Research Center or Federal Reserve survey of household financial expectations reporting by age band would.",
+      "windowInWords": "the working years, wherever the saying is repeated \u2014 the ages it names belong to the guideline it borrows from rather than to anyone hearing it",
+      "readRef": "/topics/money",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying repeats a firm's published rule of thumb as though it were a measured norm, and it sets income, debt, caregiving, and local rent aside entirely."
+      ],
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-heard-order-of-family-steps",
+      "label": "What gets said about the order of family steps",
+      "lane": "people-family",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "First comes love, then comes marriage, then comes the baby carriage.",
+        "You're doing it all out of order."
+      ],
+      "researchRequired": true,
+      "researchNote": "The National Center for Health Statistics reports the timing and order of marriage and of a first birth by age; a quotable sentence naming the age band across which the sequence question is put was not obtained from a fetchable page.",
+      "windowInWords": "the years across which partnership and childbearing are commonly arranged",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying names one sequence as the sequence, while households in the population arrange these steps in many orders and often leave some of them out."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-too-late-to-switch",
+      "label": "What gets said about changing direction in midlife",
+      "lane": "work-income",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "It's too late to start over now.",
+        "Nobody hires at your age."
+      ],
+      "timing": { "exact": 40 },
+      "measure": "legal-rule",
+      "population": "Applicants and employees covered by the federal age discrimination statute from the age the enforcing agency names. It is a rule as written, not a measurement of who gets hired.",
+      "sources": ["src-eeoc-adea-age-forty"],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The saying states a hiring outcome as a law, though people in the population enter new occupations, new training, and new licences well into later working years.",
+        "There is a federal statute against deciding hiring by age, which is a route rather than a guarantee, and the agency that enforces it takes complaints."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-made-it-by-forty",
+      "label": "What gets said about peak earning years",
+      "lane": "money-wealth",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "If you haven't made it by forty, you never will.",
+        "The big money years are the middle ones."
+      ],
+      "researchRequired": true,
+      "researchNote": "Census Bureau or Bureau of Labor Statistics tables of median earnings by age band would give the ages at which earnings actually move, against which this saying can be placed; the published tables are spreadsheets this fetcher could not read.",
+      "windowInWords": "the middle working years, on both sides of the birthday the saying names",
+      "readRef": "/topics/money",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying reads a single birthday as a closing gate on earnings, while pay, promotion, and business formation keep moving across the whole working span."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-quiet-house",
+      "label": "What gets said when grown children leave home",
+      "lane": "people-family",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "The house is going to feel so empty.",
+        "What will you do with yourselves now?"
+      ],
+      "researchRequired": true,
+      "researchNote": "The Census Bureau America's Families and Living Arrangements tables report the ages of parents whose youngest child has left the household, which is the band this saying is aimed at; a quotable prose sentence naming it was not obtained.",
+      "windowInWords": "the years in which grown children commonly leave a parental household",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying assumes one reaction to a household change, and the people living through it describe relief, disorientation, and new routines in every combination."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-caring-for-parents",
+      "label": "What gets said about caring for ageing parents",
+      "lane": "people-family",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Family looks after its own.",
+        "You'll manage, everybody does."
+      ],
+      "researchRequired": true,
+      "researchNote": "The National Alliance for Caregiving and AARP Caregiving in the US report gives the average age of family caregivers, which is the band this saying is aimed at; a fetchable page carrying that age in a quotable sentence was not obtained.",
+      "windowInWords": "the middle and later adult years, wherever an older relative needs help",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying assigns unpaid care to whoever lives nearest, and it leaves out the paid leave, distance, and household finances that decide who can actually do it."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-retirement-timing",
+      "label": "What gets said about the timing of retirement",
+      "lane": "work-income",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Sixty-five and out.",
+        "Aren't you retired yet?"
+      ],
+      "timing": { "exact": 65 },
+      "measure": "legal-rule",
+      "population": "The age at which the federal health insurance program covers people, as its own page states it. It is a rule about coverage, not a measurement of when people stop working.",
+      "sources": ["src-medicare-eligibility-age"],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The saying treats one birthday as a single exit, though people leave paid work earlier, later, in stages, and sometimes return to it afterwards.",
+        "The birthday the saying names is the age federal health coverage opens; the age at which a pension pays in full is a separate rule with its own record."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-learning-new-tools",
+      "label": "What gets said about learning new tools in later life",
+      "lane": "learning",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "It's a bit late for you to be learning all that.",
+        "Get one of the grandchildren to do it for you."
+      ],
+      "researchRequired": true,
+      "researchNote": "A measured distribution of the ages at which adults take up new software or new qualifications is needed: Pew Research Center technology adoption by age, or NCES adult education participation by age, quoted verbatim with the band it reports.",
+      "windowInWords": "the later adult decades, wherever an unfamiliar tool arrives",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying assigns unfamiliar tools to younger households, and adults across the later decades take up new software, new languages, and new qualifications every year."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-downsizing",
+      "label": "What gets said about downsizing a home",
+      "lane": "home-independence",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "You'll be rattling around in that big house.",
+        "Somewhere smaller would be more sensible."
+      ],
+      "researchRequired": true,
+      "researchNote": "The National Association of Realtors, or the Harvard Joint Center for Housing Studies Housing America's Older Adults report, gives the ages at which households move to smaller homes; a fetchable page carrying that band in quotable prose was not obtained.",
+      "windowInWords": "the later adult decades, around and after leaving paid work",
+      "readRef": "/topics/money",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying presents one move as the obvious next step, while staying put, moving nearer family, and moving somewhere larger are all ordinary choices."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-heard-acting-your-age",
+      "label": "What gets said about acting one's age",
+      "lane": "inner-life",
+      "kind": "cultural-expectation",
+      "optional": true,
+      "heard": [
+        "Act your age.",
+        "Aren't you a bit old for that?"
+      ],
+      "researchRequired": true,
+      "researchNote": "A survey measuring the ages at which people report being told their clothing, hobbies or ambitions do not suit their years is needed; an AARP or Pew Research Center age-stereotyping survey reporting by age band would resolve it, and none quotable was found.",
+      "windowInWords": "the whole of adult life, and most sharply at its two edges",
+      "readRef": "/guidance",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "whatChanges": [
+        "The saying polices clothing, hobbies, and ambition by counting birthdays, and people take up new sports, instruments, and studies throughout adult life."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

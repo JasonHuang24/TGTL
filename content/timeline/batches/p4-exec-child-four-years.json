@@ -1,0 +1,93 @@
+{
+  "key": "p4-exec-child-four-years",
+  "sources": [
+    {
+      "id": "src-cdc-milestones-4-years",
+      "title": "Milestones at 4 Years — Learn the Signs. Act Early.",
+      "publisher": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/act-early/milestones/4-years.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the age by which most children are described as doing a thing, in the agency's developmental surveillance checklists; the bullet this record rests on reads \"Says sentences with four or more words\"",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "What most children do by 4 years"
+    },
+    {
+      "id": "src-nchs-mortality-brief-at-65",
+      "title": "Mortality in the United States, 2023 (NCHS Data Brief)",
+      "publisher": "National Center for Health Statistics",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db521.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2023,
+      "measures": "Life expectancy at age sixty-five for the total population, computed from the national life table; the figure is a span of years remaining from that age, not an age.",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "In 2023, life expectancy at age 65 for the total population was 19.5 years, an increase of 0.6 year from 2022."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-longer-sentences",
+      "label": "Speaking in longer sentences",
+      "lane": "learning",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 4,
+          "to": 4
+        },
+        "typical": {
+          "from": 4,
+          "to": 4
+        }
+      },
+      "measure": "most-by",
+      "population": "children in the United States, in the terms of the federal milestone checklists, which place saying sentences of several words or more among the things most children do by this age",
+      "sources": [
+        "src-cdc-milestones-4-years"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "child-development",
+      "careNote": "This describes a spread across many children rather than a requirement for any one of them, and a clinician or a speech-language professional is the right place for a question about one child.",
+      "whatChanges": [
+        "Sentences carry more of the meaning, so a child can hold a short back-and-forth about something that is not in front of them.",
+        "Adults outside the household follow more of what is said, which widens who a child can talk to without a translator."
+      ],
+      "notes": "Authored by the executor during the rolling human read, not by a batch agent. Added because age four was the single year on the whole timeline with no covering record, which left its honest empty state saying 'the windows above are still open' when none were. The page was fetched, the heading quoted verbatim, and its last-review date fetched separately rather than assumed from its sibling pages.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-remaining-years-at-sixty-five-sourced",
+      "label": "Years still ahead, counted from later life rather than from birth",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "exact": 65,
+        "remainingYears": 19.5
+      },
+      "measure": "mean",
+      "population": "the whole United States population reaching that age in the reference year, from the national life table; the figure is a span of years remaining from that age and not an age anyone reaches",
+      "sources": [
+        "src-nchs-mortality-brief-at-65"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "sensitivity": "health-decline",
+      "renderAs": "stage-intro-note",
+      "stageId": "stage-later",
+      "careNote": "This is a population average for people who have already reached later life, not a prediction about any one person, and a clinician is the right place for a question about a particular body.",
+      "whatChanges": [
+        "An average taken at birth includes everyone who died young, so it sits lower than the span still ahead of someone who has already reached later life.",
+        "The two figures answer different questions, and the one measured from birth is the one most often quoted at people it does not describe."
+      ],
+      "notes": "Added by the executor after a reader-persona pass. Blueprint section five point four requires life expectancy at birth AND at sixty-five; only the at-birth figure was rendering, and a reader in later life was doing arithmetic on the wrong number. Encoded as a remaining span, which is what the source prints, so no arithmetic is performed by the timeline.",
+      "lastReviewed": "2026-09-04"
+    }
+  ]
+}

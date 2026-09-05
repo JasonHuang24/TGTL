@@ -1,0 +1,42 @@
+{
+  "key": "p5-fixpass-work",
+  "note": "Authored during the 5.0 fix pass, through the same pipeline as every other batch: fetched, quoted verbatim, re-fetched adversarially, recorded in records/research-pipeline.md. See DECISIONS.md, the fix-pass section, for why the early forties needed a record of their own.",
+  "sources": [
+    {
+      "id": "src-census-carra-founder-age",
+      "title": "Age and High-Growth Entrepreneurship (Center for Administrative Records Research and Applications working paper)",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/content/dam/Census/library/working-papers/2018/adrm/carra-wp-2018-03.pdf",
+      "kind": "peer-reviewed",
+      "publicationYear": 2018,
+      "dataYear": 2014,
+      "measures": "the mean age of a person at the moment they founded a United States firm that went on to employ someone, computed from the Census Bureau's Longitudinal Business Database and linked federal earnings and partnership records for firms founded across an eight-year stretch; a working paper by named academic authors and a Census Bureau economist, which states that its opinions and conclusions are the authors' own",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "the mean age for the entrepreneurs at founding is 41.9",
+      "notes": "The full sentence names the founder count and the years counted; the excerpt is the clause carrying the figure. The same paper reports a higher mean for the fastest-growing ventures, which this record does not claim."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-founding-a-business-mean-age",
+      "label": "Founding a firm that goes on to employ someone",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "typical": { "from": 41.9, "to": 41.9 } },
+      "measure": "mean",
+      "population": "People who founded a United States firm that went on to employ at least one person, across an eight-year stretch of linked federal business and tax records. The figure is the mean age at the moment of founding across every kind of new firm the records hold, from a restaurant to a software company.",
+      "sources": ["src-census-carra-founder-age"],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The middle of the age distribution for people who start a firm that goes on to employ someone sits in the early forties rather than in the twenties.",
+        "The count covers every kind of new firm in the records and not only the ones that grow quickly; the paper reports an older mean age for those.",
+        "It is a mean across a very wide spread, and founders much younger and much older than it are ordinary."
+      ],
+      "notes": "Authored in the fix pass. Re-authoring the comparison-as-window records removed a cultural expectation whose window had been borrowed from a brokerage's published guideline and stretched across most of adult life, and that borrowed window had been the only thing standing between the early forties and a stretch of years with nothing discrete in them. This is the honest replacement: a measured age that actually falls there, quoted from a fetched page, rather than a wider window on a record that did not earn one.",
+      "lastReviewed": "2026-09-04"
+    }
+  ]
+}

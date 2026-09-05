@@ -1,0 +1,173 @@
+{
+  "key": "p1-state-driving",
+  "sources": [
+    {
+      "id": "src-p1sd-ak-instruction-permit",
+      "title": "INSTRUCTION PERMIT, Division of Motor Vehicles, State of Alaska",
+      "publisher": "Alaska Division of Motor Vehicles",
+      "url": "https://dmv.alaska.gov/credential-services/instruction-permit/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written by the issuing agency: the minimum age at which Alaska will issue an instruction permit",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "When you turn 14, you are eligible for an instruction permit to begin to practice how to drive."
+    },
+    {
+      "id": "src-p1sd-nj-special-learner-permit",
+      "title": "NJ MVC | First Driver License",
+      "publisher": "New Jersey Motor Vehicle Commission",
+      "url": "https://www.nj.gov/mvc/license/youngadult.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written by the issuing agency: the minimum age at which New Jersey will issue a special learner's permit to a driver-education student",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "you can obtain a special learner’s permit at age 16"
+    },
+    {
+      "id": "src-p1sd-iihs-sd-intermediate-entry",
+      "title": "Graduated licensing laws",
+      "publisher": "Insurance Institute for Highway Safety",
+      "url": "https://www.iihs.org/topics/teenagers/graduated-licensing-laws-table",
+      "kind": "reputable-secondary",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rules as written, compiled state by state into a table; the excerpt is the South Dakota cell in the column headed Intermediate stage, Minimum entry age, whose unconditional value is fourteen years and nine months and whose parenthetical value applies only to drivers who complete driver education",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "14, 9 months (14, 6 months with driver education)",
+      "notes": "Encoding convention for this build: ages in typed timing fields are decimal years, so the cell's unconditional value of fourteen years and nine months is recorded as fourteen and three quarters. The parenthetical driver-education value of fourteen years and six months is NOT used as the floor of the range, because it is a conditional sub-case rather than the plain minimum the column header names."
+    },
+    {
+      "id": "src-p1sd-nj-probationary-license",
+      "title": "NJ MVC | First Driver License",
+      "publisher": "New Jersey Motor Vehicle Commission",
+      "url": "https://www.nj.gov/mvc/license/youngadult.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written by the issuing agency: the minimum age at which New Jersey will issue a probationary driver license",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "NOTE: You cannot get your license until you are 17 years of age."
+    },
+    {
+      "id": "src-p1sd-iihs-mt-unrestricted",
+      "title": "Graduated licensing laws",
+      "publisher": "Insurance Institute for Highway Safety",
+      "url": "https://www.iihs.org/topics/teenagers/graduated-licensing-laws-table",
+      "kind": "reputable-secondary",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rules as written, compiled state by state into a table; the excerpt is the Montana cell in the column headed Unrestricted stage, Requirements for nighttime restrictions to be lifted",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "licensed for 12 months or age 18, whichever occurs first (min. age: 16)"
+    },
+    {
+      "id": "src-p1sd-tx-gdl-provisional-restrictions",
+      "title": "Graduated Driver License (GDL) and Hardship License | Department of Public Safety",
+      "publisher": "Texas Department of Public Safety",
+      "url": "https://www.dps.texas.gov/section/driver-license/graduated-driver-license-gdl-and-hardship-license",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written by the issuing agency: the age below which Texas provisional license restrictions apply",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Provisional license holders under 18 years are subject to the following restrictions:"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-learner-permit-minimum-age",
+      "label": "Learner permit for supervised driving",
+      "lane": "home-independence",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "variesByState": {
+          "from": 14,
+          "to": 16,
+          "note": "the youngest age at which a supervised learner permit may be issued differs from state to state, and in several states driver education must be underway first"
+        }
+      },
+      "measure": "legal-rule",
+      "population": "residents applying for a first driver credential in the state where they live",
+      "sources": [
+        "src-p1sd-ak-instruction-permit",
+        "src-p1sd-nj-special-learner-permit"
+      ],
+      "readRef": "/map",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Supervised practice driving becomes legal, with a licensed adult required in the vehicle.",
+        "Driving alone stays prohibited; the permit covers practice only.",
+        "Households often begin logging the supervised hours the next stage requires."
+      ],
+      "affectsLater": [
+        "ms-provisional-license-minimum-age"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-provisional-license-minimum-age",
+      "label": "Provisional license for driving alone",
+      "lane": "home-independence",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "variesByState": {
+          "from": 14.75,
+          "to": 17,
+          "note": "the youngest age at which a provisional license allowing unsupervised driving may be issued differs from state to state; the low end of this range is the unconditional minimum entry age in the earliest state, fourteen years and nine months, written here in decimal years, and that same state allows entry a few months earlier for drivers who complete driver education"
+        }
+      },
+      "measure": "legal-rule",
+      "population": "residents moving from a learner permit to a provisional or intermediate license in the state where they live",
+      "sources": [
+        "src-p1sd-iihs-sd-intermediate-entry",
+        "src-p1sd-nj-probationary-license"
+      ],
+      "readRef": "/map",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Driving without a supervising adult becomes legal, in nearly every state with limits on late-night hours and on carrying other young passengers.",
+        "Independent travel to school, work, and errands opens up, which matters most in places without transit.",
+        "Household insurance and vehicle arrangements usually change at this point."
+      ],
+      "affectsLater": [
+        "ms-full-unrestricted-license-minimum-age"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-full-unrestricted-license-minimum-age",
+      "label": "Full license without novice restrictions",
+      "lane": "home-independence",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "variesByState": {
+          "from": 16,
+          "to": 18,
+          "note": "the youngest age at which the late-night and passenger limits on a novice license come off differs from state to state, and most states also require a minimum time already licensed"
+        }
+      },
+      "measure": "legal-rule",
+      "population": "residents holding a provisional or intermediate license in the state where they live",
+      "sources": [
+        "src-p1sd-iihs-mt-unrestricted",
+        "src-p1sd-tx-gdl-provisional-restrictions"
+      ],
+      "readRef": "/map",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The late-night driving limit and the cap on young passengers attached to a novice license come off.",
+        "The credential becomes an ordinary license, renewed on the same terms as other drivers hold.",
+        "Driving for work, and driving others, stops depending on the novice conditions."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

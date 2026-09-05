@@ -1,0 +1,193 @@
+{
+  "key": "p1-federal-retirement",
+  "sources": [
+    {
+      "id": "src-p1fr-cfr-404-310",
+      "title": "20 CFR 404.310 - When am I entitled to old-age benefits?",
+      "publisher": "U.S. Government Publishing Office (Code of Federal Regulations)",
+      "url": "https://www.govinfo.gov/content/pkg/CFR-2023-title20-vol2/xml/CFR-2023-title20-vol2-sec404-310.xml",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, for entitlement to Social Security old-age benefits",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "You are at least 62 years old"
+    },
+    {
+      "id": "src-p1fr-usc-42-416-l",
+      "title": "42 U.S.C. 416 - Additional definitions, subsection (l) Retirement age",
+      "publisher": "U.S. Government Publishing Office (United States Code)",
+      "url": "https://www.govinfo.gov/content/pkg/USCODE-2023-title42/html/USCODE-2023-title42-chap7-subchapII-sec416.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, defining statutory retirement age by cohort",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "(E) with respect to an individual who attains early retirement age after December 31, 2021, 67 years of age."
+    },
+    {
+      "id": "src-p1fr-cfr-404-313",
+      "title": "20 CFR 404.313 - What are delayed retirement credits and how do they increase my old-age benefit amount?",
+      "publisher": "U.S. Government Publishing Office (Code of Federal Regulations)",
+      "url": "https://www.govinfo.gov/content/pkg/CFR-2023-title20-vol2/xml/CFR-2023-title20-vol2-sec404-313.xml",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, for the period over which delayed retirement credits may be earned",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "you may still earn DRCs for months during the period from full retirement age to age 70"
+    },
+    {
+      "id": "src-p1fr-medicare-get-started",
+      "title": "Get started with Medicare",
+      "publisher": "Centers for Medicare & Medicaid Services (Medicare.gov)",
+      "url": "https://www.medicare.gov/basics/get-started-with-medicare",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as stated on the agency's current program page; the page carries no publication or revision date, so the year given is the year the live page was retrieved",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Medicare is health insurance for people 65 or older who meet citizenship or residency requirements."
+    },
+    {
+      "id": "src-p1fr-usc-42-1395o",
+      "title": "42 U.S.C. 1395o - Eligible individuals (Medicare Part B)",
+      "publisher": "U.S. Government Publishing Office (United States Code)",
+      "url": "https://www.govinfo.gov/content/pkg/USCODE-2023-title42/html/USCODE-2023-title42-chap7-subchapXVIII-partB-sec1395o.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, for eligibility to enroll in Medicare Part B",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "has attained age 65 and is a resident of the United States, and is either (A) a citizen"
+    },
+    {
+      "id": "src-p1fr-cfr-404-335",
+      "title": "20 CFR 404.335 - How do I become entitled to widow's or widower's benefits?",
+      "publisher": "U.S. Government Publishing Office (Code of Federal Regulations)",
+      "url": "https://www.govinfo.gov/content/pkg/CFR-2023-title20-vol2/xml/CFR-2023-title20-vol2-sec404-335.xml",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, for entitlement of a widow or widower to Social Security survivors benefits; the section sets out two age routes side by side",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "You are at least 60 years old; or you are at least 50 years old and have a disability"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-p1fr-ss-earliest-claim",
+      "label": "Earliest claim for Social Security retirement benefits",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 62
+      },
+      "measure": "legal-rule",
+      "population": "workers who are fully insured under Social Security",
+      "sources": ["src-p1fr-cfr-404-310"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A fully insured worker may first file for retirement benefits, and the monthly amount is permanently reduced relative to filing at full retirement age.",
+        "Filing here is one option among several; many people file later, and never filing at this point is an ordinary path."
+      ],
+      "affectsLater": ["ms-p1fr-ss-full-retirement-age"],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fr-ss-full-retirement-age",
+      "label": "Full retirement age for Social Security",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "exact": 67
+      },
+      "measure": "legal-rule",
+      "population": "people who reach early retirement age after the statutory transition date set in federal law",
+      "sources": ["src-p1fr-usc-42-416-l"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Retirement benefits become payable without the reduction that federal law applies to earlier filing.",
+        "Statute raised this age in steps across successive birth cohorts, and the figure here is the top of that schedule.",
+        "It also sets the starting point for the credits that federal law grants for postponing a claim."
+      ],
+      "affectsLater": ["ms-p1fr-ss-delayed-credit-ceiling"],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fr-ss-delayed-credit-ceiling",
+      "label": "Delayed retirement credits stop accruing",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 70
+      },
+      "measure": "legal-rule",
+      "population": "people who are fully insured and eligible for old-age benefits but do not receive them",
+      "sources": ["src-p1fr-cfr-404-313"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The credits that raise a monthly benefit for each month of postponement stop being earned, so postponing further adds nothing under this rule.",
+        "People who claimed earlier and then suspended their benefits to earn these credits also stop accruing them here.",
+        "Earning any of these credits at all is optional, and many people never do."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fr-medicare-eligibility",
+      "label": "Medicare eligibility",
+      "lane": "body-health",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "exact": 65
+      },
+      "measure": "legal-rule",
+      "population": "people who meet the citizenship or residency requirements set in federal law",
+      "sources": ["src-p1fr-medicare-get-started", "src-p1fr-usc-42-1395o"],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Federal health insurance becomes available to people who meet the citizenship or residency requirements.",
+        "Enrollment runs on its own federal timetable, separate from when a person claims Social Security retirement benefits.",
+        "Separate federal routes into the program exist that do not depend on age at all."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fr-ss-survivor-earliest-claim",
+      "label": "Age route to Social Security widow's or widower's benefits",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "sensitivity": "dying",
+      "careNote": "This is a benefits rule, not guidance for grief and not a statement of what anyone owes a spouse who died; the pages on a death and on grief are the route for that.",
+      "timing": {
+        "exact": 60
+      },
+      "measure": "legal-rule",
+      "population": "widows and widowers of workers who died fully insured, on the age route the regulation states",
+      "sources": ["src-p1fr-cfr-404-335"],
+      "readRef": "/situations/a-death",
+      "alsoRead": ["/situations/grief", "/topics/money"],
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A widow or widower may file for survivors benefits on this route, subject to the marriage-duration and remarriage conditions the regulation sets out.",
+        "The same regulation states a separate, earlier route for a widow or widower who has a disability as it defines one.",
+        "Federal rules also govern how this benefit interacts with a person's own retirement benefit."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

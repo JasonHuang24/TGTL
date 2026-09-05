@@ -1,0 +1,522 @@
+{
+  "key": "p3-analyses-work-money",
+  "analyses": {
+    "ms-first-full-time-job": {
+      "major": true,
+      "affectsLater": [
+        "ms-household-wealth-by-age",
+        "ms-first-home-purchase-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Sustained full-time work begun earlier than most starts several clocks at once: payroll earnings, eligibility for an employer health plan, vesting in an employer retirement plan, and a credit file built on documented income. Money placed into a tax-advantaged account has a longer span in which to compound, and the earnings record that later programs read from begins filling sooner.",
+          "costs": [
+            "Fewer years of formal schooling completed before the first sustained job, which narrows the set of roles reachable at entry",
+            "Early pay is often anchored by the employer to the previous salary, so a low starting figure can follow a worker across several moves"
+          ],
+          "routes": [
+            "Employer tuition assistance, evening and part-time degree programs, and registered apprenticeships that carry a credential at the end",
+            "Salary-history bans, which many states and cities have enacted, bar employers there from asking what a candidate previously earned"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Entering sustained full-time work in the band where most people do it means the surrounding institutions line up without special handling: loan underwriting reads a conventional employment history, employer plans open on their ordinary schedules, and the gap between schooling and payroll is short enough that it needs no explanation in an interview.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "A first sustained full-time job that arrives after the usual band compresses the span over which employer matching, vesting and compounding accumulate, and it shifts the whole earnings curve rightward, so the years of highest pay tend to arrive later too. Where the delay came from further study or credentialing, the job entered is often further up a pay scale than an early entry job, which offsets part of the shorter span.",
+          "costs": [
+            "A shorter working span in which to accumulate covered earnings and employer contributions",
+            "An employment gap that some employers read as a signal and screen on"
+          ],
+          "routes": [
+            "Catch-up contribution provisions in employer plans and individual retirement arrangements raise the annual ceiling in the later working years",
+            "Returnship and mid-career entry programs run by large employers, and public-sector pay scales that price a role by grade rather than by the candidate's history"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "When a first full-time job ends, several things unwind together rather than separately: employer health coverage lapses, contributions to the employer plan stop, and unvested employer contributions can be forfeited. Tenure resets at the next employer, so seniority-linked pay and leave accrual begin again from the start.",
+          "costs": [
+            "A coverage gap between one employer plan and the next",
+            "Forfeiture of employer contributions that had not yet vested"
+          ],
+          "routes": [
+            "COBRA continuation of the former employer's plan, marketplace coverage with income-based assistance, or coverage through a spouse's plan",
+            "Rolling the vested balance into an individual retirement arrangement or the next employer's plan keeps it in a tax-advantaged account",
+            "State unemployment insurance and the workforce boards that administer retraining under the federal workforce law"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Self-employment, contract work, seasonal work, military service, a family business, or a patchwork of part-time roles all produce earnings without producing an employer plan. Retirement saving then runs through individual arrangements rather than payroll deduction, health coverage is bought rather than offered, and the worker pays both halves of the payroll tax that credits the earnings record.",
+          "costs": [
+            "No employer match, no employer-sponsored health plan, and income that arrives unevenly",
+            "Some lenders underwrite self-employment income more conservatively than salary"
+          ],
+          "routes": [
+            "Solo employer-style retirement plans and simplified employee pension arrangements are open to self-employed people, with contribution ceilings of their own",
+            "Marketplace coverage, professional and trade association plans, and health savings accounts paired with high-deductible coverage",
+            "Military service credits covered earnings and carries its own retirement and education provisions"
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Some people never hold a sustained full-time job: full-time caregiving, self-employment across a whole working life, a disability that shapes what work is possible, independent means, or work that is real and paid but never full-time. Programs keyed to an earnings record accrue through covered work, so a life without full-time employment reaches those programs through other doors rather than the payroll one.",
+          "costs": [
+            "A thinner earnings record for the programs that compute payments from covered work",
+            "No employer channel for health coverage or retirement contributions"
+          ],
+          "routes": [
+            "Spousal and divorced-spouse routes into Social Security retirement benefits are computed from a partner's record rather than one's own",
+            "Individual retirement arrangements, state-run automatic payroll savings programs such as those in Oregon, California and Illinois, and the Saver's Credit for lower-income contributors",
+            "Medicaid and marketplace coverage, and the caregiver support programs run by state and area agencies on aging"
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-prime-working-years": {
+      "major": true,
+      "affectsLater": [
+        "ms-earnings-highest-bands"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "People whose working life is fully established before the prime band opens tend to have accumulated tenure, employer contributions and an occupational identity by the time the band begins, so the prime years function as a continuation rather than a start. Pay in these years is often set by seniority and by moves between employers rather than by entry-level scales.",
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Within this band, participation in paid work is at its densest, and the institutions around work assume it: mortgage underwriting, employer plan design, career ladders and promotion schedules are all built for a continuously employed adult in these years. That density is also why an absence from work in this band is the one most visible on a résumé.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Where a working life only reaches full stride toward the end of this band, the years of steepest earnings growth overlap the years when many employers' internal ladders narrow. Growth then comes more often from changing employers or sectors than from promotion inside one.",
+          "costs": [
+            "Fewer remaining years of contribution and compounding before withdrawals ordinarily begin",
+            "Age discrimination protections apply, but proving a claim under them is difficult and slow"
+          ],
+          "routes": [
+            "Catch-up contribution provisions and additional health savings account contributions raise annual ceilings in the later working years",
+            "Federal and state age discrimination law, enforced through the Equal Employment Opportunity Commission and state fair employment agencies"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "A break inside the prime band, most often for caregiving, layoff or retraining, interrupts three things that ordinarily run in parallel: current earnings, contributions to a retirement account, and the tenure that seniority-linked pay rests on. Re-entry pay commonly starts below the pre-break level because the anchor an employer reaches for is the most recent salary.",
+          "costs": [
+            "Re-entry earnings that start lower than the pre-break level and take years to converge",
+            "Contribution years lost from the span in which compounding runs"
+          ],
+          "routes": [
+            "Returnship programs, which many large employers run specifically for people re-entering after a career break",
+            "Salary-history bans in many states, which remove the previous salary from what an employer may ask",
+            "Family and medical leave protections, and state paid family leave programs, which hold a job open where they apply"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Some people spend these years in unpaid work that no participation measure counts: raising children, caring for an adult relative, running a household while a partner earns, or being in full-time study. The work is real and the household depends on it, but it does not credit an earnings record, and so it does not appear in the measure this record describes.",
+          "costs": [
+            "Unpaid work does not accrue covered earnings, employer contributions or tenure"
+          ],
+          "routes": [
+            "Spousal retirement arrangements let an earning spouse contribute on behalf of a non-earning one",
+            "Spousal and divorced-spouse Social Security routes compute a payment from a partner's covered earnings"
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "A minority of adults are outside the labor force across the whole of this band, through disability, long-term caregiving, independent means, or continuous study. Because the measure counts people working or looking for work, someone who has stopped looking is counted outside it whatever the reason, which is why the measure moves with discouragement as well as with circumstance.",
+          "costs": [
+            "No covered earnings accruing over the years that most programs weight most heavily"
+          ],
+          "routes": [
+            "Social Security disability benefits, Supplemental Security Income, and state vocational rehabilitation services",
+            "Spousal routes into retirement benefits and health coverage, and Medicaid coverage independent of employment"
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-earnings-highest-bands": {
+      "major": true,
+      "affectsLater": [
+        "ms-household-wealth-by-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Earnings that reach their highest point earlier than the common band are typical of physically demanding trades, performance-dependent work, and commission work, where output peaks before experience does. The flat or declining span afterward is longer, so a larger part of later income tends to come from what was accumulated or from a second occupation rather than from the first one.",
+          "costs": [
+            "A long span after the peak in which wage income no longer grows",
+            "Skills tied to one occupation may not price the same in another"
+          ],
+          "routes": [
+            "Trade-to-supervisory and trade-to-instruction ladders, which move the same expertise into work that is priced by knowledge rather than by exertion",
+            "Community college and union-run credentialing that converts occupational experience into a transferable qualification"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Earnings commonly rise with tenure, accumulated skill and moves into roles with more responsibility, then flatten as promotion ladders narrow toward the top. The flattening is not a decline in capability; it is an arithmetic feature of pyramids, which have fewer positions at each level.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "In occupations with a long credentialing tail, earnings arrive late and keep rising into bands where other occupations have already flattened. The compounding span for saving is shorter, but the amounts placed in it are larger, and the earnings often continue past the years when others' fall away.",
+          "costs": [
+            "Debt taken on during the credentialing years accrues while earnings are still low",
+            "A shorter span between the peak and the years when paid work commonly falls away"
+          ],
+          "routes": [
+            "Income-driven repayment and Public Service Loan Forgiveness for federal student loans in qualifying employment",
+            "Catch-up contribution provisions, which raise annual retirement contribution ceilings in the later working years"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "When earnings are interrupted mid-career and then resume, they commonly resume below the level they left. Two mechanisms do most of the work: employers price an offer against the most recent salary, and seniority-linked pay resets with tenure at a new employer.",
+          "costs": [
+            "Re-entry pay below the pre-break level, with convergence measured in years rather than months",
+            "A lower figure entering the earnings record used by benefit formulas"
+          ],
+          "routes": [
+            "Salary-history bans in many states and cities, and public-sector and unionized pay scales that price a role by grade rather than by history",
+            "Returnship programs and employer-sponsored re-entry cohorts",
+            "Continued covered earnings in later years, which can replace a lower year in the record a benefit formula reads"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Some income never tracks the wage curve at all: ownership stakes, licensing and royalties, rental property, and business profits are priced by the asset rather than by hours worked. Income of this kind can peak at any age, is taxed under different rules, and does not by itself credit an earnings record for programs computed from covered work.",
+          "costs": [
+            "Income that is uneven and can fall as easily as it rises",
+            "Business and rental income does not generate an employer plan or employer contributions"
+          ],
+          "routes": [
+            "Simplified employee pension arrangements and solo employer-style plans, which are open to owner-operators",
+            "Electing to pay self-employment tax on business earnings credits them to the covered earnings record"
+          ],
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "In occupations with compressed pay scales, earnings stay roughly flat across a whole working life, so there is no distinct peak to locate. Where that is the case, the shape of the household's finances is set by how long the earnings run and what is done with them rather than by any high point.",
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-leaving-paid-work": {
+      "major": true,
+      "affectsLater": [
+        "ms-p1fr-ss-earliest-claim",
+        "ms-household-wealth-by-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Leaving paid work before the common band lengthens the span funded from accumulated savings and shortens the span in which contributions and covered earnings accrue. Employer health coverage ordinarily ends with the job while public coverage keyed to age has not yet opened, so the intervening years have to be bridged from somewhere else. Withdrawals taken during a market downturn draw from a smaller base, which is the mechanism usually called sequence risk.",
+          "costs": [
+            "A gap between employer health coverage ending and age-keyed public coverage beginning",
+            "A longer drawdown span funded by a balance that stopped growing earlier",
+            "Withdrawals before the age at which the additional early-distribution tax stops applying may carry that tax"
+          ],
+          "routes": [
+            "Marketplace coverage with income-based premium assistance, COBRA continuation of the former plan, retiree coverage where an employer offers it, or a spouse's plan",
+            "Phased retirement, seasonal work, consulting and bridge jobs, which spread the transition rather than ending it at once",
+            "Statutory exceptions to the additional early-distribution tax, including substantially equal periodic payments and separation from service in or after a qualifying year"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Leaving inside the common band is the case the surrounding system is built around: age-keyed health coverage, the claiming span for retirement benefits, and most employer plan rules all open somewhere inside or near it. Because they open at different ages rather than together, the transition is still a sequence of separate steps rather than a single event.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Continuing in paid work past the common band extends contributions, extends employer health coverage where the plan continues, and shortens the span that savings have to fund. Covered earnings in later years can replace lower years in the record from which retirement benefits are computed, and where an employer plan is still active some plan rules delay required withdrawals from that plan while the person is still working. Where benefits are already being received, amounts withheld under the earnings test before full retirement age are not forfeited: the payment is recomputed upward once that age is reached.",
+          "costs": [
+            "Age discrimination protections apply, but roles and hours can narrow in practice well before any formal exit",
+            "Working while receiving retirement benefits before full retirement age triggers an earnings test that withholds part of the payment"
+          ],
+          "routes": [
+            "Federal and state age discrimination law, enforced through the Equal Employment Opportunity Commission and state fair employment agencies",
+            "The Social Security Administration's retirement earnings test calculator, and its procedure for reporting expected earnings so that withholding is spread across the year rather than applied in a block",
+            "A claim filed at or after full retirement age, to which the earnings test does not apply",
+            "Phased retirement and reduced-hours arrangements, which some employers and most public-sector plans formalize"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Many exits from paid work are not chosen but arrive as a layoff, a restructuring, a plant or office closure, or the sudden onset of caregiving for a relative. What follows tends to be a search in a labor market where hiring at older ages is slower, and an exit that was framed as retirement only afterward.",
+          "costs": [
+            "An unplanned end to contributions and to employer health coverage",
+            "Longer search times, and re-employment often at lower pay or fewer hours"
+          ],
+          "routes": [
+            "State unemployment insurance, and the Senior Community Service Employment Program and workforce boards that fund training for older workers",
+            "COBRA continuation, marketplace coverage with income-based assistance, or a spouse's plan for the coverage gap",
+            "Federal and state paid and unpaid family leave provisions where the interruption is caregiving rather than job loss"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Leaving paid work is often not a single door but a taper: reduced hours at the same employer, seasonal or contract work, self-employment, or unpaid work that fills the same time. Income then falls in steps rather than at once, which changes when health coverage lapses and when any income-tested assistance recalculates.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Some people work for pay until the end of their working capacity, by preference, by trade, or because the accumulated balance is small. Where the work is self-employment or a family business there is often no plan rule or employer schedule that ends it, so no exit age exists to reach.",
+          "costs": [
+            "No planned handover of the work, and income that stops abruptly rather than tapering"
+          ],
+          "routes": [
+            "Retirement benefits can be claimed while still working, subject to the earnings test before full retirement age",
+            "Business succession arrangements, buy-sell agreements and Small Business Administration transition counseling"
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-household-wealth-by-age": {
+      "major": true,
+      "affectsLater": [],
+      "analysis": {
+        "early": {
+          "tends": "Households that begin accumulating early get a longer span of compounding, and compounding is not linear in time: the growth in the later years is applied to a base that the early years built. Home equity works the same way through amortization, where early payments are mostly interest and the principal share climbs with every year the loan runs.",
+          "costs": [
+            "Money placed in retirement accounts early is illiquid, and withdrawing it before the qualifying age can carry an additional tax",
+            "Saving hard in low-earning years can crowd out schooling or training that would have raised later earnings"
+          ],
+          "routes": [
+            "Roth contributions can be withdrawn up to the amount contributed without the additional tax, and hardship and loan provisions exist in many employer plans",
+            "Employer tuition assistance and income-driven repayment let training continue without stopping contributions entirely"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Across most of adult life, household wealth builds from three sources running together — earnings placed into accounts, debt being paid down, and the growth of what is already held — and then is drawn down in the later years, when income shifts from wages to withdrawals and benefit payments. The drawdown is the design, not a failure of the accumulation.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "A household that begins accumulating late has a shorter compounding span, so a larger share of the final balance has to come from contributions rather than from growth. Contribution ceilings cap how far that substitution can go, which is the constraint the catch-up provisions partially loosen.",
+          "costs": [
+            "A shorter span in which growth can substitute for contributions",
+            "Annual contribution ceilings limit how much of the shortfall can be closed by saving more"
+          ],
+          "routes": [
+            "Catch-up contribution provisions in employer plans and individual retirement arrangements, and the additional health savings account contribution",
+            "Delaying a claim for retirement benefits raises the monthly payment through delayed retirement credits, up to the age at which those credits stop accruing",
+            "Home equity conversion mortgages and downsizing convert housing wealth into spendable form"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "A drawdown made mid-accumulation to cover a job loss, a medical bill or a family need resets the base that later growth compounds on, and where the money came from a retirement account it may also carry tax and an additional early-distribution tax. The account can be refilled, but only up to the annual ceiling, so the refill takes longer than the withdrawal did.",
+          "costs": [
+            "The compounding base is reset, and the lost growth cannot be contributed back",
+            "Annual contribution ceilings cap the speed of any refill"
+          ],
+          "routes": [
+            "Plan loans, hardship distributions and the emergency distribution provisions that federal retirement law now allows, which carry different tax treatment from an ordinary withdrawal",
+            "Nonprofit credit counseling agencies accredited by the national counseling associations, and state emergency assistance programs",
+            "Rolling a balance rather than cashing it out at a job change keeps it inside the tax-advantaged system"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "A great deal of household wealth is not in financial accounts at all: it sits in a business, in farmland, in rental property, or in a defined-benefit pension and a stream of benefit payments that no balance sheet shows as a number. Households holding wealth this way can look asset-poor in survey measures while holding claims on future income that are substantial.",
+          "costs": [
+            "Wealth held in one business or property is illiquid and concentrated in a single risk"
+          ],
+          "routes": [
+            "Pension lump-sum and annuity elections, where a plan offers both",
+            "Business valuation and succession planning through Small Business Administration resources and Small Business Development Centers"
+          ],
+          "evidence": "contested"
+        },
+        "never": {
+          "tends": "Some households never accumulate on this curve: earnings that cover current costs and no more, no employer plan on offer, rent rather than a mortgage, and no inheritance. What supports later life is then benefit payments computed from covered earnings rather than a balance, which is a different structure rather than a smaller version of the same one.",
+          "costs": [
+            "No buffer for an income shock, and no asset to draw on in the years after paid work ends"
+          ],
+          "routes": [
+            "State automatic payroll savings programs for workers without an employer plan, operating in Oregon, California, Illinois and a growing number of other states",
+            "The Saver's Credit for lower-income retirement contributors, and Supplemental Security Income for those who qualify",
+            "Individual development accounts and matched-savings programs run by community development organizations"
+          ],
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-first-home-purchase-age": {
+      "major": true,
+      "affectsLater": [
+        "ms-household-wealth-by-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Buying earlier starts the amortization clock sooner, so a larger share of the loan is paid off by any later point and the housing payment is fixed against later movements in rent. It also concentrates the household's assets in one illiquid holding and ties the cost of moving for work to the cost of selling.",
+          "costs": [
+            "A large share of net worth held in a single, illiquid asset",
+            "Moving for a job becomes expensive, which narrows the labor market a household can reach",
+            "A smaller down payment usually means mortgage insurance and a larger balance to amortize"
+          ],
+          "routes": [
+            "Renting the property out and moving, where the loan and local rules allow it",
+            "Federally backed loans that a qualified buyer may assume, which can make a later sale easier in some markets",
+            "Mortgage insurance on conventional loans can be removed once the equity share reaches the level the servicer requires"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Buying somewhere near the common age means the amortization span sits mostly inside the working years, so the payment falls during the years earnings are highest and the loan is largely retired before paid work falls away. Underwriting standards, down payment assistance programs and first-time buyer provisions are all designed around a buyer in roughly this position.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "A first purchase made later means the amortization span overlaps the years when income shifts from wages to withdrawals and benefit payments, so the housing payment continues into the drawdown. Against that, more years of renting usually mean a larger accumulated down payment and a shorter loan term is more often affordable, which changes the shape of the payment rather than only its start date.",
+          "costs": [
+            "Loan payments continuing past the years when paid work commonly falls away",
+            "Underwriting looks at income that may already be shifting from wages to benefits"
+          ],
+          "routes": [
+            "Shorter loan terms and larger down payments, which compress the amortization span",
+            "Retirement and asset-depletion underwriting, which lets some lenders count assets as qualifying income",
+            "Home equity conversion mortgages, which are available to older owners once sufficient equity exists"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Ownership can end other than by choice, through a job loss, a divorce, or a payment the household can no longer make. The consequences run through the credit file and through eligibility waiting periods before another federally backed loan can be obtained, which is what makes re-entry a matter of years rather than months.",
+          "costs": [
+            "Waiting periods before eligibility for another federally backed loan",
+            "Equity that was built can be consumed by the costs of a forced sale"
+          ],
+          "routes": [
+            "Loan modification, forbearance and repayment plans, which servicers of federally backed loans are required to evaluate",
+            "Housing counseling agencies approved by the Department of Housing and Urban Development, whose counseling is free to the household",
+            "Short sale or deed in lieu, which end the loan on terms that carry shorter waiting periods than a completed foreclosure"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "Ownership is not the only structure available: shared-equity and community land trust programs split appreciation in exchange for a lower entry price, co-ownership with family or friends spreads the down payment, manufactured housing and cooperative apartments carry different financing entirely, and long-term renting keeps the same money liquid. Each changes what the household owns rather than whether it has housing.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Renting across a whole adult life is a common and coherent arrangement, and it is the arrangement in which the household keeps its assets liquid and its mobility intact. Wealth then builds through financial accounts rather than through equity, and where the amounts placed in those accounts match what a mortgage would have absorbed, the accumulation is not obviously smaller — which is exactly the comparison researchers disagree about, because it turns on local prices, rents and the returns assumed.",
+          "costs": [
+            "No fixed housing payment, so housing costs move with the local rental market",
+            "No equity to draw on or to pass on"
+          ],
+          "routes": [
+            "Employer retirement plans, individual retirement arrangements and taxable brokerage accounts, which are open regardless of tenure",
+            "Rent stabilization where local law provides it, and long-term leases",
+            "Real estate investment trusts, which give exposure to housing as an asset class without ownership of a dwelling"
+          ],
+          "evidence": "contested"
+        }
+      }
+    },
+    "ms-p1fma-catch-up-contributions-open": {
+      "major": true,
+      "affectsLater": [
+        "ms-household-wealth-by-age"
+      ],
+      "analysis": {
+        "early": {
+          "tends": "Before this provision applies, the ordinary annual contribution ceiling is the binding one, and what accumulates depends on the standard limit, on any employer match, and on the span left for compounding. Money placed under the ordinary ceiling in the earlier working years sits in the account longer than the same amount placed under the raised ceiling later, which is why the provision raises a limit rather than replacing what the earlier years did.",
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "When the provision opens, the annual ceiling on tax-advantaged contributions rises for employer plans and for individual retirement arrangements alike, and a similar additional amount opens for health savings accounts a few years later. The provision is a ceiling, not a schedule: it changes what is permitted in a year, not what happens in it.",
+          "evidence": "speculative"
+        },
+        "late": {
+          "tends": "Taking up the raised ceiling only years after it opens leaves fewer years under it before withdrawals ordinarily begin, so more of the eventual balance comes from the contributions themselves and less from growth on them. Where earnings are highest in exactly these years, the raised ceiling and the capacity to use it often arrive together.",
+          "costs": [
+            "Fewer years under the raised ceiling before required withdrawals begin"
+          ],
+          "routes": [
+            "Individual retirement arrangements carry their own catch-up provision on top of the employer plan's",
+            "Health savings accounts allow an additional contribution from a somewhat later age, and unspent balances carry forward with no expiry",
+            "Taxable brokerage accounts carry no contribution ceiling at all, at the cost of the tax treatment"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "Contributions stopped and later restarted cannot be made up: the ceiling is annual, and an unused year does not carry forward in an employer plan or an individual retirement arrangement. What the provision does is raise the ceiling in the years that remain, not restore the years that were missed.",
+          "costs": [
+            "Unused annual contribution room is not recoverable in a later year"
+          ],
+          "routes": [
+            "Spousal individual retirement arrangements let an earning spouse contribute on behalf of a non-earning one, opening a second ceiling",
+            "Health savings account balances and taxable accounts absorb amounts beyond the retirement plan ceilings"
+          ],
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "The same objective is reachable through instruments the provision does not govern: taxable brokerage accounts with no ceiling, health savings accounts, deferred compensation arrangements offered by some employers, paying down a mortgage, or holding a business or property. Each carries different tax treatment, different liquidity and different risk, and none of them is a version of the others.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Most households contribute below the ordinary ceiling, so for them the raised ceiling never binds and never becomes relevant — it is a limit that only matters to someone already pressing against it. Where contributions are set by what is left after costs rather than by a rule, the provision changes nothing about the household's position.",
+          "evidence": "speculative"
+        }
+      }
+    },
+    "ms-p1fr-ss-earliest-claim": {
+      "major": true,
+      "affectsLater": [],
+      "analysis": {
+        "early": {
+          "tends": "A claim made at the earliest permitted age produces a monthly payment permanently reduced against the amount payable at full retirement age, in exchange for a longer span of payments. Where the household is still earning above the threshold the program sets, an earnings test withholds part of each payment before full retirement age; the withheld amount is not forfeited but recomputed into a higher payment afterward.",
+          "costs": [
+            "A monthly amount reduced for as long as payments continue, not only until full retirement age",
+            "Part of each payment withheld while earnings exceed the program's threshold"
+          ],
+          "routes": [
+            "The program's own withdrawal-of-application provision allows a claim to be undone within the first year of entitlement, with the payments received repaid",
+            "Voluntary suspension of payments at full retirement age lets delayed retirement credits accrue on the suspended amount",
+            "Continued covered earnings in later years can replace a lower year in the earnings record the benefit formula reads"
+          ],
+          "evidence": "speculative"
+        },
+        "window": {
+          "tends": "Claims are spread across the whole span between the earliest permitted age and the age at which delayed credits stop accruing, and the payment is adjusted continuously across it rather than in steps: a reduction for every month before full retirement age, a credit for every month after. The program is designed so that the adjustment is roughly neutral for someone with average longevity, which is why the same span is used by people in very different circumstances.",
+          "evidence": "contested"
+        },
+        "late": {
+          "tends": "A claim made after full retirement age accrues delayed retirement credits for each month it is deferred, raising the monthly amount, until the age at which those credits stop. The intervening years are funded from earnings, savings or another household member's income, and the higher amount then applies to every payment that follows. Past that ceiling age the credit rule adds nothing further and the months deferred beyond it are not recovered, so that particular gain closes rather than narrows.",
+          "costs": [
+            "The years before the claim have to be funded from other sources",
+            "Fewer months over which payments are received",
+            "Months deferred past the age at which delayed credits stop add nothing to the payment and are not recoverable"
+          ],
+          "routes": [
+            "Continued paid work, phased retirement or part-time work bridges the intervening years",
+            "Withdrawals from tax-deferred accounts in those years, which also reduce the balance from which later required withdrawals are computed",
+            "Retroactive payment of up to a limited number of prior months is available to someone claiming after full retirement age"
+          ],
+          "evidence": "speculative"
+        },
+        "interrupted": {
+          "tends": "A claim followed by a return to paid work does not end the entitlement: before full retirement age the earnings test withholds part of the payment against earnings above a threshold, and at full retirement age the payment is recomputed upward to account for what was withheld. Payments can also be suspended voluntarily at full retirement age and restarted later with credits accrued in between.",
+          "evidence": "speculative"
+        },
+        "alternative": {
+          "tends": "The retirement benefit computed from a person's own covered earnings is not the only route into the program. Spousal benefits, divorced-spouse benefits after a marriage of sufficient length, and disability benefits that convert automatically at full retirement age each compute a payment from a different basis, and a person entitled under more than one route receives the higher rather than the sum.",
+          "evidence": "speculative"
+        },
+        "never": {
+          "tends": "Retirement benefits are paid only on a filed application, and there is no automatic enrolment, so a claim never made on one's own record is an ordinary state rather than a missed step. Some people never become fully insured on their own covered earnings and are entitled instead through a spouse's or a divorced spouse's record; others are fully insured, have a pension or other income, and simply never file here. Insured status once earned does not lapse, so the entitlement stays available and the door to filing an application does not close.",
+          "costs": [
+            "Nothing is paid for the months before an application is filed, and retroactive payment reaches back only a limited number of months"
+          ],
+          "routes": [
+            "An application can be filed at any later point, online or at a Social Security field office, and someone filing after full retirement age can request the limited retroactive payment the program allows",
+            "Entitlement through a current spouse's record, or through a former spouse's record after a marriage of sufficient length, is claimed separately from one's own and computed on a different basis",
+            "The program's benefit statement and online account show insured status and the amount computed at each claiming age"
+          ],
+          "evidence": "speculative"
+        }
+      }
+    }
+  }
+}

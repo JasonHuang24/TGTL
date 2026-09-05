@@ -1,0 +1,312 @@
+{
+  "key": "p2-late-life-transitions",
+  "sources": [
+    {
+      "id": "src-census-living-arrangements-2022",
+      "title": "Living Arrangements Varied Across Age Groups",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/library/stories/2024/05/living-arrangements.html",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "the share of women in each older age band who lived alone, from the Current Population Survey; the page publishes living-alone shares by sex only for women in these bands",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Among older adults, about 27% of women ages 65 to 74 and 43% of those age 75 or older lived alone"
+    },
+    {
+      "id": "src-nchs-residential-care-2022",
+      "title": "Residential Care Community Resident Characteristics: United States, 2022 (NCHS Data Brief No. 506)",
+      "publisher": "National Center for Health Statistics",
+      "url": "https://www.cdc.gov/nchs/products/databriefs/db506.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "the age distribution of people living in residential care communities such as assisted living, from the biennial National Post-acute and Long-term Care Study",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Most residential care community residents were age 85 and older (53%), 31% were ages 75–84, 10% were ages 65–74"
+    },
+    {
+      "id": "src-census-centenarians-age-bands",
+      "title": "The U.S. Centenarian Population Grew by 50% Between 2010 and 2020",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/newsroom/press-releases/2025/centenarian-population.html",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2020,
+      "measures": "the geographic distribution of the population in the oldest age bands, contrasting the band below one hundred with the band of those who had reached it",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "States with the highest proportion of centenarians were similar in pattern to that for the population ages 85 to 99"
+    },
+    {
+      "id": "src-census-centenarians-count",
+      "title": "The U.S. Centenarian Population Grew by 50% Between 2010 and 2020",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/newsroom/press-releases/2025/centenarian-population.html",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2020,
+      "measures": "the count and population share of people who had reached one hundred years of age at the decennial census",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In 2020, centenarians (people who have reached the age of 100) accounted for just 2 out of 10,000 people"
+    },
+    {
+      "id": "src-bls-ted-2019-lfp-65-74",
+      "title": "Labor force participation rate for workers age 75 and older projected to be over 10 percent by 2026",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/opub/ted/2019/labor-force-participation-rate-for-workers-age-75-and-older-projected-to-be-over-10-percent-by-2026.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2016,
+      "measures": "the civilian labor force participation rate of the sixty-five to seventy-four age band, observed in an earlier year and projected to the end of the projection period by the employment projections program",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The participation rate for workers age 65 to 74 is projected to be 30.2 percent in 2026, compared with 17.5 percent in 1996."
+    },
+    {
+      "id": "src-bls-ted-2019-lfp-75-plus",
+      "title": "Labor force participation rate for workers age 75 and older projected to be over 10 percent by 2026",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/opub/ted/2019/labor-force-participation-rate-for-workers-age-75-and-older-projected-to-be-over-10-percent-by-2026.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2016,
+      "measures": "the civilian labor force participation rate of the open band of workers seventy-five and older, observed in an earlier year and projected to the end of the projection period by the employment projections program",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For workers age 75 and older, the participation rate in 2026 is projected to be 10.8 percent, compared with 4.7 percent in 1996."
+    },
+    {
+      "id": "src-bls-lfp-oldest-band",
+      "title": "Number of people 75 and older in the labor force is expected to grow 96.5 percent by 2030",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/opub/ted/2021/number-of-people-75-and-older-in-the-labor-force-is-expected-to-grow-96-5-percent-by-2030.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2021,
+      "dataYear": 2020,
+      "measures": "the direction of projected change in labor force participation by age band: which bands the employment projections program expects to fall and which to rise",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The only age group whose labor force participation rate is projected to rise are people age 75 and older"
+    },
+    {
+      "id": "src-bls-older-workers",
+      "title": "Older workers: Labor force trends and career options",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/careeroutlook/2017/article/older-workers.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2017,
+      "dataYear": 2016,
+      "measures": "the share of workers in each older age band employed part time, defined by the article as usually one to thirty-four hours a week",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For workers ages 65 and older, the rate of part-time employment is even higher: 40 percent."
+    },
+    {
+      "id": "src-cfpb-claiming-age",
+      "title": "Planning your Social Security claiming age",
+      "publisher": "Consumer Financial Protection Bureau",
+      "url": "https://www.consumerfinance.gov/consumer-tools/retirement/before-you-claim/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the span of ages at which a worker is permitted to claim Social Security retirement benefits, restating the rules of the Social Security Administration; it is a permission, not a count of when people claim",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "you are allowed to claim your benefits as early as age 62. You can choose to wait, and claim as late as age 70."
+    },
+    {
+      "id": "src-cfpb-benefit-grows-with-age",
+      "title": "Planning your Social Security claiming age",
+      "publisher": "Consumer Financial Protection Bureau",
+      "url": "https://www.consumerfinance.gov/consumer-tools/retirement/before-you-claim/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "how the monthly retirement benefit amount changes with the age at which a worker claims, restating the rules of the Social Security Administration",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Your monthly benefit is higher the longer you wait, until age 70."
+    },
+    {
+      "id": "src-irs-rmd-faq",
+      "title": "Retirement plan and IRA required minimum distributions FAQs",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the age at which an account owner must begin taking required minimum distributions; unconditional for a traditional individual retirement account owner, while the same page allows a workplace plan participant who is still working to wait",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "You must take your first required minimum distribution for the year in which you reach age 73."
+    },
+    {
+      "id": "src-irs-rmd-first-year",
+      "title": "Retirement plan and IRA required minimum distributions FAQs",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/retirement-plans/retirement-plan-and-ira-required-minimum-distributions-faqs",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the deadline for the first required minimum distribution, which the agency allows to fall in the year after the year the distribution is for",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "However, you can delay taking the first RMD until April 1 of the following year."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-living-alone-later-life",
+      "label": "Living alone in later life",
+      "lane": "home-independence",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 65, "to": 75 }, "typical": { "from": 65, "to": 75 } },
+      "measure": "share-at-age",
+      "population": "women counted in the Current Population Survey and reported in broad older age bands; the source publishes a living-alone share by sex for women only, and its oldest band is open ended, so the window stops where that band begins",
+      "sources": ["src-census-living-arrangements-2022"],
+      "readRef": "/topics/relationships",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A household of one becomes a common arrangement among the women counted in the older bands, and more common in the older band than in the younger one.",
+        "Tasks two people once split — bills, driving, cooking, checking that the other person got home safely — sit with one person.",
+        "Contact with neighbors, relatives and services carries weight it did not carry in a shared household."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-residential-care-community",
+      "label": "Living in a residential care community",
+      "lane": "home-independence",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 65, "to": 85 }, "typical": { "from": 75, "to": 85 } },
+      "measure": "share-at-age",
+      "population": "people living in residential care communities such as assisted living, counted in the national post-acute and long-term care study; the oldest published band is open ended",
+      "sources": ["src-nchs-residential-care-2022"],
+      "readRef": "/topics/health",
+      "sensitivity": "health-decline",
+      "careNote": "This is a count of where people were living, not a forecast for any one person, and questions about a particular person's care belong with that person, the people close to them, and a clinician.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Parts of daily life — meals, medicines, bathing, moving around a building — are handled by staff who are on site.",
+        "A household of one's own is exchanged for a room or apartment inside a community, with other residents nearby.",
+        "Relatives take on visiting, and often paperwork and money handled from a distance."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-advance-directives-later-life",
+      "label": "Written care instructions naming a decision maker",
+      "lane": "civic-legal",
+      "kind": "institutional-sequence",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Need a general-population study reporting the share of people who have completed an advance directive at a stated age or age band — a Health and Retirement Study analysis or a national survey of adults would do it. The NCHS long-term-care data brief cannot carry this: its comparison is an odds contrast between open bands inside a universe of people already receiving home health, nursing home or hospice care, which is a stock inside a narrow universe rather than an age at which anything happens.",
+      "windowInWords": "Paperwork naming a decision maker and setting out care instructions, available across adult life with no starting age of its own, on file more often in the older bands than in the younger ones measured beside them",
+      "readRef": "/situations/a-death",
+      "alsoRead": ["/situations/grief"],
+      "sensitivity": "dying",
+      "careNote": "This describes paperwork some people already had on file, not advice about anyone in particular, and a clinician, or a lawyer where property is involved, is where a real decision belongs.",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-hospice-and-palliative-availability",
+      "label": "Hospice and palliative care, as services rather than events",
+      "lane": "body-health",
+      "kind": "institutional-sequence",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Need a verbatim eligibility sentence from medicare.gov or the CMS hospice benefit page, plus a use-by-age-band sentence from the CMS Hospice Monitoring Report published at cms.gov/files/document. Note that any age band in that report is measured among beneficiaries who died, which is a share inside a decedent universe and not an age at which anything happens.",
+      "windowInWords": "A service that is available across later life with no starting age of its own, taken up by a share of people in the oldest bands rather than in a particular year",
+      "readRef": "/situations/a-death",
+      "alsoRead": ["/situations/grief"],
+      "sensitivity": "dying",
+      "careNote": "This only notes that a covered service exists and says nothing about any one person's situation; a clinician or care team is where that conversation belongs.",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-social-security-claiming-window",
+      "label": "The span in which Social Security retirement benefits can first be claimed",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "window": { "from": 62, "to": 70 } },
+      "measure": "legal-rule",
+      "population": "workers insured for Social Security retirement benefits, under the claiming rules the agency applies; this is the span the rule permits, and no source here counts the ages at which people actually claim",
+      "sources": ["src-cfpb-claiming-age", "src-cfpb-benefit-grows-with-age"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A monthly payment begins, and the age it begins at sets the size of every payment that follows.",
+        "The monthly amount is higher the longer a person waits, up to the last age the rule counts.",
+        "Earnings and savings are weighed differently once a monthly check is arriving."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-required-minimum-distributions",
+      "label": "Withdrawals from a traditional individual retirement account stop being optional",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "window": { "from": 73, "to": 73 } },
+      "measure": "legal-rule",
+      "population": "owners of traditional individual retirement accounts, under the rule the tax agency applies; the same agency lets a person still working under a workplace plan wait longer, and that case is not what this age describes",
+      "sources": ["src-irs-rmd-faq", "src-irs-rmd-first-year"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A minimum amount has to come out of the account for that year, and again for each year after it.",
+        "The agency lets the first one be taken in that year or delayed to the first day of April in the following year.",
+        "Money that had been sitting untaxed inside the account becomes income in the year it is withdrawn."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-work-in-later-life",
+      "label": "Paid work continues for some people in the oldest working bands",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 65, "to": 75 }, "typical": { "from": 65, "to": 74 } },
+      "measure": "share-at-age",
+      "population": "people counted in the civilian labor force by age band; the participation rate is higher in the younger of the two oldest bands, and the oldest band the agency publishes is open ended, so the window stops where that band begins",
+      "sources": [
+        "src-bls-ted-2019-lfp-65-74",
+        "src-bls-ted-2019-lfp-75-plus",
+        "src-bls-lfp-oldest-band",
+        "src-bls-older-workers"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Paid work carries on past the ages usually associated with leaving it, and part-time schedules are more common among the oldest workers than among younger ones.",
+        "Earnings sit alongside pension and benefit income rather than replacing it.",
+        "The oldest working band is the one the agency projects to rise rather than fall."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-oldest-ages",
+      "label": "Reaching the oldest ages",
+      "lane": "body-health",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 85, "to": 100 }, "typical": { "from": 85, "to": 99 } },
+      "measure": "share-at-age",
+      "population": "people counted at the decennial census in the oldest age bands, including those who had reached one hundred years",
+      "sources": ["src-census-centenarians-age-bands", "src-census-centenarians-count"],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The number of people counted at these ages has grown, while they remain a very small share of the whole population.",
+        "Most statistics stop resolving single years here and report one open band that holds everyone above it.",
+        "Services, forms and research designed around broad older bands rarely separate the people inside this one."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

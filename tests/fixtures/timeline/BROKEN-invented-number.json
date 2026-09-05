@@ -1,0 +1,20 @@
+{
+  "key": "fixture-broken",
+  "sources": [],
+  "milestones": [
+    {
+      "id": "ms-fixture-invented",
+      "label": "A number typed from memory",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": { "exact": 42 },
+      "measure": "legal-rule",
+      "population": "everyone",
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

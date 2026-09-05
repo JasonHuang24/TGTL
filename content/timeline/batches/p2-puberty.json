@@ -1,0 +1,139 @@
+{
+  "key": "p2-puberty",
+  "sources": [
+    {
+      "id": "src-nichd-puberty-onset",
+      "title": "About Puberty and Precocious Puberty",
+      "publisher": "Eunice Kennedy Shriver National Institute of Child Health and Human Development (NICHD), National Institutes of Health",
+      "url": "https://www.nichd.nih.gov/health/topics/puberty/conditioninfo",
+      "kind": "reputable-secondary",
+      "publicationYear": 2021,
+      "dataYear": 2021,
+      "measures": "The age range within which the physical changes of puberty typically begin, stated separately for girls and for boys in the source's own terms. This is a federal health institute's summary of the clinical literature; the page names no single underlying study, and it does not say whether girls and boys refer to sex assigned at birth or to gender.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The physical changes that mark puberty typically begin in girls between ages 8 and 13 and in boys between ages 9 and 14."
+    },
+    {
+      "id": "src-statpearls-tanner-females",
+      "title": "Tanner Stages",
+      "publisher": "StatPearls Publishing, via NCBI Bookshelf (Emmanuel M, Bokor BR)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470280/",
+      "kind": "peer-reviewed",
+      "publicationYear": 2022,
+      "dataYear": 2022,
+      "measures": "The age range for onset of puberty in females, summarized from clinical sexual-maturity staging literature. Staging is assessed by clinician examination rather than self-report, and the chapter uses the word females without defining it as sex assigned at birth or as gender.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In females, the normal onset of puberty ranges from 8 to 13 years old"
+    },
+    {
+      "id": "src-statpearls-tanner-males",
+      "title": "Tanner Stages",
+      "publisher": "StatPearls Publishing, via NCBI Bookshelf (Emmanuel M, Bokor BR)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470280/",
+      "kind": "peer-reviewed",
+      "publicationYear": 2022,
+      "dataYear": 2022,
+      "measures": "The age range for onset of puberty in males, summarized from clinical sexual-maturity staging literature. Staging is assessed by clinician examination rather than self-report, and the chapter uses the word males without defining it as sex assigned at birth or as gender.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The onset of puberty in males ranges from 9 to 14 years of age."
+    },
+    {
+      "id": "src-nchs-menarche-median",
+      "title": "Trends and Patterns in Menarche in the United States: 1995 through 2013-2017, National Health Statistics Reports Number 146",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/data/nhsr/nhsr146-508.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2017,
+      "measures": "Median age at first menstrual period, from the National Survey of Family Growth. Age is recalled and self-reported in a face-to-face interview by women of reproductive age in a nationally representative household sample, in answer to a single question about how old they were at their first menstrual period. It is not a clinician observation, and it applies only to respondents interviewed as women.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The median age at menarche decreased from 12.1 in 1995 to 11.9 in 2013–2017."
+    },
+    {
+      "id": "src-nchs-menarche-distribution",
+      "title": "Trends and Patterns in Menarche in the United States: 1995 through 2013-2017, National Health Statistics Reports Number 146",
+      "publisher": "National Center for Health Statistics, Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nchs/data/nhsr/nhsr146-508.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2017,
+      "measures": "Cumulative probability of having reached first menstrual period by each single year of age, estimated by a survival method from recalled ages self-reported by women of reproductive age in a nationally representative household survey. The reported band is a spread across the sample, not a clinical threshold.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Among women aged 15–44 in the United States in 2013–2017, 10% reached menarche by age 10, 53% by age 12, and 90% by age 14."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-puberty-onset-girls",
+      "label": "The physical changes of puberty begin in girls",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "typical": { "from": 8, "to": 13 }
+      },
+      "measure": "typical-range",
+      "population": "Girls in the United States, in the terms the sources themselves use. Neither source states whether girls means sex assigned at birth or gender, and the range describes when changes typically begin across a population rather than in any one child.",
+      "sources": ["src-nichd-puberty-onset", "src-statpearls-tanner-females"],
+      "readRef": "/topics/health",
+      "sensitivity": "puberty",
+      "careNote": "This is a range observed across a population rather than a timetable for any one child, and a pediatrician is the right place for a question about a particular child.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Growth speeds up and the body changes shape, and the changes arrive in a sequence spread over several years rather than all at once.",
+        "Clothing, sleep, appetite and privacy needs shift, and families often start renegotiating what a child handles on their own.",
+        "The spread across a population is wide, so a single calendar age covers many different points in the sequence."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-puberty-onset-boys",
+      "label": "The physical changes of puberty begin in boys",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "typical": { "from": 9, "to": 14 }
+      },
+      "measure": "typical-range",
+      "population": "Boys in the United States, in the terms the sources themselves use. Neither source states whether boys means sex assigned at birth or gender, and the range describes when changes typically begin across a population rather than in any one child.",
+      "sources": ["src-nichd-puberty-onset", "src-statpearls-tanner-males"],
+      "readRef": "/topics/health",
+      "sensitivity": "puberty",
+      "careNote": "This describes the spread measured across many children rather than a schedule any single child is held to, and a pediatrician is the right place to bring a specific concern.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Growth accelerates, the voice changes, and body composition shifts, with the sequence unfolding over several years rather than in a single step.",
+        "Sizing, sports and sleep needs change, and appetite often rises sharply through the fastest-growing stretch.",
+        "Starting points vary widely across a population, and a later start is a position within a measured range."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-menarche-first-period",
+      "label": "First menstrual period",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "typical": { "from": 11.9, "to": 11.9 }
+      },
+      "measure": "median",
+      "population": "Women of reproductive age interviewed for a nationally representative United States household survey, recalling their own age at first menstrual period. This applies to that group only. The single typical figure is the survey median rather than a range, and the ages recorded across that survey run for years on either side of it.",
+      "sources": ["src-nchs-menarche-median", "src-nchs-menarche-distribution"],
+      "readRef": "/topics/health",
+      "sensitivity": "puberty",
+      "careNote": "This is a recalled range measured across a large survey population, not a test anyone passes or fails, and a clinician is the right place for a question about one person.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Periods begin, and cycles are often irregular for a while before settling into a steadier pattern.",
+        "Households begin planning around supplies, cramps and school days, and schools differ in how easily they accommodate that.",
+        "The ages recorded across a population span several years, so a single middle figure sits inside a wide spread rather than marking a target."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

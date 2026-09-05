@@ -1,0 +1,509 @@
+/* =========================================================================
+   THE SIX CANONICAL INSTRUMENTS (blueprint 4.0 §4.1, §4.3)
+   -------------------------------------------------------------------------
+   The second sheet of the sim namespace. Drawn once, reused everywhere. Every
+   rule here obeys the standing law at the top of app/sim.css: sim tokens only,
+   no fixed width on anything holding text, min-size tap targets, explicit grid
+   tracks, solid ground under every string. Gate S-9 treats app/sim.css and this
+   file together as "the sim stylesheet" and asserts that no selector in either
+   is shared with the reading sheet.
+   ========================================================================= */
+
+/* The screen-reader text equivalent every instrument carries (§4.1). It is real
+   content, not a label — it says the same thing the picture says. */
+.sim-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sim-instrument-title {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+.sim-instrument-subtitle {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+  margin: 0.9rem 0 0.4rem;
+  font-weight: 600;
+}
+
+/* ---- 1 · the card face ---- */
+
+.sim-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.sim-card[data-selected="1"] {
+  border-color: var(--sim-accent);
+  box-shadow: inset 0 0 0 1px var(--sim-accent);
+}
+.sim-card-frame {
+  display: grid;
+  place-items: center;
+  padding: 0.75rem 0.5rem;
+  background: var(--sim-sunk);
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-card-body {
+  padding: 0.85rem 1rem 1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.sim-card-family {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-card-family-word {
+  color: var(--sim-accent);
+  font-weight: 600;
+}
+.sim-card-title {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.3;
+  margin: 0;
+  color: var(--sim-ink);
+}
+.sim-card[data-band="strong"] .sim-card-frame,
+.sim-card[data-band="solid"] .sim-card-frame {
+  border-bottom-color: var(--sim-good);
+}
+.sim-card[data-band="mixed"] .sim-card-frame {
+  border-bottom-color: var(--sim-mixed);
+}
+.sim-card[data-band="poor"] .sim-card-frame,
+.sim-card[data-band="failure"] .sim-card-frame {
+  border-bottom-color: var(--sim-poor);
+}
+
+.sim-motif {
+  inline-size: 100%;
+  max-inline-size: 9rem;
+  block-size: auto;
+}
+.sim-motif-line {
+  stroke: var(--sim-line-strong);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+}
+.sim-motif-dash {
+  stroke: var(--sim-line-strong);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 3 4;
+  stroke-linecap: round;
+}
+.sim-motif-accent-line {
+  stroke: var(--sim-accent);
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sim-motif-fill {
+  fill: var(--sim-line-strong);
+  opacity: 0.55;
+}
+.sim-motif-hollow {
+  fill: none;
+  stroke: var(--sim-line-strong);
+  stroke-width: 2;
+}
+.sim-motif-accent {
+  fill: var(--sim-accent);
+}
+.sim-motif-glow {
+  fill: var(--sim-accent);
+  opacity: 0.22;
+}
+.sim-motif-void {
+  fill: var(--sim-bg);
+  stroke: var(--sim-line);
+  stroke-width: 1;
+}
+
+.sim-family-plate {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
+  gap: 0.75rem;
+}
+.sim-family-plate-item {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  background: var(--sim-sunk);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.4rem;
+}
+.sim-family-plate-word {
+  font-size: 0.78rem;
+  color: var(--sim-muted);
+  text-align: center;
+}
+
+/* ---- 2 · the distribution strip ---- */
+
+.sim-strip {
+  margin: 1rem 0;
+}
+.sim-strip-bar {
+  position: relative;
+  display: flex;
+  min-height: 2.4rem;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  overflow: visible;
+}
+.sim-strip-seg {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 0.35rem 0.2rem;
+  border-right: 1px solid var(--sim-divider);
+}
+.sim-strip-seg:last-child {
+  border-right: 0;
+}
+.sim-strip-seg[data-band="strong"] {
+  background: color-mix(in srgb, var(--sim-good) 60%, var(--sim-raised));
+}
+.sim-strip-seg[data-band="solid"] {
+  background: color-mix(in srgb, var(--sim-good) 34%, var(--sim-raised));
+}
+.sim-strip-seg[data-band="mixed"] {
+  background: color-mix(in srgb, var(--sim-mixed) 40%, var(--sim-raised));
+}
+.sim-strip-seg[data-band="poor"] {
+  background: color-mix(in srgb, var(--sim-poor) 40%, var(--sim-raised));
+}
+.sim-strip-seg[data-band="failure"] {
+  background: color-mix(in srgb, var(--sim-poor) 62%, var(--sim-raised));
+}
+.sim-strip-seg-label {
+  font-size: 0.72rem;
+  color: var(--sim-on-accent);
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.sim-strip-marker {
+  position: absolute;
+  top: -0.4rem;
+  bottom: -0.4rem;
+  inline-size: 2px;
+  background: var(--sim-ink);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease, left 0.5s ease;
+}
+.sim-strip-marker[data-shown="1"] {
+  opacity: 1;
+}
+.sim-strip-marker-dot {
+  position: absolute;
+  top: -0.3rem;
+  left: 50%;
+  inline-size: 0.7rem;
+  block-size: 0.7rem;
+  border-radius: 50%;
+  background: var(--sim-ink);
+  transform: translateX(-50%);
+}
+.sim-strip-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+}
+
+/* ---- 3 · the gauges ---- */
+
+.sim-gauge-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-gauge {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) minmax(min(3rem, 100%), 1fr) minmax(4.5rem, auto);
+  align-items: center;
+  gap: 0.6rem;
+}
+.sim-gauge-name {
+  font-size: 0.88rem;
+  color: var(--sim-ink);
+}
+.sim-gauge-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  min-block-size: 0.6rem;
+}
+.sim-gauge-cell {
+  background: var(--sim-pip-empty);
+  border-radius: 1px;
+}
+.sim-gauge-cell[data-on="1"] {
+  background: var(--sim-accent);
+}
+.sim-gauge[data-band="depleted"] .sim-gauge-cell[data-on="1"],
+.sim-gauge[data-band="thin"] .sim-gauge-cell[data-on="1"] {
+  background: var(--sim-mixed);
+}
+.sim-gauge-band {
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+  text-align: right;
+}
+.sim-gauge-derived .sim-gauge-name {
+  font-style: italic;
+}
+
+/* ---- 4 · the budget instrument ---- */
+
+.sim-budget-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.sim-budget-row {
+  display: grid;
+  grid-template-columns: minmax(4rem, auto) 1fr;
+  align-items: center;
+  gap: 0.7rem;
+}
+.sim-budget-name {
+  font-size: 0.88rem;
+  color: var(--sim-ink);
+}
+.sim-budget-pips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+.sim-budget-pip {
+  inline-size: 0.85rem;
+  block-size: 0.85rem;
+  border-radius: 50%;
+  background: var(--sim-pip);
+  border: 1px solid var(--sim-pip);
+}
+.sim-budget-pip[data-state="spent"] {
+  background: transparent;
+  border-color: var(--sim-line-strong);
+}
+.sim-budget-pip[data-state="over"] {
+  background: var(--sim-poor);
+  border-color: var(--sim-poor);
+}
+.sim-budget-none {
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+  font-style: italic;
+}
+.sim-budget-row[data-empty="1"] .sim-budget-name {
+  color: var(--sim-muted);
+}
+.sim-budget-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  color: var(--sim-muted);
+}
+.sim-budget[data-compact="1"] .sim-budget-note {
+  display: none;
+}
+
+/* ---- 5 · the consequence queue ---- */
+
+.sim-queue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-queue-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--sim-sunk);
+  border-left: 3px solid var(--sim-queue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.sim-queue-mark {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--sim-queue);
+  margin-top: 0.42rem;
+}
+.sim-queue-text {
+  font-size: 0.92rem;
+  color: var(--sim-ink);
+  line-height: 1.45;
+}
+.sim-queue-inspect {
+  grid-column: 2;
+  justify-self: start;
+  background: transparent;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  color: var(--sim-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+}
+.sim-queue-inspect:hover {
+  border-color: var(--sim-accent);
+  color: var(--sim-ink);
+}
+.sim-queue-note,
+.sim-queue-none {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+}
+
+/* ---- 6 · the timeline ---- */
+
+.sim-timeline-track {
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: stretch;
+}
+.sim-timeline-track:focus-visible {
+  outline: 2px solid var(--sim-focus);
+  outline-offset: 2px;
+}
+.sim-timeline-cell {
+  flex: 1 1 0;
+  min-inline-size: 0.55rem;
+  display: grid;
+}
+/* No .sim-timeline-btn: the timeline is read, not operated. Its cells used to be
+   buttons wired to an inert handler. The cell keeps the height the button gave it
+   so the instrument looks the same. */
+.sim-timeline-cell {
+  min-block-size: 2.75rem;
+  align-items: end;
+}
+.sim-timeline-tick {
+  display: block;
+  block-size: 1.1rem;
+  background: var(--sim-pip-empty);
+  border-radius: 1px;
+}
+.sim-timeline-cell[data-state="past"] .sim-timeline-tick {
+  background: var(--sim-accent);
+}
+.sim-timeline-cell[data-state="now"] .sim-timeline-tick {
+  background: var(--sim-ink);
+  block-size: 1.7rem;
+}
+.sim-timeline-cell[data-kind="branch"] .sim-timeline-tick {
+  background: var(--sim-queue);
+  block-size: 1.5rem;
+}
+.sim-timeline-cell[data-kind="pending"] .sim-timeline-tick {
+  background: var(--sim-queue);
+}
+/* No [data-kind="beat"] rule either — a beat mark on the timeline would be a beat
+   previewed on a surface, which §5.1 forbids. The kind is gone from the type. */
+.sim-timeline-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.76rem;
+  color: var(--sim-muted);
+}
+.sim-timeline-key {
+  inline-size: 0.7rem;
+  block-size: 0.7rem;
+  border-radius: 1px;
+  background: var(--sim-accent);
+  margin-left: 0.5rem;
+}
+.sim-timeline-key[data-kind="branch"],
+.sim-timeline-key[data-kind="pending"] {
+  background: var(--sim-queue);
+}
+.sim-timeline-key[data-kind="played"] {
+  background: var(--sim-accent);
+  margin-left: 0;
+}
+.sim-milestone-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.sim-milestone-list li {
+  font-size: 0.88rem;
+  color: var(--sim-ink);
+  padding-left: 0.9rem;
+  position: relative;
+}
+.sim-milestone-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--sim-accent);
+}
+.sim-milestone-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  color: var(--sim-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-strip-marker {
+    transition: none;
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "tgtl-claude-5.0",
+  "version": "5.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "gates": "node --experimental-strip-types tests/run-gates.ts",
+    "gates:sim": "tsx tests/sim-gates.ts",
+    "gates:all": "npm run gates && npm run gates:sim && npm run gates:sim4 && npm run gates:timeline",
+    "serve:out": "node tests/serve-out.mjs",
+    "gates:sim4": "tsx tests/sim-gates-4.ts",
+    "gates:s9": "node tests/s9-ui.mjs",
+    "gates:balance": "tsx tests/s10-balance.ts",
+    "gates:pileup": "tsx tests/s13-pileup.ts",
+    "content": "node tools/build-content.mjs",
+    "content:timeline": "node --experimental-strip-types tools/timeline-build-content.mjs",
+    "gates:timeline": "node --experimental-strip-types tests/timeline-gates.ts",
+    "known-limits:timeline": "node --experimental-strip-types tools/timeline-known-limitations.mjs",
+    "gates:falsify": "bash tests/falsify-walls.sh"
+  },
+  "dependencies": {
+    "next": "^15.5.24",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "eslint": "9.18.0",
+    "eslint-config-next": "^15.5.24",
+    "playwright": "^1.49.1",
+    "tsx": "^4.23.12",
+    "typescript": "5.7.3"
+  }
+}

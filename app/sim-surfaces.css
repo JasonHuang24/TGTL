@@ -1,0 +1,1315 @@
+/* =========================================================================
+   THE PLAY SURFACES (blueprint 4.0 §4.1, §4.3) — the door, the creation scene,
+   the season loop, the Lab, the parse.
+   -------------------------------------------------------------------------
+   The third sheet of the sim namespace. Standing law from app/sim.css applies
+   to every rule here: sim tokens only, no fixed size on anything holding text,
+   min-size tap targets, explicit grid tracks, solid ground under every string.
+   ========================================================================= */
+
+.sim-campaign,
+.sim-lab,
+.sim-door {
+  display: none;
+  background: var(--sim-bg);
+  color: var(--sim-ink);
+  border-radius: var(--radius);
+  min-height: 70vh;
+  padding-bottom: 3rem;
+  font-family: var(--sans);
+}
+:root[data-play-hydrated="1"] .sim-campaign,
+:root[data-play-hydrated="1"] .sim-lab,
+:root[data-play-hydrated="1"] .sim-door {
+  display: block;
+}
+
+.sim-campaign :focus-visible,
+.sim-lab :focus-visible,
+.sim-door :focus-visible {
+  outline: 2px solid var(--sim-focus);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------
+   The scene (§4.1: creation is a scene)
+   --------------------------------------------------------------- */
+
+.sim-scene {
+  position: relative;
+  isolation: isolate;
+  min-height: 60vh;
+  display: grid;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2rem) clamp(2rem, 5vw, 4rem);
+}
+.sim-scene-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.sim-scene-svg {
+  inline-size: 100%;
+  block-size: 100%;
+  display: block;
+}
+.sim-scene-void {
+  fill: var(--sim-bg);
+}
+.sim-scene-glow-in {
+  stop-color: var(--sim-accent);
+  stop-opacity: 0.14;
+}
+.sim-scene-glow-out {
+  stop-color: var(--sim-bg);
+  stop-opacity: 0;
+}
+.sim-scene-star {
+  fill: var(--sim-ink);
+  opacity: 0.5;
+}
+.sim-scene-earth-in {
+  stop-color: var(--sim-accent);
+  stop-opacity: 0.34;
+}
+.sim-scene-earth-mid {
+  stop-color: var(--sim-accent);
+  stop-opacity: 0.12;
+}
+.sim-scene-earth-out {
+  stop-color: var(--sim-bg);
+  stop-opacity: 0;
+}
+.sim-scene-earth-rim {
+  fill: none;
+  stroke: var(--sim-accent);
+  stroke-width: 1.5;
+  opacity: 0.45;
+}
+.sim-scene-earth-line {
+  fill: none;
+  stroke: var(--sim-accent);
+  stroke-width: 1.5;
+  opacity: 0.3;
+}
+.sim-scene-book-body {
+  fill: var(--sim-raised);
+  stroke: var(--sim-line-strong);
+  stroke-width: 1.5;
+}
+.sim-scene-book-spine {
+  fill: var(--sim-accent);
+  opacity: 0.85;
+}
+.sim-scene-book-alt {
+  opacity: 0.7;
+}
+.sim-scene-book-rule {
+  stroke: var(--sim-line-strong);
+  stroke-width: 1.5;
+  opacity: 0.7;
+}
+.sim-scene-book-mark {
+  fill: none;
+  stroke: var(--sim-accent);
+  stroke-width: 1.8;
+  opacity: 0.8;
+}
+.sim-scene-earth,
+.sim-scene-books,
+.sim-scene-stars {
+  transition: opacity 0.9s ease;
+}
+.sim-scene-backdrop[data-stage="void"] .sim-scene-earth,
+.sim-scene-backdrop[data-stage="void"] .sim-scene-books {
+  opacity: 0.25;
+}
+.sim-scene-backdrop[data-stage="earth"] .sim-scene-books {
+  opacity: 0.4;
+}
+.sim-scene-backdrop[data-stage="hand"] .sim-scene-books {
+  opacity: 0.5;
+}
+
+/* §4.2 remedy 4 — SOLID GROUND. Every string over the art sits on this plate. */
+.sim-scene-plate {
+  position: relative;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  max-inline-size: 44rem;
+  margin: 0 auto;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.9rem;
+}
+.sim-scene-plate[data-wide="1"] {
+  max-inline-size: 68rem;
+}
+.sim-scene-eyebrow {
+  margin: 0;
+  color: var(--sim-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+.sim-scene-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  line-height: 1.18;
+  margin: 0;
+  color: var(--sim-ink);
+}
+.sim-scene-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+.sim-hint {
+  color: var(--sim-muted);
+  font-size: 0.88rem;
+}
+
+/* the hand as dealt cards */
+.sim-dealt-row {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: 0.85rem;
+}
+.sim-dealt-card {
+  min-block-size: 11rem;
+  display: grid;
+}
+.sim-dealt-face,
+.sim-dealt-back {
+  background: var(--sim-sunk);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+}
+.sim-dealt-back {
+  place-items: center;
+  align-content: center;
+}
+.sim-dealt-back-art {
+  inline-size: 3.5rem;
+  block-size: auto;
+}
+.sim-dealt-back-frame {
+  fill: none;
+  stroke: var(--sim-line-strong);
+  stroke-width: 1.5;
+}
+.sim-dealt-back-ring {
+  fill: none;
+  stroke: var(--sim-accent);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+.sim-dealt-back-dot {
+  fill: var(--sim-accent);
+}
+.sim-dealt-axis {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-dealt-value {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--sim-ink);
+}
+.sim-dealt-note {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------
+   The door
+   --------------------------------------------------------------- */
+
+.sim-door-grid,
+.sim-lab-grid,
+.sim-preset-grid {
+  list-style: none;
+  margin: 1.2rem 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.sim-door-line {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  color: var(--sim-ink);
+}
+.sim-door-note,
+.sim-preset-fiction {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--sim-muted);
+  line-height: 1.5;
+}
+.sim-door-foot {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+}
+
+/* ---------------------------------------------------------------
+   The constraint profile (§2.3.1) — per axis, no composite, ever
+   --------------------------------------------------------------- */
+
+.sim-profile {
+  background: var(--sim-sunk);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.sim-profile-intro {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--sim-muted);
+  line-height: 1.5;
+}
+.sim-profile-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-profile-line {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) 1fr;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-profile-line:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.sim-profile-axis {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-profile-band {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--sim-ink);
+}
+.sim-profile-note {
+  grid-column: 2;
+  font-size: 0.84rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+.sim-worth-guard {
+  margin: 0;
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--sim-muted);
+  line-height: 1.5;
+  border-top: 1px solid var(--sim-line);
+  padding-top: 0.6rem;
+}
+
+/* ---------------------------------------------------------------
+   Priorities (§3.6)
+   --------------------------------------------------------------- */
+
+.sim-priority-presets {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: 0.75rem;
+}
+.sim-priority-preset {
+  inline-size: 100%;
+  text-align: left;
+  background: var(--sim-sunk);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.85rem;
+  cursor: pointer;
+  font: inherit;
+  color: var(--sim-ink);
+  display: grid;
+  gap: 0.35rem;
+}
+.sim-priority-preset[aria-pressed="true"] {
+  border-color: var(--sim-accent);
+  box-shadow: inset 0 0 0 1px var(--sim-accent);
+}
+.sim-priority-preset-name {
+  font-family: var(--serif);
+  font-size: 1.04rem;
+}
+.sim-priority-preset-note {
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+.sim-priority-list {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.sim-priority-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-priority-name {
+  display: grid;
+  gap: 0.15rem;
+}
+.sim-priority-name strong {
+  color: var(--sim-ink);
+}
+.sim-priority-note {
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+.sim-priority-bar {
+  display: flex;
+  gap: 0.25rem;
+}
+.sim-priority-mark {
+  inline-size: 1.6rem;
+  block-size: 0.35rem;
+  border-radius: 2px;
+  background: var(--sim-pip-empty);
+}
+.sim-priority-mark[data-on="1"] {
+  background: var(--sim-accent);
+}
+.sim-priority-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.sim-priority-btn {
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--sim-line);
+  background: transparent;
+  color: var(--sim-ink);
+  cursor: pointer;
+}
+.sim-priority-btn[aria-pressed="true"] {
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border-color: var(--sim-accent);
+}
+.sim-priority-total {
+  margin: 0.5rem 0 0;
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--sim-muted);
+}
+
+/* ---------------------------------------------------------------
+   The campaign header
+   --------------------------------------------------------------- */
+
+.sim-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  padding: 0.85rem clamp(1rem, 3vw, 1.5rem);
+  border-bottom: 1px solid var(--sim-line);
+  background: var(--sim-raised);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.sim-header-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin: 0;
+}
+.sim-header-fact {
+  display: grid;
+  gap: 0.1rem;
+}
+.sim-header-fact dt {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+  margin: 0;
+}
+.sim-header-fact dd {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--sim-ink);
+}
+.sim-header-intent dd {
+  color: var(--sim-accent);
+}
+.sim-header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ---------------------------------------------------------------
+   The season screens
+   --------------------------------------------------------------- */
+
+.sim-season {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: clamp(1.2rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+}
+@media (min-width: 62rem) {
+  .sim-season {
+    grid-template-columns: minmax(0, 1fr) 19rem;
+    align-items: start;
+  }
+  .sim-season-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.sim-season-main {
+  min-inline-size: 0;
+  display: grid;
+  gap: 1.1rem;
+  align-content: start;
+}
+.sim-season-title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3.4vw, 2rem);
+  line-height: 1.2;
+  margin: 0;
+  color: var(--sim-ink);
+}
+.sim-season-lede {
+  margin: 0;
+  color: var(--sim-muted);
+  font-size: 0.96rem;
+}
+.sim-rail {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  min-inline-size: 0;
+}
+.sim-panel {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}
+.sim-panel-empty,
+.sim-panel-note {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+  line-height: 1.5;
+}
+.sim-briefing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.sim-briefing-grid > * {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  min-inline-size: 0;
+}
+.sim-pressure-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.sim-pressure-list li {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  padding-left: 0.95rem;
+  position: relative;
+  color: var(--sim-ink);
+}
+.sim-pressure-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  border-radius: 50%;
+  background: var(--sim-mixed);
+}
+.sim-pressure-list li[data-kind="need"]::before {
+  background: var(--sim-queue);
+}
+.sim-season-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.sim-standing-list,
+.sim-people-list,
+.sim-plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.sim-standing-list li,
+.sim-plain-list li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--sim-ink);
+}
+.sim-people-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+}
+.sim-person-state {
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+}
+.sim-people-list li[data-exited="1"] .sim-person-name {
+  color: var(--sim-muted);
+  text-decoration: line-through;
+}
+
+/* ---------------------------------------------------------------
+   Allocate
+   --------------------------------------------------------------- */
+
+.sim-allocate-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: 1rem;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}
+.sim-chosen {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+}
+.sim-chosen li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--sim-ink);
+}
+.sim-chosen-empty {
+  color: var(--sim-muted);
+  font-style: italic;
+}
+.sim-chosen-remove {
+  font: inherit;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  color: var(--sim-muted);
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+.sim-chosen-remove:hover {
+  border-color: var(--sim-accent);
+  color: var(--sim-ink);
+}
+.sim-family-filter,
+.sim-lab-axes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.sim-filter-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--sim-line);
+  background: transparent;
+  color: var(--sim-muted);
+  cursor: pointer;
+}
+.sim-filter-btn[aria-pressed="true"] {
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border-color: var(--sim-accent);
+}
+.sim-action-grid,
+.sim-result-list,
+.sim-lab-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.sim-result-list,
+.sim-lab-steps {
+  grid-template-columns: 1fr;
+}
+.sim-card-scene {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--sim-ink);
+}
+.sim-card-cost {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--sim-muted);
+  font-style: italic;
+  line-height: 1.45;
+}
+.sim-card-blocked {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--sim-mixed);
+}
+.sim-option-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.sim-option {
+  background: var(--sim-sunk);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-option-label {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  color: var(--sim-ink);
+}
+.sim-chip-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.sim-chip {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--sim-line);
+  color: var(--sim-muted);
+}
+.sim-chip[data-kind="variance"] {
+  border-color: var(--sim-accent);
+  color: var(--sim-accent);
+}
+.sim-chip[data-kind="recovery"] {
+  border-color: var(--sim-good);
+  color: var(--sim-good);
+}
+.sim-chip[data-kind="position"] {
+  border-color: var(--sim-mixed);
+  color: var(--sim-mixed);
+}
+.sim-option-support {
+  margin: 0;
+  font-size: 0.84rem;
+}
+.sim-floor-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+  border-left: 3px solid var(--sim-good);
+  padding-left: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------
+   Consequences, recovery ties, the beat
+   --------------------------------------------------------------- */
+
+.sim-result-line {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--sim-ink);
+}
+.sim-result-invalid {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--sim-mixed);
+  line-height: 1.5;
+}
+.sim-recovery {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-good);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}
+.sim-recovery-block + .sim-recovery-block {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--sim-line);
+  padding-top: 0.9rem;
+}
+.sim-recovery-from {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--sim-ink);
+}
+.sim-recovery-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.sim-recovery-list li {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.88rem;
+}
+.sim-recovery-label {
+  color: var(--sim-ink);
+}
+.sim-recovery-why {
+  color: var(--sim-muted);
+  font-size: 0.84rem;
+}
+
+/* The beat's reduced frame (§5.1): no chips, no strip, no card face. */
+.sim-beat {
+  padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem);
+  display: grid;
+  justify-items: center;
+}
+.sim-beat-inner {
+  max-inline-size: 34rem;
+  display: grid;
+  gap: 1.1rem;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+.sim-beat-frame-note,
+.sim-beat-real {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--sim-muted);
+  line-height: 1.55;
+}
+.sim-beat-prose {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.7;
+  color: var(--sim-ink);
+}
+.sim-beat-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+.sim-beat-notes li {
+  color: var(--sim-muted);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------
+   The explain drawer
+   --------------------------------------------------------------- */
+
+.sim-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.sim-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--sim-scrim);
+  border: 0;
+  cursor: pointer;
+}
+.sim-drawer-card {
+  position: relative;
+  z-index: 1;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  max-inline-size: 34rem;
+  max-block-size: 86vh;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.7rem;
+  box-shadow: var(--shadow);
+}
+.sim-drawer-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--sim-ink);
+}
+.sim-drawer-line {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--sim-ink);
+}
+.sim-drawer-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--sim-muted);
+  line-height: 1.5;
+}
+.sim-drawer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+.sim-attribution {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.sim-attribution li {
+  display: grid;
+  grid-template-columns: minmax(9rem, auto) 1fr;
+  gap: 0.2rem 0.7rem;
+  align-items: baseline;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--sim-line);
+}
+.sim-attribution li[data-dir="up"] {
+  border-left-color: var(--sim-good);
+}
+.sim-attribution li[data-dir="down"] {
+  border-left-color: var(--sim-mixed);
+}
+.sim-attribution-cat {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-attribution-note {
+  font-size: 0.9rem;
+  color: var(--sim-ink);
+  line-height: 1.45;
+}
+.sim-evidence {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  background: var(--sim-sunk);
+  border-radius: var(--radius);
+}
+.sim-evidence-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sim-accent);
+  font-weight: 600;
+}
+.sim-evidence-meaning {
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------
+   The Lab
+   --------------------------------------------------------------- */
+
+.sim-lab-compare {
+  padding: clamp(1.2rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+  display: grid;
+  gap: 1.1rem;
+}
+.sim-lab-frame {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--sim-ink);
+  background: var(--sim-raised);
+  border-left: 3px solid var(--sim-accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.8rem 1rem;
+}
+.sim-lab-lesson {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--sim-muted);
+}
+.sim-lab-lesson-label {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  color: var(--sim-accent);
+  margin-right: 0.4rem;
+  font-weight: 600;
+}
+.sim-lab-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 54rem) {
+  .sim-lab-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.sim-lab-column {
+  min-inline-size: 0;
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.sim-lab-branch-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--sim-ink);
+}
+.sim-lab-branch-sub {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--sim-muted);
+}
+.sim-lab-diff {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.sim-lab-diff li {
+  display: grid;
+  grid-template-columns: minmax(min(8rem, 100%), 1fr) auto auto auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.88rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-lab-diff-field {
+  color: var(--sim-muted);
+}
+.sim-lab-diff-left,
+.sim-lab-diff-right {
+  color: var(--sim-ink);
+}
+.sim-lab-diff-vs {
+  color: var(--sim-muted);
+  font-size: 0.78rem;
+}
+.sim-no-prediction {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--sim-muted);
+  border: 1px dashed var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+}
+
+/* ---------------------------------------------------------------
+   The parse
+   --------------------------------------------------------------- */
+
+.sim-parse {
+  max-inline-size: 48rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 1.5rem);
+  display: grid;
+  gap: 1.1rem;
+}
+.sim-parse-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  line-height: 1.18;
+  margin: 0;
+  color: var(--sim-ink);
+}
+.sim-parse-lede {
+  margin: 0;
+  color: var(--sim-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.sim-parse-seasons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+  max-block-size: 26rem;
+  overflow-y: auto;
+}
+.sim-parse-seasons li {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, auto) 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding-left: 0.7rem;
+  border-left: 3px solid var(--sim-line);
+  font-size: 0.9rem;
+}
+.sim-parse-seasons li[data-band="strong"],
+.sim-parse-seasons li[data-band="solid"] {
+  border-left-color: var(--sim-good);
+}
+.sim-parse-seasons li[data-band="mixed"] {
+  border-left-color: var(--sim-mixed);
+}
+.sim-parse-seasons li[data-band="poor"],
+.sim-parse-seasons li[data-band="failure"] {
+  border-left-color: var(--sim-poor);
+}
+.sim-parse-age {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+.sim-parse-headline {
+  color: var(--sim-ink);
+  line-height: 1.5;
+}
+.sim-door-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.sim-door-list li {
+  font-size: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-door-label {
+  color: var(--sim-ink);
+}
+/* Doors are grouped by state, so the state is said once per group rather than
+   stamped on every row — and no state can be pushed off the end of a flat list.
+   Only "opened" is tinted; a closing is stated plainly and not coloured as a
+   verdict, which is the same rule the rest of the parse follows. */
+.sim-door-group + .sim-door-group {
+  margin-block-start: 1.1rem;
+}
+.sim-door-group-head {
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+  margin: 0 0 0.2rem;
+}
+.sim-door-group-head[data-state="opened"] {
+  color: var(--sim-good);
+}
+.sim-door-note {
+  grid-column: 1 / -1;
+  font-size: 0.84rem;
+  color: var(--sim-muted);
+  line-height: 1.45;
+}
+.sim-bridge {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-accent);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  display: grid;
+  gap: 0.7rem;
+}
+.sim-bridge-frame,
+.sim-bridge-line {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--sim-ink);
+}
+.sim-bridge-frame {
+  font-size: 0.9rem;
+  color: var(--sim-muted);
+}
+.sim-bridge .sim-primary-btn {
+  justify-self: start;
+}
+
+/* ---------------------------------------------------------------
+   Gates, notices, legacy state
+   --------------------------------------------------------------- */
+
+.sim-gate {
+  max-inline-size: 34rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) 1.25rem;
+  display: grid;
+  gap: 0.8rem;
+}
+.sim-gate h1 {
+  font-family: var(--serif);
+  margin: 0;
+  color: var(--sim-ink);
+}
+.sim-gate-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.sim-notice {
+  margin: 0;
+  padding: 0.7rem clamp(1rem, 3vw, 1.5rem);
+  background: var(--sim-sunk);
+  color: var(--sim-ink);
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+.sim-notice-dismiss {
+  font: inherit;
+  font-size: 0.82rem;
+  background: transparent;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  color: var(--sim-muted);
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+.sim-legacy {
+  margin: 1rem clamp(1rem, 3vw, 1.5rem);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--sim-mixed);
+  border-radius: var(--radius);
+  background: var(--sim-raised);
+  display: grid;
+  gap: 0.7rem;
+  justify-items: start;
+}
+.sim-legacy p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--sim-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-scene-earth,
+  .sim-scene-books,
+  .sim-scene-stars {
+    transition: none;
+  }
+}
+
+/* Named saves and branches (§3.8) — caps stated beside the erase control. */
+.sim-saves-wrap {
+  max-inline-size: 68rem;
+  margin: 0 auto 2rem;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+.sim-save-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.sim-save-list li {
+  display: grid;
+  gap: 0.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-save-label {
+  color: var(--sim-ink);
+  font-size: 0.94rem;
+}
+.sim-save-meta {
+  color: var(--sim-muted);
+  font-size: 0.8rem;
+}
+.sim-save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+.sim-recovery-floor {
+  margin: 0.7rem 0 0;
+  font-size: 0.86rem;
+  color: var(--sim-muted);
+  line-height: 1.55;
+  border-top: 1px solid var(--sim-line);
+  padding-top: 0.6rem;
+}

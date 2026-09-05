@@ -1,0 +1,227 @@
+{
+  "key": "p1-state-education",
+  "sources": [
+    {
+      "id": "src-p1-state-education-ecs-2025-washington",
+      "title": "Free and Compulsory School Age Requirements 2025",
+      "publisher": "Education Commission of the States",
+      "url": "https://reports.ecs.org/comparisons/free-and-compulsory-school-age-requirements-2025",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written in each state's statute, compiled state by state with the citation for each entry",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Washington 5 - 21 Wash. Rev. Code Ann. § 28A.225.160 8 - 18 Wash. Rev. Code Ann. § 28A.225.010"
+    },
+    {
+      "id": "src-p1-state-education-ecs-2025-texas",
+      "title": "Free and Compulsory School Age Requirements 2025",
+      "publisher": "Education Commission of the States",
+      "url": "https://reports.ecs.org/comparisons/free-and-compulsory-school-age-requirements-2025",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written in each state's statute, compiled state by state with the citation for each entry",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Texas 5 - 21 Tex. Educ. Code Ann. § 25.001 6 - 19 Tex. Educ. Code Ann. § 25.085"
+    },
+    {
+      "id": "src-p1-state-education-ecs-2025-delaware",
+      "title": "Free and Compulsory School Age Requirements 2025",
+      "publisher": "Education Commission of the States",
+      "url": "https://reports.ecs.org/comparisons/free-and-compulsory-school-age-requirements-2025",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written in each state's statute, compiled state by state with the citation for each entry",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Delaware 5 - 21 Del. Code Ann. tit. 14, § 202 5 - 16 Del. Code Ann. tit. 14, § 2702"
+    },
+    {
+      "id": "src-p1-state-education-de-code-2702",
+      "title": "Delaware Code Title 14 Chapter 27 Subchapter I, § 2702 Compulsory attendance requirements",
+      "publisher": "Delaware Code Online, State of Delaware",
+      "url": "https://delcode.delaware.gov/title14/c027/sc01/index.html",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "or legal control of a child between 5 and 16 years of age"
+    },
+    {
+      "id": "src-p1-state-education-wa-rcw-28a-225-010",
+      "title": "RCW 28A.225.010 Attendance mandatory—Age—Exceptions",
+      "publisher": "Washington State Legislature",
+      "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=28A.225.010",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "All parents in this state of any child eight years of age and under eighteen years of age shall cause such child to attend"
+    },
+    {
+      "id": "src-p1-state-education-nces-compulsory-washington",
+      "title": "Table 1.2. Compulsory school attendance laws, minimum and maximum age limits for required free education, by state: 2020",
+      "publisher": "National Center for Education Statistics",
+      "url": "https://nces.ed.gov/programs/statereform/tab1_2-2023.asp",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2020,
+      "measures": "state compulsory attendance law as compiled by the agency, reported as the age of required school attendance",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Washington 8 to 18 5 21"
+    },
+    {
+      "id": "src-p1-state-education-nces-compulsory-texas",
+      "title": "Table 1.2. Compulsory school attendance laws, minimum and maximum age limits for required free education, by state: 2020",
+      "publisher": "National Center for Education Statistics",
+      "url": "https://nces.ed.gov/programs/statereform/tab1_2-2023.asp",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2020,
+      "measures": "state compulsory attendance law as compiled by the agency, reported as the age of required school attendance",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Texas 6 to 19 5 21"
+    },
+    {
+      "id": "src-p1-state-education-nces-compulsory-delaware",
+      "title": "Table 1.2. Compulsory school attendance laws, minimum and maximum age limits for required free education, by state: 2020",
+      "publisher": "National Center for Education Statistics",
+      "url": "https://nces.ed.gov/programs/statereform/tab1_2-2023.asp",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2020,
+      "measures": "state compulsory attendance law as compiled by the agency, reported as the age of required school attendance",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Delaware 5 to 16 5 21"
+    },
+    {
+      "id": "src-p1-state-education-ecs-k3-cutoff-2023",
+      "title": "State K-3 Policies 2023: What is the state's kindergarten entrance date cut-off? Are there age exemptions or waivers?",
+      "publisher": "Education Commission of the States",
+      "url": "https://reports.ecs.org/comparisons/state-k-3-policies-2023-06",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "state statutes and regulations only, as gathered and summarized by the compiler",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Most states require kindergarten students to be age 5 by a certain cutoff date"
+    },
+    {
+      "id": "src-p1-state-education-nces-kindergarten-entrance",
+      "title": "Table 1.3. Types of state and district requirements for kindergarten entrance and attendance, by state: 2020",
+      "publisher": "National Center for Education Statistics",
+      "url": "https://nces.ed.gov/programs/statereform/tab1_3-2020.asp",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2020,
+      "measures": "state kindergarten entrance age requirement as compiled by the agency, reported as an age together with a calendar cut-off date",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Washington 8 5 on or before 8/31"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-kindergarten-entrance-age",
+      "label": "Reaching the kindergarten entrance age",
+      "lane": "learning",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "variesByState": {
+          "from": 5,
+          "to": 5,
+          "note": "Every state that sets a statewide entrance age sets the same one; what differs across states is the calendar cut-off date by which a child must reach it, and a handful of states leave that cut-off to local districts."
+        }
+      },
+      "measure": "legal-rule",
+      "population": "children entering public kindergarten in states that set a statewide entrance age",
+      "sources": [
+        "src-p1-state-education-ecs-k3-cutoff-2023",
+        "src-p1-state-education-nces-kindergarten-entrance"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A child becomes eligible to enroll in public kindergarten once they reach the entrance age by the cut-off date their state sets.",
+        "Because cut-off dates differ across states, children born in the same month start kindergarten in different school years depending on where they live.",
+        "Some states leave the cut-off to local districts, and many allow waivers letting a child who misses it enroll early."
+      ],
+      "affectsLater": [
+        "ms-compulsory-attendance-begins"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-compulsory-attendance-begins",
+      "label": "Compulsory school attendance begins",
+      "lane": "learning",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "variesByState": {
+          "from": 5,
+          "to": 8,
+          "note": "The lowest state minimum applies in the states where the duty to attend begins at five; the highest applies in the single state where it begins at eight."
+        }
+      },
+      "measure": "legal-rule",
+      "population": "children in the fifty states and the District of Columbia, under each state's compulsory attendance statute",
+      "sources": [
+        "src-p1-state-education-ecs-2025-delaware",
+        "src-p1-state-education-ecs-2025-washington",
+        "src-p1-state-education-de-code-2702",
+        "src-p1-state-education-wa-rcw-28a-225-010",
+        "src-p1-state-education-nces-compulsory-delaware",
+        "src-p1-state-education-nces-compulsory-washington"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "From this age a parent or guardian must enroll the child in school, or in an approved alternative such as private school or home instruction.",
+        "States differ in when the duty starts, so a family moving across state lines can find it begins earlier or later than where they lived.",
+        "Most states allow exemptions, including local district permission and conditions that make regular attendance impractical."
+      ],
+      "affectsLater": [
+        "ms-compulsory-attendance-ends"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-compulsory-attendance-ends",
+      "label": "Compulsory school attendance ends",
+      "lane": "learning",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "variesByState": {
+          "from": 16,
+          "to": 19,
+          "note": "The lowest state maximum applies in the states where the duty lifts at sixteen; the highest applies in the single state where it runs through nineteen."
+        }
+      },
+      "measure": "legal-rule",
+      "population": "children in the fifty states and the District of Columbia, under each state's compulsory attendance statute",
+      "sources": [
+        "src-p1-state-education-ecs-2025-delaware",
+        "src-p1-state-education-ecs-2025-texas",
+        "src-p1-state-education-de-code-2702",
+        "src-p1-state-education-nces-compulsory-delaware",
+        "src-p1-state-education-nces-compulsory-texas"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Past this age a person is no longer legally required to attend school, whether or not they have completed a diploma.",
+        "Many states allow an earlier exit with parental consent, or once graduation requirements are met.",
+        "Free public education generally remains available past this age in most states, often for several more years."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

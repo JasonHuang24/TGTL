@@ -1,0 +1,1022 @@
+/**
+ * app/timeline.css — the timeline namespace.
+ *
+ * Written under the 4.0 UI standing law (§2.2/§4.2), which this sheet restates
+ * because it is enforced by S-9's structural half:
+ *
+ *  1. NAMESPACE. Every class here is prefixed `tl-` and lives ONLY in this file.
+ *     No selector is shared with the reading sheet or the sim sheets.
+ *  2. NO FIXED WIDTH on anything containing text. Tap targets are sized with
+ *     min-inline-size / min-block-size >= 44px plus padding.
+ *  3. TOKENS ONLY. The `tl-` token set is defined once, at the top, deriving from
+ *     the reading sheet's tokens. No literal colour appears past that block.
+ *  4. SOLID GROUND. Text renders only over a solid token background, so every
+ *     text/background pair is computable for contrast.
+ *  5. GRID ALIGNMENT. Rows align via grid with explicit tracks, never
+ *     justify-content on a shared row class.
+ *
+ * Deliberate scroll regions carry `data-scroll-region` so S-9 audits them as
+ * genuinely scrollable rather than failing them as clipped.
+ */
+
+/* ── 1. tokens ─────────────────────────────────────────────────────────────
+   The instrument is an atlas panel: deliberately dark in both themes, like the
+   sim surfaces, because it is an instrument rather than a page of prose. The
+   reading parts of the timeline (year cards, drawers) sit on paper. */
+
+.tl-surface {
+  --tl-bg: var(--atlas);
+  --tl-raised: var(--atlas-raised);
+  --tl-line: var(--atlas-line);
+  --tl-ink: var(--atlas-ink);
+  --tl-muted: var(--atlas-muted);
+  --tl-accent: var(--atlas-accent);
+  --tl-on-accent: var(--accent-ink);
+  --tl-focus: var(--focus);
+  --tl-tap: 44px;
+
+  /* Lane hues. Colour is never the only carrier: every lane also has a label
+     and a distinct glyph, and the lane filter is a list of named chips. */
+  --tl-lane-body: #7fb8a4;
+  --tl-lane-learning: #8fa8d8;
+  --tl-lane-work: #d3b071;
+  --tl-lane-money: #c9a45f;
+  --tl-lane-home: #9db4c4;
+  --tl-lane-people: #d19c95;
+  --tl-lane-civic: #a9a0cc;
+  --tl-lane-inner: #b9a7c9;
+
+  /* Stage bands, low-chroma so the spans and ticks read above them. */
+  --tl-band-a: rgba(111, 169, 201, 0.10);
+  --tl-band-b: rgba(111, 169, 201, 0.18);
+}
+
+/* CONTRAST NOTE. S-9's browser half measured --muted (#6f6857) on --paper-sunk
+   (#ece4d2) at 4.37:1, under the 4.5:1 AA threshold — on the evidence drawer's
+   labels, the source stamps and the quotation attributions. Those are exactly the
+   places a reader goes to CHECK something, so they are the last text that should be
+   hard to read. Everything the timeline sets on a paper background now uses
+   --ink-soft (#4b4437); --tl-muted stays for text on the dark atlas panel, which
+   passes comfortably. */
+
+/* ── 2. the page frame ─────────────────────────────────────────────────── */
+
+.tl-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* The one allowlisted "how to read this" block (§5.1). It is the only place on
+   the timeline that may print the words the lint forbids, because its job is to
+   name the pressure and refuse it. */
+.tl-how-to-read {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  display: grid;
+  gap: 0.75rem;
+}
+.tl-how-to-read .tl-off-common {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+.tl-kind-key {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+.tl-kind-key > div {
+  display: grid;
+  grid-template-columns: minmax(9rem, max-content) 1fr;
+  gap: 0.25rem 0.9rem;
+  align-items: baseline;
+}
+.tl-kind-key dt {
+  font-weight: 600;
+  color: var(--ink);
+}
+.tl-kind-key dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.tl-frame-line {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ── 3. the instrument ─────────────────────────────────────────────────── */
+
+.tl-instrument {
+  background: var(--tl-bg);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--radius);
+  color: var(--tl-ink);
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.65rem;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  /* The sticky rule, at the width where the instrument DOES stick. The stage rail
+     made this panel taller, and a sticky panel is only an enhancement while it is
+     smaller than the screen — on a short laptop the old one would have run past
+     the bottom of the viewport and started doing to a desktop reader what the
+     vertical rail did to a phone. Bounded, it can only ever take part of the
+     screen; what does not fit scrolls inside, and it is marked as a scroll region
+     so S-9 audits it rather than waving it through. */
+  max-block-size: 62vh;
+  max-block-size: 62svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* THE STICKY RULE (blueprint errata 13.4, review F1).
+   ---------------------------------------------------
+   A sticky box is only an enhancement while it is smaller than the screen. The
+   shipped build kept `position: sticky; top: 0` on the instrument at every width,
+   and below the breakpoint the spine becomes a vertical rail: at 375x812 the
+   instrument measured 2,772px, pinned to the top, and `elementFromPoint` at the
+   centre of the viewport returned a spine rectangle at every scroll position past
+   it. Every year card on the page was behind it.
+
+   The rule that was missing, now written down and asserted by T-14:
+
+     WHILE STICKY, THE INSTRUMENT IS NEVER TALLER THAN THE VIEWPORT.
+
+   Below the breakpoint it therefore stops sticking as a whole. What sticks is
+   `.tl-strip` — the cursor in the form a phone can use, the density chips and the
+   view chips — bounded and marked as a scroll region. The rail keeps the height it
+   needs to be legible and scrolls away with the page like the content it describes. */
+.tl-strip {
+  background: var(--tl-bg);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--radius);
+  color: var(--tl-ink);
+  padding: 0.7rem 0.8rem;
+  display: grid;
+  gap: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  /* the whole point: bounded, so it can never be the thing the reader is looking at */
+  max-block-size: 34vh;
+  max-block-size: 34svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ── 3a. the stage rail ─────────────────────────────────────
+   Eight stage bubbles, in order, above the lane spine (review F3).
+
+   The owner's brief for this page is a horizontal stage timeline with large stage
+   bubbles carrying figures, and the shipped instrument read as a data chart. This
+   is the label layer and the first thing on the page that looks like a life: an
+   authored figure per stage, the stage's name, and its band. It claims nothing
+   more than the bands do, and the note under it says so.
+
+   Every colour here is a token, every size is logical, and the figures stroke in
+   `currentColor` so both themes are one drawing rather than two. */
+
+.tl-stage-rail-wrap {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tl-stage-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+@media (min-width: 30rem) {
+  .tl-stage-rail {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 62rem) {
+  /* The whole life, left to right, in one row — which is the shape the brief asks
+     for and the shape the spine underneath already has. */
+  .tl-stage-rail {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
+.tl-bubble {
+  inline-size: 100%;
+  min-block-size: var(--tl-tap);
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.25rem;
+  padding: 0.4rem 0.3rem 0.45rem;
+  background: var(--tl-raised);
+  color: var(--tl-ink);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  text-align: center;
+  cursor: pointer;
+}
+.tl-bubble:hover {
+  border-color: var(--tl-accent);
+}
+.tl-bubble:focus-visible {
+  outline: 2px solid var(--tl-focus);
+  outline-offset: 2px;
+}
+/* Where the cursor is. `aria-current` rather than `aria-pressed`: choosing a stage
+   moves the cursor, it does not switch anything on. */
+.tl-bubble[aria-current="true"] {
+  border-color: var(--tl-accent);
+  box-shadow: inset 0 0 0 1px var(--tl-accent);
+}
+
+.tl-bubble-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  max-inline-size: 3.4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tl-bg);
+  border: 1px solid var(--tl-line);
+}
+.tl-bubble[aria-current="true"] .tl-bubble-art {
+  border-color: var(--tl-accent);
+}
+
+.tl-fig {
+  display: block;
+  inline-size: 76%;
+  block-size: auto;
+  color: var(--tl-ink);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tl-fig-ground {
+  opacity: 0.35;
+}
+
+.tl-bubble-label {
+  font-size: 0.78rem;
+  line-height: 1.25;
+  color: var(--tl-ink);
+}
+.tl-bubble-band {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--tl-muted);
+}
+
+/* The lens note, on paper rather than on the atlas panel (see the component). Same
+   treatment as the band key it sits beside, so the two read as one caption. */
+.tl-view-note {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.tl-rail-note {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--tl-muted);
+  margin: 0;
+}
+
+/* The rail's own box. At wide widths it is transparent scaffolding; at narrow
+   widths it is a declared scroll region of bounded height, because a vertical
+   rail needs vertical room to stay legible and the honest way to spend less of
+   the page on it is to bound where it scrolls, not to squash the drawing. */
+.tl-rail {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* The SVG scales to its container by viewBox, so it never forces body scroll —
+   at 320px it simply draws smaller. */
+.tl-spine {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+.tl-spine-axis {
+  stroke: var(--tl-line);
+  stroke-width: 1;
+}
+.tl-band {
+  fill: var(--tl-band-a);
+}
+.tl-band--alt {
+  fill: var(--tl-band-b);
+}
+/* The band the cursor is in. This is how the two narrow bands at the start of a
+   life are identified on the spine itself: choose the stage in the rail above, or
+   scrub into it, and the band it names lights up. No digit is drawn to do it. */
+.tl-band--here {
+  fill: var(--tl-accent);
+  fill-opacity: 0.22;
+}
+.tl-band-label {
+  fill: var(--tl-muted);
+  font-family: var(--sans);
+  font-size: 9px;
+}
+/* A legal threshold: the one discrete kind, so the one thing drawn as a point. */
+.tl-tick {
+  stroke: var(--tl-accent);
+  stroke-width: 1.5;
+}
+/* A window: a span, with a denser typical zone and softer tails. Ranges, not
+   deadlines — drawn rather than said. */
+.tl-span-tail {
+  opacity: 0.28;
+}
+.tl-span-typical {
+  opacity: 0.85;
+}
+.tl-cursor {
+  stroke: var(--tl-ink);
+  stroke-width: 2;
+}
+.tl-cursor-head {
+  fill: var(--tl-ink);
+}
+.tl-year-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+.tl-year-hit:focus-visible {
+  outline: 2px solid var(--tl-focus);
+  outline-offset: 1px;
+}
+
+/* Controls row: explicit grid tracks, never justify-content (remedy 5). */
+.tl-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+@media (min-width: 48rem) {
+  .tl-controls {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.tl-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tl-chip {
+  min-block-size: var(--tl-tap);
+  min-inline-size: var(--tl-tap);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: var(--tl-raised);
+  color: var(--tl-ink);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.tl-chip[aria-pressed="true"] {
+  border-color: var(--tl-accent);
+  color: var(--tl-ink);
+}
+.tl-chip[aria-pressed="false"] {
+  color: var(--tl-muted);
+}
+.tl-chip:focus-visible {
+  outline: 2px solid var(--tl-focus);
+  outline-offset: 2px;
+}
+.tl-chip-glyph {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 2px;
+  flex: none;
+}
+
+.tl-scrub {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+.tl-scrub label {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--tl-muted);
+}
+.tl-scrub select {
+  min-block-size: var(--tl-tap);
+  background: var(--tl-raised);
+  color: var(--tl-ink);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  inline-size: 100%;
+}
+.tl-lens-note {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--tl-muted);
+  margin: 0;
+}
+
+/* ── 4. the year cards ─────────────────────────────────────────────────── */
+
+.tl-years {
+  display: grid;
+  gap: 1rem;
+}
+
+.tl-year {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  scroll-margin-block-start: 12rem;
+}
+.tl-year[aria-current="true"] {
+  border-color: var(--accent);
+}
+.tl-year-head {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+  margin-block-end: 0.5rem;
+}
+.tl-year-n {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0;
+}
+.tl-year-stage {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.tl-section-title {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0.85rem 0 0.35rem;
+}
+.tl-empty {
+  font-family: var(--serif);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.tl-list {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A milestone line and its drawer. Native <details> so the whole thing works
+   with no JavaScript (§3.2). */
+.tl-ms {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+.tl-ms > summary {
+  min-block-size: var(--tl-tap);
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+.tl-ms > summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.tl-ms-label {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+}
+.tl-ms-when {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  /* NOT nowrap. "varies by state, 14 years 9 months to 17" beside a long label is
+     what pushed /timeline past 320px; a window is allowed to wrap. */
+  overflow-wrap: anywhere;
+}
+.tl-ms-body {
+  padding: 0 0.7rem 0.7rem;
+  display: grid;
+  gap: 0.5rem;
+  border-block-start: 1px solid var(--line);
+  padding-block-start: 0.6rem;
+}
+.tl-standing {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.tl-meta {
+  display: grid;
+  grid-template-columns: minmax(6rem, max-content) 1fr;
+  gap: 0.2rem 0.8rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+.tl-meta dt {
+  color: var(--ink-soft);
+}
+.tl-meta dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+.tl-lane-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* The evidence drawer: the ONLY place a rate may render (§4.5, T-8). */
+.tl-evidence {
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.7rem;
+}
+.tl-evidence > summary {
+  min-block-size: var(--tl-tap);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.tl-stamp {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.tl-excerpt {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+  border-inline-start: 2px solid var(--line-strong);
+  padding-inline-start: 0.6rem;
+  margin: 0;
+}
+
+/* "What gets said" — quoted social speech, visibly set apart, never the site's
+   own voice (§3.4b). */
+.tl-heard {
+  background: var(--paper-sunk);
+  border-inline-start: 3px solid var(--line-strong);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.55rem 0.8rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.tl-heard-line {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-style: italic;
+  color: var(--ink);
+  margin: 0;
+}
+.tl-heard-standing {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* Research-required: calm, and carrying no digit (§4.6). */
+.tl-not-sourced {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.1rem 0.45rem;
+  white-space: nowrap;
+}
+
+.tl-ms-name {
+  color: var(--ink);
+}
+
+/* The stage intro, rendered at the stage's first year (§3.3). */
+.tl-stage-intro {
+  display: grid;
+  gap: 0.6rem;
+  border-inline-start: 3px solid var(--accent);
+  padding-inline-start: 0.9rem;
+  margin-block-end: 0.6rem;
+}
+.tl-stage-intro p {
+  font-family: var(--serif);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.tl-stage-band-note {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* §3.5 item 4 — the compact continuity line. The record's full entry lives once,
+   at its anchor year; this shows that the window is still open. */
+.tl-running-list {
+  gap: 0.15rem;
+}
+.tl-running {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content max-content;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.tl-running--quiet {
+  color: var(--ink-soft);
+}
+.tl-running-kind {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+/* Lane glyph colour by class — an inline style on every line cost real bytes. */
+.tl-g--body-health { color: var(--tl-lane-body); }
+.tl-g--learning { color: var(--tl-lane-learning); }
+.tl-g--work-income { color: var(--tl-lane-work); }
+.tl-g--money-wealth { color: var(--tl-lane-money); }
+.tl-g--home-independence { color: var(--tl-lane-home); }
+.tl-g--people-family { color: var(--tl-lane-people); }
+.tl-g--civic-legal { color: var(--tl-lane-civic); }
+.tl-g--inner-life { color: var(--tl-lane-inner); }
+
+/* ── 5. sensitive segments: quiet, in both editions (§5.3) ─────────────── */
+
+/* Paper + ink + one muted accent. No game chrome, no reward treatment, ever. */
+[data-tl-sensitive] {
+  background: var(--paper);
+  border-color: var(--line-strong);
+}
+[data-tl-sensitive] .tl-ms-when {
+  color: var(--ink-soft);
+}
+.tl-care-note {
+  font-family: var(--serif);
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.7rem;
+  margin: 0;
+}
+.tl-real-page {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+}
+
+/* A sensitive record's segment: the drawer, then the care note, then — on a
+   child-development record — the line that says where to go. All at rest. */
+.tl-sensitive-block {
+  display: grid;
+  gap: 0.35rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.4rem;
+  background: var(--paper);
+}
+.tl-sensitive-block .tl-ms {
+  border: none;
+  background: transparent;
+}
+/* The action line is the one a worried reader most needs to see, so it is not
+   styled as a footnote. */
+.tl-care-note--act {
+  color: var(--ink);
+  border-inline-start: 3px solid var(--accent);
+}
+
+/* §5.3, review F5. The screening line and the early-intervention paragraph belong
+   to the material rather than to any one record, so a year card renders them once
+   for its whole quiet section. This is the box they sit in: the same paper and the
+   same accent bar the per-record version used, so nothing about how they READ
+   changed — only how many times they appear. */
+.tl-care-shared {
+  display: grid;
+  gap: 0.35rem;
+  margin-block-start: 0.35rem;
+}
+
+/* A disclosure affordance. `display: grid` on a <summary> suppresses the native
+   marker in Chromium and WebKit, so without this the row reads as a finished
+   statement of fact rather than an expandable thing — which is exactly what made
+   the collapsed care note dangerous. The reading sheet already uses this pattern
+   on .triage-branch; it simply had not been applied here. */
+.tl-ms > summary::after,
+.tl-evidence > summary::after {
+  content: "+";
+  font-family: var(--mono);
+  color: var(--ink-soft);
+  margin-inline-start: 0.5rem;
+}
+.tl-ms[open] > summary::after,
+.tl-evidence[open] > summary::after {
+  content: "2";
+}
+.tl-ms > summary::-webkit-details-marker,
+.tl-evidence > summary::-webkit-details-marker {
+  display: none;
+}
+.tl-evidence > summary {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+}
+
+/* ── 6. the terminal card ──────────────────────────────────────────────── */
+
+.tl-terminal {
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  display: grid;
+  gap: 0.7rem;
+}
+.tl-terminal h2 {
+  font-family: var(--serif);
+  margin: 0;
+}
+
+/* ── 7. milestone pages ────────────────────────────────────────────────── */
+
+.tl-branches {
+  display: grid;
+  gap: 0.8rem;
+}
+.tl-branch {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.8rem 0.9rem;
+  display: grid;
+  gap: 0.4rem;
+}
+.tl-branch h3 {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  margin: 0;
+  color: var(--ink);
+}
+/* Recovery sits beside every cost, in the same view (§5.7, T-4). */
+.tl-cost-and-route {
+  display: grid;
+  gap: 0.6rem;
+}
+@media (min-width: 40rem) {
+  .tl-cost-and-route {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.tl-routes {
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.7rem;
+}
+.tl-routes h4,
+.tl-costs h4 {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.3rem;
+}
+
+/* The closing honesty block: plain reading treatment, no panel chrome. */
+.tl-how-to-read-plain {
+  display: grid;
+  gap: 0.6rem;
+}
+.tl-how-to-read-plain h2 {
+  font-family: var(--serif);
+  margin: 0;
+}
+.tl-how-to-read-plain p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* Lane filtering drives the server-rendered cards through one attribute on the
+   page root, so the client never re-renders content it does not own. */
+.tl-page[data-tl-lanes-off~="body-health"] [data-tl-lane="body-health"] { display: none; }
+.tl-page[data-tl-lanes-off~="learning"] [data-tl-lane="learning"] { display: none; }
+.tl-page[data-tl-lanes-off~="work-income"] [data-tl-lane="work-income"] { display: none; }
+.tl-page[data-tl-lanes-off~="money-wealth"] [data-tl-lane="money-wealth"] { display: none; }
+.tl-page[data-tl-lanes-off~="home-independence"] [data-tl-lane="home-independence"] { display: none; }
+.tl-page[data-tl-lanes-off~="people-family"] [data-tl-lane="people-family"] { display: none; }
+.tl-page[data-tl-lanes-off~="civic-legal"] [data-tl-lane="civic-legal"] { display: none; }
+.tl-page[data-tl-lanes-off~="inner-life"] [data-tl-lane="inner-life"] { display: none; }
+
+/* milestone pages */
+.tl-crumb {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.tl-when-panel {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.tl-when-big {
+  font-family: var(--mono);
+  font-size: 1.35rem;
+  color: var(--accent);
+  margin: 0;
+}
+[data-tl-sensitive] .tl-when-big {
+  color: var(--ink);
+}
+.tl-branch-q {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.tl-never-line {
+  font-family: var(--serif);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* §5.4 — a figure that renders in a stage intro and nowhere else. */
+.tl-stage-note {
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.8rem 0.9rem;
+  display: grid;
+  gap: 0.45rem;
+  margin-block-start: 0.6rem;
+}
+.tl-stage-note h4 {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  margin: 0;
+  color: var(--ink);
+}
+.tl-stage-note-figure {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0;
+}
+.tl-stage-note-scope {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* §4.6 — the claims we could not put a year on. */
+.tl-not-sourced-block {
+  background: var(--paper-raised);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.tl-not-sourced-block h2 {
+  font-family: var(--serif);
+  margin: 0;
+}
+
+/* ── narrow widths ─────────────────────────────────────────────────────────
+   At 320px the three-column compact line and the two-column drawer summary both
+   overflow: the labels are real sentences and the windows are real phrases. They
+   stack instead. Checked by the browser gate, which measures document scrollWidth
+   against the viewport rather than trusting the design. */
+/* Below the instrument's own breakpoint (the width at which the spine becomes a
+   vertical rail) the instrument stops sticking and the strip takes over. This is
+   written against the same 47.99rem the component's media query uses, so the two
+   halves of the decision cannot drift apart. */
+@media (max-width: 47.99rem) {
+  .tl-instrument {
+    position: static;
+    /* Not sticky here, so not bounded here: the rail below wants its own height,
+       and the strip above is the thing that has to stay small. */
+    max-block-size: none;
+    overflow-y: visible;
+  }
+  .tl-rail {
+    max-block-size: 62vh;
+    max-block-size: 62svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* A year anchored under a sticky strip has to clear it, or "scroll to age 34"
+     lands the heading behind the strip. */
+  .tl-year {
+    scroll-margin-block-start: 38vh;
+  }
+}
+
+@media (max-width: 30rem) {
+  .tl-running {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+  .tl-ms > summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+  .tl-meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem 0;
+  }
+  .tl-meta dt {
+    font-size: 0.78rem;
+  }
+  .tl-kind-key > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tl-year-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tl-cost-and-route {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Long words in a source title or a statute citation must not push the page wide. */
+.tl-excerpt,
+.tl-ms-name,
+.tl-stamp,
+.tl-evidence a {
+  overflow-wrap: anywhere;
+}
+
+/* ── 8. reduced motion ─────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-cursor,
+  .tl-year,
+  .tl-chip,
+  .tl-bubble,
+  .tl-bubble-art {
+    transition: none !important;
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

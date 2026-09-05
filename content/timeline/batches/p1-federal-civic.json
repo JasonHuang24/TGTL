@@ -1,0 +1,312 @@
+{
+  "key": "p1-federal-civic",
+  "sources": [
+    {
+      "id": "src-p1fc-usagov-who-can-vote",
+      "title": "Who can and cannot vote in U.S. elections",
+      "publisher": "USAGov, U.S. General Services Administration",
+      "url": "https://www.usa.gov/who-can-vote",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the federal voter eligibility rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Are 18 years old on or before Election Day"
+    },
+    {
+      "id": "src-p1fc-26th-amendment-text",
+      "title": "The Constitution: Amendments 11-27",
+      "publisher": "National Archives and Records Administration",
+      "url": "https://www.archives.gov/founding-docs/amendments-11-27",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1971,
+      "dataYear": 2025,
+      "measures": "the constitutional text of the Twenty-Sixth Amendment as ratified",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "citizens of the United States, who are eighteen years of age or older, to vote shall not be denied"
+    },
+    {
+      "id": "src-p1fc-uscourts-juror-qualifications",
+      "title": "Juror Qualifications, Exemptions and Excuses",
+      "publisher": "Administrative Office of the U.S. Courts",
+      "url": "https://www.uscourts.gov/court-programs/jury-service/juror-qualifications-exemptions-and-excuses",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the federal juror qualification rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "be at least 18 years of age;"
+    },
+    {
+      "id": "src-p1fc-usc-28-1865",
+      "title": "28 U.S.C. 1865 - Qualifications for jury service",
+      "publisher": "Office of the Law Revision Counsel, U.S. House of Representatives",
+      "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title28-section1865&num=0&edition=prelim",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the statute as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "is not a citizen of the United States eighteen years old who has resided for a period of one year"
+    },
+    {
+      "id": "src-p1fc-sss-who-must-register",
+      "title": "Who Needs to Register",
+      "publisher": "Selective Service System",
+      "url": "https://www.sss.gov/register/who-needs-to-register/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the registration requirement as written, by sex as recorded for registration purposes",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Almost all male US citizens and male immigrants, who are 18 through 25, are required to register with Selective Service."
+    },
+    {
+      "id": "src-p1fc-house-explained",
+      "title": "The House Explained",
+      "publisher": "U.S. House of Representatives",
+      "url": "https://www.house.gov/the-house-explained",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the constitutional qualification rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "a representative must be at least 25 years old"
+    },
+    {
+      "id": "src-p1fc-constitution-transcript",
+      "title": "The Constitution of the United States: A Transcription",
+      "publisher": "National Archives and Records Administration",
+      "url": "https://www.archives.gov/founding-docs/constitution-transcript",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1787,
+      "dataYear": 2025,
+      "measures": "the constitutional text as ratified",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "No Person shall be a Representative who shall not have attained to the Age of twenty five Years"
+    },
+    {
+      "id": "src-p1fc-constitution-transcript-senate",
+      "title": "The Constitution of the United States: A Transcription",
+      "publisher": "National Archives and Records Administration",
+      "url": "https://www.archives.gov/founding-docs/constitution-transcript",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1787,
+      "dataYear": 2025,
+      "measures": "the constitutional text as ratified",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "No Person shall be a Senator who shall not have attained to the Age of thirty Years"
+    },
+    {
+      "id": "src-p1fc-constitution-transcript-president",
+      "title": "The Constitution of the United States: A Transcription",
+      "publisher": "National Archives and Records Administration",
+      "url": "https://www.archives.gov/founding-docs/constitution-transcript",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1787,
+      "dataYear": 2025,
+      "measures": "the constitutional text as ratified",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "neither shall any Person be eligible to that Office who shall not have attained to the Age of thirty five Years"
+    },
+    {
+      "id": "src-p1fc-senate-qualifications-terms",
+      "title": "Qualifications & Terms of Service",
+      "publisher": "United States Senate",
+      "url": "https://www.senate.gov/senators/qualifications_termsofservice.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the constitutional qualification rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "age (at least thirty years of age)"
+    },
+    {
+      "id": "src-p1fc-usagov-presidential-requirements",
+      "title": "Constitutional requirements for presidential candidates",
+      "publisher": "USAGov, U.S. General Services Administration",
+      "url": "https://www.usa.gov/requirements-for-presidential-candidates",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the constitutional qualification rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Be at least 35 years old"
+    },
+    {
+      "id": "src-p1fc-whitehouse-executive-branch",
+      "title": "The Executive Branch",
+      "publisher": "The White House",
+      "url": "https://www.whitehouse.gov/government/executive-branch/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the constitutional qualification rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The President must be 35 years of age"
+    },
+    {
+      "id": "src-p1fc-usagov-child-passport-under",
+      "title": "Get a passport for a minor under 18",
+      "publisher": "USAGov, U.S. General Services Administration",
+      "url": "https://www.usa.gov/child-passport",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the passport issuance rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Passports for children under age 16 are valid for 5 years."
+    },
+    {
+      "id": "src-p1fc-usagov-child-passport-teen",
+      "title": "Get a passport for a minor under 18",
+      "publisher": "USAGov, U.S. General Services Administration",
+      "url": "https://www.usa.gov/child-passport",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the passport issuance rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Passports issued to children ages 16-17 are valid for 10 years."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-voting-federal-elections",
+      "label": "Voting in federal elections",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 18 },
+      "measure": "legal-rule",
+      "population": "United States citizens",
+      "sources": ["src-p1fc-usagov-who-can-vote", "src-p1fc-26th-amendment-text"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Citizens meeting the federal age rule can register and cast a ballot, and neither the federal government nor a state may deny the vote on account of age.",
+        "Registration deadlines, identification rules, and mail ballot procedures continue to be set state by state, so the practical steps differ across the country.",
+        "Not voting remains an ordinary path; many citizens never register, and many register and vote only in some years."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-federal-jury-service",
+      "label": "Qualifying for federal jury service",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 18 },
+      "measure": "legal-rule",
+      "population": "United States citizens residing in a federal judicial district",
+      "sources": ["src-p1fc-uscourts-juror-qualifications", "src-p1fc-usc-28-1865"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A person becomes legally qualified to sit on a federal jury, alongside conditions on citizenship, residence in the district, and English proficiency.",
+        "Qualifying is not the same as serving; whether a summons ever arrives depends on the district's source lists and random selection.",
+        "Many qualified people are never called, and many who are called are excused or not seated."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-selective-service-registration",
+      "label": "Selective Service registration requirement",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": { "window": { "from": 18, "to": 25 } },
+      "measure": "legal-rule",
+      "population": "male United States citizens and male immigrants, as the agency records sex for registration",
+      "sources": ["src-p1fc-sss-who-must-register"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Registration with the Selective Service System becomes a legal requirement for almost everyone in the covered group, and the requirement window closes after the upper age.",
+        "The requirement is to register, not to serve; registration by itself does not place anyone in the armed forces.",
+        "The rule as written covers men only, so it does not apply to a large share of the population at these ages."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-house-of-representatives-eligibility",
+      "label": "Eligibility to serve in the House of Representatives",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 25 },
+      "measure": "legal-rule",
+      "population": "United States citizens seeking federal office",
+      "sources": ["src-p1fc-house-explained", "src-p1fc-constitution-transcript"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Constitutional eligibility for a seat in the House opens, alongside requirements on years of citizenship and inhabiting the represented state.",
+        "Eligibility is a floor, not a plan; the overwhelming majority of citizens never seek or hold federal office."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-senate-eligibility",
+      "label": "Eligibility to serve in the Senate",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 30 },
+      "measure": "legal-rule",
+      "population": "United States citizens seeking federal office",
+      "sources": ["src-p1fc-senate-qualifications-terms", "src-p1fc-constitution-transcript-senate", "src-p1fc-constitution-transcript"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Constitutional eligibility for a Senate seat opens, alongside requirements on years of citizenship and residency in the represented state.",
+        "The Constitution sets a higher age floor for a seat in the Senate than for a seat in the House, and both floors remain in force."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-presidential-eligibility",
+      "label": "Eligibility to serve as President",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 35 },
+      "measure": "legal-rule",
+      "population": "natural born citizens of the United States",
+      "sources": ["src-p1fc-usagov-presidential-requirements", "src-p1fc-whitehouse-executive-branch", "src-p1fc-constitution-transcript-president"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Constitutional eligibility for the presidency opens, alongside requirements on being a natural born citizen and years of residence in the country.",
+        "This is the highest age floor written into the Constitution for any federal office."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-passport-validity-lengthens",
+      "label": "Passport validity period lengthens",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": { "exact": 16 },
+      "measure": "legal-rule",
+      "population": "United States passport applicants",
+      "sources": ["src-p1fc-usagov-child-passport-under", "src-p1fc-usagov-child-passport-teen"],
+      "readRef": "/history",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A passport issued from this age onward carries the longer adult validity period rather than the shorter one used for younger children.",
+        "The length is fixed by age at issuance, so a book issued earlier keeps its shorter term until it expires.",
+        "Many people never hold a passport at all, and the change matters only when an application is actually made."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

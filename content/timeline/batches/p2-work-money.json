@@ -1,0 +1,392 @@
+{
+  "key": "p2-work-money",
+  "sources": [
+    {
+      "id": "src-bls-mlr-prime-age-definition",
+      "title": "Labor force and macroeconomic projections overview and highlights, 2023-33",
+      "publisher": "U.S. Bureau of Labor Statistics, Monthly Labor Review",
+      "url": "https://www.bls.gov/opub/mlr/2024/article/labor-force-and-macroeconomic-projections-overview-and-highlights-2023-33.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2023,
+      "measures": "How the agency defines the prime-working-age group used throughout its labor force projections.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The 25- to 54-year-old age group is commonly referred to as the prime-working-age (hereafter, prime-age) group"
+    },
+    {
+      "id": "src-bls-golden-years-prime",
+      "title": "Golden years: older Americans at work and play",
+      "publisher": "U.S. Bureau of Labor Statistics, Beyond the Numbers",
+      "url": "https://www.bls.gov/opub/btn/volume-14/golden-years-older-americans-at-work-and-play.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2024,
+      "measures": "Civilian labor force participation rates by age group, annual averages from the Current Population Survey.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In 2024, the highest labor force participation rate was among people ages 25 to 54, at 83.6 percent."
+    },
+    {
+      "id": "src-bls-golden-years-youth",
+      "title": "Golden years: older Americans at work and play",
+      "publisher": "U.S. Bureau of Labor Statistics, Beyond the Numbers",
+      "url": "https://www.bls.gov/opub/btn/volume-14/golden-years-older-americans-at-work-and-play.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2024,
+      "measures": "Civilian labor force participation rate for the youngest age band the agency reports, annual average.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "while 55.9 percent of 16- to 24-year-olds were in the labor force"
+    },
+    {
+      "id": "src-bls-golden-years-55-64",
+      "title": "Golden years: older Americans at work and play",
+      "publisher": "U.S. Bureau of Labor Statistics, Beyond the Numbers",
+      "url": "https://www.bls.gov/opub/btn/volume-14/golden-years-older-americans-at-work-and-play.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2024,
+      "measures": "Civilian labor force participation rate for the band just above the prime-age group, annual average.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In the same year, those ages 55 to 64 had a 65.9-percent participation rate"
+    },
+    {
+      "id": "src-bls-golden-years-65plus",
+      "title": "Golden years: older Americans at work and play",
+      "publisher": "U.S. Bureau of Labor Statistics, Beyond the Numbers",
+      "url": "https://www.bls.gov/opub/btn/volume-14/golden-years-older-americans-at-work-and-play.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2024,
+      "measures": "Civilian labor force participation rate for the open-ended older age band, annual average.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In 2024, 19.5 percent of people age 65 and older participated in the labor force"
+    },
+    {
+      "id": "src-bls-ted-older-projection-65-74",
+      "title": "Labor force participation rate for workers age 75 and older projected to be over 10 percent by 2026",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2019/labor-force-participation-rate-for-workers-age-75-and-older-projected-to-be-over-10-percent-by-2026.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2026,
+      "measures": "Projected civilian labor force participation rate for the older age bands the agency reports separately; a projection, not an observation.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The participation rate for workers age 65 to 74 is projected to be 30.2 percent in 2026, compared with 17.5 percent in 1996."
+    },
+    {
+      "id": "src-bls-ted-older-projection-75plus",
+      "title": "Labor force participation rate for workers age 75 and older projected to be over 10 percent by 2026",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2019/labor-force-participation-rate-for-workers-age-75-and-older-projected-to-be-over-10-percent-by-2026.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2026,
+      "measures": "Projected civilian labor force participation rate for the oldest age band the agency reports separately; a projection, not an observation.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For workers age 75 and older, the participation rate in 2026 is projected to be 10.8 percent, compared with 4.7 percent in 1996."
+    },
+    {
+      "id": "src-bls-wkyeng-2025q2-men",
+      "title": "Usual Weekly Earnings of Wage and Salary Workers, Second Quarter 2025",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/news.release/archives/wkyeng_07222025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Median usual weekly earnings of full-time wage and salary workers, by age band, for men.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "By age, usual weekly earnings were highest for men ages 35 to 54"
+    },
+    {
+      "id": "src-bls-wkyeng-2025q2-women",
+      "title": "Usual Weekly Earnings of Wage and Salary Workers, Second Quarter 2025",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/news.release/archives/wkyeng_07222025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Median usual weekly earnings of full-time wage and salary workers, by age band, for women.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Among women, usual weekly earnings were also highest for workers ages 35 to 54"
+    },
+    {
+      "id": "src-bls-wkyeng-2025q2-youngest",
+      "title": "Usual Weekly Earnings of Wage and Salary Workers, Second Quarter 2025",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/news.release/archives/wkyeng_07222025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Median usual weekly earnings of full-time wage and salary workers in the youngest age band the release reports.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Men and women ages 16 to 24 had the lowest median weekly earnings, $797 and $712, respectively."
+    },
+    {
+      "id": "src-census-hvs-homeownership-by-age",
+      "title": "Quarterly Residential Vacancies and Homeownership, Second Quarter 2026",
+      "publisher": "U.S. Census Bureau, Current Population Survey/Housing Vacancy Survey",
+      "url": "https://www.census.gov/housing/hvs/files/qtr226/Q226press.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "Homeownership rate by age of householder, quarterly estimate for the United States.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "homeownership rate was highest for those householders aged 65 years and over (78.6 percent) and lowest for those householders under 35 years of age"
+    },
+    {
+      "id": "src-nar-first-time-buyer-age",
+      "title": "First-Time Home Buyer Share Falls to Historic Low of 21%, Median Age Rises to 40",
+      "publisher": "National Association of REALTORS, reporting its 2025 Profile of Home Buyers and Sellers",
+      "url": "https://www.nar.realtor/press-releases/first-time-home-buyer-share-falls-to-historic-low-of-21-median-age-rises-to-40",
+      "kind": "reputable-secondary",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Median age of first-time home buyers in the association's annual national survey of recent buyers and sellers.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "the typical age of first-time buyers climbed to an all-time high of 40 years"
+    },
+    {
+      "id": "src-nar-first-time-buyer-share",
+      "title": "First-Time Home Buyer Share Falls to Historic Low of 21%, Median Age Rises to 40",
+      "publisher": "National Association of REALTORS, reporting its 2025 Profile of Home Buyers and Sellers",
+      "url": "https://www.nar.realtor/press-releases/first-time-home-buyer-share-falls-to-historic-low-of-21-median-age-rises-to-40",
+      "kind": "reputable-secondary",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Share of all home buyers who were first-time buyers, and their median age, in the association's annual national survey.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "First-time home buyers made up 21% of all home buyers; their median age was 40."
+    },
+    {
+      "id": "src-census-wealth-2022-under-35",
+      "title": "Wealth of Households: 2022",
+      "publisher": "U.S. Census Bureau, Survey of Income and Program Participation",
+      "url": "https://www2.census.gov/library/publications/2024/demo/p70br-202.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "Median household net worth by age of householder, in the youngest band the brief reports.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For households in which the householder was under the age of 35, median wealth was $31,110 in 2022."
+    },
+    {
+      "id": "src-census-wealth-2022-early-seventies",
+      "title": "Wealth of Households: 2022",
+      "publisher": "U.S. Census Bureau, Survey of Income and Program Participation",
+      "url": "https://www2.census.gov/library/publications/2024/demo/p70br-202.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "Median household net worth for householders in the early seventies, compared with the overall median.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For households in which the householder was between 70 and 74 years old, median household wealth was $403,000"
+    },
+    {
+      "id": "src-census-wealth-2022-oldest",
+      "title": "Wealth of Households: 2022",
+      "publisher": "U.S. Census Bureau, Survey of Income and Program Participation",
+      "url": "https://www2.census.gov/library/publications/2024/demo/p70br-202.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "Median household net worth in the oldest, open-ended age band the brief reports, showing later drawdown.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "For households in which the householder was at least 75 years old, median household wealth was $307,900"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-prime-working-years",
+      "label": "The years in which the largest share of people are working or looking for work",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": { "from": 25, "to": 54 },
+        "typical": { "from": 25, "to": 54 }
+      },
+      "measure": "share-at-age",
+      "population": "Civilian noninstitutional population of the United States; the agency reports participation rates for fixed age bands, not the working lives of individuals.",
+      "sources": ["src-bls-mlr-prime-age-definition", "src-bls-golden-years-prime"],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Across this band the share of people in the labor force is higher than in any other band the agency reports.",
+        "Statisticians call it the prime working age group; the phrase labels a rate measured across a population, not a description of one person's working life.",
+        "Participation is lower in the bands before it and lower again in the bands after it."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-entering-paid-work",
+      "label": "Taking part in paid work in the teen and early adult years",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": { "from": 16, "to": 25 },
+        "typical": { "from": 16, "to": 24 }
+      },
+      "measure": "share-at-age",
+      "population": "Civilian noninstitutional population; the source reports a participation rate for a fixed teen-and-early-adult band, and does not report an age at which individuals first work.",
+      "sources": [
+        "src-bls-golden-years-youth",
+        "src-bls-golden-years-prime",
+        "src-bls-mlr-prime-age-definition",
+        "src-bls-golden-years-65plus"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "A markedly smaller share of the youngest band the agency counts is in the labor force than of the prime-age band that follows it, though participation is lower still in the open-ended older band the agency reports.",
+        "Schooling, training and caring work all sit inside these years for many people, and none of them is counted as being in the labor force.",
+        "The comparison is between two bands of a population, not a schedule for any one person."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-first-full-time-job",
+      "label": "A first sustained full-time job",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Need a fetchable page from the BLS National Longitudinal Survey of Youth (the later cohort) reporting a median or modal age at a first job held full time for a sustained period. Query: bls.gov national longitudinal survey of youth news release age at first job lasting thirteen weeks or more. Labor force participation rates by age band cannot answer this, because a rate inside a fixed band is not an age at entry.",
+      "windowInWords": "The years over which people take a first job that is full time and lasts, a window that stretches from the late teens through the twenties and moves later where schooling runs longer.",
+      "readRef": "/topics/work",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-earnings-highest-bands",
+      "label": "The years in which median weekly earnings for full-time workers sit highest",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": { "from": 35, "to": 54 },
+        "typical": { "from": 35, "to": 54 }
+      },
+      "measure": "median",
+      "population": "Full-time wage and salary workers; the release publishes medians by age band separately for men and for women, so the figure is a middle value, not an amount anyone earns.",
+      "sources": [
+        "src-bls-wkyeng-2025q2-youngest",
+        "src-bls-wkyeng-2025q2-men",
+        "src-bls-wkyeng-2025q2-women"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Median weekly earnings are lowest in the youngest band the survey reports and highest across the two middle bands, for men and for women alike.",
+        "The middle bands are wide, and the difference between the two of them is small.",
+        "A median describes where the middle of a distribution sits; the spread around it is very large."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-leaving-paid-work",
+      "label": "The years over which participation in paid work falls away",
+      "lane": "work-income",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": { "from": 55, "to": 75 },
+        "typical": { "from": 65, "to": 74 }
+      },
+      "measure": "share-at-age",
+      "population": "Civilian noninstitutional population; participation rates are reported for age bands, and the oldest bands are open ended. This is when participation declines, not a rule about when work ends.",
+      "sources": [
+        "src-bls-golden-years-55-64",
+        "src-bls-golden-years-65plus",
+        "src-bls-ted-older-projection-65-74",
+        "src-bls-ted-older-projection-75plus"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The share of people counted as working or looking for work falls steeply across these bands, and keeps falling in the oldest ones.",
+        "Leaving paid work is spread across many years rather than concentrated on a single birthday.",
+        "Some people are still counted in the labor force in the oldest bands the agency reports, and the figure for the very oldest band is a projection rather than an observation."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-homeownership-rate-climb",
+      "label": "The years over which the share of householders who own their home climbs",
+      "lane": "money-wealth",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "window": { "from": 35, "to": 65 },
+        "typical": { "from": 35, "to": 65 }
+      },
+      "measure": "share-at-age",
+      "population": "Householders in the United States; the survey reports an ownership rate for each age band of householder, with the youngest and oldest bands left open ended.",
+      "sources": ["src-census-hvs-homeownership-by-age"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The ownership rate is at its lowest in the youngest band of householders and at its highest in the oldest, climbing through the bands between.",
+        "The rate counts householders, so people living in someone else's household are not counted as owners or as renters here.",
+        "Renting and owning are both housing arrangements the survey counts, not stages in a sequence."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-first-home-purchase-age",
+      "label": "The median age of a first-time home buyer",
+      "lane": "money-wealth",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "window": { "from": 40, "to": 40 },
+        "typical": { "from": 40, "to": 40 }
+      },
+      "measure": "median",
+      "population": "Recent first-time home buyers in a national survey of buyers and sellers run by a real estate trade association; the figure is a median for one survey year, so window and typical are the same point.",
+      "sources": ["src-nar-first-time-buyer-age", "src-nar-first-time-buyer-share"],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The survey reports a median age for first-time buyers, meaning half of them were younger and half were older.",
+        "That median has moved a long way later over the decades the association has run the survey, and it reached its highest recorded value in this year.",
+        "The survey covers people who bought; it says nothing about the many people who did not."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-household-wealth-by-age",
+      "label": "Household net worth across adult life",
+      "lane": "money-wealth",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": { "from": 35, "to": 75 }
+      },
+      "measure": "median",
+      "population": "United States households, grouped by age of householder; the figures are median household net worth for each band, the oldest band is open ended, the brief names no highest band, and because age bands differ between household surveys no peak is encoded here.",
+      "notes": "The brief prints medians for the youngest, early-seventies and oldest bands and says wealth is eventually drawn down, but nowhere names a highest-wealth band, so this record carries a window only. A survey using wider bands would place the top of the arc elsewhere; that boundary is an artifact of the survey, not a finding.",
+      "sources": [
+        "src-census-wealth-2022-under-35",
+        "src-census-wealth-2022-early-seventies",
+        "src-census-wealth-2022-oldest"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Median household net worth is small in the youngest band of householders and far larger in the band around the early seventies.",
+        "The brief reports lower median wealth in the oldest band than in the early seventies, which it reads as households drawing their wealth down.",
+        "These are medians across bands, and the spread inside every band is enormous."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

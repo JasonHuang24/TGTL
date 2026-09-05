@@ -1,0 +1,98 @@
+{
+  "key": "p1-institutional-education",
+  "sources": [
+    {
+      "id": "src-p1ie-nces-kindergarten-entry-age",
+      "title": "The Early Reading and Mathematics Achievement of Children Who Repeated Kindergarten or Who Began School a Year Late (NCES 2006-064)",
+      "publisher": "National Center for Education Statistics, U.S. Department of Education",
+      "url": "https://files.eric.ed.gov/fulltext/ED491697.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2006,
+      "dataYear": 2006,
+      "measures": "the age at which most children enter kindergarten, as stated in the report's introduction alongside Early Childhood Longitudinal Study findings on entry age",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Most children enter kindergarten when they are 5 years of age and move into first grade when they are 6."
+    },
+    {
+      "id": "src-p1ie-nces-coe-young-children",
+      "title": "Condition of Education 2024: School Enrollment Rates of Young Children",
+      "publisher": "National Center for Education Statistics, U.S. Department of Education",
+      "url": "https://nces.ed.gov/programs/coe/indicator/cfa/enrollment-of-young-children",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "school enrollment as reported by household respondents to the American Community Survey, tabulated by single year of age, with a note on the age at which most states require that free public education be provided",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The total enrollment rate was higher for 5-year-olds than for 3- to 4-year-olds (84 vs. 47 percent)."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-starting-kindergarten",
+      "label": "Starting kindergarten",
+      "lane": "learning",
+      "kind": "institutional-sequence",
+      "optional": false,
+      "timing": {
+        "exact": 5
+      },
+      "measure": "modal",
+      "population": "children in the United States, at the age federal education statisticians report most children enter kindergarten and most states require that free public education be provided",
+      "sources": [
+        "src-p1ie-nces-kindergarten-entry-age",
+        "src-p1ie-nces-coe-young-children"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Children move onto a full school calendar kept by a district, with a classroom teacher, attendance records, and a daily schedule set by someone outside the household.",
+        "Households start dealing with a school as an institution: registration, immunization paperwork, transportation routes, and term dates they did not choose.",
+        "Entry hinges on a district cutoff date, so children born a few days apart can begin a full year apart."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-completing-twelfth-grade",
+      "label": "Finishing the twelfth grade",
+      "lane": "learning",
+      "kind": "institutional-sequence",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "A measured distribution of ages at completion of the twelfth grade is needed. NCES Digest of Education Statistics chapter two, and the Census Bureau October Current Population Survey School Enrollment Supplement detailed tables, cross grade attended against single year of age; resolving query: 'Digest of Education Statistics, enrollment by grade attended and single year of age'. The Mini-Digest structural overview describes only how the program is organized, and states in the same paragraph that the high school level may run a variable number of years depending on district structure, so it cannot supply either an age or a measured share.",
+      "windowInWords": "the end of the standard secondary school sequence, with some leaving it earlier and some finishing it later",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-modal-age-of-twelfth-graders",
+      "label": "Age of students in the final year of high school",
+      "lane": "learning",
+      "kind": "institutional-sequence",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Census Bureau October Current Population Survey School Enrollment Supplement detailed tables, which cross grade attended against single year of age. The published files are spreadsheets that this fetcher could not read; the resolving query is 'CPS October School Enrollment Supplement detailed tables, enrollment status of the population three years old and over, by age and grade'. NCES Digest of Education Statistics chapter two carries the same crosstab. Until that crosstab is captured, nothing may be said about how old most students in this grade are.",
+      "windowInWords": "the last year of the standard high school sequence",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-enrolling-in-college",
+      "label": "Enrolling in college",
+      "lane": "learning",
+      "kind": "institutional-sequence",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "A measured distribution of age at first postsecondary enrollment is needed: NCES Beginning Postsecondary Students Longitudinal Study or National Postsecondary Student Aid Study tables on age at first enrollment, or the Digest of Education Statistics table on total fall enrollment in degree-granting postsecondary institutions by age of student. Both are published as spreadsheets rather than quotable prose. The federal immediate college enrollment indicator and the federal college enrollment rate indicator each fix an age band to define who is counted, and the second measures a share enrolled at a point in time rather than the act of enrolling, so neither can supply a timing window.",
+      "windowInWords": "for many, the months after finishing high school, with first enrollment also happening throughout the adult years",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

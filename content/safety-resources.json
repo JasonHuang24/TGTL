@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-08-26",
+  "verificationScope": "Official or authoritative primary service pages were checked for the contact details shown.",
+  "regions": [
+    {
+      "id": "safety-us",
+      "region": "United States",
+      "emergency": "911",
+      "crisis": {
+        "name": "988 Suicide & Crisis Lifeline",
+        "contact": "Call or text 988",
+        "availability": "24 hours a day, 7 days a week",
+        "url": "https://988lifeline.org/",
+        "sourceType": "Official national service"
+      },
+      "abuse": {
+        "name": "National Domestic Violence Hotline",
+        "contact": "Call 800-799-SAFE (7233), text START to 88788, or use live chat",
+        "url": "https://www.thehotline.org/get-help/",
+        "sourceType": "Official national service"
+      }
+    },
+    {
+      "id": "safety-canada",
+      "region": "Canada",
+      "emergency": "911",
+      "crisis": {
+        "name": "9-8-8: Suicide Crisis Helpline",
+        "contact": "Call or text 9-8-8",
+        "availability": "24 hours a day, 7 days a week",
+        "url": "https://988.ca/",
+        "sourceType": "Public Health Agency of Canada service"
+      },
+      "abuse": {
+        "name": "Government of Canada family-violence services directory",
+        "contact": "Choose your province or territory for a current crisis line or shelter",
+        "url": "https://www.canada.ca/en/public-health/services/health-promotion/stop-family-violence/services.html",
+        "sourceType": "Government directory"
+      }
+    },
+    {
+      "id": "safety-uk-ireland",
+      "region": "United Kingdom and Republic of Ireland",
+      "emergency": "999 or 112",
+      "crisis": {
+        "name": "Samaritans",
+        "contact": "Call 116 123",
+        "availability": "Free, day or night",
+        "url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/",
+        "sourceType": "Authoritative crisis service"
+      },
+      "abuse": {
+        "name": "National Domestic Abuse Helpline (England)",
+        "contact": "Call 0808 2000 247; UK nation-specific services are linked from GOV.UK",
+        "url": "https://www.gov.uk/guidance/domestic-abuse-how-to-get-help",
+        "sourceType": "Government directory and official helpline"
+      }
+    },
+    {
+      "id": "safety-australia",
+      "region": "Australia",
+      "emergency": "000",
+      "crisis": {
+        "name": "Lifeline Crisis Support",
+        "contact": "Call 13 11 14 or text 0477 13 11 14",
+        "availability": "24 hours a day, 7 days a week",
+        "url": "https://www.lifeline.org.au/get-help/national-services/lifeline-crisis-support",
+        "sourceType": "Authoritative national crisis service"
+      },
+      "abuse": {
+        "name": "1800RESPECT",
+        "contact": "Call 1800 737 732, text 0458 737 732, or use online chat",
+        "url": "https://1800respect.org.au/",
+        "sourceType": "National domestic, family and sexual violence service"
+      }
+    },
+    {
+      "id": "safety-eu",
+      "region": "European Union emergency access",
+      "emergency": "112",
+      "crisis": {
+        "name": "Find A Helpline country directory",
+        "contact": "Choose your country and the kind of support you need",
+        "availability": "Availability varies by listed service",
+        "url": "https://findahelpline.com/",
+        "sourceType": "IASP-linked, service-verified international directory"
+      },
+      "abuse": {
+        "name": "Find A Helpline abuse and domestic-violence directory",
+        "contact": "Choose your country; do not assume one number works across Europe",
+        "url": "https://findahelpline.com/topics/abuse-domestic-violence",
+        "sourceType": "Service-verified international directory"
+      },
+      "emergencySource": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+    }
+  ],
+  "unlistedRegion": {
+    "message": "This release does not contain a verified number for every country. Use the directory below and confirm the country before calling.",
+    "name": "Find A Helpline",
+    "url": "https://findahelpline.com/",
+    "coverage": "Verified helpline listings in 175+ countries, maintained by the directory"
+  },
+  "privacy": {
+    "warning": "Internet and device use can be monitored and may be impossible to erase completely.",
+    "saferOptions": [
+      "If it is safe, use a device the controlling person cannot access.",
+      "Consider a trusted person's phone, a library device, or another safer connection.",
+      "Private browsing can reduce local history, but it does not hide activity from device monitoring, networks, employers, or account-level logs.",
+      "Calls and texts may appear in device records or bills depending on the service and account."
+    ]
+  }
+}

@@ -1,0 +1,1512 @@
+/* =========================================================================
+   The Guidebook to Life 4.0 — THE SIM STYLESHEET (blueprint 4.0 §2.2, §4.2)
+   -------------------------------------------------------------------------
+   Standing law for every play surface. The 3.0 defect the owner hit came from a
+   reading-surface rule (.weight-buttons button { width: 44px }) cascading into
+   the play screen, whose override restyled colour but never unset the width.
+   The structural remedy, enforced permanently by gate S-9:
+
+     1. NAMESPACE       every play-surface class is `sim-`-prefixed and lives
+                        ONLY in this file. No selector is shared with the reading
+                        stylesheet, so no reading rule can ever reach a play
+                        screen again. (The one sanctioned exception is the
+                        reference-layer SVG set `mv-*`/`mech-viz`, which is a
+                        deliberately shared component and sets no text geometry;
+                        it is allowlisted in S-9 with this justification.)
+     2. NO FIXED WIDTH  nothing that contains text carries `width`/`height`.
+                        Tap targets are sized with min-inline-size/min-block-size
+                        (>= 44px) plus padding, so a label can only ever grow the
+                        box, never be clipped by it.
+     3. SIM TOKENS ONLY every colour on a play surface comes from the --sim-*
+                        token set defined here. Reading tokens (--ink, --paper)
+                        are never read on a play surface, and no literal colour
+                        is written outside the token block.
+     4. SOLID GROUND    play-surface text renders only over a solid token
+                        background (art always carries a scrim). This is also
+                        what makes S-9's contrast check computable.
+     5. GRID ALIGNMENT  rows align via grid with explicit tracks, never
+                        justify-content on a shared row class.
+   ========================================================================= */
+
+/* ============================================================
+   The Playthrough (3.0) — the dark-atlas sim chrome (§5)
+   ============================================================ */
+
+/* Show the static floor by default; hide it once the client hydrates. */
+.sim-play-app {
+  display: none;
+}
+
+:root[data-play-hydrated="1"] .sim-play-app {
+  display: block;
+}
+
+:root[data-play-hydrated="1"] .sim-play-nojs-floor {
+  display: none;
+}
+
+.sim-play-nojs-floor {
+  padding: 2rem 1.25rem 4rem;
+}
+
+
+.sim-play-page {
+  min-height: 60vh;
+}
+
+/* -------------------------------------------------------------------------
+   THE SIM TOKEN SET (§2.2 remedy 3). Every colour on every play surface comes
+   from here. `.sim-surface` is the root every play screen sits inside, so a new
+   4.0 surface inherits the whole set by adding one class. Nothing on a play
+   surface may read a reading token (--ink, --paper) or write a literal colour.
+   ------------------------------------------------------------------------- */
+.sim-surface {
+  /* ground */
+  --sim-bg: var(--atlas);
+  --sim-raised: var(--atlas-raised);
+  --sim-sunk: #0b0e13;
+  --sim-line: var(--atlas-line);
+  --sim-line-strong: #4a5768;
+  /* ink */
+  --sim-ink: var(--atlas-ink);
+  --sim-muted: var(--atlas-muted);
+  --sim-accent: var(--atlas-accent);
+  /* the ink that sits ON the accent — tokenised so no surface writes a literal */
+  --sim-on-accent: #10202b;
+  /* semantic instrument colours (the six canonical instruments, §4.1) */
+  --sim-good: #7cc39b;
+  --sim-mixed: #d6b06a;
+  --sim-poor: #d98a7a;
+  --sim-pip: var(--atlas-accent);
+  --sim-pip-empty: #33404f;
+  --sim-queue: #9a86c9;
+  --sim-help: #e2a091;
+  --sim-focus: #6fb2e0;
+  --sim-scrim: rgba(6, 9, 14, 0.72);
+  --sim-divider: rgba(255, 255, 255, 0.16);
+  /* the minimum interactive target, quoted once so no rule can drift below it */
+  --sim-tap: 44px;
+}
+
+/* The light theme keeps the atlas dark, but the sunk/empty tones need a nudge so
+   the instruments read at the same contrast in both themes (§4.1, S-9). */
+:root[data-theme="light"] .sim-surface,
+:root:not([data-theme="dark"]) .sim-surface {
+  --sim-sunk: #141b24;
+  --sim-pip-empty: #3c4a5b;
+}
+
+.sim-play-app {
+  background: var(--sim-bg);
+  color: var(--sim-ink);
+  border-radius: var(--radius);
+  padding: 0 0 3rem;
+  min-height: 70vh;
+  font-family: var(--sans);
+}
+
+:root[data-edition="game"]:not([data-reduce-framing="1"]) .sim-surface {
+  --sim-accent: #d7ac6a;
+}
+
+/* -------------------------------------------------------------------------
+   STANDING LAW (§2.2 remedies 1–5, §4.2). These four rules are what gate S-9
+   makes permanent; every one of them names the defect it kills.
+   ------------------------------------------------------------------------- */
+
+/* (a) Headings on a play surface take sim ink EXPLICITLY. The 3.0 defect: the
+       base sheet's `h1,h2,h3,h4 { color: var(--sim-ink) }` is an element rule, so it
+       beats the container's inherited colour — in the light theme that painted
+       near-black headings on the dark atlas, which is the "invisible heading"
+       the owner hit. Colour is set here, on the play surface, from a sim token. */
+.sim-surface,
+.sim-surface h1,
+.sim-surface h2,
+.sim-surface h3,
+.sim-surface h4,
+.sim-surface p,
+.sim-surface li,
+.sim-surface label,
+.sim-surface dt,
+.sim-surface dd,
+.sim-surface summary,
+.sim-surface figcaption,
+.sim-surface th,
+.sim-surface td {
+  color: var(--sim-ink);
+}
+/* EVERY link on a play surface, not only unclassed ones. The first version of
+   this rule used `a:not([class])`, so a link that carried a class fell through to
+   the reading sheet's link colour and rendered at 1.13:1 on the dark atlas —
+   the same defect class as the invisible heading, one selector narrower. */
+.sim-surface a:not(.sim-primary-btn):not(.sim-ghost-btn) {
+  color: var(--sim-accent);
+}
+
+/* (b) Tap targets are sized by MINIMUM, never fixed. A label can only grow the
+       box. This is the direct structural kill for the clipped weight buttons. */
+.sim-surface button,
+.sim-surface [role="button"],
+.sim-surface a.sim-primary-btn,
+.sim-surface a.sim-ghost-btn,
+.sim-surface input,
+.sim-surface select {
+  min-block-size: var(--sim-tap);
+  min-inline-size: var(--sim-tap);
+  inline-size: auto;
+  block-size: auto;
+}
+
+/* (c) Text over art always sits on a scrim, so a play-surface text colour always
+       has one computable background behind it (what makes S-9's contrast check
+       decidable, §4.2). */
+.sim-scrim {
+  background: var(--sim-scrim);
+}
+
+
+/* Shared sim buttons */
+.sim-primary-btn,
+.sim-ghost-btn {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+.sim-primary-btn {
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border-color: var(--sim-accent);
+}
+
+.sim-primary-btn:hover {
+  filter: brightness(1.08);
+}
+
+.sim-primary-btn:active {
+  transform: translateY(1px);
+}
+
+.sim-primary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sim-ghost-btn {
+  background: transparent;
+  color: var(--sim-ink);
+  border-color: var(--sim-line);
+}
+
+.sim-ghost-btn:hover {
+  border-color: var(--sim-accent);
+}
+
+.sim-replay-sub,
+.sim-leaning-note {
+  font-weight: 400;
+  font-size: 0.82rem;
+  opacity: 0.8;
+}
+
+.sim-creation-nav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.sim-creation-hint {
+  color: var(--sim-muted);
+  font-size: 0.9rem;
+}
+
+
+.sim-play-app :focus-visible {
+  outline: 2px solid var(--sim-focus);
+  outline-offset: 2px;
+}
+
+
+/* Play bar (Pause & exit) */
+.sim-play-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--sim-line);
+  background: var(--sim-raised);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.sim-play-bar-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sim-muted);
+}
+
+.sim-play-exit {
+  font: inherit;
+  font-size: 0.9rem;
+  background: transparent;
+  color: var(--sim-ink);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+}
+
+.sim-play-exit:hover {
+  border-color: var(--sim-accent);
+}
+
+
+/* Generic sim content wrappers */
+.sim-play-intro,
+.sim-briefing,
+.sim-creation,
+.sim-act-main,
+.sim-parse,
+.sim-play-gate {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.sim-play-app h1 {
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1.15;
+  margin: 0.3rem 0 0.8rem;
+}
+
+.sim-play-app h2 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  margin: 1.4rem 0 0.6rem;
+}
+
+.sim-play-app .sim-eyebrow {
+  color: var(--sim-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.sim-illustrative-note {
+  border: 1px dashed var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: var(--sim-muted);
+  font-size: 0.92rem;
+  margin-bottom: 1.5rem;
+}
+
+.sim-content-note {
+  background: var(--sim-raised);
+  border-left: 3px solid var(--sim-accent);
+  padding: 0.85rem 1rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--sim-ink);
+  margin: 1rem 0 1.75rem;
+}
+
+
+/* Gate + resume */
+.sim-play-gate {
+  text-align: center;
+}
+
+.sim-play-gate-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+
+/* Briefing */
+.sim-briefing-points {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.sim-briefing-point {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.sim-briefing-point-label {
+  color: var(--sim-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.sim-briefing-point-body {
+  color: var(--sim-ink);
+}
+
+@media (max-width: 34rem) {
+  .sim-briefing-point {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
+
+
+/* Creation */
+.sim-creation-steps {
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sim-creation-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--sim-muted);
+}
+
+.sim-creation-steps li.sim-is-current {
+  color: var(--sim-ink);
+  font-weight: 600;
+}
+
+.sim-creation-step-num {
+  min-inline-size: 1.4rem;
+  min-block-size: 1.4rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 50%;
+  border: 1px solid var(--sim-line);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+}
+
+.sim-creation-steps li.sim-is-current .sim-creation-step-num {
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border-color: var(--sim-accent);
+}
+
+.sim-creation-intro {
+  color: var(--sim-muted);
+}
+
+.sim-weight-rows {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+/* (§2.2 remedy 5) Explicit grid tracks, not `justify-content` on a shared row
+   class — the 3.0 defect had the reading sheet's `.weight-row { justify-content:
+   space-between }` reaching in and pushing the button group away from its label. */
+.sim-weight-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--sim-line);
+}
+.sim-weight-row label {
+  display: block;
+  margin-bottom: 0;
+  color: var(--sim-ink);
+}
+
+.sim-play-app .sim-weight-buttons {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.sim-play-app .sim-weight-buttons button {
+  font: inherit;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--sim-line);
+  background: transparent;
+  color: var(--sim-ink);
+  cursor: pointer;
+}
+
+.sim-play-app .sim-weight-buttons button[aria-pressed="true"] {
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border-color: var(--sim-accent);
+}
+
+.sim-leaning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.sim-leaning-option {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--sim-line);
+  background: var(--sim-raised);
+  color: var(--sim-ink);
+  cursor: pointer;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.sim-leaning-option[aria-pressed="true"] {
+  border-color: var(--sim-accent);
+  box-shadow: inset 0 0 0 1px var(--sim-accent);
+}
+
+.sim-leaning-name {
+  font-weight: 600;
+}
+
+@media (max-width: 34rem) {
+  .sim-leaning-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* The hand reveal */
+.sim-hand-cards {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.5rem 0;
+}
+
+.sim-hand-card {
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  background: var(--sim-raised);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.sim-hand-card[data-shown="0"] {
+  opacity: 0.55;
+}
+
+.sim-hand-card-axis {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sim-muted);
+  margin: 0 0 0.2rem;
+}
+
+.sim-hand-card-value {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.sim-hand-card-reveal {
+  margin: 0;
+  color: var(--sim-ink);
+}
+
+.sim-hand-card-facedown {
+  font-size: 1.4rem;
+  color: var(--sim-muted);
+  text-align: center;
+  margin: 0.4rem 0;
+}
+
+
+/* Tier + worth guard */
+.sim-tier-block {
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  background: var(--sim-raised);
+  margin: 1.5rem 0;
+}
+
+.sim-tier-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sim-tier-eyebrow {
+  color: var(--sim-muted);
+  font-size: 0.85rem;
+}
+
+.sim-tier-value {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.sim-tier-value {
+  color: var(--sim-ink);
+}
+
+.sim-worth-guard {
+  margin: 0;
+  color: var(--sim-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.sim-redraw-block {
+  margin-top: 1.5rem;
+}
+
+.sim-redraw-line {
+  color: var(--sim-ink);
+  font-style: italic;
+}
+
+
+/* The act stage layout: panel + main */
+.sim-act-stage {
+  display: grid;
+  grid-template-columns: 17rem 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem;
+}
+
+@media (max-width: 52rem) {
+  .sim-act-stage {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* State panel */
+.sim-state-panel {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1rem;
+  position: sticky;
+  top: 1rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 52rem) {
+  .sim-state-panel {
+    position: static;
+  }
+}
+
+.sim-state-panel-head {
+  border-bottom: 1px solid var(--sim-line);
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.sim-panel-hand {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin: 0.3rem 0 0;
+}
+
+.sim-panel-hand-tier {
+  font-weight: 700;
+  font-family: var(--serif);
+}
+
+.sim-panel-hand-tier[data-tier="0"] { color: var(--sim-good); }
+
+.sim-panel-hand-tier[data-tier="1"] { color: var(--sim-accent); }
+
+.sim-panel-hand-tier[data-tier="2"] { color: var(--sim-mixed); }
+
+.sim-panel-hand-tier[data-tier="3"] { color: var(--sim-poor); }
+
+.sim-panel-hand-note {
+  font-size: 0.78rem;
+  color: var(--sim-muted);
+}
+
+.sim-panel-section {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--sim-line);
+}
+
+.sim-panel-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sim-muted);
+  margin: 0 0 0.4rem;
+}
+
+.sim-gauge {
+  margin-bottom: 0.5rem;
+}
+
+.sim-gauge-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  margin-bottom: 0.2rem;
+}
+
+.sim-gauge-band {
+  color: var(--sim-muted);
+}
+
+.sim-gauge-track {
+  display: flex;
+  gap: 3px;
+}
+
+.sim-gauge-cell {
+  height: 8px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--sim-line);
+}
+
+.sim-gauge-cell[data-on="1"] {
+  background: var(--sim-accent);
+}
+
+.sim-panel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sim-panel-chips li {
+  background: var(--sim-bg);
+  border: 1px solid var(--sim-line);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.sim-panel-conditions li {
+  border-color: var(--sim-mixed);
+}
+
+.sim-panel-marks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.sim-panel-marks li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+.sim-mark-quality {
+  color: var(--sim-muted);
+}
+
+.sim-panel-marks li[data-quality="close"] .sim-mark-quality { color: var(--sim-good); }
+
+.sim-panel-marks li[data-quality="strained"] .sim-mark-quality { color: var(--sim-mixed); }
+
+.sim-panel-foot {
+  font-size: 0.75rem;
+  color: var(--sim-muted);
+  font-style: italic;
+  margin: 0.6rem 0 0;
+}
+
+
+/* Act intro / summary */
+.sim-watched-tag {
+  color: var(--sim-mixed);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.sim-act-intro-text {
+  font-size: 1.1rem;
+  color: var(--sim-ink);
+}
+
+.sim-aims-audit {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 1.25rem;
+}
+
+.sim-aims-audit-q {
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.sim-act-summary-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.sim-act-summary-list li {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+}
+
+.sim-summary-decided {
+  color: var(--sim-muted);
+  font-size: 0.85rem;
+}
+
+
+/* Decision card */
+.sim-card-setup {
+  font-size: 1.2rem;
+  font-family: var(--serif);
+  line-height: 1.4;
+  margin: 0 0 1.25rem;
+}
+
+.sim-watched-note {
+  color: var(--sim-mixed);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.sim-option-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sim-option {
+  width: 100%;
+  text-align: left;
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  color: var(--sim-ink);
+  cursor: pointer;
+  display: grid;
+  gap: 0.5rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sim-option:hover {
+  border-color: var(--sim-accent);
+}
+
+.sim-option[data-selected="1"] {
+  border-color: var(--sim-accent);
+  box-shadow: inset 0 0 0 1px var(--sim-accent);
+}
+
+.sim-option-label {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.sim-option-chips,
+.sim-option-position {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.sim-chip {
+  font-size: 0.76rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--sim-line);
+  color: var(--sim-muted);
+  background: var(--sim-bg);
+}
+
+.sim-chip-cost {
+  border-style: dashed;
+}
+
+.sim-chip-variance {
+  color: var(--sim-accent);
+  border-color: var(--sim-accent);
+}
+
+.sim-chip-recovery {
+  color: var(--sim-good);
+  border-color: var(--sim-good);
+}
+
+.sim-chip-endurance {
+  color: var(--sim-mixed);
+  border-color: var(--sim-mixed);
+}
+
+.sim-chip-position {
+  background: var(--sim-bg);
+  border-color: var(--sim-accent);
+  color: var(--sim-ink);
+  border-radius: var(--radius);
+  white-space: normal;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.sim-resolve-block {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--sim-line);
+  padding-top: 1.25rem;
+}
+
+.sim-resolve-hint {
+  color: var(--sim-muted);
+  font-size: 0.9rem;
+}
+
+.sim-resolve-btn {
+  margin-top: 1rem;
+}
+
+
+/* Distribution strip */
+.sim-dist-strip {
+  margin: 1rem 0;
+}
+
+.sim-dist-bar {
+  position: relative;
+  display: flex;
+  min-height: 34px;
+  border-radius: var(--radius);
+  overflow: visible;
+  border: 1px solid var(--sim-line);
+}
+
+.sim-dist-seg {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  transition: flex-grow 0.4s ease;
+}
+
+.sim-dist-seg + .sim-dist-seg {
+  border-left: 1px solid var(--sim-divider);
+}
+
+.sim-dist-seg[data-band="strong"] { background: color-mix(in srgb, var(--sim-good) 70%, transparent); }
+
+.sim-dist-seg[data-band="solid"] { background: color-mix(in srgb, var(--sim-accent) 55%, transparent); }
+
+.sim-dist-seg[data-band="mixed"] { background: color-mix(in srgb, var(--sim-muted) 45%, transparent); }
+
+.sim-dist-seg[data-band="poor"] { background: color-mix(in srgb, var(--sim-mixed) 60%, transparent); }
+
+.sim-dist-seg[data-band="failure"] { background: color-mix(in srgb, var(--sim-poor) 60%, transparent); }
+
+.sim-dist-seg[data-landed="1"] {
+  box-shadow: inset 0 0 0 2px var(--sim-ink);
+}
+
+.sim-dist-seg-label {
+  font-size: 0.72rem;
+  color: var(--sim-ink);
+  padding: 0 0.25rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.sim-dist-marker {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: 0;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, left 0.5s ease;
+}
+
+.sim-dist-marker[data-shown="1"] {
+  opacity: 1;
+}
+
+.sim-dist-marker-dot {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--sim-ink);
+  transform: translateX(-50%);
+  border: 2px solid var(--sim-bg);
+}
+
+.sim-dist-marker::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--sim-ink);
+}
+
+.sim-dist-marker-label {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  color: var(--sim-ink);
+  white-space: nowrap;
+}
+
+.sim-dist-legend {
+  font-size: 0.82rem;
+  color: var(--sim-muted);
+  margin: 0.9rem 0 0;
+}
+
+.sim-dist-legend-skill { color: var(--sim-accent); }
+
+.sim-dist-legend-luck { color: var(--sim-ink); }
+
+
+/* Consequence */
+.sim-outcome-line {
+  font-size: 1.15rem;
+  font-family: var(--serif);
+  line-height: 1.45;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.sim-consequence-deltas {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.sim-consequence-deltas li {
+  font-size: 0.82rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--sim-line);
+}
+
+.sim-consequence-deltas li[data-dir="up"] { color: var(--sim-good); border-color: var(--sim-good); }
+
+.sim-consequence-deltas li[data-dir="down"] { color: var(--sim-mixed); border-color: var(--sim-mixed); }
+
+.sim-consequence-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.sim-why-link {
+  font: inherit;
+  background: transparent;
+  border: none;
+  color: var(--sim-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.4rem 0;
+}
+
+
+/* Scripted beat — reduced frame */
+.sim-scripted-beat {
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--sim-raised) 80%, transparent);
+  text-align: center;
+}
+
+.sim-beat-frame-note {
+  font-size: 0.8rem;
+  color: var(--sim-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sim-beat-prose {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 34rem;
+  margin: 1rem auto;
+}
+
+.sim-beat-real {
+  color: var(--sim-muted);
+  font-size: 0.9rem;
+}
+
+.sim-beat-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+
+/* Watched moment */
+.sim-watched-moment {
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  background: var(--sim-raised);
+}
+
+
+/* Parse */
+.sim-parse-head {
+  border-bottom: 1px solid var(--sim-line);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sim-parse-intro {
+  color: var(--sim-muted);
+  font-size: 1.05rem;
+}
+
+.sim-parse-section {
+  margin: 1.75rem 0;
+}
+
+.sim-parse-hand-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.sim-parse-hand-list li {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+}
+
+.sim-parse-hand-list span {
+  color: var(--sim-muted);
+  font-size: 0.78rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sim-turning-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.sim-turning {
+  border-left: 3px solid var(--sim-line);
+  padding: 0.4rem 0 0.4rem 0.9rem;
+}
+
+.sim-turning[data-band="strong"] { border-color: var(--sim-good); }
+
+.sim-turning[data-band="poor"],
+.sim-turning[data-band="failure"] { border-color: var(--sim-mixed); }
+
+/* Watched acts (§3.4): decided-for-you context — quiet, no outcome-band colour. */
+.sim-turning-watched {
+  border-left-style: dotted;
+  border-left-color: var(--sim-line);
+  opacity: 0.85;
+}
+
+.sim-turning-madefor {
+  color: var(--sim-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sim-turning-choice {
+  margin: 0 0 0.4rem;
+}
+
+.sim-turning-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.sim-turning-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--sim-good);
+  color: var(--sim-good);
+}
+
+.sim-turning-tag-fail {
+  border-color: var(--sim-mixed);
+  color: var(--sim-mixed);
+}
+
+.sim-turning-strip {
+  position: relative;
+  height: 6px;
+  background: var(--sim-line);
+  border-radius: 3px;
+  margin: 0.4rem 0;
+}
+
+.sim-turning-marker {
+  position: absolute;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sim-ink);
+  transform: translateX(-50%);
+}
+
+.sim-turning-split {
+  font-size: 0.9rem;
+  color: var(--sim-muted);
+  margin: 0.2rem 0 0;
+}
+
+.sim-parse-note {
+  color: var(--sim-muted);
+  font-style: italic;
+  font-size: 0.92rem;
+}
+
+.sim-beat-notes {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sim-beat-note {
+  background: var(--sim-raised);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-style: italic;
+}
+
+.sim-beat-real-link {
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+.sim-achievement-list,
+.sim-aim-read-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sim-achievement-list li {
+  padding-left: 1.4rem;
+  position: relative;
+}
+
+.sim-achievement-list li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: var(--sim-accent);
+}
+
+.sim-aim-read-list li {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.sim-aim-name {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.sim-aim-verdict {
+  color: var(--sim-muted);
+}
+
+.sim-aim-tension {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--sim-mixed);
+  background: var(--sim-raised);
+  color: var(--sim-ink);
+}
+
+.sim-slack-curve,
+.mech-viz {
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+  display: block;
+}
+
+.sim-slack-line {
+  stroke: var(--sim-accent);
+  stroke-width: 2.5;
+}
+
+.sim-parse-replay {
+  border-top: 1px solid var(--sim-line);
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.sim-replay-note {
+  font-style: italic;
+  color: var(--sim-ink);
+}
+
+.sim-replay-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.sim-replay-disanalogy {
+  color: var(--sim-muted);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+
+/* Why-this-happened modal */
+.sim-why-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.sim-why-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--sim-scrim);
+  border: none;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.sim-why-card {
+  position: relative;
+  z-index: 1;
+  background: var(--sim-raised);
+  color: var(--sim-ink);
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 30rem;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+
+.sim-why-eyebrow {
+  color: var(--sim-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  margin: 0;
+}
+
+.sim-why-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  margin: 0.3rem 0 0.8rem;
+}
+
+.sim-why-viz {
+  background: var(--sim-bg);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.sim-why-para {
+  color: var(--sim-ink);
+  line-height: 1.55;
+}
+
+.sim-why-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.sim-why-deep {
+  color: var(--sim-accent);
+}
+
+.sim-why-close {
+  font: inherit;
+  background: var(--sim-accent);
+  color: var(--sim-on-accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+
+.sim-act-empty {
+  padding: 2rem;
+  text-align: center;
+}
+
+
+/* ---- Rules the play surfaces previously borrowed from the reading sheet,
+        now owned here under the sim namespace (§2.2 remedy 1). ---- */
+.sim-chip-list {
+  list-style: none;
+  margin: 0.4rem 0 0.8rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.sim-chip-list li {
+  padding: 0.3rem 0.6rem;
+  background: var(--sim-sunk);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+
+/* ---- Play rules that were authored into the reading sheet in 3.0 (they read
+        --sim-* tokens, so they were always play rules). Moved here and
+        namespaced; reading tokens re-pointed at sim tokens (§2.2). ---- */
+.sim-summary-drawn { color: var(--sim-muted); }
+.sim-act-summary-note { color: var(--sim-muted); font-style: italic; margin-top: 1rem; }
+/* Counterfactual shock strip (§3.5) */
+.sim-counterfactual {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid var(--sim-line);
+  border-radius: var(--radius);
+  background: var(--sim-raised);
+}
+.sim-cf-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sim-muted);
+  margin: 0 0 0.4rem;
+}
+.sim-counterfactual-note { margin: 0.75rem 0 0; color: var(--sim-muted); font-style: italic; font-size: 0.9rem; }
+
+/* The counterfactual pair (the slack shock, §3.5) — moved out of the reading
+   sheet, namespaced, and re-tokenised onto the sim palette (§2.2). */
+.sim-counterfactual-lead {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+.sim-counterfactual-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 40rem) {
+  .sim-counterfactual-pair {
+    grid-template-columns: 1fr;
+  }
+}
+.sim-cf-outcome {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+}
+.sim-cf-outcome[data-band="strong"],
+.sim-cf-outcome[data-band="solid"] {
+  color: var(--sim-good);
+}
+.sim-cf-outcome[data-band="poor"],
+.sim-cf-outcome[data-band="failure"] {
+  color: var(--sim-mixed);
+}
+
+/* The parse's slack-trajectory chart — its own sim marks, so the play surface
+   borrows nothing from the reference-layer viz set (§2.2 remedy 1). */
+.sim-chart-axis {
+  stroke: var(--sim-line);
+  stroke-width: 1.5;
+}
+.sim-chart-node {
+  fill: var(--sim-accent);
+}

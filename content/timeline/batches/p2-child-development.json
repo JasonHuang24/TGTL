@@ -1,0 +1,223 @@
+{
+  "key": "p2-child-development",
+  "sources": [
+    {
+      "id": "src-cdc-milestones-2-months",
+      "title": "Milestones by 2 Months",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/2-months.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most babies do by two months of age, listed on this page as including smiling when someone talks to or smiles at them",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most babies do by 2 months"
+    },
+    {
+      "id": "src-cdc-milestones-9-months",
+      "title": "Milestones by 9 Months",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/9-months.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most babies do by nine months of age, listed on this page as including sitting without support and getting to a sitting position by themselves",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most babies do by 9 months"
+    },
+    {
+      "id": "src-cdc-milestones-15-months",
+      "title": "Milestones by 15 Months",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/15-months.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most children do by fifteen months of age, listed on this page as including trying to say one or two words besides the names for a parent",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most children do by 15 months"
+    },
+    {
+      "id": "src-cdc-milestones-18-months",
+      "title": "Milestones by 18 Months",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/18-months.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most children do by eighteen months of age, listed on this page as including walking without holding on to anyone or anything, and trying to say three or more words besides the names for a parent",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most children do by 18 months"
+    },
+    {
+      "id": "src-cdc-milestones-2-years",
+      "title": "Milestones by 2 Years",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/2-years.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most children do by two years of age, listed on this page as including saying at least two words together",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most children do by 2 years"
+    },
+    {
+      "id": "src-cdc-milestones-3-years",
+      "title": "Milestones by 3 Years",
+      "publisher": "Centers for Disease Control and Prevention, Learn the Signs. Act Early.",
+      "url": "https://www.cdc.gov/act-early/milestones/3-years.html",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "developmental milestones that most children do by three years of age, listed on this page as including talking well enough for others to understand, most of the time",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "What most children do by 3 years"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-social-smile",
+      "label": "Smiling back at a familiar face",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 0.17, "to": 0.17 },
+        "typical": { "from": 0.17, "to": 0.17 }
+      },
+      "measure": "most-by",
+      "population": "babies in the United States, in the terms of the federal milestone checklists, which place smiling when someone talks to or smiles at them among the things most babies do by the age that checklist names",
+      "sources": ["src-cdc-milestones-2-months"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "This is a range drawn across many babies rather than a test any child passes or fails, and a clinician is the right place for a question about one baby.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Caregivers begin to get something back: a face that turns toward them and a smile that answers theirs.",
+        "Soothing starts to work through voice and eye contact, not only through feeding and holding."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-sitting-without-support",
+      "label": "Sitting up without support",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 0.75, "to": 0.75 },
+        "typical": { "from": 0.75, "to": 0.75 }
+      },
+      "measure": "most-by",
+      "population": "babies in the United States, in the terms of the federal milestone checklists, which place sitting without support among the things most babies do by the age that checklist names",
+      "sources": ["src-cdc-milestones-9-months"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "Ranges like this describe a spread across a population rather than any individual child, and a pediatric clinician is where a specific concern belongs.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Sitting steadily frees both hands, which changes how babies reach, play and handle food.",
+        "Household routines shift as an upright seated position stops needing an adult to hold it."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-walking-independently",
+      "label": "Walking without holding on",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 1.5, "to": 1.5 },
+        "typical": { "from": 1.5, "to": 1.5 }
+      },
+      "measure": "most-by",
+      "population": "children in the United States, in the terms of the federal milestone checklists, which place walking without holding on to anyone or anything among the things most children do by the age that checklist names",
+      "sources": ["src-cdc-milestones-18-months"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "This describes when a skill appears across many children rather than a cutoff for any one of them, and a clinician can answer questions about a particular child.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Rooms open up as children cross open floor on their own, and household safety changes with it.",
+        "Hands stay free while moving, so carrying and fetching become part of everyday play."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-first-spoken-words",
+      "label": "First spoken words beyond names for parents",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 1.25, "to": 1.5 },
+        "typical": { "from": 1.25, "to": 1.25 }
+      },
+      "measure": "most-by",
+      "population": "children in the United States, in the terms of the federal milestone checklists, which place trying to say one or two words besides the names for a parent at the earlier checklist age, and trying to say three or more such words at the later one",
+      "sources": ["src-cdc-milestones-15-months", "src-cdc-milestones-18-months"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "This is a population range rather than a verdict on any child, and questions about one child's speech belong with a clinician.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Naming enters daily life: familiar objects and people get sounds attached to them.",
+        "Caregivers start answering words as well as gestures, and pointing and speech work together for a while."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-two-word-phrases",
+      "label": "Putting two words together",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 2, "to": 2 },
+        "typical": { "from": 2, "to": 2 }
+      },
+      "measure": "most-by",
+      "population": "children in the United States, in the terms of the federal milestone checklists, which place saying at least two words together among the things most children do by the age that checklist names",
+      "sources": ["src-cdc-milestones-2-years"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "This describes a spread across many children rather than a requirement for any one of them, and a clinician is the right place to raise a concern.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Single words become small combinations, so a child can say what they want and what it is about in one go.",
+        "Adults guess less, because a phrase carries more of the meaning than a word plus a gesture did."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-speech-understood-by-others",
+      "label": "Talking well enough for others to understand",
+      "lane": "body-health",
+      "kind": "biological-window",
+      "optional": false,
+      "timing": {
+        "window": { "from": 3, "to": 3 },
+        "typical": { "from": 3, "to": 3 }
+      },
+      "measure": "most-by",
+      "population": "children in the United States, in the terms of the federal milestone checklists, which place talking well enough for others to understand, most of the time, among the things most children do by the age that checklist names",
+      "sources": ["src-cdc-milestones-3-years"],
+      "readRef": "/topics/health",
+      "sensitivity": "child-development",
+      "careNote": "This is a range observed across a population rather than a result anyone is graded on, and a clinician or speech-language professional is where a question about one child belongs.",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Conversation stops depending on a caregiver to translate, which widens who a child can talk to.",
+        "Childcare, preschool and playground exchanges get easier as adults outside the household follow what is said."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

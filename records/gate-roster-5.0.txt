@@ -1,0 +1,281 @@
+TGTL 5.0 — the full gate roster, run on the shipped tree AFTER the fix pass
+Captured 2026-09-04 04:45 — Node v22.20.0, the export rebuilt from source
+and served from tests/serve-out.mjs for every browser suite below.
+
+===== npm run gates (static) =====
+
+
+[PASS] Gate 0: Doors integrity
+   6 homepage doors point at valid routes.
+
+[PASS] Gate 1: Link integrity + no orphan routes
+   All 57 pages: internal links, anchors, and reachability OK.
+
+[PASS] Gate 2: Set-down vocabulary lint
+   7 set-down routes clean of 39 game terms and stat/tier/reward components.
+
+[PASS] Gate 3: Terminology parity + component source lint
+   55 terms parity-clean; no game vocabulary hardcoded in 73 component/app sources.
+
+[PASS] Gate 4: Encoding hygiene
+   57 pages: UTF-8 clean, no mojibake or U+FFFD.
+
+[PASS] Gate 9: Local-only: no external resource loads (static check)
+   57 pages: no page-initiated external resource loads (fonts/system-stack only).
+
+[PASS] Gate 10: Source hygiene: no stray control characters
+   248 source files: no backspace, form feed, bell, vertical tab, NUL or escape anywhere.
+
+============================================================
+ALL 7 STATIC GATES PASS
+
+===== npm run gates:sim (S-1..S-8) =====
+
+
+[PASS] Gate 101: S-1 · Content-boundary lint (two-tier)
+   1062 non-beat strings clean of crisis+loss tiers; 2 beats well-typed with resolving realPageLinks.
+
+[PASS] Gate 102: S-2 · No-numbers-in-play lint
+   1066 sim strings: no percentages, no "N in M", no bare numbers (years excepted).
+
+[PASS] Gate 103: S-3 · Graph integrity (bands, recovery, no dead ends)
+   47 cards well-formed; every act pool sized with a recovery route for each decision slot.
+
+[PASS] Gate 104: S-3b · Full-run reachability (parse reachable from every hand)
+   120/120 hands drove creation → all acts → end of life → parse; no dead ends.
+
+[PASS] Gate 105: S-5 · No-score lint (reader-facing instruments)
+   Parse/board content and templates: no totals, grades, ranks, meters, or reader comparisons.
+
+[PASS] Gate 106: S-6 · Input-doctrine lint (no interpreted free text)
+   Free-text fields present only in allowlisted files (components/Logs.tsx, components/Search.tsx); everything the engine responds to is enumerated.
+
+[PASS] Gate 107: S-7 · Determinism (derived-seed, replay-stable)
+   Identical seeds+choices ⇒ identical run (60 seeds); skips, pause/resume, why-detours, and a weight edit never perturbed a draw.
+
+[PASS] Gate 108: S-8 · Constraint profile + worth-guard adjacency (arc)
+   Verbatim worth-guard preserved and adjacent on every profile-rendering template; the difficulty tier is gone from the arc entirely (Hand carries a four-axis profile, no tier field, no digits rendered).
+
+============================================================
+ALL 8 SIM GATES PASS (S-1..S-8)
+
+===== npm run gates:sim4 (sandbox) =====
+
+
+[PASS] Gate 201: S-1 · Content boundary + beat-channel isolation + Lab curation (sandbox)
+   beat/queue isolation: 74 queue entries inspected across six full runs, by queued ref and by source.
+   4273 sandbox strings clean of crisis+loss tiers; 3 beats well-typed on their own channel; no beat reachable through Event, queue, delayed effect, companion arc, or a live run; 4 Lab windows beat-free and valid on every branch of every declared axis.
+
+[PASS] Gate 202: S-2 · No-numbers-in-play lint (sandbox)
+   4279 sandbox strings: no percentages, no "N in M", no bare numbers (years excepted).
+
+[PASS] Gate 203: S-3 · Graph integrity (witness fixtures, recovery ties, arcs, variants)
+   every failure-capable record's authored tie resolves to an AVAILABLE action at every season it can appear in, from every preset — checked through availability(), not only on the graph.
+   companion delivery, driven over real seasons: 50 trajectory-node entries across the fleet, 50 heard from; no arc held a refuse or leave node with an UNSPENT event for more than eight consecutive seasons without being delivered, and no season exceeded the arrival cap of 1.
+   91 actions + 66 events + 11 Lab actions well-formed; every action witnessed available under a replayed hand+seed; every failure-capable record carries a tied recovery route; 6 arcs each DECLARE neglect-response, repair-response, refuse and leave nodes, and their delivery is exercised over real seasons above; outcome variants cover every band on every repeatable, six deep on the unconditional whole-window ones with no duplicated line; floor set free, repeatable and unconditional.
+
+[PASS] Gate 204: S-3b · Full-run reachability (completable from every hand)
+   25/25 runs drove all 24 seasons to a complete parse — every preset and drawn hand completable.
+
+[PASS] Gate 205: S-5 · No-score lint (all play-surface strings, incl. the parse bridge)
+   4279 play-surface strings clean of score, composite-difficulty and reader-characterisation patterns; parse carries no total; the bridge selector takes a campaign id and nothing else, and every template is conditionally framed.
+
+[PASS] Gate 206: S-6 · Input doctrine + no self-insertion (sandbox)
+   No free-text field on any sandbox surface. Every input the engine responds to is enumerated.
+   Hand origins in the campaign surface: only preset and birth-rng (2 sites).
+
+[PASS] Gate 207: S-7 · Determinism (occurrence-discriminated draws, fork isolation, migration)
+   Identical seeds+ledger ⇒ identical run (8 drives); occurrence-discriminated draws differ across seasons and reproduce exactly (12 repeatables); forks (choice-vary and draw-vary) left the parent byte-identical and kept its prefix; save/resume interleavings did not perturb a run; stale-version, stale-content and unreadable saves are all declared rather than resumed; every Lab comparison is stable.
+
+[PASS] Gate 208: S-8 · Constraint profile (per-axis only, no composite, hardness never renders)
+   Verbatim worth-guard preserved and adjacent on every profile-rendering template; ConstraintProfile carries no composite field and profileRender exposes only {intro, lines, worthGuard}; internalHardness reaches no render path and no profile string contains a digit; preset order is the authored order and is not hardness-sorted.
+
+[PASS] Gate 209: S-9 · UI integrity, structural half (namespace, no fixed size, sim tokens)
+   379 sim classes across 3 sheets, zero shared with the 317-class reading sheet; no fixed width/height on a text-bearing sim rule; no reading token and no literal colour past the token block; every class on every sandbox component is namespaced (one allowlisted shared reference-viz set, which sets no text geometry). The browser half of S-9 runs in tests/s9-ui.mjs.
+
+[PASS] Gate 211: S-11 · Consequence-queue integrity
+   88 queue entries placed and 81 resolved across 15 full campaigns; every carry-forward recorded a cause; every expiry recorded a stated cause; the rendered queue matched the engine queue in every season; timed, conditional and expiring transitions verified directly. Scoped to the queue object — beats live outside it (§5.1).
+   the attribution predicate was run against a note built the old broken way (“body creative practice”) and rejected it, and against the authored label and accepted it — so its green is earned.
+
+[PASS] Gate 212: S-12 · Attribution honesty (rendered factors = nonzero tagged components)
+   97 scripted resolutions checked: every rendered factor is a tagged nonzero component with a note, 'your choice' is always present, and 'the draw' renders exactly when the marker was off-centre. Per-axis Lab fixtures: draw-vary isolates the draw, position-vary separates on position.
+
+[PASS] Gate 214: Invention gate · every INVENTION carries its adversarial-check record
+   9 INVENTION entries, each with its doctrine, its §1/§5/§11 check, and an attached adversarial safety review.
+
+============================================================
+ALL 12 SANDBOX GATES PASS
+
+===== npm run gates:timeline (T suite) =====
+
+
+[PASS] Gate 1: T-1 · Source traceability (a number without a fetched source is an invented number)
+   122 records; 89 carry numeric timing, each traced to a Source with an excerpt and a retrieval date.
+   rendered: every age numeral on 25 timeline page(s) sits in a year header, a navigation-convention stage band, an age claim, a source stamp, or an evidence drawer; and every sourced record renders its full source list at least once.
+
+[PASS] Gate 2: T-2 · Kind discipline (five kinds; strategy and personal targets excluded by type)
+   five kinds only; the two excluded kinds are inexpressible in the type. institutional-sequence:6  legal-threshold:35  biological-window:15  statistical-norm:46  cultural-expectation:20
+   rendered kinds: biological-window, cultural-expectation, institutional-sequence, legal-threshold, statistical-norm — each with its standing line.
+
+[PASS] Gate 3: T-3 · Normative-language lint (the site's voice never says a reader should have)
+   content: 1131 prose fields across 122 records checked against the §5.1 list (`heard` exempt by design — it is quotation): clean.
+   content: 37 stage prose fields across 9 stages checked against the §5.1 list and for digits: clean.
+   rendered: 25 timeline page(s) clean of the §5.1 list outside the one allowlisted "how-to-read-this" block.
+
+[PASS] Gate 4: T-4 · Recovery adjacency & never-is-not-failure
+   142 branches; 91 name a cost and every one of them renders a route in the same view; 17 optional records carry a "never" branch.
+
+[PASS] Gate 5: T-5 · No reader computation (the reader is never assessed)
+   5 timeline sources: one storage key ("tgtl:timeline"), no free-text input, no control that takes a reader's or a child's age. The age selector is view position only.
+
+[PASS] Gate 6: T-6 · Sensitive quiet (care note, real page, no game chrome)
+   27 sensitive records — dying:5  health-decline:8  fertility:4  child-development:7  puberty:3 — each with a care note and the real page; loss-tier language confined to dying/health-decline; crisis tier nowhere.
+   2 record(s) render in a stage intro only — off the spine and out of every year card (§5.4: life expectancy renders once, with its scope stated).
+
+[PASS] Gate 7: T-7 · Year coverage & derivation (no year carries an invented event)
+   all 101 years plus the terminal card render; the rendered milestone set for every year equals an independently computed set; 3 year(s) render the honest empty state; longest empty run before ninety: 3.
+
+[PASS] Gate 8: T-8 · No numbers on the surface (rates live in drawers; the surface carries a band)
+   25 timeline page(s): no percentage, no "N in M", no decimal rate and no digit adjacent to a likelihood word outside `.tl-evidence`; ages and windows render as ages.
+
+[PASS] Gate 9: T-9 · Sex-lens honesty (a divergence only where a source says what it measured)
+   1 record(s) carry a sourced sex-lens divergence, each with a source that states what it measured; the rendered count equals the content count.
+
+[PASS] Gate 10: T-10 · Reference integrity
+   every affectsLater and readRef resolves; 24 major record(s), each with a page, and no page without one.
+
+[PASS] Gate 11: T-11 · Source freshness & stamps
+   153 sources: each with publication year, data year, an ISO retrieval date and a non-empty excerpt of at most twenty-five words.
+   205 rendered source stamp(s).
+
+[PASS] Gate 12: T-12 · Layer isolation (the play layer is untouched)
+   32 play-layer sources import nothing from content/timeline or components/timeline; 14 timeline sources import no sim state and touch no play storage key.
+
+[PASS] Gate 13: T-13 · Research-pipeline record
+   153 sources, each with a verifier verdict in records/research-pipeline.md; 33 research-required records, each listed in KNOWN_LIMITATIONS.md.
+
+[PASS] Gate 15: T-15 · UI integrity, structural half (the tl- namespace)
+   95 tl- classes in app/timeline.css, none shared with the reading or sim sheets; no fixed size on a text-bearing rule; no literal colour past the token block; 5 controls sized by the 44px tap token.
+
+[PASS] Gate 16: T-16 · The export is current (a stale out/ cannot certify a build)
+   out/timeline/index.html is at least as new as every timeline source that produces it.
+
+============================================================
+ALL 15 SUBSTANTIVE TIMELINE GATES PASS
+
+===== npm run gates:balance (S-10 fleets) =====
+[PASS] Gate 221: S-10b · Completable from every hand under every policy
+   All 315 runs completed all 24 seasons — every policy from every preset and every sampled drawn hand.
+[PASS] Gate 222: S-10c · No policy dominates all priorities
+   No policy is at least as good as every other on all ten priorities. Each of the 15 policies is beaten somewhere.
+   Leaders per priority — safety: rest-and-bank · health: spend-everything · closeness: greedy-creativity · autonomy: spend-everything · mastery: greedy-mastery · wealth: greedy-autonomy · service: greedy-service · creativity: greedy-creativity · recognition: greedy-service · meaning: wait-only
+[PASS] Gate 223: S-10d · Rest-heavy is never strictly dominated
+   Rest-heavy is not strictly dominated by any policy. Holding the floor is a way of playing, not a way of losing slowly.
+[PASS] Gate 224: S-10e · At least three meaningfully different viable endings per preset
+   Supported Explorer: 20 meaningfully different viable endings (of 20 viable runs) — e.g. greedy-safety, greedy-safety, greedy-closeness.
+   Working Under Pressure: 23 meaningfully different viable endings (of 24 viable runs) — e.g. greedy-safety, greedy-health, greedy-closeness.
+   Credential Route: 17 meaningfully different viable endings (of 18 viable runs) — e.g. greedy-safety, greedy-safety, greedy-health.
+   Care-Constrained Builder: 23 meaningfully different viable endings (of 23 viable runs) — e.g. greedy-safety, greedy-safety, greedy-health.
+   Recovery and Relaunch: 21 meaningfully different viable endings (of 21 viable runs) — e.g. greedy-safety, greedy-health, greedy-autonomy.
+[PASS] Gate 225: S-10f · Pile-up cap holds across the fleet
+   The most negative arrivals any season in the fleet delivered: 2 (the published cap is two). 9635 further negative arrivals were suppressed by the depletion floor across the fleet.
+[PASS] Gate 226: S-10g · /methodology's fleet and debt claims are true of the code
+   15 policies, published as "Fifteen"; the debt drag caps at 2 pips and stays there past 9, which is what the page now says.
+[PASS] Gate 2201: S-10a′ · The floor predicate is falsifiable
+   floorReport returns FALSE at a closed budget (3 affordable, 0 authored non-floor) and TRUE at the bare reserve (17 affordable, 5 authored non-floor across 4 families). The predicate the fleet asserts is one that can come back red.
+ALL 8 BALANCE ASSERTIONS PASS (S-10, 525 fleet runs)
+
+===== npm run gates:pileup (S-13 fleets) =====
+[PASS] Gate 230: S-13a · The floor set holds in every adversarially-reached state
+   864 adversarially-driven seasons — worst-option-always, never rest, never ask, 432 of them from a fully drained start. 783 of those seasons were at deep depletion. In every one, the floor set was present and free and at least three allocations across at least two families were affordable (worst: 17 affordable across 9 families; worst count from the authored pool beyond the small-move tier: 5) — so no reachable state is the floor alone.
+[PASS] Gate 231: S-13b · Every failure surfaces a tied recovery route
+   292 failure-band resolutions across the adversarial fleet. Every one surfaced at least one AUTHORED recovery route tied to that specific failure (the always-available floor route is deliberately not counted here — counting it is what made this clause unfalsifiable), and every endurance route among them named a real support page.
+[PASS] Gate 232: S-13c · Matter-of-fact rendering under maximal pressure
+   186 strings rendered by the 60 highest-pressure seasons in the fleet (pressure 9–14): no catastrophising, no collapse narrative, no verdict on the person. Setbacks read as things that happened.
+[PASS] Gate 233: S-13d · Pile-up cap and depletion floor bind under adversarial search
+   The negative-arrival cap held in all 864 adversarial seasons (ceiling 2). 783 seasons were at deep depletion; 0 of those still drew the maximum, which is the honest part — the depletion floor suppresses fresh negative CHANCE events, not the consequences of what you did.
+ALL 4 WORST-CASE ASSERTIONS PASS (S-13, 864 adversarial seasons)
+
+===== bash tests/falsify-walls.sh (nine plant-and-restore probes) =====
+               LOSS-TIER "funeral" (death-of-others) leaked into non-beat content: act-people-keep-the-friendship-alive.label
+ok        S-2 · a percentage in a rendered string
+               percent sign in act-people-keep-the-friendship-alive/opt-people-standing-night.label
+ok        S-5 · a score on a play surface
+               reader-scoring construction in act-people-keep-the-friendship-alive/opt-people-stay-reachable.label: "Answer properly and raise your life score"
+
+restore verified: content/sim/campaign/actions/batch-people.ts is byte-identical (sha256 fa585279d89291273df4a6bcb954479d74104c8c4d850c1c38e497bb6b238f02)
+
+---- timeline walls ----
+ok        T-1 · numeric timing with no source
+               ms-age-of-majority: numeric timing with NO source (§4.1 cardinal rule)
+ok        T-3 · normative language in a content field
+               ms-age-of-majority.whatChanges[0]: §5.1 entry "should have" matched "should have"
+ok        T-4 · a cost with no recovery route
+               ms-advance-directives-later-life.analysis.late: names 1 cost(s) and no route (§5.7)
+ok        T-6 · sensitive record with no care note
+               ms-advance-directives-later-life: sensitivity "dying" with no careNote (§5.3)
+ok        T-7 · a year claiming an event its records deny
+               age 0: rendered set != independently computed set — extra ms-planted-invention
+ok        T-8 · a percentage on a timeline surface
+               /timeline: a percent sign renders outside an evidence drawer (§4.5)
+
+restore verified: content/timeline/generated/milestones.ts is byte-identical (sha256 436e1a1e8aec234eb527f8aadc632e09570cd4dff8b502781a9544242441ff77)
+restore verified: out/timeline/index.html is byte-identical (sha256 9821470b57d001a66c648507b747766585baba483bef170e4dc768bdf5676d06)
+
+all wall lints went red on a planted violation
+
+===== node tests/browser-gates.mjs (browser half + T-14) =====
+[PASS] Gate 0: Screenshots captured (present, non-empty, and covering every art-checkpoint surface)
+   88 screenshots in screenshots/ — all present on disk, none under 4KB, and all 13 art-checkpoint surfaces covered in both themes at both viewports.
+[PASS] Gate 4: S-4 · Keyboard: a full season, a fork, a Lab comparison; Help-now in every state
+   Help-now present in all 7 sampled states across all three modes.
+   S-4: one full season completed keyboard-only — briefing → allocate → resolve (4 outcomes) → explain, closed by Escape.
+   S-4: forked by keyboard; the surface states plainly that the run branched from is untouched.
+   S-4: one Lab comparison completed keyboard-only, both branches rendered, the axis switched by Enter and the comparison re-rendered, no-prediction line present.
+[PASS] Gate 5: Console cleanliness (31 routes × both editions)
+   Zero console errors across 62 page loads, including all three play modes.
+[PASS] Gate 6: State preservation + reset
+   map: stage selection stayed across edition switch
+   guidance: objective weight survived navigation
+   campaign: a run in progress is offered back, never silently resumed or lost
+   reset: board/logs/guidance/play state cleared
+[PASS] Gate 7: Keyboard: Help-now reachable everywhere
+   keyboard: Help-now focusable on all eight sampled routes including all three play modes; reached Threshold by keyboard
+[PASS] Gate 8: Responsive: no horizontal body scroll at 320px (31 routes + the allocate screen)
+   All 31 routes clean at 320px, including the allocate screen with every instrument rendered.
+[PASS] Gate 9: Local-only at runtime (no off-origin loads; no state in URL)
+   No off-origin requests on load or interaction; no stored value in any URL, in any mode.
+[PASS] Gate 14: T-14 · Timeline browser walk (keyboard, JS-off floor, 320px, themes, motion)
+   JS-off floor: all 101 year sections + the terminal card + 115 drawer bodies are in the static HTML.
+   size: document 880KB (§3.2 budget 1024KB) + hydration payload 1330KB = 2210KB exported — file over budget, recorded in KNOWN_LIMITATIONS.md
+   keyboard: reached the cursor by Tab; ArrowRight moved it 0 → 12, PageDown moved it a stage to 18, End reached 100, Home returned.
+   keyboard: aria-current followed the cursor to year 0.
+   keyboard: opened a milestone drawer with Enter (1 open).
+   keyboard: lane filter toggled true → false, and the cursor kept its place.
+   keyboard: switched the sex lens and the page recorded it.
+   console: clean on /timeline.
+   keyboard: followed /timeline/ms-learner-permit-minimum-age/ to its page and returned, entirely by keyboard.
+   stage rail: eight bubbles, each with a figure, a stage name and its band — Birth and dependency 0–2 · Early childhood 3–5 · The tutorial years 6–11 · Adolescence 12–17 · The launch years 18–24 · Build and establishment 25–39 · Midgame and caregiving 40–59 · Later life and legacy 60–100.
+   stage rail: choosing the fifth stage moved the cursor to age 18.
+   every one of the eight bands carries its full name and its ages as a title on the spine.
+   1280px: 5 band label(s) drawn on the spine (Tutorial, Launch, Build and establishment, Midgame and caregiving, Later life and legacy), no two bounding boxes intersect; every band carries its full name as a title and in the rail.
+   1280x900: .tl-instrument sticky 537px.
+   1280x700: .tl-instrument sticky 434px.
+   768x720: .tl-instrument sticky 446px.
+   375px: sticky geometry — .tl-instrument static 1404px/812px, .tl-strip sticky 198px/812px.
+   375px: at ages 2, 12, 18, 34, 50, 68, 84 the element at the centre of the viewport is inside a .tl-year every time — the year card is what the reader sees.
+   320px: no horizontal body scroll on /timeline in either theme.
+   reduced motion: honoured (scroll-behavior "auto").
+ALL BROWSER GATES PASS
+
+===== node tests/s9-ui.mjs (S-9 browser half) =====
+[PASS] Gate 109: S-9 · UI integrity (clip / contrast / tap-target)
+   20 play surfaces x 2 themes x 3 viewports = 120 audits: no clipped text, every text/background pair at WCAG AA, every control >= 44x44, 42 marked scroll regions genuinely scrollable and keyboard-reachable.
+
+===== node tests/timeline-screenshots.mjs =====
+captured 40 timeline screenshots into screenshots/ (10 scenes x 2 themes x 2 viewports)
+
+===== npm run typecheck =====
+> tsc --noEmit
+
+  clean (no errors)

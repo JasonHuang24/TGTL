@@ -1,0 +1,213 @@
+{
+  "key": "p1-state-work-family",
+  "sources": [
+    {
+      "id": "src-p1swf-dol-age-requirements",
+      "title": "Age Requirements",
+      "publisher": "U.S. Department of Labor",
+      "url": "https://www.dol.gov/general/topic/youthlabor/agerequirements",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written under the federal Fair Labor Standards Act; the page carries no printed date, so the year recorded is the year the rule was in force at retrieval",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "the FLSA sets 14 years old as the minimum age for employment"
+    },
+    {
+      "id": "src-p1swf-dol-elaws-hours-nonag",
+      "title": "Hours Restrictions for Non-Agricultural Employees",
+      "publisher": "U.S. Department of Labor, elaws FLSA Child Labor Rules Advisor",
+      "url": "https://webapps.dol.gov/elaws/whd/flsa/docs/hours.asp",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written under the federal Fair Labor Standards Act; the page carries no printed date, so the year recorded is the year the rule was in force at retrieval",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Youth 16 or 17 years old may perform any non-hazardous job for unlimited hours."
+    },
+    {
+      "id": "src-p1swf-dol-elaws-haznonag",
+      "title": "Prohibited Occupations for Non-Agricultural Employees",
+      "publisher": "U.S. Department of Labor, elaws FLSA Child Labor Rules Advisor",
+      "url": "https://webapps.dol.gov/elaws/whd/flsa/docs/haznonag.asp",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written under the federal Fair Labor Standards Act; the page carries no printed date, so the year recorded is the year the rule was in force at retrieval",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Eighteen is the minimum age for employment in non-agricultural occupations declared hazardous by the Secretary of Labor."
+    },
+    {
+      "id": "src-p1swf-dol-elaws-hazardous-list",
+      "title": "elaws - FLSA - Child Labor Rules (hazardous occupations orders)",
+      "publisher": "U.S. Department of Labor, elaws FLSA Child Labor Rules Advisor",
+      "url": "https://webapps.dol.gov/elaws/whd/flsa/cl/y18.asp",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written under the federal Fair Labor Standards Act; the page carries no printed date, so the year recorded is the year the rule was in force at retrieval",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "the following non-agricultural occupations are hazardous for young workers under 18 years of age"
+    },
+    {
+      "id": "src-p1swf-lii-majority-most-states",
+      "title": "age of majority",
+      "publisher": "Legal Information Institute, Cornell Law School",
+      "url": "https://www.law.cornell.edu/wex/age_of_majority",
+      "kind": "reputable-secondary",
+      "publicationYear": 2021,
+      "dataYear": 2021,
+      "measures": "the rule as written, summarized across state statutes",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In the US, most states have set the age of majority at 18."
+    },
+    {
+      "id": "src-p1swf-lii-majority-mississippi",
+      "title": "age of majority",
+      "publisher": "Legal Information Institute, Cornell Law School",
+      "url": "https://www.law.cornell.edu/wex/age_of_majority",
+      "kind": "reputable-secondary",
+      "publicationYear": 2021,
+      "dataYear": 2021,
+      "measures": "the rule as written, summarized across state statutes",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "In Mississippi, the age of majority is 21."
+    },
+    {
+      "id": "src-p1swf-nebraska-43-2101",
+      "title": "Nebraska Revised Statute 43-2101, Persons under nineteen years of age declared minors",
+      "publisher": "Nebraska Legislature",
+      "url": "https://nebraskalegislature.gov/laws/statutes.php?statute=43-2101",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2019,
+      "dataYear": 2019,
+      "measures": "the rule as written",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "All persons under nineteen years of age are declared to be minors"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-flsa-minimum-working-age",
+      "label": "Federal minimum age for most nonagricultural work",
+      "lane": "work-income",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 14
+      },
+      "measure": "legal-rule",
+      "population": "young people working in nonagricultural jobs covered by the federal Fair Labor Standards Act",
+      "sources": [
+        "src-p1swf-dol-age-requirements"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Federal law sets this as the minimum age for employment in most nonagricultural jobs.",
+        "Federal law still limits how many hours minors may work, until they reach the later age at which those caps lift."
+      ],
+      "affectsLater": [
+        "ms-flsa-hour-limits-lift"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-flsa-hour-limits-lift",
+      "label": "Federal hour limits lift for nonhazardous work",
+      "lane": "work-income",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 16
+      },
+      "measure": "legal-rule",
+      "population": "young people working in nonagricultural jobs covered by the federal Fair Labor Standards Act",
+      "sources": [
+        "src-p1swf-dol-elaws-hours-nonag",
+        "src-p1swf-dol-elaws-haznonag"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Federal caps on hours stop applying, and any nonhazardous job may be worked for unlimited hours.",
+        "Occupations the Secretary of Labor has declared hazardous stay closed under federal law until a later age."
+      ],
+      "affectsLater": [
+        "ms-flsa-hazardous-occupations-age"
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-flsa-hazardous-occupations-age",
+      "label": "Federal minimum age for hazardous nonagricultural work",
+      "lane": "work-income",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 18
+      },
+      "measure": "legal-rule",
+      "population": "people working in nonagricultural occupations the Secretary of Labor has declared hazardous",
+      "sources": [
+        "src-p1swf-dol-elaws-haznonag",
+        "src-p1swf-dol-elaws-hazardous-list"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The federal hazardous occupations orders stop applying, opening work such as roofing, excavation, mining, logging, demolition, and operating power-driven machines.",
+        "The federal youth employment provisions no longer apply at all, so no federal age bar remains on any job.",
+        "Below this age, limited apprentice and student-learner exemptions let some of these occupations be performed under supervision."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-age-of-majority",
+      "label": "Reaching the age of majority",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "variesByState": {
+          "from": 18,
+          "to": 21,
+          "note": "Most states set majority at the age used federally for adulthood, while a small number of states set it higher."
+        }
+      },
+      "measure": "legal-rule",
+      "population": "people under the majority statute of the state where they live",
+      "sources": [
+        "src-p1swf-lii-majority-most-states",
+        "src-p1swf-lii-majority-mississippi",
+        "src-p1swf-nebraska-43-2101"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Adult legal status attaches: signing binding contracts and leases, holding and conveying property, and carrying the responsibilities state law assigns to adults.",
+        "Some state statutes also end minority early for a person who marries before reaching the stated age.",
+        "Because the age is set state by state, the same birthday can carry different legal weight after a move."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-minimum-age-to-marry",
+      "label": "Minimum age to marry under state law",
+      "lane": "people-family",
+      "kind": "legal-threshold",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Needs one compilation covering all fifty states, not individual state statutes, since two statutes cannot establish national endpoints. Query: a National Conference of State Legislatures or Congressional Research Service table of state statutory minimum marriage ages, which must state the highest state floor and say how states without a statutory minimum are handled.",
+      "windowInWords": "around the age at which state law treats a person as an adult, with some states allowing marriage earlier under conditions their statutes set",
+      "readRef": "/topics/relationships",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

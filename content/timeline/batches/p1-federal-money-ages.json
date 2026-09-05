@@ -1,0 +1,226 @@
+{
+  "key": "p1-federal-money-ages",
+  "sources": [
+    {
+      "id": "src-p1fma-irs-tc557-early-ira",
+      "title": "Topic no. 557, Additional tax on early distributions from traditional and Roth IRAs",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/taxtopics/tc557",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written, for distributions from traditional and Roth IRAs",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Generally, early distributions are those you receive from an IRA before reaching age 59½."
+    },
+    {
+      "id": "src-p1fma-irs-tc558-early-plans",
+      "title": "Topic no. 558, Additional tax on early distributions from retirement plans other than IRAs",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/taxtopics/tc558",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written, for distributions from qualified retirement plans other than IRAs",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Generally, early distributions are those you receive from a qualified retirement plan or deferred annuity contract before reaching age 59½."
+    },
+    {
+      "id": "src-p1fma-irs-catch-up",
+      "title": "Retirement topics - Catch-up contributions",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-catch-up-contributions",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written, for elective deferrals and IRA contributions",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Individuals who are age 50 or over at the end of the calendar year can make annual catch-up contributions."
+    },
+    {
+      "id": "src-p1fma-irs-rmd-ira-rbd",
+      "title": "Retirement topics - Required minimum distributions (RMDs)",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written, stating the required beginning date for individual retirement arrangements only",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "April 1 of the year following the calendar year in which you reach age 73."
+    },
+    {
+      "id": "src-p1fma-irs-rmd-workplace-rbd",
+      "title": "Retirement topics - Required minimum distributions (RMDs)",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written, stating the required beginning date for defined contribution workplace plans, where the trigger can be retirement rather than an age",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Generally, April 1 following the later of the calendar year in which you: reach age 73, or retire."
+    },
+    {
+      "id": "src-p1fma-irs-pub969-hsa",
+      "title": "Publication 969 (2025), Health Savings Accounts and Other Tax-Favored Health Plans",
+      "publisher": "Internal Revenue Service",
+      "url": "https://www.irs.gov/publications/p969",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written, for health savings account contribution limits",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "If you are an eligible individual who is age 55 or older at the end of your tax year,"
+    },
+    {
+      "id": "src-p1fma-eeoc-adea-statute",
+      "title": "Age Discrimination in Employment Act of 1967",
+      "publisher": "U.S. Equal Employment Opportunity Commission",
+      "url": "https://www.eeoc.gov/statutes/age-discrimination-employment-act-1967",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1967,
+      "dataYear": 2026,
+      "measures": "the statute as written and in force at retrieval",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The prohibitions in this chapter shall be limited to individuals who are at least 40 years of age."
+    },
+    {
+      "id": "src-p1fma-dol-agedisc",
+      "title": "Age Discrimination",
+      "publisher": "U.S. Department of Labor",
+      "url": "https://www.dol.gov/general/topic/discrimination/agedisc",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 1967,
+      "dataYear": 2026,
+      "measures": "the rule as written, summarized by the administering department",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The Age Discrimination in Employment Act of 1967 (ADEA) protects certain applicants and employees 40 years of age and older from discrimination"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-p1fma-early-distribution-tax-ends",
+      "label": "Retirement withdrawals stop carrying the extra early tax",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 59.5
+      },
+      "measure": "legal-rule",
+      "population": "people holding traditional or Roth individual retirement arrangements, or qualified employer retirement plans, under the federal rule as written",
+      "sources": [
+        "src-p1fma-irs-tc557-early-ira",
+        "src-p1fma-irs-tc558-early-plans"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Money taken out of an individual retirement arrangement is no longer treated by the tax code as an early distribution.",
+        "The same threshold applies to qualified employer retirement plans and deferred annuity contracts.",
+        "Ordinary income tax on the withdrawn amount is unaffected; only the additional early-distribution tax falls away."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fma-catch-up-contributions-open",
+      "label": "Catch-up retirement contributions become available",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 50
+      },
+      "measure": "legal-rule",
+      "population": "individuals contributing to workplace retirement plans or individual retirement arrangements, under the federal rule as written",
+      "sources": [
+        "src-p1fma-irs-catch-up"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "An extra annual contribution above the regular limit becomes permitted for those who reach the threshold by the end of the calendar year.",
+        "The allowance covers workplace salary deferrals and individual retirement arrangements, each with its own separate extra amount.",
+        "Whether a workplace plan offers the extra contribution depends on how that plan is written."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fma-required-minimum-distributions-begin",
+      "label": "Withdrawals from an individual retirement arrangement become required",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "exact": 73
+      },
+      "measure": "legal-rule",
+      "population": "owners of individual retirement arrangements, under the federal rule as written for that kind of account",
+      "sources": [
+        "src-p1fma-irs-rmd-ira-rbd",
+        "src-p1fma-irs-rmd-workplace-rbd"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Withdrawals from a tax-deferred individual retirement arrangement shift from optional to required, on a yearly schedule set by the tax code rather than by the account owner.",
+        "The first required withdrawal is not due on the birthday itself; the deadline falls on the first day of April in the following calendar year.",
+        "A workplace retirement plan follows a different trigger: the requirement can wait until the account holder retires, where the plan allows that delay."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fma-hsa-additional-contribution",
+      "label": "Extra health savings account contribution becomes available",
+      "lane": "money-wealth",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 55
+      },
+      "measure": "legal-rule",
+      "population": "individuals eligible to contribute to a health savings account, under the federal rule as written",
+      "sources": [
+        "src-p1fma-irs-pub969-hsa"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The annual health savings account contribution limit rises by a set additional amount for those who reach the threshold by year end.",
+        "Spouses who each qualify hold the extra allowance separately, and each puts it into an account of their own.",
+        "Enrolling in Medicare ends the ability to contribute at all, whatever the account holder's age."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-p1fma-adea-protection-begins",
+      "label": "Federal age discrimination protections apply at work",
+      "lane": "work-income",
+      "kind": "legal-threshold",
+      "optional": false,
+      "timing": {
+        "exact": 40
+      },
+      "measure": "legal-rule",
+      "population": "applicants and employees covered by the federal Age Discrimination in Employment Act, as the statute is written",
+      "sources": [
+        "src-p1fma-eeoc-adea-statute",
+        "src-p1fma-dol-agedisc"
+      ],
+      "readRef": "/topics/work",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Federal law begins forbidding employment discrimination based on age against covered applicants and employees.",
+        "The protection reaches hiring, promotion, discharge, compensation, and other terms and conditions of employment.",
+        "It attaches automatically at the statutory threshold, without any application or filing."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

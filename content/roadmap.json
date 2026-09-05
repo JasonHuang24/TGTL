@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "status": "Illustrative fixture",
+  "context": {
+    "geography": "United States baseline",
+    "referenceYear": 2025,
+    "note": "A production starting point, not a universal human norm. Age windows are orientation ranges, not deadlines."
+  },
+  "stages": [
+    {
+      "id": "stage-dependency",
+      "short": "0–5",
+      "label": "Birth and early dependency",
+      "gameLabel": "Arrival and early game",
+      "summary": "A period of high dependence in which care, safety, attachment, health, play, and language shape what becomes possible later.",
+      "needs": "Reliable care, safety, nutrition, sleep, movement, language, and responsive relationships.",
+      "agency": "Very limited at first and gradually increasing.",
+      "variation": "Family structure, disability, health, culture, resources, and care conditions matter enormously.",
+      "nextMove": "For a caregiver: make one routine easier to repeat, and ask what support would make care more sustainable."
+    },
+    {
+      "id": "stage-learning",
+      "short": "6–11",
+      "label": "Learning and belonging",
+      "gameLabel": "Tutorial years",
+      "summary": "Foundational learning expands while peer groups, school rules, interests, and durable identity labels begin to matter.",
+      "needs": "Belonging, play, literacy, numeracy, movement, patient instruction, and room to discover uneven strengths.",
+      "agency": "Growing, but still constrained by caregivers and institutions.",
+      "variation": "School access, neurodevelopment, language, safety, and social treatment change the experience.",
+      "nextMove": "Separate a child’s current performance from their identity; look for the condition or support changing the task."
+    },
+    {
+      "id": "stage-transition",
+      "short": "12–17",
+      "label": "Adolescence and identity",
+      "gameLabel": "Transition chapter",
+      "summary": "Adult-sized consequences begin to arrive before adult-sized power, resources, or perspective are fully available.",
+      "needs": "Safe autonomy, trustworthy adults, consent education, sleep, belonging, skill practice, and recoverable experiments.",
+      "agency": "Meaningful but partial; legal, financial, developmental, and family limits remain.",
+      "variation": "Puberty, identity, disability, peer culture, family safety, school, and digital life create very different routes.",
+      "nextMove": "Prefer reversible experiments over permanent identity verdicts."
+    },
+    {
+      "id": "stage-launch",
+      "short": "18–24",
+      "label": "Launch and first independence",
+      "gameLabel": "Open-map launch",
+      "summary": "Work, education, housing, healthcare, relationships, debt, and self-maintenance begin competing for the same limited capacity.",
+      "needs": "A viable floor, practical administration, mentors, transferable skills, recovery, and several routes rather than one brittle bet.",
+      "agency": "Legally broader, materially uneven.",
+      "variation": "Family support, money, health, geography, immigration status, and institutional access strongly affect feasible choices.",
+      "nextMove": "Name one constraint that is binding now, then choose the smallest reversible move that tests a route."
+    },
+    {
+      "id": "stage-building",
+      "short": "25–39",
+      "label": "Building and commitment",
+      "gameLabel": "Build establishment",
+      "summary": "Career, partnership, family, housing, health, money, friendship, care, and meaning can all demand investment at once.",
+      "needs": "Maintenance, honest tradeoffs, boundaries, buffers, and explicit decisions about which commitments not to make.",
+      "agency": "Often high, while earlier commitments and unequal resources narrow some routes.",
+      "variation": "There is no required ordering of partnership, parenthood, education, work, housing, or creative life.",
+      "nextMove": "Audit what is compounding in your favor and what is quietly becoming maintenance debt."
+    },
+    {
+      "id": "stage-midlife",
+      "short": "40–59",
+      "label": "Midlife and reassessment",
+      "gameLabel": "Midgame and respec",
+      "summary": "Competence and influence may peak alongside caregiving, health shifts, grief, burnout, obsolescence, and sharper awareness of time.",
+      "needs": "Recovery capacity, care support, health maintenance, role clarity, and permission to revise inherited definitions of success.",
+      "agency": "Substantial in some domains and tightly constrained in others.",
+      "variation": "Care burden, disability, work history, discrimination, wealth, partnership, and parenthood produce different boards.",
+      "nextMove": "Distinguish a temporary depletion from a structural mismatch before making a major change."
+    },
+    {
+      "id": "stage-later",
+      "short": "60–74",
+      "label": "Later work and transition",
+      "gameLabel": "Late-game transition",
+      "summary": "Paid work may change or end while care, learning, leadership, creativity, health adaptation, and community roles continue.",
+      "needs": "Purpose beyond one role, social continuity, material planning, mobility support, and room for new commitments.",
+      "agency": "Can expand with time or contract with health, money, care, and institutional limits.",
+      "variation": "Retirement is not one event and is not available on the same terms to everyone.",
+      "nextMove": "Plan the social and identity transition as carefully as the financial one."
+    },
+    {
+      "id": "stage-closure",
+      "short": "75+",
+      "label": "Later life and practical closure",
+      "gameLabel": "Later life and legacy",
+      "summary": "Function, care, loss, dignity, transfer, meaning, and mortality come forward, while growth and relationship remain possible.",
+      "needs": "Respect, symptom relief, trustworthy care, accessible environments, legal clarity, connection, and control over what can be controlled.",
+      "agency": "Highly individual and often shared with trusted supporters.",
+      "variation": "Chronological age predicts far less than health, function, resources, care, and social context.",
+      "nextMove": "Make one practical wish legible to another person before a crisis has to interpret it."
+    }
+  ],
+  "domains": [
+    { "id": "domain-health", "label": "Health and function", "note": "Capacity, care, adaptation, and recovery" },
+    { "id": "domain-learning", "label": "Learning and craft", "note": "Knowledge, practice, and transferable capability" },
+    { "id": "domain-work", "label": "Education and work", "note": "Roles, credentials, livelihood, and contribution" },
+    { "id": "domain-relationships", "label": "Relationships and care", "note": "Belonging, repair, support, and obligation" },
+    { "id": "domain-money", "label": "Money and material stability", "note": "Cash flow, buffers, housing, and access" },
+    { "id": "domain-identity", "label": "Identity and meaning", "note": "Values, roles, interpretation, and purpose" }
+  ],
+  "branches": [
+    {
+      "id": "branch-training",
+      "type": "Choice",
+      "label": "Train for a different role",
+      "summary": "Spend time and money to open a route whose payoff and fit remain uncertain.",
+      "reward": "A legible credential, stronger signal, or access to a new role.",
+      "tradeoff": "Time, money, energy, and delayed earnings; the credential may not be sufficient.",
+      "gate": "Affordable access, time, and evidence that the target route actually values the training.",
+      "alternative": "A shorter course, portfolio project, work sample, informational interview, or adjacent-role bridge.",
+      "recovery": "Pause without treating sunk cost as destiny; translate what transfers and protect the financial floor.",
+      "evidence": "Research required for any occupation-specific outcome claim."
+    },
+    {
+      "id": "branch-care",
+      "type": "Circumstance",
+      "label": "Care responsibility expands",
+      "summary": "Someone needs care, changing time, energy, work, money, and relationships whether or not the role was planned.",
+      "reward": "Connection, dignity, reciprocity, and meaning may deepen.",
+      "tradeoff": "Sleep, work flexibility, money, identity continuity, and health can be strained.",
+      "gate": "The question is not entry but support: who else can share coordination, respite, information, or cost?",
+      "alternative": "Formal care, shared scheduling, narrower tasks, boundary changes, or collective support.",
+      "recovery": "Treat caregiver depletion as a system failure requiring support, not proof of insufficient devotion.",
+      "evidence": "Illustrative systems map; individual service guidance is location-dependent."
+    },
+    {
+      "id": "branch-credential",
+      "type": "Gate",
+      "label": "A formal gate blocks entry",
+      "summary": "A license, degree, portfolio, legal status, geography, or other institution controls access.",
+      "reward": "Passing the gate may open a defined set of opportunities.",
+      "tradeoff": "Gate completion can consume resources without guaranteeing a satisfying or sustainable outcome.",
+      "gate": "Identify whether the gate is truly mandatory, merely preferred, or substitutable.",
+      "alternative": "Adjacent roles, employers with different screens, a bridge role, or another geography.",
+      "recovery": "If the gate stays closed, preserve the underlying goal and search for another mechanism.",
+      "evidence": "Research required for a specific gate, jurisdiction, or occupation."
+    },
+    {
+      "id": "branch-recovery",
+      "type": "Recovery route",
+      "label": "Re-enter after a disrupted path",
+      "summary": "Return through a later, hybrid, slower, or structurally different route.",
+      "reward": "Restored direction without pretending the interruption never happened.",
+      "tradeoff": "Some timing advantages may be gone; experience, clarity, and constraint knowledge may be stronger.",
+      "gate": "A viable floor and a route compatible with current capacity and obligations.",
+      "alternative": "A smaller experiment, adjacent role, part-time return, support-first period, or changed objective.",
+      "recovery": "The recovery route is the route; it is not a lesser copy of the original plan.",
+      "evidence": "Illustrative fixture; route-specific claims require research."
+    }
+  ]
+}

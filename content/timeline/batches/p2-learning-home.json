@@ -1,0 +1,227 @@
+{
+  "key": "p2-learning-home",
+  "sources": [
+    {
+      "id": "src-bls-attainment-reported-from-age-twenty-five",
+      "title": "Educational attainment",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/cps/demographics/educational-attainment.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "Why the federal labor statistics agency reports educational attainment for adults starting at the age by which most people have finished schooling.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Educational attainment data published by BLS typically pertain to people age 25 and older because most people have completed their schooling by age 25."
+    },
+    {
+      "id": "src-nces-bb-age-completed-degree-requirements",
+      "title": "Baccalaureate and Beyond (B&B:16/17): A First Look at the Employment and Educational Experiences of College Graduates, 1 Year Later (NCES 2019-241)",
+      "publisher": "National Center for Education Statistics, U.S. Department of Education",
+      "url": "https://nces.ed.gov/pubs2019/2019241.pdf",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2016,
+      "measures": "Table one, a percentage distribution of bachelor's degree recipients by the age at which they completed degree requirements; the youngest and oldest groups are open ended.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "23 or younger 63.4 65.2 24–29 21.0 20.3 30 or older 15.5 14.5"
+    },
+    {
+      "id": "src-nces-time-to-degree-fast-facts",
+      "title": "Fast Facts: Time to degree",
+      "publisher": "National Center for Education Statistics",
+      "url": "https://nces.ed.gov/fastfacts/display.asp?id=569",
+      "kind": "official-statistics",
+      "publicationYear": 2019,
+      "dataYear": 2016,
+      "measures": "Median months from first postsecondary enrollment to a bachelor's degree, reported separately for recipients grouped by the age at which they graduated.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "One-half of those age 23 years or younger graduated in 45 months or less"
+    },
+    {
+      "id": "src-census-living-arrangements-across-age-groups",
+      "title": "Living Arrangements Varied Across Age Groups",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/library/stories/2024/05/living-arrangements.html",
+      "kind": "official-statistics",
+      "publicationYear": 2024,
+      "dataYear": 2022,
+      "measures": "The most common living arrangement of adults in each Current Population Survey age band, counting students in college housing at a parent's address.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The most common living arrangement among 18- to 24-year-olds in 2022 was living in a parent's home (Figure 1)."
+    },
+    {
+      "id": "src-census-young-adults-in-parents-household",
+      "title": "Estimated 17.8% of Adults Ages 25 to 34 Lived in Their Parents' Household Last Year",
+      "publisher": "U.S. Census Bureau",
+      "url": "https://www.census.gov/library/stories/2020/09/more-young-adults-lived-with-their-parents-in-2019.html",
+      "kind": "official-statistics",
+      "publicationYear": 2020,
+      "dataYear": 2019,
+      "measures": "The share of young adults in the older Current Population Survey young-adult band who lived in a parent's household.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Meanwhile, 17.8% of all young adults ages 25 to 34 lived in their parents"
+    },
+    {
+      "id": "src-nauck-us-departures-completed",
+      "title": "How kinship systems and welfare regimes shape leaving home: A comparative study of the United States, Germany, Taiwan, and China",
+      "publisher": "Demographic Research (Max Planck Institute for Demographic Research), Volume 36, Article 38",
+      "url": "https://www.demographic-research.org/volumes/vol36/38/36-38.pdf",
+      "kind": "peer-reviewed",
+      "publicationYear": 2017,
+      "dataYear": 2014,
+      "measures": "How steeply the share of young adults living with parents declines in the United States compared with Germany, from a national longitudinal survey of youth.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The decline in living with parents was steeper in the United States, with most departures completed by age 25"
+    },
+    {
+      "id": "src-nauck-us-left-parental-home-by-thirty",
+      "title": "How kinship systems and welfare regimes shape leaving home: A comparative study of the United States, Germany, Taiwan, and China",
+      "publisher": "Demographic Research (Max Planck Institute for Demographic Research), Volume 36, Article 38",
+      "url": "https://www.demographic-research.org/volumes/vol36/38/36-38.pdf",
+      "kind": "peer-reviewed",
+      "publicationYear": 2017,
+      "dataYear": 2014,
+      "measures": "The cumulative share of young adults who had left the parental home by the end of the observation period in each country studied.",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "the final result was almost 90% of the young adults leaving the parental home by age 30 in the United States and Germany"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-formal-schooling-settled-by-mid-twenties",
+      "label": "The end of formal schooling for most people",
+      "lane": "learning",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 25,
+          "to": 25
+        },
+        "typical": {
+          "from": 25,
+          "to": 25
+        }
+      },
+      "measure": "most-by",
+      "population": "Adults in the Current Population Survey; the federal labor statistics agency reports attainment from this age because most people have finished schooling by then.",
+      "sources": [
+        "src-bls-attainment-reported-from-age-twenty-five"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "National attainment tables begin counting at the age where most people have stopped adding formal credentials, which is why the young adult bands are reported separately.",
+        "Schooling that continues past that point still happens, and it appears in later attainment figures rather than in the young adult ones."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-bachelors-degree-completed-by-early-twenties",
+      "label": "Finishing a bachelor's degree",
+      "lane": "learning",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": {
+        "window": {
+          "from": 23,
+          "to": 30
+        },
+        "typical": {
+          "from": 23,
+          "to": 23
+        }
+      },
+      "measure": "most-by",
+      "population": "Bachelor's degree recipients in a national follow-up study of graduates, grouped by the age at which they completed degree requirements; the oldest group in that table is open ended, so the upper edge here is where that group starts rather than where it ends.",
+      "sources": [
+        "src-nces-bb-age-completed-degree-requirements",
+        "src-nces-time-to-degree-fast-facts"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The rest of the graduating group finishes later, some in the second half of the twenties and some at thirty or beyond.",
+        "The stretch between first enrolling and the degree runs much longer for recipients who finish at older ages, so the calendar and the credential come apart.",
+        "This counts only people who reached the degree; it says nothing about how many started."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-living-in-a-parents-home-young-adults",
+      "label": "Living in a parent's home as a young adult",
+      "lane": "home-independence",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "typical": {
+          "from": 18,
+          "to": 24
+        }
+      },
+      "measure": "share-at-age",
+      "population": "Adults in the younger of the Current Population Survey young adult age bands, where living in a parent's home was the most common arrangement; these are the survey's reporting bands rather than the outer edges of the arrangement.",
+      "sources": [
+        "src-census-living-arrangements-across-age-groups",
+        "src-census-young-adults-in-parents-household"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Students living in college housing are recorded at a parent's address in this survey, so the count mixes staying home with being away at school.",
+        "In the late teens and early twenties it is the most common arrangement the survey records; in the older young adult band it is a minority one, and it stays far from rare.",
+        "The bands are the survey's own brackets, so they mark where the counting is grouped rather than where the arrangement begins or ends."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-leaving-the-parental-home",
+      "label": "Leaving a parent's home",
+      "lane": "home-independence",
+      "kind": "statistical-norm",
+      "optional": false,
+      "timing": {
+        "window": {
+          "from": 25,
+          "to": 30
+        },
+        "typical": {
+          "from": 25,
+          "to": 25
+        }
+      },
+      "measure": "most-by",
+      "population": "United States respondents born in the early nineteen-eighties and followed by a national longitudinal survey of youth; the lower edge is where the study reports most departures completed and the upper edge is where nearly all of them had left.",
+      "sources": [
+        "src-nauck-us-departures-completed",
+        "src-nauck-us-left-parental-home-by-thirty"
+      ],
+      "readRef": "/topics/money",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The decline runs steeper in the United States than in the comparison countries in the same study, and nearly all departures had happened by thirty.",
+        "The measurement follows one cohort born in the early nineteen-eighties, so it describes their passage rather than a rule about anyone now.",
+        "Housing costs and study both move this timing, which is why the same event lands at different ages in different countries."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-continued-learning-after-formal-schooling",
+      "label": "Learning that continues after formal schooling ends",
+      "lane": "learning",
+      "kind": "statistical-norm",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "No age-resolved United States figure was obtainable. The adult skills assessment pages fetched report fixed survey universes only (working-age adults, plus an older extension band) and no measured age at which adult learning begins, peaks, or ends, so any window would be the survey universe dressed up as an age. Resolving query: NCES Program for the International Assessment of Adult Competencies United States results tables giving literacy proficiency by ten-year age group, or the NCES Adult Training and Education Survey reporting participation in work-related courses and certificate programs by age group.",
+      "windowInWords": "Formal and informal learning continues after schooling ends and across adult life, but no sourced age window for it was found.",
+      "readRef": "/map/credential-decision",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}

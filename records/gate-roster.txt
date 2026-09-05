@@ -1,0 +1,70 @@
+TGTL 4.0 — full gate roster, run 2026-08-27 against the shipped tree.
+Node v22.23.2 portable. Static export served from out/ for the browser halves.
+
+### npm run gates (static)
+[PASS] Gate 0: Doors integrity
+[PASS] Gate 1: Link integrity + no orphan routes
+[PASS] Gate 2: Set-down vocabulary lint
+[PASS] Gate 3: Terminology parity + component source lint
+[PASS] Gate 4: Encoding hygiene
+[PASS] Gate 9: Local-only: no external resource loads (static check)
+ALL 6 STATIC GATES PASS
+
+### npm run gates:sim (Life Arc S-1..S-8)
+[PASS] Gate 101: S-1 · Content-boundary lint (two-tier)
+[PASS] Gate 102: S-2 · No-numbers-in-play lint
+[PASS] Gate 103: S-3 · Graph integrity (bands, recovery, no dead ends)
+[PASS] Gate 104: S-3b · Full-run reachability (parse reachable from every hand)
+[PASS] Gate 105: S-5 · No-score lint (reader-facing instruments)
+[PASS] Gate 106: S-6 · Input-doctrine lint (no interpreted free text)
+[PASS] Gate 107: S-7 · Determinism (derived-seed, replay-stable)
+[PASS] Gate 108: S-8 · Constraint profile + worth-guard adjacency (arc)
+ALL 8 SIM GATES PASS (S-1..S-8)
+
+### gates:sim4 (sandbox)
+[PASS] Gate 201: S-1 · Content boundary + beat-channel isolation + Lab curation (sandbox)
+[PASS] Gate 202: S-2 · No-numbers-in-play lint (sandbox)
+[PASS] Gate 203: S-3 · Graph integrity (witness fixtures, recovery ties, arcs, variants)
+[PASS] Gate 204: S-3b · Full-run reachability (completable from every hand)
+[PASS] Gate 205: S-5 · No-score lint (all play-surface strings, incl. the parse bridge)
+[PASS] Gate 206: S-6 · Input doctrine + no self-insertion (sandbox)
+[PASS] Gate 207: S-7 · Determinism (occurrence-discriminated draws, fork isolation, migration)
+[PASS] Gate 208: S-8 · Constraint profile (per-axis only, no composite, hardness never renders)
+[PASS] Gate 209: S-9 · UI integrity, structural half (namespace, no fixed size, sim tokens)
+[PASS] Gate 211: S-11 · Consequence-queue integrity
+[PASS] Gate 212: S-12 · Attribution honesty (rendered factors = nonzero tagged components)
+[PASS] Gate 214: Invention gate · every INVENTION carries its adversarial-check record
+ALL 12 SANDBOX GATES PASS
+
+### S-10 balance fleets
+[PASS] Gate 220: S-10a · The rails test, mechanized (per-season floor telemetry)
+[PASS] Gate 221: S-10b · Completable from every hand under every policy
+[PASS] Gate 222: S-10c · No policy dominates all priorities
+[PASS] Gate 223: S-10d · Rest-heavy is never strictly dominated
+[PASS] Gate 224: S-10e · At least three meaningfully different viable endings per preset
+[PASS] Gate 225: S-10f · Pile-up cap holds across the fleet
+[PASS] Gate 226: S-10g · /methodology's fleet and debt claims are true of the code
+[PASS] Gate 2201: S-10a′ · The floor predicate is falsifiable
+ALL 8 BALANCE ASSERTIONS PASS (S-10, 525 fleet runs)
+
+### S-13 pile-up fleets
+[PASS] Gate 230: S-13a · The floor set holds in every adversarially-reached state
+[PASS] Gate 231: S-13b · Every failure surfaces a tied recovery route
+[PASS] Gate 232: S-13c · Matter-of-fact rendering under maximal pressure
+[PASS] Gate 233: S-13d · Pile-up cap and depletion floor bind under adversarial search
+ALL 4 WORST-CASE ASSERTIONS PASS (S-13, 864 adversarial seasons)
+
+### browser gates
+[PASS] Gate 0: Screenshots captured
+[PASS] Gate 4: S-4 · Keyboard: a full season, a fork, a Lab comparison; Help-now in every state
+[PASS] Gate 5: Console cleanliness (30 routes × both editions)
+[PASS] Gate 6: State preservation + reset
+[PASS] Gate 7: Keyboard: Help-now reachable everywhere
+[PASS] Gate 8: Responsive: no horizontal body scroll at 320px (30 routes + the allocate screen)
+[PASS] Gate 9: Local-only at runtime (no off-origin loads; no state in URL)
+ALL BROWSER GATES PASS
+
+### S-9 browser half
+[PASS] Gate 109: S-9 · UI integrity (clip / contrast / tap-target)
+
+   17 play surfaces x 2 themes x 3 viewports = 102 audits (S-9 browser half).

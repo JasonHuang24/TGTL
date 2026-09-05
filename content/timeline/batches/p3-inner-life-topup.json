@@ -1,0 +1,231 @@
+{
+  "key": "p3-inner-life-topup",
+  "sources": [
+    {
+      "id": "src-bls-atus-games-teen-band",
+      "title": "American Time Use Survey Summary (2025 annual averages)",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/news.release/atus.nr0.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2025,
+      "measures": "average hours per day spent playing games or using a computer for leisure, reported for the youngest age band the survey publishes, averaged across all days of the year",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "Individuals ages 15 to 19 spent 1.5 hours playing games or using a computer for leisure on an average day"
+    },
+    {
+      "id": "src-bls-atus-games-comparison",
+      "title": "American Time Use Survey Summary (2025 annual averages)",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/news.release/atus.nr0.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2025,
+      "measures": "the closing clause of the same sentence, which states how that age band compares with every other age band the survey publishes",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "for leisure on an average day in 2025, more than any other age group."
+    },
+    {
+      "id": "src-bls-ted-relaxing-oldest-band",
+      "title": "Americans age 15 and over read for an average of 16 minutes per day in 2025",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2026/americans-age-15-and-over-read-for-an-average-of-16-minutes-per-day-in-2025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2025,
+      "measures": "average minutes per day the oldest published age band spent socializing and communicating, and relaxing and thinking, in the American Time Use Survey",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "Those 65 and over spent about 34 minutes a day on each of these activities"
+    },
+    {
+      "id": "src-bls-ted-relaxing-late-midlife",
+      "title": "Americans age 15 and over read for an average of 16 minutes per day in 2025",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2026/americans-age-15-and-over-read-for-an-average-of-16-minutes-per-day-in-2025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2025,
+      "measures": "the sentence that names the two activities and gives average minutes per day for the age band just below the oldest published band, which supplies the antecedent for the sentence that follows it",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "between the ages of 55 and 64 spent about 40 minutes a day socializing and communicating and about 22 minutes a day relaxing and thinking"
+    },
+    {
+      "id": "src-bls-ted-relaxing-early-adult",
+      "title": "Americans age 15 and over read for an average of 16 minutes per day in 2025",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2026/americans-age-15-and-over-read-for-an-average-of-16-minutes-per-day-in-2025.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2025,
+      "measures": "average minutes per day spent relaxing and thinking in the early adult band of the American Time Use Survey",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "those between the ages of 25 and 34 spent about 15 minutes a day relaxing and thinking in 2025"
+    },
+    {
+      "id": "src-bls-ted-reading-age-gap",
+      "title": "It's Read Across America Day",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2026/its-read-across-america-day.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2024,
+      "measures": "average hours and minutes per day spent reading for personal interest in the lowest and the highest published age bands of the American Time Use Survey",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "with 20- to 24-year-olds averaging 0.13 hours (8 minutes) per day, while those 75 and older averaged 0.77 hours, or 46 minutes per day."
+    },
+    {
+      "id": "src-bls-ted-reading-all-ages",
+      "title": "It's Read Across America Day",
+      "publisher": "U.S. Bureau of Labor Statistics, The Economics Daily",
+      "url": "https://www.bls.gov/opub/ted/2026/its-read-across-america-day.htm",
+      "kind": "official-statistics",
+      "publicationYear": 2026,
+      "dataYear": 2024,
+      "measures": "average hours per day spent reading for personal interest across the whole surveyed population, which is the base the age bands are read against",
+      "retrievedOn": "2026-09-04",
+      "excerpt": "In 2024, Americans over the age of 14 spent 0.28 hours—about 17 minutes—on an average day reading for personal interest."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-games-and-computer-leisure-by-age",
+      "label": "Daily time playing games or using a computer for leisure",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 15, "to": 19 }, "typical": { "from": 15, "to": 19 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, whose age universe begins in the mid-teens, averaged across all days of the year",
+      "sources": ["src-bls-atus-games-teen-band", "src-bls-atus-games-comparison"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Games and computer leisure take up more of an average day in the late teen band than in any other age band the survey publishes.",
+        "This is one slice of leisure time, counted alongside television, reading, socializing and everything else people do with unpaid hours.",
+        "These are averages across a population and across every day of the week, not a description of any one person's week."
+      ],
+      "notes": "The band named here is the youngest the survey publishes, so the window begins where the survey's age universe begins rather than at a measured start.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-relaxing-and-thinking-early-adult",
+      "label": "Daily time spent relaxing and thinking in the early adult band",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 25, "to": 34 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, averaged across all days of the year, in the single age band the article names",
+      "sources": ["src-bls-ted-relaxing-early-adult"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Time counted as relaxing and thinking, rather than as any other activity, takes up less of an average day in this band than in the older bands the article names.",
+        "Relaxing and thinking is the survey's own category and does not include sleep, television or socializing, which are counted separately.",
+        "These are averages across a population and across every day of the week, not a description of any one week."
+      ],
+      "notes": "The window is the age band the article names and nothing wider. The bands the article does not name are not described here at all.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-relaxing-and-thinking-late-midlife",
+      "label": "Daily time spent relaxing and thinking in the band before the oldest",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 55, "to": 64 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, averaged across all days of the year, in the single age band the article names",
+      "sources": ["src-bls-ted-relaxing-late-midlife"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Time counted as relaxing and thinking takes up more of an average day in this band than in the early adult band, and less than in the oldest band the article names.",
+        "The same sentence reports time spent socializing and communicating for this band, and that figure is higher here than in the oldest band.",
+        "These are averages across a population and across every day of the week, not a description of any one week."
+      ],
+      "notes": "The window is the age band the article names and nothing wider.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-relaxing-and-thinking-oldest-band",
+      "label": "Daily time spent relaxing and thinking in the oldest band the article names",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 65, "to": 100 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, averaged across all days of the year, in the oldest age band the article names",
+      "sources": ["src-bls-ted-relaxing-oldest-band", "src-bls-ted-relaxing-late-midlife"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Time counted as relaxing and thinking takes up more of an average day in this band than in either younger band the article names.",
+        "Time spent socializing and communicating is reported as slightly lower here than in the band just below it.",
+        "These are averages across a population and across every day of the week, not a description of any one week."
+      ],
+      "notes": "The article's oldest band is open-ended at the top, so the window closes at this timeline's own ceiling rather than at a measured end. The sentence carrying this band's figure says the two activities take about the same time \"each\", and its antecedent is the sentence about the band below, which is why that source is carried here too.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-reading-for-personal-interest-early-adult",
+      "label": "Daily time spent reading for personal interest in the early twenties",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 20, "to": 24 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, averaged across all days of the year, with reading counted only when it is done for personal interest rather than for school or paid work",
+      "sources": ["src-bls-ted-reading-age-gap", "src-bls-ted-reading-all-ages"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Reading chosen for its own sake takes up less of an average day in this band than in any other band the article names.",
+        "Reading done for school or for paid work is counted elsewhere and does not appear in this figure.",
+        "These are averages across a population and across every day of the week, not a description of any one week."
+      ],
+      "notes": "The window is the age band the article names and nothing wider. Until the fix pass this record ran from this band to the oldest one it was being compared with, so a true figure about the oldest band rendered beside every year in between.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-reading-for-personal-interest-oldest-band",
+      "label": "Daily time spent reading for personal interest in the oldest band the article names",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "timing": { "window": { "from": 75, "to": 100 } },
+      "measure": "mean",
+      "population": "the population interviewed for the American Time Use Survey, averaged across all days of the year, with reading counted only when it is done for personal interest rather than for school or paid work",
+      "sources": ["src-bls-ted-reading-age-gap", "src-bls-ted-reading-all-ages"],
+      "readRef": "/topics",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Reading chosen for its own sake takes up more of an average day in this band than in any other band the article names.",
+        "Reading done for school or for paid work is counted elsewhere and does not appear in this figure.",
+        "These are averages across a population and across every day of the week, not a description of any one week."
+      ],
+      "notes": "The survey's oldest band is open-ended at the top, so the window closes at this timeline's own ceiling rather than at a measured end.",
+      "lastReviewed": "2026-09-04"
+    },
+    {
+      "id": "ms-belonging-to-groups-and-organizations-by-age",
+      "label": "Belonging to a community, civic or religious organization across adult life",
+      "lane": "inner-life",
+      "kind": "statistical-norm",
+      "optional": true,
+      "researchRequired": true,
+      "researchNote": "Needed: a verbatim sentence naming an age band together with the share of people who belong to a group or organization. Candidates to fetch: the AmeriCorps Volunteering and Civic Life in America pages on americorps.gov, whose organizational membership measure is published by demographic group but which refused an automated fetch in this pass; the Civic Engagement and Volunteering Supplement detailed tables on census.gov; the AmeriCorps open data dashboard on data.americorps.gov, if it publishes a sentence rather than a table alone. The Pew religious attendance report was fetched and its narrative names older and younger adults without giving an age band beside a figure, so it cannot resolve this.",
+      "windowInWords": "Belonging to a congregation, a club, a union, a neighborhood group or another organization is often described as more common in the later adult years than in the earliest, but no source fetched in this pass gave a verbatim sentence naming an age band beside a figure, so no window is asserted.",
+      "readRef": "/topics",
+      "status": "editorial",
+      "evidence": "insufficient-evidence",
+      "lastReviewed": "2026-09-04"
+    }
+  ]
+}

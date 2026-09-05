@@ -1,0 +1,190 @@
+{
+  "key": "p1-federal-coverage",
+  "sources": [
+    {
+      "id": "src-p1fc-usc-23-158-withholding",
+      "title": "§158. National minimum drinking age",
+      "publisher": "U.S. Government Publishing Office (United States Code)",
+      "url": "https://www.govinfo.gov/content/pkg/USCODE-2023-title23/html/USCODE-2023-title23-chap1-sec158.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, in the 2023 edition of the United States Code; the enforcement mechanism rather than the age",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "the amount to be withheld under this section shall be an amount equal to 8 percent of the amount apportioned"
+    },
+    {
+      "id": "src-p1fc-cdc-mlda",
+      "title": "Why A Minimum Legal Drinking Age of 21 Works",
+      "publisher": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/alcohol/underage-drinking/minimum-legal-drinking-age.html",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2024,
+      "dataYear": 2024,
+      "measures": "the minimum legal drinking age as it stands in law across the United States",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "The MLDA in the United States is 21 years."
+    },
+    {
+      "id": "src-p1fc-fda-tobacco-21",
+      "title": "Tobacco 21",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/tobacco-products/retail-sales-tobacco-products/tobacco-21",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2025,
+      "dataYear": 2025,
+      "measures": "the rule as written; page content current as of August 2025",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "raising the federal minimum age for sale of tobacco products from 18 to 21 years"
+    },
+    {
+      "id": "src-p1fc-cfr-45-147-120",
+      "title": "45 CFR § 147.120 - Eligibility of children until at least age 26",
+      "publisher": "Legal Information Institute, Cornell Law School",
+      "url": "https://www.law.cornell.edu/cfr/text/45/147.120",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as written; the codified text of the federal regulation setting the minimum dependent-coverage requirement for plans that make dependent coverage of children available; the page carries no publication date, so the retrieval year is recorded",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "that makes available dependent coverage of children must make such coverage available for children until attainment of 26 years of age"
+    },
+    {
+      "id": "src-p1fc-healthcare-under-26",
+      "title": "Health Insurance Coverage For Children and Young Adults Under 26",
+      "publisher": "HealthCare.gov (Centers for Medicare & Medicaid Services)",
+      "url": "https://www.healthcare.gov/young-adults/children-under-26/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the rule as described to consumers for plans that offer dependent coverage, stated as what usually happens rather than as an absolute; the page carries no publication date, so the retrieval year is recorded",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "If a parent's health insurance plan covers dependents, you usually can be added to their plan and stay on it until you turn 26."
+    },
+    {
+      "id": "src-p1fc-healthcare-plan-variation",
+      "title": "Health Insurance Coverage For Children and Young Adults Under 26",
+      "publisher": "HealthCare.gov (Centers for Medicare & Medicaid Services)",
+      "url": "https://www.healthcare.gov/young-adults/children-under-26/",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2026,
+      "dataYear": 2026,
+      "measures": "the variation the agency itself reports around the federal requirement, by state and by individual plan; the page carries no publication date, so the retrieval year is recorded",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "Check with the employer or plan if you can stay on the plan after you turn 26. Some states and plans have different rules."
+    },
+    {
+      "id": "src-p1fc-usc-20-1087vv",
+      "title": "§1087vv. Definitions",
+      "publisher": "U.S. Government Publishing Office (United States Code)",
+      "url": "https://www.govinfo.gov/content/pkg/USCODE-2023-title20/html/USCODE-2023-title20-chap28-subchapIV-partF-sec1087vv.htm",
+      "kind": "statute-or-agency-rule",
+      "publicationYear": 2023,
+      "dataYear": 2023,
+      "measures": "the rule as written, in the 2023 edition of the United States Code; the statutory definition of an independent student",
+      "retrievedOn": "2026-09-03",
+      "excerpt": "is 24 years of age or older by December 31 of the award year"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-alcohol-purchase-minimum-age",
+      "label": "Legal age to buy alcohol",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 21
+      },
+      "measure": "legal-rule",
+      "population": "retail purchasers of alcoholic beverages in the United States",
+      "sources": [
+        "src-p1fc-cdc-mlda",
+        "src-p1fc-usc-23-158-withholding"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Buying alcohol at retail becomes lawful at this threshold, which is the minimum legal drinking age in the United States.",
+        "Congress reached it through funding rather than a direct ban on sale: the federal statute withholds a share of a state's apportionment.",
+        "Stores, bars and restaurants ask for proof of age, so carrying identification becomes part of ordinary social occasions for many people."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-tobacco-purchase-minimum-age",
+      "label": "Legal age to buy tobacco and nicotine products",
+      "lane": "civic-legal",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 21
+      },
+      "measure": "legal-rule",
+      "population": "retail purchasers of tobacco and nicotine products in the United States",
+      "sources": [
+        "src-p1fc-fda-tobacco-21"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "Federal law raised the minimum age of sale for tobacco products to this threshold, so retail purchase becomes lawful for the buyer at this point.",
+        "The rule reaches the whole category, including cigarettes, cigars, smokeless tobacco and electronic nicotine products, rather than only combustible cigarettes.",
+        "Retailers check identification at the counter and at online checkout, so proof of age is part of these purchases."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-parent-health-plan-dependent-coverage-ends",
+      "label": "Federal requirement for dependent coverage on a parent's plan ends",
+      "lane": "body-health",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 26
+      },
+      "measure": "legal-rule",
+      "population": "children covered as dependents under a group health plan or health insurance coverage that makes dependent coverage of children available",
+      "sources": [
+        "src-p1fc-cfr-45-147-120",
+        "src-p1fc-healthcare-under-26",
+        "src-p1fc-healthcare-plan-variation"
+      ],
+      "readRef": "/topics/health",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "The federal floor runs out here: a plan that offers dependent coverage of children is no longer required by that rule to keep it available.",
+        "State rules and individual plans vary, and some carry dependent coverage past this point, so what actually happens turns on the particular plan and state.",
+        "Where coverage does end, it comes from somewhere else instead: an employer plan, a marketplace plan, a school plan, or a public program."
+      ],
+      "lastReviewed": "2026-09-03"
+    },
+    {
+      "id": "ms-independent-status-federal-student-aid",
+      "label": "Automatic independent status for federal student aid",
+      "lane": "learning",
+      "kind": "legal-threshold",
+      "optional": true,
+      "timing": {
+        "exact": 24
+      },
+      "measure": "legal-rule",
+      "population": "applicants for federal student aid",
+      "sources": [
+        "src-p1fc-usc-20-1087vv"
+      ],
+      "readRef": "/map/credential-decision",
+      "status": "researched",
+      "evidence": "evidence-informed",
+      "whatChanges": [
+        "An applicant meets the statutory definition of an independent student on age alone, without having to satisfy any of the other conditions the law lists.",
+        "The law fixes the test to a set date within the award year rather than to the applicant's birthday, so the aid year matters as much as the age.",
+        "Younger applicants can still reach independent status through the other conditions in the same definition; age is one route among several."
+      ],
+      "lastReviewed": "2026-09-03"
+    }
+  ]
+}
