@@ -1993,6 +1993,29 @@ samaritans.org (116 123, free, any time); gov.wales Live Fear Free ("Call: 0808 
 owner's rule.** The report recommends an independent review of the 6.0 build alongside the
 pending 4.0 one (0.E.48).
 
+### The live state after the 6.0 merge (Fable alone)
+
+**[2026-09-05] MERGED AND LIVE.** Pull request #1 (`consolidation/6.0` at `b7730c9`, eleven
+commits from the blueprint `fd9851a` to Phase D) merged into `main` as `bdc36d9` by a merge
+commit under the owner's rule — the PR was CLEAN and MERGEABLE with no repository checks; the
+roster in the Phase D entry above is the green. The Pages workflow "Deploy preview to GitHub
+Pages" ran as 33975838169 on `bdc36d9` and succeeded.
+
+**The live walk** (Playwright Chromium from the repository directory against
+https://jasonhchronicles.com/TGTL, and the in-app browser as a second witness): 60 pages — the
+36 reader routes and the 24 milestone pages from the search index — each in both editions and
+both themes and again at 320px: every page 200, no console error, no request leaving the
+origin, no horizontal scroll, nothing in a URL; the footer stamp "TGTL 6.0 preview — The
+Consolidation" and `noindex, nofollow` on every page; `/roadmap/` refreshing to `/TGTL/map/`;
+`/does-not-exist/` a 404; the quick exit pointing at weather.com; the help-now page saying
+"last checked 2026-09-04"; `/situations/getting-through-today/` rendering with "And then
+stop" and no Play or Timeline in its nav. **LIVE WALK CLEAN.**
+
+**What this entry does not do.** It closes no human gate; §0.D and §0.E of
+`KNOWN_LIMITATIONS.md` are the list, unchanged. It is a record, added on its own branch and
+pull request after the Phase D merge so that `main` receives nothing by a direct push; whether
+it merges is the owner's call, and the same record stands in "The Consolidation Report".
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0
