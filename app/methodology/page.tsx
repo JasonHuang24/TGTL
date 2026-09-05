@@ -69,6 +69,19 @@ export default function MethodologyPage() {
         turn the framing down everywhere yourself, with the control at the top of the page; it reduces the
         vocabulary and the chrome, never the content.
       </p>
+      {/* N-272 (§3.10, §5.3): the set-down rule, published. */}
+      <p>
+        Setting the frame down is not the same as setting the evidence down. A page with the frame
+        down may still carry an evidence label &mdash; Illustrative, Our judgement, Researched
+        &mdash; and may not carry a game term. The two prohibitions are different in kind. Game
+        vocabulary goes away because taking a bereavement apart produces the appearance of
+        understanding at a cost to someone already being handled a great deal. The evidence label
+        stays because a page about grief is exactly where a reader is most likely to have been
+        handed a folk model as a fact, and marking it as folk belief is the one correction that most
+        protects them; withholding it would protect the register at the reader&rsquo;s expense.
+        Applying the rule to the five pages under clinical and specialist review waits for that
+        review &mdash; those pages are unchanged, and nothing was labelled on them here.
+      </p>
 
       <h2>The model underneath, in one screen</h2>
       <p>
@@ -130,6 +143,22 @@ export default function MethodologyPage() {
             <p>{b.detail}</p>
           </section>
         ))}
+        {/* N-253 (§5.4): the presentation walls, adopted before the thing they govern
+            exists. No scene layer is built in this version and none is planned here. */}
+        <section id="graphical-layer" className="known-break">
+          <h3>Rules adopted for a picture that does not exist yet</h3>
+          <p>
+            Nothing on this site is drawn. If a scene layer is ever built, these rules were adopted
+            before it, so the first picture inherits them instead of arguing with them: a safety
+            transition replaces the scene with calm, plain help and never animates damage or
+            failure; health is shown through capacity, symptoms, support, access and accommodation,
+            never through grotesque visuals; discrimination and systemic exclusion are never drawn
+            as penalties attached to a person, because they are properties of a ruleset; parenthood
+            and childlessness are never scored; appearance never determines worth; and colour never
+            encodes a verdict. Writing them down now is the point &mdash; a rule adopted after the
+            first picture is a rule argued against a picture someone has already made.
+          </p>
+        </section>
       </div>
 
       <h2>No scores, and why</h2>
@@ -168,6 +197,66 @@ export default function MethodologyPage() {
         because they are comprehensible and you have agency inside them. This site keeps the
         comprehensibility and leaves the points.
       </p>
+
+      {/* N-430 (§3.10): the owner's own safety charters, published as checklists so the
+          walls can be read and held against the instruments rather than lived in a brief.
+          Each item is one line. No numbers. */}
+      <h2 id="never-do">What these instruments must never do</h2>
+      <p>
+        The rules below were written before the instruments they govern, and they are published so
+        you can hold the site to them. They are not aspirations. Each one names a specific way an
+        instrument of this kind goes wrong, and several of them describe things this site avoids by
+        construction rather than by care &mdash; there is no account, no rating of you, and nothing
+        to compare against anyone else. The list is the reason for the construction.
+      </p>
+
+      <h3>Anything that describes a difficulty or a position</h3>
+      <ul>
+        <li>Never label a reader, publicly or otherwise, without their asking for it.</li>
+        <li>Never diagnose a physical or mental condition.</li>
+        <li>Never score appearance, or rank it, or comment on it as a measure of anything.</li>
+        <li>Never treat disability as a tragedy by default.</li>
+        <li>Never encourage fatalism: a hard position is a description, not a settled ending.</li>
+        <li>Never invite a competition about who has suffered more.</li>
+        <li>Never turn trauma into entertainment.</li>
+        <li>Never let a hard position be used to excuse harm done to somebody else.</li>
+        <li>
+          Never treat someone&rsquo;s pain as invalid because the conditions around it look
+          favourable from outside.
+        </li>
+      </ul>
+
+      <h3>Anything that describes a person&rsquo;s capacities</h3>
+      <ul>
+        <li>A described capacity is never a measure of human worth.</li>
+        <li>A low reading is never a moral failure, and a high one is never proof of merit.</li>
+        <li>No reading fixes what someone can become.</li>
+        <li>Unknown stays unknown; it is never filled in to make a panel look finished.</li>
+        <li>Nothing here diagnoses, and no profile is a diagnosis.</li>
+        <li>
+          Nothing is framed so that it invites a conclusion about which people ought to exist.
+        </li>
+        <li>Appearance and intelligence get the most careful handling of all, or none at all.</li>
+        <li>Nothing about a reader is ever ranked against other readers, by default or on request.</li>
+        <li>No child is boxed into a permanent identity by an early measurement.</li>
+        <li>The environment and the support around a person stay visible beside anything said about them.</li>
+        <li>No single attribute ever decides a recommended life.</li>
+      </ul>
+
+      <h3>Anything that reads a whole life back to you</h3>
+      <ul>
+        <li>Never reduce a life to what happens to be measurable.</li>
+        <li>Never treat prestige as the achievement that counts.</li>
+        <li>Never score a circumstance as a moral success or a moral failure.</li>
+        <li>Never leave out unpaid care and ordinary love.</li>
+        <li>Never turn a tragedy into entertainment.</li>
+        <li>Never encourage obsessive comparison.</li>
+        <li>Never claim more about cause than the evidence carries.</li>
+        <li>Never present a constructed biography as history.</li>
+        <li>Never manufacture regret out of a simplistic counterfactual.</li>
+        <li>Never assume everyone is playing for the same thing.</li>
+        <li>Never imply that a short life cannot be a meaningful one.</li>
+      </ul>
 
       <h2>What this is not</h2>
       <p>
@@ -246,8 +335,16 @@ export default function MethodologyPage() {
       <Callout tone="quiet" title="What this site remembers about you">
         <p>
           Only what you tell it, and only in this browser: your edition and framing choices, and anything you
-          type into the board, the logs, or the guidance flow. None of it is sent anywhere, put in the
-          address bar, or scored. You can erase all of it at once.
+          type into the board, the logs, or the guidance flow. All of it sits under keys the reset control
+          clears. None of it is sent anywhere, put in the address bar, or scored. You can erase all of it at
+          once.
+        </p>
+        {/* N-266 (§3.10): what is stored, and what the application cannot see. The
+            second sentence is what makes the first one believable. */}
+        <p>
+          Visits to the help-now and safety pages are not recorded by this site. Your browser, device,
+          network, or employer may still keep their own records &mdash; that is outside what this site can
+          see or change, and it is the half most privacy notes leave out.
         </p>
         <ResetButton />
       </Callout>

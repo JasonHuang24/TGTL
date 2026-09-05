@@ -37,12 +37,24 @@ export default function ThresholdPage() {
       <section className="hotline-group" id="privacy" aria-labelledby="h-privacy">
         <h2 id="h-privacy">If someone might see this screen</h2>
         <ul className="privacy-list">
-          <li>Use a private or incognito window, or a device that is not yours.</li>
+          <li>
+            A private or incognito window can keep this page out of the history on this device. That
+            is all it does.
+          </li>
+          <li>
+            It does not hide what you do from software installed on the device, from the network you
+            are on, from an employer or a school, or from the logs kept by an account you are signed
+            in to. If the device or the account is shared, assume the record is shared too.
+          </li>
+          <li>
+            A device that is not yours &mdash; a library computer, a friend&rsquo;s phone &mdash; is
+            usually safer than any setting on a device someone else can reach.
+          </li>
+          <li>Phone calls appear on bills. Text and web chat frequently do not.</li>
           <li>
             Most domestic-abuse services have a page about covering your tracks online. It is worth
             ten minutes and it is more thorough than anything we would write here.
           </li>
-          <li>Phone calls appear on bills. Text and web chat frequently do not.</li>
         </ul>
       </section>
 

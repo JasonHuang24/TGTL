@@ -706,6 +706,83 @@ async function labTo(page, opts = {}) {
   record(3, "C-3 (N-191): the action card renders its switching cost", problems.length === 0, problems.length ? problems : details);
 }
 
+/* ============================================================
+   C-6 (N-263): double-Escape leaves EVERY set-down route.
+   ============================================================
+   The reader who most needs the quick exit may not be able to reach or aim at a
+   button. Two Escape presses inside the window run the same navigation the
+   visible "Leave this page" control runs — and on four of the seven set-down
+   routes there IS no visible control, so this is the only exit there.
+
+   The route list is read out of content/routes.ts (every record with
+   intensity: "down"), NOT out of the rendered pages and NOT from the handler, so
+   a plant that quietly drops a route from the handler cannot also drop it from
+   the test.
+
+   The exit is a real navigation to a third-party site, so it is intercepted at
+   the network layer and aborted: the assertion is that the page tried to leave
+   for the exit target, and nothing off-origin is actually fetched.
+
+   Proven red by narrowing the handler's guard to skip one route — the run with
+   the plant is in DECISIONS.md §8 under batch 2.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const routesSrc = readFileSync(join(ROOT, "content/routes.ts"), "utf8");
+  const SETDOWN = routesSrc
+    .split('path: "')
+    .slice(1)
+    .map((c) => [c.slice(0, c.indexOf('"')), /intensity:\s*"(\w+)"/.exec(c)])
+    .filter(([, m]) => m && m[1] === "down")
+    .map(([p]) => p);
+  if (!SETDOWN.length) problems.push("content/routes.ts: no set-down route found; the gate has no subject");
+
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  let leftFor = null;
+  // Fulfilled locally rather than aborted: the navigation still happens (which is
+  // the thing being asserted) but nothing is fetched off-origin, and the page does
+  // not land on an error document that races the next goto.
+  await page.route("**/*", (r) => {
+    const u = r.request().url();
+    if (u.startsWith(BASE) || u.startsWith("data:") || u.startsWith("blob:")) return r.continue();
+    leftFor = u;
+    return r.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>intercepted</title>" });
+  });
+  const doubleEscape = async (route) => {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        await page.goto(BASE + route, { waitUntil: "domcontentloaded" });
+        await sleep(160);
+        leftFor = null;
+        await page.keyboard.press("Escape");
+        await page.keyboard.press("Escape");
+        await sleep(360);
+        return leftFor;
+      } catch {
+        await sleep(240);
+      }
+    }
+    problems.push(`${route}: could not be walked — the gate proved nothing about this route`);
+    return null;
+  };
+  for (const route of SETDOWN) {
+    if (!(await doubleEscape(route)))
+      problems.push(`${route}: two Escape presses did not leave the page — this route has no keyboard quick exit`);
+  }
+  // And the gesture must NOT fire on a route that is not set-down: a page-initiated
+  // jump off-site is sanctioned only where the reader may need to hide the screen.
+  const stray = await doubleEscape("/topics");
+  if (stray) problems.push(`/topics: double-Escape left the page from a route that is not set-down (${stray})`);
+  await ctx.close();
+  if (!problems.length)
+    details.push(
+      `double-Escape leaves all ${SETDOWN.length} set-down routes (${SETDOWN.join(", ")}) and does not fire on /topics`,
+    );
+  record(106, "C-6 (N-263): double-Escape exits every set-down route", problems.length === 0, problems.length ? problems : details);
+}
+
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */
 {
   const { runTimelineBrowserGateSafe } = await import("./timeline-browser-gate.mjs");

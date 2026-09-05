@@ -9,6 +9,17 @@
  * Board safety clause (release blocker): crisis-domain selections short-circuit the
  * flow straight to the real page using the triage pattern — never rated, weighed,
  * or folded into a reading.
+ *
+ * N-268 (6.0 §5.5) generalises that clause: a favourable reading never overrides a
+ * safety route, and every instrument that orders, ranks or reads checks the crisis
+ * route before the ordering runs. The doctrine is stated in `content/exclusions.ts`;
+ * C-8 asserts the order in the source of this board and of `/guidance`.
+ *
+ * N-430 (6.0 §3.10): the wider charter this clause belongs to — the owner's own
+ * list of what an instrument of this kind must never do — is published as the
+ * checklist "What these instruments must never do" on `/methodology`. The clause
+ * above is the board's share of it; the checklist is where the whole thing is
+ * readable, and it is what a new instrument is written against.
  */
 
 export type CrisisChip = { id: string; label: string; route: string };

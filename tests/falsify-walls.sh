@@ -285,6 +285,57 @@ c_probe "C-5 · unsourced stage content under the female lens" "C-5" \
   'stage.gameLabel : stage.label}</h2>{sexLens === "female" ? <p>This window opens earlier.</p> : null}' \
   "branches on the sex lens with no data-source"
 
+# ---- batch 2 (safety, group J + group I's two rules): C-7, C-8, C-9, C-10 ----
+#
+# C-6 (N-263) is the batch's one "record" gate: its subject is a key gesture in a
+# real browser, so its proven red is the browser assertion in tests/browser-gates.mjs
+# run with the handler's guard narrowed to skip a route, pasted into DECISIONS.md §8.
+
+# C-7 (N-267) — a region the fixture serves with no dated entry in the standing record.
+# Demoting the heading is exactly how this fails in life: an edit that looks cosmetic.
+c_probe "C-7 · a fixture region missing from SAFETY_SOURCES.md" "C-7" \
+  "SAFETY_SOURCES.md" \
+  '## Northern Ireland' \
+  '### Northern Ireland' \
+  'claims to cover Northern Ireland'
+
+# C-8 (N-268) — the ordering runs before the safety route is offered.
+c_probe "C-8 · guidance ranks before the crisis gate is reached" "C-8" \
+  "components/Guidance.tsx" \
+  '  const crisisGate = (' \
+  '  const preRank = rankPlans(inputs); const crisisGate = (' \
+  'has already run at line'
+
+# C-8 again — the gate stops being a link out and becomes an input to the reading.
+c_probe "C-8 · the board's crisis gate records the choice" "C-8" \
+  "components/Board.tsx" \
+  '<Link className="board-crisis-link" href={c.route}>' \
+  '<Link className="board-crisis-link" href={c.route} onClick={() => setLevel("condition", c.id)}>' \
+  'records or handles the choice'
+
+# C-9 (N-272) — an evidence label enters the generated set-down game-term list, so
+# gate 2 would begin stripping the evidence apparatus off set-down pages.
+c_probe "C-9 · an evidence label given as a game term" "C-9" \
+  "content/terminology.ts" \
+  'standard: "affects later",' \
+  'standard: "affects later", game: "researched",' \
+  'collides with the evidence label'
+
+# C-10 (N-273) — the caring-duty referent named. This is the plant the verifier's
+# warning describes: the appointment identified with a live companion.
+c_probe "C-10 · the caring-duty referent named" "C-10" \
+  "content/sim/campaign/events/batch-comp-family.ts" \
+  'You take the appointment and the paperwork behind it.' \
+  'You take the appointment and the paperwork behind it for Diane.' \
+  'as the person the care is for'
+
+# C-10 again — a condition named in the same thread.
+c_probe "C-10 · a condition named in a caring-duty record" "C-10" \
+  "content/sim/campaign/events/batch-comp-family.ts" \
+  '"label": "Stay on the admin"' \
+  '"label": "Stay on the caring-duty admin"' \
+  'names the condition'
+
 fi
 
 echo

@@ -57,27 +57,37 @@ export function Board() {
     setErased(true);
   };
 
+  /*
+   * Crisis short-circuit (§4 safety clause; 6.0 §5.5, N-268): direct routes,
+   * never rated. Declared HERE, above computeReading, because the rule the other
+   * instruments inherit is an ordering rule — the safety route is checked before
+   * the reading runs, in source and in the call graph, not merely painted above
+   * it. C-8 asserts the order.
+   */
+  const crisisGate = (
+    <aside className="board-crisis" aria-label="If something serious is happening">
+      <p className="board-crisis-lead">
+        Before anything else — if any of these is happening, this checklist is the wrong tool. Go
+        straight here:
+      </p>
+      <ul className="board-crisis-list">
+        {CRISIS_CHIPS.map((c) => (
+          <li key={c.id}>
+            <Link className="board-crisis-link" href={c.route}>
+              {c.label} →
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <CrisisNote />
+    </aside>
+  );
+
   const reading = computeReading(sel);
 
   return (
     <div className="board">
-      {/* Crisis short-circuit (§4 safety clause): direct routes, never rated. */}
-      <aside className="board-crisis" aria-label="If something serious is happening">
-        <p className="board-crisis-lead">
-          Before anything else — if any of these is happening, this checklist is the wrong tool. Go
-          straight here:
-        </p>
-        <ul className="board-crisis-list">
-          {CRISIS_CHIPS.map((c) => (
-            <li key={c.id}>
-              <Link className="board-crisis-link" href={c.route}>
-                {c.label} →
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <CrisisNote />
-      </aside>
+      {crisisGate}
 
       <p className="board-privacy">
         These stay in this browser. Nothing is sent anywhere, put in the address bar, or scored. This

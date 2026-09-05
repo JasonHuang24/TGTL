@@ -15,8 +15,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { ROOT, OUT_DIR } from "./util.ts";
-import { HOTLINE_GROUPS, NATIONS, UK_NATIONS, hotlineRegions } from "../content/hotlines.ts";
+import { ROOT, OUT_DIR, containsPhrase, textOf } from "./util.ts";
+import { HOTLINE_GROUPS, NATIONS, UK_NATIONS, hotlineRegions, ALL_HOTLINES } from "../content/hotlines.ts";
+import { SETDOWN_FORBIDDEN_TERMS } from "../content/terminology.ts";
+import { STATUS_LABEL } from "../content/evidence.ts";
+import { SETDOWN_ROUTES } from "../content/routes.ts";
 
 export type CGateResult = { pass: boolean; details: string[] };
 
@@ -32,6 +35,12 @@ export type CGate = {
 const NA = (): CGateResult | null => null;
 
 const read = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
+
+/** The exported HTML for a route, or null when the build has not made it. */
+const readOut = (route: string): string | null => {
+  const file = join(OUT_DIR, route.replace(/^\//, ""), "index.html");
+  return existsSync(file) ? readFileSync(file, "utf8") : null;
+};
 
 /* =========================================================================
    C-1 (N-226) — a write whose readback differs, throws, or is refused never
@@ -335,17 +344,457 @@ function c5(): CGateResult | null {
   return { pass: true, details };
 }
 
+/* =========================================================================
+   C-6 (N-263) — double-Escape triggers the quick exit on every set-down route.
+   =========================================================================
+   The substance is the BROWSER assertion in tests/browser-gates.mjs, which
+   presses Escape twice on every route in SETDOWN_ROUTES and requires the page to
+   leave the origin (a "record" gate; its proven red is a route omitted from the
+   handler). This half asserts the three things a browser walk cannot see:
+
+   1. the handler's routes are DERIVED from content/routes.ts, never hand-listed —
+      a hand-list is exactly how a route loses its exit the day the inventory grows;
+   2. the listener is attached only where the route is set-down and removed again
+      on a route change (the effect's cleanup, with the route in its deps);
+   3. the keyboard exit and the visible "Leave this page" control go through ONE
+      navigation, so the two can never drift apart.
+   ========================================================================= */
+function c6(): CGateResult | null {
+  const rel = "components/SiteChrome.tsx";
+  const src = read(rel);
+  const escAt = src.indexOf('"Escape"');
+  if (escAt < 0) return null;
+  const fails: string[] = [];
+
+  // 1. Derived, never hand-listed.
+  if (!/isSetDownRoute|SETDOWN_ROUTES/.test(src))
+    fails.push(
+      `${rel}: the double-Escape handler does not derive its routes from content/routes.ts — a hand-written list is how a set-down route loses its keyboard exit the day the inventory grows`,
+    );
+
+  // 2. The effect that owns the listener.
+  const effAt = src.lastIndexOf("useEffect(", escAt);
+  const depAt = src.indexOf("}, [", escAt);
+  const effect = effAt >= 0 && depAt > effAt ? src.slice(effAt, src.indexOf("\n", depAt)) : "";
+  const deps = depAt > 0 ? src.slice(depAt + 4, src.indexOf("]", depAt)) : "";
+  if (!effect)
+    fails.push(`${rel}: the Escape handler is not inside a useEffect the gate can read`);
+  else {
+    if (!effect.includes("addEventListener") || !effect.includes("removeEventListener"))
+      fails.push(
+        `${rel}: the Escape listener is added without a cleanup that removes it — it would survive a route change and fire on a page that has no quick exit`,
+      );
+    if (!/setDown|isSetDownRoute/.test(effect))
+      fails.push(
+        `${rel}: the Escape listener is attached without checking that the route is set-down (§5.3: double-Escape belongs to the set-down routes, not to the whole site)`,
+      );
+    if (!/\broute\b/.test(deps) && !/\bsetDown\b/.test(deps))
+      fails.push(
+        `${rel}: the Escape effect does not re-run on a route change (deps "[${deps.trim()}]"), so the listener cannot follow the reader off a set-down page`,
+      );
+    // 3. One navigation, shared with the visible control.
+    const called = [...effect.matchAll(/(\w+)\(\s*\)/g)].map((m) => m[1]);
+    const exits = called.filter((id) => {
+      const at = src.indexOf(`function ${id}(`);
+      return at >= 0 && /location\.replace\(/.test(src.slice(at, at + 600));
+    });
+    if (!exits.length)
+      fails.push(
+        `${rel}: the Escape handler does not call the same navigation the visible control uses — the keyboard exit and "Leave this page" would be two exits that can drift apart`,
+      );
+    else {
+      const onClick = /className="quick-exit"[\s\S]{0,400}?onClick=\{(\w+)\}/.exec(src);
+      if (!onClick) fails.push(`${rel}: the visible quick-exit control has no onClick the gate can follow`);
+      else {
+        const at = src.indexOf(`function ${onClick[1]}(`);
+        const body = at >= 0 ? src.slice(at, at + 600) : "";
+        if (!exits.some((e) => body.includes(`${e}(`)))
+          fails.push(
+            `${rel}: "Leave this page" (${onClick[1]}) and the Escape handler do not share a navigation — one can be fixed and the other left broken`,
+          );
+      }
+    }
+  }
+
+  // 4. The note claims the behaviour, and claims it only where the control renders.
+  const noteAt = src.indexOf("quick-exit-note");
+  const note = noteAt >= 0 ? src.slice(noteAt, src.indexOf("</p>", noteAt)) : "";
+  if (!/Escape twice/i.test(note))
+    fails.push(
+      `${rel}: the .quick-exit-note does not tell the reader that pressing Escape twice also leaves the page`,
+    );
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${rel}: the Escape listener is derived from SETDOWN_ROUTES (${SETDOWN_ROUTES.length} routes), attached only on a set-down route, removed on route change, and shares one navigation with the visible control`,
+      "the rendered half — Escape ×2 leaves the origin on every set-down route — is the browser assertion in tests/browser-gates.mjs",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-7 (N-267) — every fixture region has a SAFETY_SOURCES.md entry, dated.
+   =========================================================================
+   A hotline record's most load-bearing field is who it actually serves. The
+   fixture stores that as `coverage`; SAFETY_SOURCES.md is the standing prose
+   record of what was checked for each of those regions, on which page, with the
+   scope caveats and the fallback state. The gate ties them: every region any
+   record claims has a heading in the record, with a checked date not older than
+   that record's own `lastVerified`, and the maintenance rule is STATED rather
+   than implied.
+
+   Plant that proves it: take one nation's heading out of SAFETY_SOURCES.md.
+   ========================================================================= */
+function c7(): CGateResult | null {
+  const rel = "SAFETY_SOURCES.md";
+  if (!existsSync(join(ROOT, rel))) return null;
+  const doc = read(rel);
+  const fails: string[] = [];
+
+  const checked = new Map<string, string>();
+  let current: string | null = null;
+  for (const line of doc.split("\n")) {
+    const h = /^##\s+(.+?)\s*$/.exec(line);
+    if (h) {
+      current = h[1];
+      continue;
+    }
+    const d = /^-\s*Checked:\s*(\d{4}-\d{2}-\d{2})\s*$/.exec(line);
+    if (d && current && !checked.has(current)) checked.set(current, d[1]);
+  }
+
+  for (const h of ALL_HOTLINES) {
+    for (const region of h.coverage) {
+      const date = checked.get(region);
+      if (!date) {
+        fails.push(
+          `${rel}: no "## ${region}" entry with a Checked date, but ${h.id} (${h.contact}) claims to cover ${region} — a number whose reach is in no standing record cannot be re-read before a release (N-267)`,
+        );
+        continue;
+      }
+      if (date < h.lastVerified)
+        fails.push(
+          `${rel}: "## ${region}" was checked ${date}, older than ${h.id}'s lastVerified ${h.lastVerified} — the record is behind the fixture it exists to vouch for`,
+        );
+    }
+  }
+
+  const RULES: [string, RegExp][] = [
+    ["a routing or label change is not a re-verification", /is not a re-?verification/i],
+    ["a region that cannot be verified leaves the fixture and shows the directory fallback", /cannot be verified[\s\S]{0,240}fallback/i],
+    ["the record is re-read before a release", /re-?read[\s\S]{0,60}release/i],
+  ];
+  for (const [what, re] of RULES)
+    if (!re.test(doc)) fails.push(`${rel}: the maintenance rule does not state that ${what}`);
+
+  if (!read("content/hotlines.ts").includes("SAFETY_SOURCES.md"))
+    fails.push(
+      "content/hotlines.ts: the fixture does not name the standing record, so a maintainer editing a number never learns it exists",
+    );
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${rel}: ${checked.size} region entries cover every coverage value in ${ALL_HOTLINES.length} fixture records, each dated no older than the record it vouches for`,
+      "the maintenance rule is stated: a routing or label change is not a re-verification; an unverifiable region shows the directory fallback; the record is re-read before a release",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-8 (N-268) — the safety check precedes every ordering.
+   =========================================================================
+   6.0 §5.5: every instrument that orders, ranks or reads checks the crisis route
+   BEFORE the ordering runs. `content/board.ts` has had that shape since 3.0; it
+   was a convention in one place, not a rule the other instruments inherited.
+
+   The assertion is source order inside the component body — the crisis gate is
+   reached before the ranking or reading function is ever called — plus the shape
+   of the gate itself: it routes by link to the record's own route and records
+   nothing (the triage pattern), so choosing it cannot become a rateable input.
+
+   Plant that proves it: move the crisis block below the ordering call.
+   ========================================================================= */
+const ORDERING_INSTRUMENTS: { rel: string; orderingFn: string }[] = [
+  { rel: "components/Guidance.tsx", orderingFn: "rankPlans" },
+  { rel: "components/Board.tsx", orderingFn: "computeReading" },
+];
+
+function c8(): CGateResult | null {
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  for (const { rel, orderingFn } of ORDERING_INSTRUMENTS) {
+    const src = read(rel);
+    const bodyAt = src.indexOf("\nexport function ");
+    if (bodyAt < 0) {
+      fails.push(`${rel}: no exported component for the gate to read`);
+      continue;
+    }
+    const body = src.slice(bodyAt);
+    const lineOf = (i: number): number => src.slice(0, bodyAt + i).split("\n").length;
+    const orderAt = body.indexOf(`${orderingFn}(`);
+    const crisisAt = body.indexOf("CRISIS_CHIPS");
+    if (orderAt < 0) {
+      fails.push(`${rel}: ${orderingFn}() is never called — the gate is reading the wrong instrument`);
+      continue;
+    }
+    if (crisisAt < 0) {
+      fails.push(
+        `${rel}: ${orderingFn}() is called at line ${lineOf(orderAt)} and the crisis routes (CRISIS_CHIPS) are never reached in this component — an instrument that orders or reads must check the safety route first (6.0 §5.5, N-268)`,
+      );
+      continue;
+    }
+    if (crisisAt > orderAt) {
+      fails.push(
+        `${rel}: the crisis gate is at line ${lineOf(crisisAt)} but ${orderingFn}() has already run at line ${lineOf(orderAt)} — a favourable reading is computed before the safety route is offered (6.0 §5.5, N-268)`,
+      );
+      continue;
+    }
+    const aOpen = body.lastIndexOf("<aside", crisisAt);
+    const aClose = body.indexOf("</aside>", crisisAt);
+    const block = aOpen >= 0 && aClose > aOpen ? body.slice(aOpen, aClose) : "";
+    if (!block) {
+      fails.push(`${rel}: the crisis gate is not a self-contained <aside> the gate can read`);
+      continue;
+    }
+    if (!/href=\{[\w.]*\.route\}/.test(block))
+      fails.push(
+        `${rel}: the crisis gate does not send the reader to the record's own route — the triage pattern is a plain link, so it works with JavaScript off`,
+      );
+    if (/onClick|writeJSON|readJSON|localStorage|setInputs|setSel/.test(block))
+      fails.push(
+        `${rel}: the crisis gate records or handles the choice instead of leaving for the route — choosing it must never become an input (§4 safety clause, 6.0 §5.5)`,
+      );
+    details.push(
+      `${rel}: the crisis gate (line ${lineOf(crisisAt)}) precedes ${orderingFn}() (line ${lineOf(orderAt)}) and routes by link, recording nothing`,
+    );
+  }
+
+  if (!/favourable reading never overrides a safety route/i.test(read("content/exclusions.ts")))
+    fails.push(
+      "content/exclusions.ts: the N-268 doctrine is not stated beside the lists it governs — the rule the instruments inherit lives nowhere the next author reads",
+    );
+  if (!/checklist|charter/i.test(read("content/board.ts")))
+    fails.push("content/board.ts: the board's safety clause does not cite the published checklist (N-430)");
+
+  if (fails.length) return { pass: false, details: fails };
+  details.push("content/exclusions.ts: the doctrine is stated where the tier lists are defined");
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-9 (N-272) — a set-down route may render an evidence label and may not
+   render a game term.
+   =========================================================================
+   The two prohibitions are different in kind and collapsing them is expensive:
+   on a bereavement page the evidence apparatus is what marks a folk model as
+   folk belief, and that correction is exactly what a bereaved reader is owed.
+   Gate 2 lints set-down pages against the GENERATED game-term list, so the way
+   this rule fails is quietly — a term record acquires a game label that is also
+   an evidence word, and gate 2 starts stripping the apparatus.
+
+   So: no word in the generated set-down lint list collides with an evidence
+   label, and a fixture set-down page rendering all three labels passes gate 2's
+   own phrase check (the same containsPhrase gate 2 uses, not a copy of it).
+
+   Plant that proves it: give a term record the game label "researched".
+   ========================================================================= */
+function c9(): CGateResult | null {
+  const fails: string[] = [];
+  const labels = Object.values(STATUS_LABEL).map((l) => l.toLowerCase());
+  const forbidden = SETDOWN_FORBIDDEN_TERMS.map((t) => t.toLowerCase());
+
+  for (const t of forbidden)
+    for (const l of labels)
+      if (containsPhrase(l, t) || containsPhrase(t, l))
+        fails.push(
+          `content/terminology.ts: the set-down-forbidden game term "${t}" collides with the evidence label "${l}" — gate 2 would strip the evidence apparatus off a set-down page along with the game vocabulary (6.0 §5.3, N-272)`,
+        );
+
+  // Gate 2's own check, run over a set-down page that renders every label.
+  const fixture = `<main class="prose-page is-setdown"><h1>Grief and bereavement</h1>${labels
+    .map((l) => `<p class="evidence-status">${l}</p>`)
+    .join("")}</main>`;
+  const text = textOf(fixture).toLowerCase();
+  for (const t of forbidden)
+    if (containsPhrase(text, t))
+      fails.push(`a set-down fixture rendering the evidence labels trips gate 2's phrase check on "${t}"`);
+
+  const routes = read("content/routes.ts");
+  if (!/may render an evidence label/i.test(routes) || !/may not render a game term/i.test(routes))
+    fails.push(
+      "content/routes.ts: the set-down rule (an evidence label may render, a game term may not) is not written where the routes are defined",
+    );
+  const meth = readOut("/methodology");
+  if (meth === null) fails.push("out/methodology/index.html not built — the rendered half of C-9 cannot be read");
+  else {
+    const t = textOf(meth).toLowerCase();
+    if (!containsPhrase(t, "evidence label")) fails.push("/methodology: the set-down rule is not published for readers");
+    if (!/frozen|waits for|clinical review|not yet applied/i.test(textOf(meth)))
+      fails.push("/methodology: the rule is published without the clause saying the five reviewed pages are not covered yet");
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${forbidden.length} generated set-down game terms, none of them an evidence label; a set-down fixture rendering ${labels.join(" / ")} passes gate 2's phrase check`,
+      "the rule is written in content/routes.ts and published on /methodology, with the frozen pages named as not yet covered",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-10 (N-273) — no caring-duty record names the referent.
+   =========================================================================
+   HOW THE RECORDS WERE IDENTIFIED. records/content-pipeline.md line 208 (the
+   family batch's adversarial verifier) names three by id — evt-tasha-imbalance,
+   evt-tasha-repair, evt-tasha-refuses — and says why they survive the loss-tier
+   boundary: "the object of care stays 'the family admin' … 'the appointment and
+   the paperwork behind it', 'an office that never picks up' — institutional
+   logistics, never a body". The same thread runs through three more records in
+   the same file, so the gate takes the verifier's three as the floor and DERIVES
+   the rest from that objects-of-care vocabulary, inside the one file the warning
+   is about. A record that joins the thread and is not in the list fails the gate
+   rather than escaping it.
+
+   WHAT IS ASSERTED. Not "no name appears" — Tasha is in these scenes as the
+   person who DOES the admin, and forbidding her name would forbid the thread.
+   The referent is the person the appointment is FOR, so the assertion is about
+   referent position: inside a sentence that carries one of the objects of care,
+   no companion's given name appears in a benefactive or possessive construction
+   (the closed list is REFERENT_FORMS below), and no condition from the campaign's
+   own condition vocabulary is named anywhere in the record.
+
+   Plant that proves it: append " for Diane" to one of those sentences.
+   ========================================================================= */
+const CARING_DUTY_FILE = "content/sim/campaign/events/batch-comp-family.ts";
+/** The verifier's three (records/content-pipeline.md:208) — the floor of the set. */
+const CARING_DUTY_FLOOR = ["evt-tasha-imbalance", "evt-tasha-repair", "evt-tasha-refuses"];
+/** The objects of care the verifier enumerated. Institutional logistics, never a body. */
+const CARE_OBJECTS = [
+  "family admin",
+  "sibling admin",
+  "the admin",
+  "appointment",
+  "paperwork",
+  "office that never picks up",
+  "the thing at home",
+  "needed doing at home",
+];
+/** Referent position: the constructions that say the care is FOR a named person. */
+const REFERENT_FORMS = (name: string): string[] => [
+  `for ${name}`,
+  `${name}'s appointment`,
+  `${name}'s paperwork`,
+  `${name}'s forms`,
+  `${name}'s care`,
+  `${name}'s doctor`,
+  `${name}'s treatment`,
+  `${name}'s condition`,
+  `${name}'s medication`,
+  `${name}'s hospital`,
+  `${name}'s prescription`,
+  `${name}'s ward`,
+];
+/** Only these keys carry text a reader ever sees. */
+const RENDERED_KEYS = new Set(["label", "scene", "line", "reason", "hint", "note", "summary"]);
+
+function c10(): CGateResult | null {
+  const src = read(CARING_DUTY_FILE);
+  const a = src.indexOf("= [") + 2;
+  const b = src.lastIndexOf("];") + 1;
+  let records: Record<string, unknown>[];
+  try {
+    records = JSON.parse(src.slice(a, b));
+  } catch {
+    return { pass: false, details: [`${CARING_DUTY_FILE}: the batch is no longer JSON-shaped, so the gate cannot read its strings`] };
+  }
+  const fails: string[] = [];
+
+  const stringsOf = (v: unknown, key: string | null, out: string[]): string[] => {
+    if (typeof v === "string") {
+      if (key && RENDERED_KEYS.has(key)) out.push(v);
+    } else if (Array.isArray(v)) for (const x of v) stringsOf(x, key, out);
+    else if (v && typeof v === "object")
+      for (const [k, x] of Object.entries(v as Record<string, unknown>)) stringsOf(x, k, out);
+    return out;
+  };
+  const norm = (s: string): string => s.replace(/[‘’]/g, "'").toLowerCase();
+
+  // The thread, derived from the objects of care inside the file the warning names.
+  const derived = records
+    .filter((r) => stringsOf(r, null, []).some((s) => CARE_OBJECTS.some((p) => norm(s).includes(p))))
+    .map((r) => String(r.id));
+  for (const id of CARING_DUTY_FLOOR)
+    if (!derived.includes(id))
+      fails.push(
+        `${CARING_DUTY_FILE}: ${id} no longer carries any of the objects of care the verifier named — the gate's subject has moved and the list in the gate is stale`,
+      );
+
+  // Companion given names, derived from the arcs' own labels ("Diane, your mother").
+  const comp = read("content/sim/campaign/companions.ts");
+  const names = [...comp.matchAll(/^\s{4}label: "([^",]+)/gm)]
+    .map((m) => m[1].trim())
+    .flatMap((l) => (l.includes(" ") ? [l, l.split(" ").pop() as string] : [l]));
+  // The campaign's own condition vocabulary, read out of lib/sim/effects.ts so it cannot drift.
+  const eff = read("lib/sim/effects.ts");
+  const condLine = /HIGH_LOAD_CONDITIONS\s*=\s*\[([^\]]+)\]/.exec(eff);
+  const conditions = condLine ? [...condLine[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : [];
+  if (!conditions.length) fails.push("lib/sim/effects.ts: HIGH_LOAD_CONDITIONS could not be read; the condition half of C-10 is unarmed");
+
+  for (const r of records) {
+    const id = String(r.id);
+    if (!derived.includes(id)) continue;
+    for (const s of stringsOf(r, null, [])) {
+      const flat = norm(s);
+      for (const c of conditions)
+        if (flat.includes(c) || flat.includes(c.replace(/-/g, " ")))
+          fails.push(`${id}: a rendered string names the condition "${c}" — "${s.slice(0, 90)}…"`);
+      for (const sentence of flat.split(/(?<=[.!?])\s+/)) {
+        if (!CARE_OBJECTS.some((p) => sentence.includes(p))) continue;
+        for (const n of names)
+          for (const form of REFERENT_FORMS(n.toLowerCase()))
+            if (sentence.includes(form))
+              fails.push(
+                `${id}: "${sentence.trim().slice(0, 120)}" names ${n} as the person the care is for. The caring-duty thread stays inside the loss-tier boundary ONLY while its referent is unnamed (6.0 §5.6, N-273; KNOWN_LIMITATIONS.md §5) — naming a live companion makes this record loss-tier setup.`,
+              );
+      }
+    }
+  }
+
+  const law = read("content/sim/AUTHORING.md");
+  if (!/keep the referent unnamed/i.test(law))
+    fails.push(
+      "content/sim/AUTHORING.md: \"Keep the referent unnamed\" is not authoring law — the next batch author reads this file, not KNOWN_LIMITATIONS.md §5",
+    );
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${derived.length} caring-duty records (${derived.join(", ")}) — the verifier's three plus every record in the same file using the same objects of care`,
+      `no sentence carrying an object of care puts any of ${names.length} companion names in referent position, and no record names any of ${conditions.length} campaign conditions`,
+      "the law is in content/sim/AUTHORING.md",
+    ],
+  };
+}
+
 export const GATES: CGate[] = [
   { id: 1, row: "N-226", name: "A failed or unverified write never reports saved", proof: "record", run: c1 },
   { id: 2, row: "N-190", name: "A rendered failure mode carries its tied recovery route", proof: "probe", run: c2 },
   { id: 3, row: "N-191", name: "Every switchingCost renders on its option card", proof: "record", run: c3 },
   { id: 4, row: "N-260", name: "No region label broader than verified coverage", proof: "probe", run: c4 },
   { id: 5, row: "N-160", name: "The map lens settings render identical content or cite a source", proof: "probe", run: c5 },
-  { id: 6, row: "N-263", name: "Double-Escape exits every set-down route", proof: "record", run: NA },
-  { id: 7, row: "N-267", name: "Every fixture region has a SAFETY_SOURCES entry, dated", proof: "probe", run: NA },
-  { id: 8, row: "N-268", name: "The safety check precedes every ordering", proof: "probe", run: NA },
-  { id: 9, row: "N-272", name: "Set-down lint carries no evidence-label word", proof: "probe", run: NA },
-  { id: 10, row: "N-273", name: "No caring-duty record names a companion or condition", proof: "probe", run: NA },
+  { id: 6, row: "N-263", name: "Double-Escape exits every set-down route", proof: "record", run: c6 },
+  { id: 7, row: "N-267", name: "Every fixture region has a SAFETY_SOURCES entry, dated", proof: "probe", run: c7 },
+  { id: 8, row: "N-268", name: "The safety check precedes every ordering", proof: "probe", run: c8 },
+  { id: 9, row: "N-272", name: "Set-down lint carries no evidence-label word", proof: "probe", run: c9 },
+  { id: 10, row: "N-273", name: "No caring-duty record names a companion or condition", proof: "probe", run: c10 },
   { id: 11, row: "N-192", name: "One draw-vary pair renders the same-outcome reading", proof: "probe", run: NA },
   { id: 12, row: "N-194", name: "Repeat-last-season commits an ordered set and replays byte-identical", proof: "record", run: NA },
   { id: 13, row: "N-195", name: "Methodology names the Lab seed curation tool and criterion", proof: "probe", run: NA },

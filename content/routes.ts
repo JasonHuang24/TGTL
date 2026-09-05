@@ -5,6 +5,28 @@
  * per-route presentation intensity, the client-side search index, and the
  * automated gates. 27 reader routes + 2 sanctioned redirect stubs
  * (/orientation, /roadmap). Nothing ships that is not listed here.
+ *
+ * THE SET-DOWN RULE (N-272, 6.0 §5.3), written where the routes are defined
+ * because this is where `intensity: "down"` is decided:
+ *
+ *   A set-down route MAY render an evidence label — Illustrative, Our judgement,
+ *   Researched — and MAY NOT render a game term.
+ *
+ * The two prohibitions are different in kind, and collapsing them is expensive in
+ * exactly the wrong place. Game vocabulary is put away on these routes because
+ * taking a bereavement apart produces the appearance of understanding at a cost
+ * to someone already being handled a great deal. The evidence apparatus is the
+ * opposite: it is what marks a folk model as folk belief on the page where a
+ * reader is most likely to have been handed one as fact. Withholding it would
+ * protect the register at the reader's expense.
+ *
+ * Gate 2 lints these routes against the GENERATED game-term list in
+ * `content/terminology.ts`; C-9 asserts that no word in that generated list is
+ * also an evidence label, so the lint can never start stripping the apparatus.
+ *
+ * Applying the rule to the five sensitive pages waits for their clinical and
+ * specialist review: those pages are byte-identical at source and 6.0 adds no
+ * label to them. The rule is written now so the review has something to review.
  */
 
 export type Intensity = "full" | "light" | "down";

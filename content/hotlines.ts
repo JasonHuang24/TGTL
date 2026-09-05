@@ -10,6 +10,17 @@
  *
  * No number here is invented (G-10): all are the widely published official
  * lines, matching the Opus 5 Threshold donor and blueprint §5.1 verbatim.
+ *
+ * THE STANDING RECORD (N-267, 6.0 §3.10): `SAFETY_SOURCES.md` at the repository
+ * root carries one entry per region below — the number as this file prints it,
+ * the official page checked, the date, the scope caveats that page does and does
+ * not settle, and the fallback state — plus the maintenance rule. Read it before
+ * changing anything here, and read it before a release. Two clauses of that rule
+ * bind edits to this file: **a routing or label change is not a re-verification**
+ * (a moved page does not move a `lastVerified`), and **a region that cannot be
+ * verified is removed from this fixture** and shown the directory fallback rather
+ * than left with a number nobody currently stands behind. C-7 fails the build if a
+ * `coverage` value here has no dated entry there.
  */
 
 export type VerificationStatus = "verify-before-launch" | "verified";

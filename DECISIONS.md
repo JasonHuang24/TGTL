@@ -1123,6 +1123,92 @@ lens renders the new note and identical stage content.
 **The five hashes:** unchanged from batch 0 (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`,
 `77f1151c…`, `24526d37…`).
 
+### Batch 2 — safety, group J (+ group I's two rules) — built by Opus, reviewed by Fable 5.1
+
+**Interruption, recorded.** The build agent was cut off mid-batch by an expired login (an
+API authentication failure, not a fault in the work) while writing the C-7..C-10 probes.
+It was resumed with its context intact; the working tree was checked before the resume and
+nothing was redone.
+
+**What landed.** `/threshold#privacy` no longer opens with the incognito reassurance: it
+says what private browsing does and does not hide (N-262). Two Escape presses inside
+nine hundred milliseconds run the same navigation as "Leave this page" on every route the
+inventory marks set-down — derived, never hand-listed; attached only while set-down; the
+note says so where the visible control renders (N-263, C-6). The set-down notice says the
+reader's own preference was not changed (N-265). The footer and `/methodology` name what is
+stored and what this site cannot see (N-266). `SAFETY_SOURCES.md` stands at the repository
+root: fifteen coverage entries, the maintenance rule, the known gaps, referenced from the
+fixture's header (N-267, C-7). The doctrine that a favourable reading never overrides a
+safety route is written beside the exclusion lists; guidance gains the board's crisis gate
+above its ranking, from the same `CRISIS_CHIPS` (N-268, C-8). The set-down evidence rule is
+written where intensity is decided and published on `/methodology`, with the clause that
+the five reviewed pages wait (N-272, C-9). "Keep the referent unnamed" is authoring law in
+`content/sim/AUTHORING.md` (N-273, C-10). The owner's three safety charters are published
+as checklists under "What these instruments must never do" (N-430). The presentation walls
+for a graphical layer that does not exist are written beside the lists and on
+`/methodology` (N-253). Nothing was built for N-256; the rejection tests are blueprint §10.
+
+**A finding the batch's own gate made, before any edit:** `components/Board.tsx` computed
+its reading eleven lines before rendering the crisis chips. The shape was right on the page
+and wrong in the source. C-8's first run named it; the crisis `<aside>` is now declared
+above `computeReading` and rendered unchanged. The rendered board is byte-for-byte what it
+was.
+
+**Sent back:** nothing. One reviewer amendment: the set-down notice read "This page … This
+page"; tightened to one sentence with the same content.
+
+**Gap reports and findings, recorded.** (a) `/threshold/supporting-someone` has never
+imported `SetDownNotice`, so N-265's sentence does not reach it; adding it is an edit to a
+frozen page and waits for the review — the register's parked-for-review list gains it
+(`KNOWN_LIMITATIONS.md` §0.D). (b) The browser suite had no quick-exit assertion at all
+before this batch; C-6's is written from scratch and fulfils the exit request locally so
+the navigation completes without an off-origin load. (c) C-6's browser record id is `106`
+(C-N + 100) because id 6 exists; convention noted. (d) Blueprint §3.10 says "the ten risks
+of a life parse"; the brief lists eleven, all published — a finding against the blueprint's
+prose. (e) The brief's fourth list, §6B "Privacy and sensitivity", is open design questions,
+not prohibitions, and was not rendered as a checklist; its wording is in the batch report.
+(f) `SAFETY_SOURCES.md` transcribes the batch-1 and publish-pass retrievals; it does not
+re-verify, and says so twice.
+
+**The owner's wording, as the walls' origin (N-430; N-410 follows in batch 6).**
+`MASTER_PROJECT_BRIEF.md` §4A "Privacy and psychological risk" (L923–937): *publicly
+labeling users without consent · diagnosing physical or mental conditions · assigning
+humiliating appearance scores · treating disability as tragedy by default · encouraging
+fatalism · inviting competitive claims about who suffered more · turning trauma into
+entertainment · using a difficulty tier to excuse harmful behavior · treating subjective
+pain as invalid because external conditions look favorable.* "Attribute ethics"
+(L5488–5501): *attributes are not human worth · low scores are not moral failures · high
+scores are not proof of merit · ratings should not define fixed potential · unknown should
+remain unknown · the profile should not diagnose · the system should not encourage eugenic
+interpretation · appearance and intelligence require especially careful treatment · user
+attributes should not become public leaderboards by default · children should not be boxed
+into permanent identities by early measurements · environment and support should remain
+visible · no one attribute should determine the recommended life path.* §6B "Risks"
+(L8736–8748, eleven): *reducing a life to measurable output · treating prestige as the
+primary achievement · scoring circumstances as moral success or failure · ignoring unpaid
+care and ordinary love · turning tragedy into entertainment · encouraging obsessive
+comparison · overstating causal attribution · presenting a constructed biography as
+historical fact · generating regret through simplistic counterfactuals · assuming everyone
+shares the same win condition · implying that a short life cannot be meaningful.*
+
+**Proven red, then green.** C-6 (record): with `/triage` omitted from the handler, the
+browser gate reported "/triage: two Escape presses did not leave the page"; green after on
+all seven set-down routes, and the gesture does not fire on `/topics`. C-7, C-8 (two
+plants: guidance ranking hoisted above the gate; the board's gate given an `onClick` that
+records), C-9 (an evidence label given as a game term), C-10 (two plants: " for Diane";
+a condition named) are probes in `tests/falsify-walls.sh`, red on plant, restores
+byte-identical. C-8, C-9 and C-10 also went red on the untouched tree before the batch
+built anything — the pre-build reds are in the batch report.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 12 + invention gate, timeline 15, C suite 10 substantive + 41 N/A — all PASS; falsify 20 of 20
+(3 sandbox, 6 timeline, 11 consolidation) red on plant, all restores byte-identical; browser gates ALL
+PASS including C-6 on all seven set-down routes and not on `/topics`; S-9 120 audits clean. Browser
+walk: `/situations/grief` in the Game edition renders the notice and no game term; `/threshold`'s
+privacy list and footer render the new text; `/threshold/supporting-someone` renders the Escape
+sentence and no set-down notice (the gap above). **The five hashes:** unchanged (`7157c728…`,
+`d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0

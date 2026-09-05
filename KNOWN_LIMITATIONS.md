@@ -46,7 +46,9 @@ art checkpoint · 0.1.6 the four unsettled findings · 1.2 the five sensitive pa
 parse bridge · 1.6 the 4.0 art direction · the independent review of the 4.0 play
 layer. 6.0 adds to the review list: `/situations/breakup` (loss-adjacent) and
 `/situations/getting-through-today` (a set-down page a depleted reader lands on).
-The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+Parked for that review, found in 6.0 batch 2: `/threshold/supporting-someone` has never
+imported the set-down notice, so N-265's reassurance does not reach it; adding it is an edit
+to a frozen page. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
 
 ---
 

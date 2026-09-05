@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
+import { CRISIS_CHIPS } from "@/content/board";
 import {
   PLANS,
   OBJECTIVES,
@@ -82,6 +83,36 @@ export function Guidance() {
     if (hydrated) writeJSON(STORAGE_KEYS.guidance, inputs);
   }, [inputs, hydrated]);
 
+  /*
+   * N-268 (6.0 §5.5) — THE SAFETY ROUTE IS CHECKED BEFORE THE ORDERING RUNS.
+   *
+   * The board has short-circuited on the crisis routes since 3.0; this is the
+   * same gate, from the same list (imported, never duplicated), on the other
+   * instrument that ranks. It is declared above `rankPlans` deliberately: a
+   * favourable reading must never be computed on the way to a safety route.
+   *
+   * The triage pattern — plain links to the real page, so it works with
+   * JavaScript off, and choosing one records nothing. A safety route is not an
+   * input to a ranking, so it is never stored, weighted, or read back.
+   */
+  const crisisGate = (
+    <aside className="board-crisis" aria-label="If something serious is happening">
+      <p className="board-crisis-lead">
+        Before anything else — if any of these is happening, this walkthrough is the wrong tool. Go
+        straight here:
+      </p>
+      <ul className="board-crisis-list">
+        {CRISIS_CHIPS.map((c) => (
+          <li key={c.id}>
+            <Link className="board-crisis-link" href={c.route}>
+              {c.label} →
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+
   const ranked = useMemo(() => rankPlans(inputs), [inputs]);
   const ok = meetsMinimum(inputs);
   const experiment = PLANS.find((p) => p.id === "experiment")!;
@@ -97,6 +128,7 @@ export function Guidance() {
 
   return (
     <div className="guidance">
+      {crisisGate}
       <noscript>
         <p className="board-privacy">
           This walkthrough needs JavaScript to lay out and re-rank the plans as you answer. Without it, the
