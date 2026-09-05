@@ -1209,6 +1209,164 @@ privacy list and footer render the new text; `/threshold/supporting-someone` ren
 sentence and no set-down notice (the gap above). **The five hashes:** unchanged (`7157c728…`,
 `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
 
+### Batch 3 — the play layer, group H (twenty-three rows) — built by Opus, reviewed by Fable 5.1
+
+**What landed.** The Lab: one draw-vary pair (`lab-the-repair`) curated to land the same, so
+the "identical choices, different luck, same result" reading renders for the first time
+(N-192, C-11); the same situation's pivot moved to its second step (N-193); every situation
+declares what the fork cannot settle, above the branches (N-225, C-22); the standing note on
+when a comparison stops being controlled (N-224); the seed curation disclosed on
+`/methodology` with both criteria (N-195, C-13). The campaign: a repeat-last-season control
+on quiet seasons committing through the one shared path, with a delta-only briefing (N-194,
+C-12); the origin's face motif in the chrome on every turn (N-204, C-14); the five-field
+response contract on every action and event option, read from the records — nothing authored
+(N-211, C-15); a pure `previewAction` and the preview pane (N-212, C-16); the standing upkeep
+option, priced in time so it is affordable at the bottom of the economy (N-213, C-17); the
+fourth door state, declared on four doors whose labels already said it (N-214, C-18); the
+living record — each season's explanation stored with the content version that produced it,
+reopened rather than recomputed (N-216, C-20) — and the drift notice, built and guarded
+(N-223); the empty queue's second sentence (N-218, C-21); the attribution disclaimer above
+the look-back's aggregate with a new S-12b (N-222); arm-then-confirm on every erase (N-227);
+the state rail on every step (N-228, C-23); the forbidden register and the colour rule
+measured as chroma (N-233, C-19); the seed sentence twice (N-234); `TryInPlay` on six reading
+routes and on no set-down route (N-235, C-24); the arc closing where it opened (N-341); every
+parse panel declaring recorded, interpreted or unknowable (N-355, C-25); four agency words on
+the acts and the early map stages (N-366).
+
+**Sent back:** nothing. One reviewer amendment: the delta briefing's band words are now the
+published `GAUGE_BAND_ORDER` rather than a copy.
+
+**Findings against the blueprint, recorded rather than resolved silently.**
+(a) §7.1 lists `ActionContract.ifItGoesBadly` as *required* while §3.9 says "no new content
+is invented" for N-211. The two cannot both hold: a required field means authoring a route
+for every option, across the frozen pool. The batch followed §3.9 — "if it goes badly" is
+DERIVED from the recovery tie the schema already requires — and §7.1's line is struck as
+erratum. (b) §7.1 places `SeasonRecord` in `lib/sim/persist.ts` and forbids a new storage
+key, which together force the records onto `SimState` (`seasonRecords?`, optional so old
+saves load); the type is declared in `content/sim/schema.ts` to avoid the import cycle and
+re-exported where §7.1 names it. Recorded as a schema delta §7.1 did not list. (c) N-223's
+premise does not exist in the trunk: `deserialize` declares a save from a different content
+version unresumable (4.0 §2.4), so the drift notice is built, guarded, and currently
+unreachable. Relaxing that migration wall is the owner's call — added to the owner-decisions
+register. (d) The register's *lands in* for N-222 names the arc's parse; the aggregate lives
+in the look-back, so the line went where the aggregate renders. (e) N-233's brief list goes
+red on four ordinary-English authored strings ("all the damage", "kill the most expensive
+first", "what actually killed it", "grind it out"); the full list governs the edition
+vocabulary and an unambiguous subset governs play-surface strings — recorded in
+`content/terminology.json` beside both lists. (f) C-23 exempts `beatsPlayed` by design
+(§5.1 keeps beats off every forward-looking surface). (g) The narrowing door state is
+declared, not derived; a derived one needs per-flag age the state does not carry.
+(h) The arc's per-save delete does not yet arm; a candidate for the register.
+
+**Fleets, before → after the upkeep option (no cap touched).** S-10: all eight assertions
+pass both times; worst season anywhere 17 → 18 affordable (14 → 15 beyond the floor);
+meaningfully different viable endings per preset rose on every preset; two priority leaders
+moved (health → rest-heavy, recognition → greedy-recognition); the small-move-only share
+stays zero. S-13: all four pass; deep-depletion seasons 783 → 758; failure-band resolutions
+292 → 278, every one still surfacing an authored tied route; the deep-depletion maximum-draw
+count 0 → 1, under the published ceiling of two. Read together: an always-affordable
+maintenance move makes the bottom slightly less punishing and the endings more varied.
+
+**Proven red, then green.** All fifteen C-gates: twelve as probes in `tests/falsify-walls.sh`
+(C-11, C-13, C-15 … C-19, C-21 … C-25), three as records — C-12 (a reversed proposal entered
+the ledger out of order; the repeat no longer walked the previous season in order), C-14 (the
+motif rendered on turn one only), C-20 (the stamp moved with the live version; the list
+recomputed instead of reading). S-12b (gate 215) red with `draw` dropped from the aggregate;
+gate 127 proves one press does not erase. The pre-build reds and the harness outputs are in
+the batch report.
+
+**Roster (reviewer's own run, final tree):** build clean; typecheck clean; static 7, Life Arc 8,
+sandbox 13 (S-12b joined) + invention gate, timeline 15, C suite 25 substantive + 26 N/A — all PASS;
+S-10 eight assertions and S-13 four assertions PASS (525 fleet runs; 864 adversarial seasons); falsify
+33 of 33 (3 sandbox, 6 timeline, 24 consolidation) red on plant, all restores byte-identical; browser
+gates ALL PASS including 112 (the repeat control, keyboard), 114 (the motif on every turn) and 127 (one
+press does not erase); S-9 120 audits clean. Browser walk on the quiet-season fixture: the briefing
+offers Repeat last season with a word-only delta; the house motif sits in the header; the state rail
+lists skills, capabilities, conditions, backlog, flags, people and the seed in words; the upkeep card
+carries the five contract fields and its switching cost; hovering an option fills the preview pane.
+**The five hashes:** unchanged (`7157c728…`, `d7ce27c1…`, `2bd7b7dd…`, `77f1151c…`, `24526d37…`).
+
+#### INVENTIONS registered by this batch (N-436 shape)
+
+**INVENTION: `previewAction`, a pure read-before-commit function (N-212).** *What:* a named
+export in `lib/sim/season.ts` returning words about what an option would touch. *Doctrine:*
+§3.9 asks for the pane; a gate cannot assert the purity of an inline closure. *Hidden
+definitions:* "domains touched" = the priority labels the action's tags serve, through
+`domainsServe`; "affordable" = against the season's budget, not the remaining one, because
+§7.1's signature carries no allocation list. *Risks:* a preview is a small forecast and may
+be read as a promise — mitigated by naming areas, never outcomes, bands or weights. *Open
+questions:* whether `affordable` should reflect the remaining budget. *Adversarial check:*
+not a mode; no digit, score, network or URL; no new key or directory; planted mutation makes
+C-16 red naming the count of previews.
+
+**INVENTION: the stored season explanation and `SimState.seasonRecords` (N-216).** *What:*
+`SeasonRecord` plus three functions in persist; an optional array inside the existing save.
+*Doctrine:* §7.1 forbids a new key and names the type; the state was the only home. *Hidden
+definitions:* "the rendered explanation" = the lead line then every other line in §7.6 order,
+composed in exactly one place; "the version" = `CONTENT_VERSION`, never the run's stamp.
+*Risks:* a preserved sentence asserts a memory; lives inside the save the erase control
+clears. *Open questions:* `replay()` does not reproduce records, so a branch's prefix has no
+stored text and is marked recomputed. *Adversarial check:* S-7 unchanged and green; C-1's
+thirteen-key assertion green; old saves load; proven falsifiable twice.
+
+**INVENTION: the repeat-last-season control and the one shared commit path (N-194).**
+*What:* `repeatProposal`, `commitAllocations`, a delta panel replacing the grid on a quiet
+season. *Doctrine:* §3.4b asks for the control; nothing says what happens when a previous
+action is gone — it is dropped and named, never substituted, and the whole proposal is refused
+if it no longer fits the budget. *Hidden definitions:* "the delta" = nothing arrived and
+nothing pending, gauge movement in words against session state captured at the previous
+resolve, plus live pressures and needs; a resumed run has no delta and says so. *Risks:* a
+one-press season compresses a decision; only on quiet seasons, names what it commits, the full
+briefing one press away. *Open questions:* repeating more than one season at once — not built.
+*Adversarial check:* §7.6 order preserved and asserted (C-12); no new key; S-7 unaffected.
+
+**INVENTION: `narrowing` as a declared door meaning (N-214).** *What:* the fourth state, set
+on four doors whose authored labels already describe it. *Doctrine:* §2.3.3 adds the state;
+the dynamic form needs per-flag age §7.1 does not have. *Hidden definitions:* narrowing = the
+flag's own meaning, not elapsed time. *Risks:* a darker reading of the same fact; the note is
+descriptive, not fatalistic; no label relabelled. *Open questions:* `deferred-care` and
+`waitlist`, left as they were. *Adversarial check:* C-18 — never the open token, never a red;
+the doors gate's coverage unchanged.
+
+**INVENTION: "if it goes badly" derived from the recovery tie, and two sanctioned phrases
+(N-211).** *What:* `ifItGoesBadly()` in the doctrine's order; `NO_RECOVERY_TIE_PHRASE`,
+`NOTHING_WAITS_PHRASE`. *Doctrine:* the brief and §3.9 — nothing authored; §7.1's required
+field would have meant authoring across frozen files (erratum (a) above). *Hidden
+definitions:* the per-record `noRecoveryTie.reason` addresses the author, so the player sees
+one sanctioned phrase; where no authored tie exists the floor route renders labelled as the
+floor route and is never counted as the tie. *Risks:* the no-tie phrase must not read as
+"nothing you can do" — worded to say another person's decision is not a setback of yours.
+*Adversarial check:* S-3's tie rule untouched; 458 responses resolve to five fields (C-15).
+
+**INVENTION: arm-then-confirm as a shared control (N-227).** *What:* `ArmedButton` in
+`components/ResetButton.tsx`, applied to four erase paths. *Doctrine:* §3.9 asks for the two
+presses and the two sentences, not the mechanism's home. *Hidden definitions:* a six-second
+window, deliberately not rendered — a countdown is a digit on a play surface. *Risks:* reads
+as an obstacle to someone who wants their data gone now; the second press is immediate.
+*Open questions:* the arc's per-save delete. *Adversarial check:* S-9 green; gate 6 extended;
+gate 127 proves one press does not erase.
+
+**INVENTION: the colour rule measured as chroma, and the two-scope forbidden register
+(N-233).** *What:* C-19 resolves the tokens the band classes use and fails on a green/red
+pair where either end reaches 0.50 chroma; the register at two scopes. *Doctrine:* §3.9 says
+"no token pair encodes valence as green/red" without defining green/red; the shipped
+`--sim-poor` is a red-hued terracotta, so hue alone would fail the shipped design. *Hidden
+definitions:* the threshold and the shipped values (0.28 / 0.42 / 0.37) are printed by the
+gate. *Risks:* any numeric threshold can be gamed to 0.49; the output prints the measurement
+so drift is visible. *Open questions:* none open — it already covers the arc's band tints.
+*Adversarial check:* both halves proven red.
+
+**INVENTION: the C-suite engine harness and the quiet-season fixture.** *What:*
+`tests/consolidation-sim-harness.ts` (one spawn, eight assertions) and
+`tests/fixtures/quiet-season.json` made by `tools/make-quiet-season-fixture.ts`. *Doctrine:*
+the C suite runs under strip-types with relative specifiers only; batch 1's harness set the
+precedent; the fixture is the same honest shortcut `make-parse-fixture.ts` takes. *Hidden
+definitions:* "the worst envelope" = every gauge depleted, backlog past its third threshold,
+high-load conditions on. *Risks:* a harness is where a gate can be quietly weakened; it exits
+zero always and reports per line, so a harness that will not run yields no gate lines and the
+suite says so. *Adversarial check:* every harness-backed gate planted red through the full
+`gates:consolidation` path.
+
 # The 2.0 / 3.0 / 4.0 record, carried in full
 
 # DECISIONS.md — TGTL 2.0

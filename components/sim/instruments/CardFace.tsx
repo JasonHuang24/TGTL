@@ -48,6 +48,16 @@ export const FAMILY_MOTIF_ALT: Record<CardFamily, string> = {
    The nine motifs
    ========================================================================= */
 
+/**
+ * The motif on its own, exported for N-204: the season chrome carries the
+ * origin's `face` on every turn, and it must be the SAME drawing the selection
+ * card uses, not a second one that could drift from it. `CardFace` below renders
+ * this; nothing else draws a family.
+ */
+export function FamilyMotif({ family }: { family: CardFamily }) {
+  return <Motif family={family} />;
+}
+
 function Motif({ family }: { family: CardFamily }) {
   const common = {
     viewBox: "0 0 120 72",

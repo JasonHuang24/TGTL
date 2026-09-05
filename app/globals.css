@@ -2785,3 +2785,40 @@ legend {
   font-size: 0.85rem;
   font-weight: 600;
 }
+
+/* =========================================================================
+   6.0 CONSOLIDATION, batch 3 — the reading layer's two additions.
+   ========================================================================= */
+
+/* N-235 · the reading-to-play entry. A link at the end of a page, deliberately
+   quiet: no button, no accent fill, nothing that reads as a call to action. */
+.try-in-play {
+  margin: 1.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.try-in-play-note {
+  color: var(--muted);
+}
+
+/* N-366 · the agency word on the map's early stages. */
+.stage-agency {
+  margin: 0 0 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+.stage-agency-word {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stage-agency-note {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.45;
+}

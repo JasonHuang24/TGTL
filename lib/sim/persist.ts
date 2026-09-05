@@ -25,7 +25,16 @@ import {
 } from "@/lib/storage";
 import { serialize, deserialize, type LoadResult } from "@/lib/sim/campaign";
 import { makeSave } from "@/lib/sim/forks";
-import type { ForkRecord, NamedSave, SimState } from "@/content/sim/schema";
+import { CONTENT_VERSION } from "@/content/sim/schema";
+import type { ForkRecord, NamedSave, SeasonRecord, SeasonResult, SimState } from "@/content/sim/schema";
+
+/**
+ * 6.0 §7.1 names `SeasonRecord` as this module's schema delta (N-216). The type
+ * itself is declared in `content/sim/schema.ts` because `SimState` carries the
+ * records and schema.ts cannot import from here without a cycle; it is re-exported
+ * under this module's name so the delta is where the blueprint says it is.
+ */
+export type { SeasonRecord };
 
 /** v2 keys — namespaced so nothing collides with the 3.0 arc's storage (§2.4). */
 export const SIM_KEYS = {
@@ -50,7 +59,22 @@ export const CAP_NOTE = `This device keeps up to ${SAVE_CAP} named runs and ${FO
    Named saves
    ========================================================================= */
 
-type SaveIndex = { ref: string; label: string; savedAtLabel: string; engineVersion: string; contentVersion: string }[];
+/**
+ * The index the saves panel lists from. `handSeed` and `drawSeed` joined it for
+ * N-234: the seeded-randomness contract promises the seed is INSPECTABLE, and
+ * `inspect()` in lib/sim/forks.ts — which returns exactly that — has been exported
+ * since 4.0 and called by nothing, so the promise was kept only inside the
+ * payload. Both are optional so an index written before 6.0 still lists.
+ */
+type SaveIndex = {
+  ref: string;
+  label: string;
+  savedAtLabel: string;
+  engineVersion: string;
+  contentVersion: string;
+  handSeed?: string;
+  drawSeed?: string;
+}[];
 
 /**
  * N-226 — a `LoadResult` that also says which of the seven states happened.
@@ -103,7 +127,15 @@ export function saveRun(state: SimState, label: string, savedAtLabel: string): N
   const runStatus = writeJSON(`${SIM_KEYS.saves}:${save.ref}`, save);
   const index = listSaves().filter((s) => s.ref !== save.ref);
   const next = [
-    { ref: save.ref, label, savedAtLabel, engineVersion: save.engineVersion, contentVersion: save.contentVersion },
+    {
+      ref: save.ref,
+      label,
+      savedAtLabel,
+      engineVersion: save.engineVersion,
+      contentVersion: save.contentVersion,
+      handSeed: save.state.handSeed,
+      drawSeed: save.state.drawSeed,
+    },
     ...index,
   ];
   const kept = next.slice(0, SAVE_CAP);
@@ -141,6 +173,87 @@ export function deleteSave(ref: string): void {
   removeKey(quarantineKeyFor(`${SIM_KEYS.saves}:${ref}`));
   writeJSON(SIM_KEYS.saves + ":index", listSaves().filter((s) => s.ref !== ref));
 }
+
+/* =========================================================================
+   THE LIVING RECORD (N-216, N-223) — the explanation a player actually read,
+   kept beside the ledger rather than re-derived from it.
+   =========================================================================
+   `replay()` rebuilds every derived value from origin + seeds + committed ledger.
+   That is what makes the model checkable, and it is also why a content edit
+   rewrites the past: the sentence a reader met at twenty-two is replaced by
+   whatever the current pool would produce for the same coordinates. The three
+   functions below are the whole of the fix — write the text at resolve time,
+   stamp it with the version that produced it, and read it back rather than
+   recomputing it.
+
+   NOTHING HERE IS A NEW STORAGE KEY (§7.1). The records ride inside the existing
+   save payload, on the state, under `seasonRecords`.
+   ========================================================================= */
+
+/**
+ * The season's explanation as the consequences screen rendered it: the lead line
+ * first (the same lead the look-back's season list picks — the first action, or
+ * the first item if the season had none), then every other line in resolution
+ * order. Pure, and the ONLY place the text is composed, so what is stored and what
+ * would be recomputed cannot drift apart by construction.
+ */
+export function explanationOf(result: SeasonResult): string {
+  const lead = result.items.find((i) => i.kind === "action") ?? result.items[0];
+  const out: string[] = [];
+  if (lead?.line) out.push(lead.line);
+  for (const item of result.items) if (item !== lead && item.line) out.push(item.line);
+  return out.join("\n");
+}
+
+/**
+ * Store this season's explanation on the run, stamped with the content version
+ * that produced it. Called once, where the season is committed. Re-resolving the
+ * same season index replaces its record rather than appending a second one.
+ */
+export function recordExplanations(state: SimState, result: SeasonResult): SimState {
+  const explanation = explanationOf(result);
+  if (!explanation) return state;
+  const kept = (state.seasonRecords ?? []).filter((r) => r.seasonIndex !== result.seasonIndex);
+  return {
+    ...state,
+    seasonRecords: [...kept, { seasonIndex: result.seasonIndex, explanation, contentVersion: CONTENT_VERSION }].sort(
+      (a, b) => a.seasonIndex - b.seasonIndex,
+    ),
+  };
+}
+
+/** What the season list reopens: the stored text, or null when there is none. */
+export function storedExplanationFor(state: SimState, seasonIndex: number): SeasonRecord | null {
+  return (state.seasonRecords ?? []).find((r) => r.seasonIndex === seasonIndex) ?? null;
+}
+
+/**
+ * N-223 — the content-version drift on a resumed run: the stamps carried by the
+ * stored explanations that are not the version the reader is now on.
+ *
+ * A KNOWN LIMIT, recorded rather than papered over. `deserialize` in
+ * `lib/sim/campaign.ts` declares a save from a different content version
+ * UNRESUMABLE (4.0 §2.4, unchanged by 6.0), so through the shipped load paths a
+ * run can never come back carrying a stamp that differs from the live one, and
+ * this predicate is true of no state a player can currently reach. The notice is
+ * built and guarded on it anyway, because the alternative — relaxing the migration
+ * wall so that a mixed record becomes resumable — is a change to a safety rule and
+ * belongs to the owner, not to a batch. See the batch report's gap list.
+ */
+export function contentDrift(state: SimState): string[] {
+  const stamps = new Set((state.seasonRecords ?? []).map((r) => r.contentVersion));
+  stamps.delete(CONTENT_VERSION);
+  return [...stamps];
+}
+
+/**
+ * N-223's sentence, authored once here so the component and the gate read the
+ * same string. "Not a controlled comparison" rather than "not a controlled
+ * counterfactual": the reader is being told why two halves of their own record are
+ * not comparable, which is the plainer word for the same fact.
+ */
+export const CONTENT_DRIFT_NOTICE =
+  "Earlier explanations remain unchanged. New decisions use the current content; a version change is not a controlled comparison.";
 
 /* =========================================================================
    The active run

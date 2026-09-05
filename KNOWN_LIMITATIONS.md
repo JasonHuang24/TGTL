@@ -48,7 +48,10 @@ layer. 6.0 adds to the review list: `/situations/breakup` (loss-adjacent) and
 `/situations/getting-through-today` (a set-down page a depleted reader lands on).
 Parked for that review, found in 6.0 batch 2: `/threshold/supporting-someone` has never
 imported the set-down notice, so N-265's reassurance does not reach it; adding it is an edit
-to a frozen page. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+to a frozen page. Found in batch 3: the content-version drift notice (N-223) is built and cannot currently render,
+because a save from a different content version is declared unresumable (4.0 §2.4) — whether to
+let a mixed record resume is the owner's; and the Life Arc's per-save delete does not yet arm the
+way the campaign's does (N-227), a candidate for the register. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
 
 ---
 

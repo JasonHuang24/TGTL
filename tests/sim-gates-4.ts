@@ -135,7 +135,13 @@ function collectNonBeatStrings(): Tagged[] {
       add(l.note, `${p.id}.note.${l.axis}`);
     }
   }
-  for (const s of LAB_SITUATIONS) add(s.title, `${s.id}.title`);
+  for (const s of LAB_SITUATIONS) {
+    add(s.title, `${s.id}.title`);
+    // N-225's declared unknowns render on the Lab screen before the branches, so
+    // they are sandbox strings and the tier, no-numbers and no-score lints read
+    // them like any other. Broadening the collector, not changing an assertion.
+    (s.unknowns ?? []).forEach((u, i) => add(u, `${s.id}.unknown[${i}]`));
+  }
   for (const p of PRIORITY_PRESETS) {
     add(p.label, `priority:${p.id}.label`);
     add(p.note, `priority:${p.id}.note`);
@@ -1743,6 +1749,96 @@ function collectBeatStrings(): Tagged[] {
         `and 'the draw' renders exactly when the marker was off-centre. Per-axis Lab fixtures: draw-vary isolates the draw, position-vary separates on position.`,
     );
   results.push({ id: 212, name: "S-12 · Attribution honesty (rendered factors = nonzero tagged components)", pass: ok, details });
+}
+
+/* ============================================================
+   S-12b (6.0, N-222) · THE WHOLE-RUN AGGREGATE IS THE PER-SEASON SET
+   ============================================================
+   S-12 above asserts that every factor rendered on a SEASON is a tagged nonzero
+   component. N-222 aggregates those across a whole run on the look-back, and an
+   aggregate is where an honest computation turns into a verdict: "other people —
+   most of it" reads as a finding about who is to blame for a life. Two things
+   keep it honest and both are asserted here rather than intended.
+
+   1. THE CATEGORY SET IS THE SAME SET. The aggregate may not introduce a category
+      no season produced, and may not drop one that appeared with weight. If the
+      two sets can differ, the closing screen is describing a different run from
+      the one that was played.
+   2. THE DISCLAIMER RENDERS ABOVE IT. The one sentence that stops a count being
+      read as blame is above the list, not below it and not somewhere else.
+
+   Added as its own numbered gate rather than folded into S-12, so nothing about
+   the existing assertion changes (6.0 batch rule: never alter an existing S-gate).
+   ============================================================ */
+{
+  const details: string[] = [];
+  let ok = true;
+  const fail = (m: string) => {
+    ok = false;
+    details.push(m);
+  };
+
+  let runs = 0;
+  for (const [preset, seed] of [
+    [PRESETS[0].id, "agg-a"],
+    [PRESETS[2].id, "agg-b"],
+    [PRESETS[3].id, "agg-c"],
+  ] as [string, string][]) {
+    const out = drivePolicy(preset, seed, SEASON_COUNT);
+    if (out.state.committed.length < 4) continue;
+    runs++;
+    const parse = computeParse(out.state);
+    const aggregate = new Set(parse.attribution.map((a) => a.category));
+    // THE PER-SEASON SET, recomputed INDEPENDENTLY by walking the same ledger
+    // through the same commit path and collecting what each season actually
+    // rendered. Comparing the aggregate against itself would be a gate that
+    // cannot fail, which is the defect this suite exists to refuse.
+    const perSeason = new Set<string>();
+    {
+      let s = replay(out.state.origin, { handSeed: out.state.handSeed, drawSeed: out.state.drawSeed }, []);
+      s = { ...s, priorities: out.state.priorities };
+      for (const season of out.state.committed) {
+        if (season.priorityRevision) s = { ...s, priorities: season.priorityRevision };
+        const run = commitSeason(s, season.allocations, season.eventResponses, season.beatResponse);
+        if (!run.done) break;
+        for (const item of run.result.items)
+          for (const c of item.attribution) if (Math.abs(c.weight) > 0) perSeason.add(c.category);
+        s = run.state;
+      }
+    }
+    for (const c of aggregate)
+      if (!ATTRIBUTION_CATEGORIES.includes(c))
+        fail(`${preset}/${seed}: the whole-run aggregate renders the category '${c}', which is not one of the ${ATTRIBUTION_CATEGORIES.length} the model has`);
+    for (const c of perSeason)
+      if (!aggregate.has(c))
+        fail(
+          `${preset}/${seed}: '${c}' appeared in the seasons of this run with weight and is MISSING from the whole-run aggregate — the closing screen is describing a different run from the one that was played`,
+        );
+    for (const c of aggregate)
+      if (!perSeason.has(c))
+        fail(`${preset}/${seed}: the aggregate renders '${c}', which no season of this run produced`);
+    if (!aggregate.size) fail(`${preset}/${seed}: a completed run produced an empty attribution aggregate`);
+    if (!aggregate.has("choice"))
+      fail(`${preset}/${seed}: the aggregate omits 'your choice' — every resolution carries it, so a whole run cannot`);
+    for (const a of parse.attribution)
+      if (!a.share || /\d/.test(a.share))
+        fail(`${preset}/${seed}: the aggregate renders '${a.share}' for ${a.category} — the share is a word, never a count (§6, S-2)`);
+  }
+  if (!runs) fail("no run completed far enough to produce an aggregate, so the gate proved nothing");
+
+  // The disclaimer, above the list it is about.
+  const app = readFileSync(join(ROOT, "components/sim/CampaignApp.tsx"), "utf8");
+  const LINE = "Counts show how often a source appeared in explanations, not how much blame or credit it deserves.";
+  const panel = app.slice(app.indexOf("Where it came from"), app.indexOf("Where it came from") + 1400);
+  if (!panel.includes(LINE)) fail("the whole-run attribution panel does not carry the not-a-blame-ledger line (N-222)");
+  else if (panel.indexOf(LINE) > panel.indexOf('className="sim-attribution"'))
+    fail("the not-a-blame-ledger line renders BELOW the aggregate it is about — by then the reader has already read the list as a verdict");
+
+  if (ok)
+    details.push(
+      `${runs} completed runs: every whole-run aggregate category is one of the ${ATTRIBUTION_CATEGORIES.length} the model has, 'your choice' is always among them, and every share is a word rather than a count; the not-a-blame-ledger line renders above the list.`,
+    );
+  results.push({ id: 215, name: "S-12b · The whole-run attribution aggregate is the per-season set, and is not a blame ledger", pass: ok, details });
 }
 
 /* ============================================================

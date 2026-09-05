@@ -7,6 +7,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
 
@@ -150,6 +151,10 @@ export default function RelationshipsPage() {
         <NextStep href="/situations/a-death">If the load is care at the end of a life.</NextStep>
         <NextStep href="/character/board">Lay out who is actually around you.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/campaign">the campaign has people in it who can refuse, drift and leave, and no way to command any of it.</TryInPlay>
 
       <EvidenceDrawer
         record={{

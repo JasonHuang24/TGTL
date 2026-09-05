@@ -791,6 +791,11 @@ export const LAB_SITUATIONS: LabSituation[] = [
     sourceRefs: ["/map/credential-decision", "/topics/work"],
     window: ["lab-take-the-offer", "lab-follow-through", "lab-the-review"],
     face: "school",
+    unknowns: [
+      "Whether the credential is required by the actual target employers, or only mentioned in the listings.",
+      "Whether the offer would still be there in a year, from these people, on these terms.",
+      "What the work is like on the inside, which neither branch can find out from here.",
+    ],
     axes: ["choice-vary", "draw-vary"],
     seeds: { handSeed: "lab-offer-hand", drawSeed: "lab-offer-draw-a", altDrawSeed: "lab-offer-or-course-alt-0" },
     positions: ["preset-supported-explorer", "preset-working-under-pressure"],
@@ -804,6 +809,11 @@ export const LAB_SITUATIONS: LabSituation[] = [
     sourceRefs: ["/map/launch", "/topics/relationships"],
     window: ["lab-the-move", "lab-first-season-there", "lab-the-bill-arrives"],
     face: "home",
+    unknowns: [
+      "Whether the place is the version people describe or the version you would be living in.",
+      "Whether the people who make staying worth it would still be there either way.",
+      "What the cost of getting back would be, if getting back turned out to be the thing you wanted.",
+    ],
     axes: ["position-vary", "choice-vary", "draw-vary"],
     seeds: { handSeed: "lab-move-hand", drawSeed: "lab-move-draw-a", altDrawSeed: "lab-move-or-stay-alt-0" },
     positions: ["preset-supported-explorer", "preset-care-constrained-builder"],
@@ -817,6 +827,11 @@ export const LAB_SITUATIONS: LabSituation[] = [
     sourceRefs: ["/topics/work", "/situations/job-loss"],
     window: ["lab-apply-widely", "lab-the-interview", "lab-what-comes-back"],
     face: "work",
+    unknowns: [
+      "Whether any of these roles were open in the way the posting implies, or already spoken for inside.",
+      "How long the search would actually run — the window here is a window, not a forecast.",
+      "What the people reading the applications wanted, which is not in the wording of the advert.",
+    ],
     axes: ["draw-vary", "choice-vary", "position-vary"],
     seeds: { handSeed: "lab-search-hand", drawSeed: "lab-search-draw-a", altDrawSeed: "lab-the-search-alt-0" },
     positions: ["preset-credential-route", "preset-recovery-and-relaunch"],
@@ -830,8 +845,43 @@ export const LAB_SITUATIONS: LabSituation[] = [
     sourceRefs: ["/topics/relationships"],
     window: ["lab-the-falling-out", "lab-the-next-month"],
     face: "people",
+    unknowns: [
+      "What the other person has already decided, which is theirs and is not something this model holds.",
+      "Whether the quiet has been about you at all.",
+      "Whether the thing that was said is the thing the falling-out was about.",
+    ],
+    /**
+     * N-193 — the pivot is the SECOND step, not the first.
+     *
+     * `decisionStep` has been in the type since 4.0 and set on nothing, so
+     * choice-vary has only ever varied a window's opening move. This situation is
+     * the one where the later step is genuinely the decision it is about, and the
+     * step says so itself: `lab-the-next-month`'s scene reads "what happens in that
+     * month is mostly about whether you keep doing the ordinary maintenance or
+     * whether the gesture was the whole of it". Reaching out after a falling-out is
+     * the visible decision; whether the repair holds is decided in the month after
+     * it, by turning up or not. Varying the opening gesture teaches "say something";
+     * varying the month teaches the thing that is actually hard and actually
+     * decisive — which is the shape of most real regrets.
+     */
+    decisionStep: 1,
     axes: ["choice-vary", "draw-vary"],
-    seeds: { handSeed: "lab-repair-hand", drawSeed: "lab-repair-draw-a", altDrawSeed: "lab-the-repair-alt-0" },
+    /**
+     * N-192 — THE ONE DRAW-VARY PAIR CURATED TO LAND THE SAME.
+     *
+     * Every shipped `altDrawSeed` was found by the tool's first criterion (an alt
+     * draw whose bands SEPARATE from the primary's), so the Lab could only teach
+     * "luck moved it" — and `lib/sim/lab.ts`'s third draw-vary reading, "Identical
+     * choices, different luck, and the same result anyway", existed in the code and
+     * rendered nowhere. This seed comes from the tool's second criterion: the same
+     * band at every step and a byte-identical ending, which is what that reading
+     * asserts. Found as `lab-the-repair-same-1` by `npx tsx tools/curate-lab-seeds.ts`
+     * (the first candidate of the same-landing search to satisfy both halves).
+     *
+     * The old separating seed is not lost: three of the four situations still ship
+     * one, so both halves of G-09 are now reachable in the same Lab.
+     */
+    seeds: { handSeed: "lab-repair-hand", drawSeed: "lab-repair-draw-a", altDrawSeed: "lab-the-repair-same-1" },
     positions: ["preset-supported-explorer", "preset-working-under-pressure"],
     startPresetId: "preset-supported-explorer",
     noPredictionNote: true,

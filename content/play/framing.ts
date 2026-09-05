@@ -157,6 +157,32 @@ export const PARSE_INTRO: Dual = {
 };
 
 /** Replay button copy (§3.7). */
+/* ---- The closing frame (N-341): the book shuts, and the run returns ---- */
+
+/**
+ * N-341 (6.0 §3.9) — THE ARC CLOSES WHERE IT OPENED.
+ *
+ * The run currently ends in an analysis panel, which leaves the reader standing
+ * in a report. The master brief's ending puts them back in the quiet nowhere the
+ * prologue opened in — the same void, the same starlight, the same shelf of books
+ * — with one of them now read. The symmetry is the whole of it: the return says
+ * the run is over without the project having to declare what literally happens
+ * after a life, which is not a thing this site knows or will pretend to.
+ *
+ * Vocabulary is deliberately the prologue's own, so the two ends of the arc are
+ * recognisably one place. Dual-authored, which this file's header sanctions for
+ * exactly three surfaces, of which the parse's frame text is one.
+ */
+export const PARSE_CLOSING: Dual = {
+  standard:
+    "The book shuts. You are back in the quiet nowhere it opened in — the same place to stand, the same shelf, one life read all the way through. Nothing is claimed about what comes after it; that was never what this was for.",
+  game:
+    "The run ends and the book closes. You are back on the loading screen you came in on: the void, some starlight, Earth still turning below. What happens after a run is not something this game has, or claims to know.",
+};
+
+export const PARSE_CLOSING_HOME = "Back to the entrance";
+export const PARSE_CLOSING_PLAY = "Back to the play door";
+
 export const REPLAY_NOTE = "Replays are the one thing this room has that life doesn't.";
 export const NEW_HAND_DISANALOGY =
   "A new hand is the one move the real thing never offers: the same you, dealt a different start.";

@@ -11,6 +11,7 @@ import {
   CONTEXT_BREADCRUMB,
   stageIndex,
 } from "@/content/roadmap";
+import { AGENCY_MEANING } from "@/content/play/acts";
 import { STORAGE_KEYS, readJSON, writeJSON } from "@/lib/storage";
 import { STAGES_TL } from "@/content/timeline/stages";
 
@@ -127,6 +128,16 @@ export function Roadmap() {
             Selected <Term k="stage" define /> · {stage.short}
           </p>
           <h2>{edition === "game" ? stage.gameLabel : stage.label}</h2>
+          {/* N-366. On the early stages only: what kind of thing the decisions of
+              this stretch are. A map of a whole life read from the middle looks
+              like a set of choices somebody could have made differently, and for
+              the first stretches of it that is simply not what they were. */}
+          {stage.agency ? (
+            <p className="stage-agency" data-agency={stage.agency}>
+              <span className="stage-agency-word">{stage.agency}</span>
+              <span className="stage-agency-note">{AGENCY_MEANING[stage.agency]}</span>
+            </p>
+          ) : null}
           {stage.deepLink ? (
             <>
               <p>

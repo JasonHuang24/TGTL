@@ -655,6 +655,18 @@ export type LabSituation = {
    * card four times. Presentation only, like PresetHand.face.
    */
   face: CardFamily;
+  /**
+   * N-225 (6.0 §7.1) — WHAT THIS FORK CANNOT SETTLE, declared before the branches.
+   *
+   * A Lab situation states a scene, a contract, a switching cost and its axes, and
+   * then shows two columns that look decisive. What it never said is what neither
+   * column can answer: the facts outside the model that would actually decide it.
+   * Naming them first is the honest counterweight to a comparison screen.
+   *
+   * At least one, never zero — an empty list would read as "there is nothing this
+   * cannot settle", which is the claim the field exists to prevent. C-22 asserts it.
+   */
+  unknowns: [string, ...string[]];
   /** Fixed seeds so a Lab comparison is byte-identical on every replay. */
   seeds: { handSeed: string; drawSeed: string; altDrawSeed: string };
   /** The two constraint positions the position-vary axis compares. */
@@ -677,6 +689,30 @@ export type CommittedAllocation = {
 };
 
 export type CommittedEventResponse = { eventId: string; optionId: string };
+
+/**
+ * N-216 — THE LIVING RECORD: one resolved season's rendered explanation, kept
+ * with the content version that produced it.
+ *
+ * 6.0 §7.1 names this type in `lib/sim/persist.ts`, and persist.ts re-exports it
+ * under that name. The declaration sits here because `SimState` carries the
+ * records and `content/sim/schema.ts` cannot import from `lib/sim/persist.ts` —
+ * persist.ts imports this file, and the other direction is a cycle.
+ *
+ * WHY IT EXISTS. Everything the trunk shows about a past season is re-derived from
+ * origin + seeds + ledger by `replay()`. That is what makes determinism checkable,
+ * and it is also what makes a content change silently rewrite the past: edit an
+ * outcome line and the sentence a player actually read at twenty-two is quietly
+ * replaced by a sentence they never saw. The ledger stays the source of truth for
+ * the MODEL; this is the source of truth for what was READ.
+ */
+export type SeasonRecord = {
+  seasonIndex: number;
+  /** The season's explanation as it was rendered, lead line first. */
+  explanation: string;
+  /** The content version that produced that text. Never re-stamped. */
+  contentVersion: string;
+};
 
 /** The replay ledger entry for ONE season (§7.5 commit semantics). */
 export type CommittedSeason = {
@@ -762,6 +798,16 @@ export type SimState = {
 
   /** Beats already played, for downstream reduced-frame rendering (§5.1). */
   beatsPlayed: { beatId: string; skipped: boolean; seasonIndex: number }[];
+
+  /**
+   * N-216 — the rendered explanation of each resolved season, stamped with the
+   * content version that produced it. OPTIONAL, and appended rather than folded
+   * into `committed`, for two reasons: a save written before 6.0 stays loadable
+   * (the migration rule is unchanged), and `replay()` — which rebuilds everything
+   * else from the ledger — deliberately does not reproduce these, because a
+   * recomputation is exactly what they exist to not be.
+   */
+  seasonRecords?: SeasonRecord[];
 
   /** Fork provenance; null for a root run (§3.8). */
   /**

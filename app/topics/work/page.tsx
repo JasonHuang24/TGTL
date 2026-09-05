@@ -8,6 +8,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
@@ -149,6 +150,10 @@ export default function WorkPage() {
         <NextStep href="/topics/money">The runway that makes a change survivable.</NextStep>
         <NextStep href="/history">How the rules of work have been rewritten before.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/campaign">the campaign runs twelve years of these tradeoffs under a budget that does not stretch.</TryInPlay>
 
       <EvidenceDrawer
         record={{

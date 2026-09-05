@@ -7,6 +7,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
@@ -133,6 +134,10 @@ export default function MoneyPage() {
         <NextStep href="/situations/job-loss">Losing a job — the runway arithmetic in a real shock.</NextStep>
         <NextStep href="/character/board">Lay out where your slack actually is right now.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/campaign">the campaign puts a real budget behind the same tradeoff, season by season.</TryInPlay>
 
       <EvidenceDrawer
         record={{

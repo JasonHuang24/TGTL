@@ -38,16 +38,44 @@ import {
   seasonLabel,
   beatForSeason,
 } from "@/lib/sim/campaign";
-import { menu, affordableMenu, floorReport, type MenuEntry } from "@/lib/sim/season";
+import {
+  menu,
+  affordableMenu,
+  floorReport,
+  previewAction,
+  responseContract,
+  type MenuEntry,
+  type Preview,
+} from "@/lib/sim/season";
 import { strip } from "@/lib/sim/resolve";
 import { deriveSlack } from "@/lib/sim/resolve";
 import { isHighLoad } from "@/lib/sim/effects";
 import { computeParse, BRIDGE_FRAME } from "@/lib/sim/parse";
 import { createFork, replayFork } from "@/lib/sim/forks";
 import { CAMPAIGN_CONTENT_NOTE } from "@/content/sim/methodology-copy";
-import { readActive, writeActive, clearActive, saveRun, listSaves, loadSave, deleteSave, listForks, writeFork, syncForkSuffix, deleteFork, eraseAll, CAP_NOTE } from "@/lib/sim/persist";
+import {
+  readActive,
+  writeActive,
+  clearActive,
+  saveRun,
+  listSaves,
+  loadSave,
+  deleteSave,
+  listForks,
+  writeFork,
+  syncForkSuffix,
+  deleteFork,
+  eraseAll,
+  recordExplanations,
+  storedExplanationFor,
+  contentDrift,
+  CAP_NOTE,
+  CONTENT_DRIFT_NOTICE,
+} from "@/lib/sim/persist";
 import { SAVE_STATUS_WORDS } from "@/lib/storage";
-import { presetsInOrder, SEASON_COUNT, CAMPAIGN_LABEL, ACTION_BY_ID } from "@/content/sim/registry";
+import { GAUGE_BAND_ORDER } from "@/content/bands";
+import { RANDOMNESS_LINE } from "@/content/sim/methodology-copy";
+import { presetsInOrder, SEASON_COUNT, CAMPAIGN_LABEL, ACTION_BY_ID, PRESET_BY_ID } from "@/content/sim/registry";
 import { profileRender } from "@/content/sim/profile";
 import {
   ATTRIBUTION_LABEL,
@@ -65,10 +93,14 @@ import {
   type RecoveryTie,
   type ResolvedItem,
   type SeasonResult,
+  type SimAction,
   type SimEvent,
+  type SimOption,
   type SimState,
 } from "@/content/sim/schema";
-import { CardFace } from "@/components/sim/instruments/CardFace";
+import { CardFace, FamilyMotif, FAMILY_WORD } from "@/components/sim/instruments/CardFace";
+import { StateRail } from "@/components/sim/StateRail";
+import { ArmedButton, SIBLING_BRANCH_LINE } from "@/components/ResetButton";
 import { BudgetInstrument, Gauges, Queue, Strip, Timeline, type TimelineMark } from "@/components/sim/instruments/Instruments";
 import { SceneBackdrop, ScenePlate, DealtHand, type DealtCard } from "@/components/sim/scene/Scene";
 import { PRIORITY_PRESETS } from "@/content/sim/priority-presets";
@@ -107,6 +139,15 @@ export function CampaignApp() {
   const [beatSkipped, setBeatSkipped] = useState(false);
   const [saves, setSaves] = useState(() => [] as ReturnType<typeof listSaves>);
   const [notice, setNotice] = useState<string | null>(null);
+  // N-228: the state rail is opened from the header, which renders on every
+  // season step, so "reachable mid-run" is true of every step rather than of the
+  // two screens that happen to have an aside.
+  const [railOpen, setRailOpen] = useState(false);
+  // N-194: the gauge bands the last resolved season STARTED from, so a delta-only
+  // briefing can say what moved without replaying the run to find out. Session
+  // state, never storage (§7.1: no new key); a resumed run simply has no delta to
+  // report and the briefing says so rather than inventing one.
+  const [previousGauges, setPreviousGauges] = useState<SimState["gauges"] | null>(null);
   const liveRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -209,6 +250,8 @@ export function CampaignApp() {
       {run && stage.t !== "prologue" && stage.t !== "hand" ? (
         <CampaignHeader
           run={run}
+          railOpen={railOpen}
+          onToggleRail={() => setRailOpen((v) => !v)}
           onExit={() => {
             // N-226: the pause notice used to promise the device had kept it,
             // whatever the write actually did. It reports the status now.
@@ -229,6 +272,22 @@ export function CampaignApp() {
             setNotice(SAVE_STATUS_WORDS[result.status]);
           }}
         />
+      ) : null}
+
+      {run && railOpen && stage.t !== "prologue" && stage.t !== "hand" ? <StateRail run={run} /> : null}
+
+      {/* N-223. A run resumed across a content change is a mixed record, and the
+          honest thing is to say so where the reader is deciding what to do next.
+          KNOWN LIMIT, recorded in the batch report and in lib/sim/persist.ts:
+          `deserialize` declares a save from a different content version
+          unresumable (4.0 §2.4, unchanged here), so this predicate is currently
+          true of no state a player can reach. The notice is built and guarded
+          rather than left out, because relaxing that migration wall is the
+          owner's call and not a batch's. */}
+      {run && contentDrift(run).length ? (
+        <p className="sim-notice" role="note" data-sim-content-drift>
+          {CONTENT_DRIFT_NOTICE}
+        </p>
       ) : null}
 
       {notice ? (
@@ -322,6 +381,8 @@ export function CampaignApp() {
       {stage.t === "briefing" && run && (
         <BriefingScreen
           run={run}
+          previousGauges={previousGauges}
+          onRepeatLast={(proposal) => commitAllocations(run, proposal)}
           onAllocate={() => {
             setAllocations([]);
             setEventResponses([]);
@@ -362,15 +423,7 @@ export function CampaignApp() {
           onAdd={(a) => setAllocations((prev) => [...prev, a])}
           onRemove={(i) => setAllocations((prev) => prev.filter((_, k) => k !== i))}
           onBack={() => setStage({ t: "briefing" })}
-          onResolve={() => {
-            const beat = beatForSeason(run);
-            if (beat) {
-              setBeatSkipped(false);
-              setStage({ t: "beat" });
-              return;
-            }
-            resolveNow(run, allocations, eventResponses, undefined);
-          }}
+          onResolve={() => commitAllocations(run, allocations)}
         />
       )}
 
@@ -416,6 +469,25 @@ export function CampaignApp() {
     </div>
   );
 
+  /**
+   * COMMIT AN ALLOCATION (N-194). The one path a season is committed through, so
+   * "Repeat last season" and a hand-built allocation are not two paths that could
+   * drift: both land here, both go through the beat check in the same place, and
+   * both reach `commitSeason` with an ORDERED list. C-12 asserts the repeat enters
+   * the ledger as the same ordered set and that the run still replays byte-identically.
+   */
+  function commitAllocations(state: SimState, allocs: CommittedAllocation[]) {
+    setAllocations(allocs);
+    setEventResponses([]);
+    const beat = beatForSeason(state);
+    if (beat) {
+      setBeatSkipped(false);
+      setStage({ t: "beat" });
+      return;
+    }
+    resolveNow(state, allocs, [], undefined);
+  }
+
   /** Run the season, pausing at any multi-option event at its §7.6 position. */
   function resolveNow(
     state: SimState,
@@ -428,9 +500,15 @@ export function CampaignApp() {
       setStage({ t: "event", event: outcome.pendingEvent });
       return;
     }
-    commit(outcome.state);
+    // N-216. Store the explanation the player is about to read, with the content
+    // version that produced it, BEFORE it is committed to the device — so what
+    // reopens later is the sentence they actually met and not whatever the pool
+    // would produce for the same coordinates after an edit.
+    commit(recordExplanations(outcome.state, outcome.result));
     // The revision belongs to the season just committed; the next one starts clean.
     setPendingRevision(null);
+    // N-194: where the gauges stood before this season, for the next briefing's delta.
+    setPreviousGauges(state.gauges);
     setStage({ t: "consequences", result: outcome.result });
     if (liveRef.current)
       liveRef.current.textContent = `Season resolved. ${outcome.result.items.length} things happened.`;
@@ -441,17 +519,57 @@ export function CampaignApp() {
    Header (§4.1: age · season · place · role · intent · save state)
    ========================================================================= */
 
-function CampaignHeader({ run, onExit, onSave }: { run: SimState; onExit: () => void; onSave: () => void }) {
+/**
+ * N-204 — the origin's motif in the season chrome, on every turn.
+ *
+ * Five unequal starting positions, each declaring a distinct `face`, and the face
+ * was used at exactly one place: the selection card. After `startPreset` the
+ * origin never appeared again, not even its label, so five different lives
+ * converged into one screen by season two — which teaches nothing about position,
+ * the campaign's central doctrine. This is the SAME drawing the selection card
+ * uses (`FamilyMotif`, out of the one component that draws a family), and the
+ * spec's own test is that a screenshot is attributable to its origin WITHOUT the
+ * preset name, so the name is deliberately not in the header.
+ *
+ * A drawn hand has no preset and therefore no declared face. It renders `inner` —
+ * the small lamp in a wide dark field, which is the register the prologue and the
+ * arc's void open in, and the only motif in the set that asserts nothing about
+ * where a life started.
+ */
+function originFace(run: SimState): CardFamily {
+  return run.origin.kind === "preset" ? (PRESET_BY_ID[run.origin.presetId]?.face ?? "inner") : "inner";
+}
+
+function CampaignHeader({
+  run,
+  onExit,
+  onSave,
+  railOpen,
+  onToggleRail,
+}: {
+  run: SimState;
+  onExit: () => void;
+  onSave: () => void;
+  railOpen: boolean;
+  onToggleRail: () => void;
+}) {
   const label = seasonLabel(run.seasonIndex);
   const intent = PRIORITY_KEYS.filter((k) => run.priorities[k] >= 2).map((k) => PRIORITY_LABEL[k]);
+  const face = originFace(run);
   return (
     <header className="sim-header">
+      <div className="sim-header-origin sim-card-frame" data-sim-origin-face={face} data-sim-state-field="origin">
+        <FamilyMotif family={face} />
+        {/* The instrument's text equivalent (§4.1): the motif names the family it
+            draws, never the preset. */}
+        <span className="sim-sr">the {FAMILY_WORD[face]} face this life started from</span>
+      </div>
       <dl className="sim-header-facts">
         <div className="sim-header-fact">
           <dt>age</dt>
           <dd>{label.age}</dd>
         </div>
-        <div className="sim-header-fact">
+        <div className="sim-header-fact" data-sim-state-field="seasonIndex">
           <dt>
             <Term k="season" />
           </dt>
@@ -479,6 +597,11 @@ function CampaignHeader({ run, onExit, onSave }: { run: SimState; onExit: () => 
         </div>
       </dl>
       <div className="sim-header-controls">
+        {/* N-228. In the header rather than on an aside, because the rail has to
+            be reachable from EVERY season step and only two of them have a rail. */}
+        <button type="button" className="sim-ghost-btn" aria-expanded={railOpen} onClick={onToggleRail}>
+          {railOpen ? "Hide what this run is carrying" : "What this run is carrying"}
+        </button>
         <button type="button" className="sim-ghost-btn" onClick={onSave}>
           Save
         </button>
@@ -677,13 +800,28 @@ function SavesPanel({
               <span className="sim-save-meta">
                 {s.savedAtLabel} · simulation {s.engineVersion} · content {s.contentVersion}
               </span>
+              {/* N-234. The seed, where a reader can actually see it — the save
+                  inspector has returned it since 4.0 and nothing rendered it, so
+                  "inspectable" was true of the payload and not of the reader. */}
+              {s.drawSeed ? (
+                <span className="sim-save-meta" data-sim-save-seed>
+                  draw seed {s.drawSeed}
+                  {s.handSeed ? ` · hand seed ${s.handSeed}` : ""}
+                </span>
+              ) : null}
               <span className="sim-save-actions">
                 <button type="button" className="sim-ghost-btn" onClick={() => onLoad(s.ref)}>
                   Resume
                 </button>
-                <button type="button" className="sim-ghost-btn" onClick={() => onDelete(s.ref)}>
-                  Delete
-                </button>
+                <ArmedButton
+                  label="Delete"
+                  armedLabel="Press again to delete"
+                  consequence="This removes this saved run from this device. Any branches taken from it stay where they are."
+                  onConfirm={() => onDelete(s.ref)}
+                  className="sim-ghost-btn"
+                  wrapperClassName="sim-armed"
+                  noticeClassName="sim-panel-note"
+                />
               </span>
             </li>
           ))}
@@ -691,6 +829,10 @@ function SavesPanel({
       ) : (
         <p className="sim-panel-empty">Nothing saved on this device yet.</p>
       )}
+      <p className="sim-panel-note" data-sim-randomness-line>
+        {RANDOMNESS_LINE} A seed is what makes a run reproducible and forkable, so two branches can be
+        compared rather than re-rolled. <Link href="/methodology#seeded-randomness">How that works</Link>.
+      </p>
       {forks.length ? (
         <>
           <h5 className="sim-instrument-subtitle">Branches</h5>
@@ -706,9 +848,18 @@ function SavesPanel({
                   <button type="button" className="sim-ghost-btn" onClick={() => onLoadFork(f.ref)}>
                     Resume
                   </button>
-                  <button type="button" className="sim-ghost-btn" onClick={() => onDeleteFork(f.ref)}>
-                    Delete
-                  </button>
+                  {/* N-227. The sibling-branch line belongs here specifically: a
+                      branch looks like a copy of a run, and a reader deleting one
+                      needs to know the line it came from is a separate record. */}
+                  <ArmedButton
+                    label="Delete"
+                    armedLabel="Press again to delete"
+                    consequence={`This removes this branch from this device. ${SIBLING_BRANCH_LINE}`}
+                    onConfirm={() => onDeleteFork(f.ref)}
+                    className="sim-ghost-btn"
+                    wrapperClassName="sim-armed"
+                    noticeClassName="sim-panel-note"
+                  />
                 </span>
               </li>
             ))}
@@ -716,9 +867,14 @@ function SavesPanel({
         </>
       ) : null}
       <p className="sim-panel-note">{CAP_NOTE}</p>
-      <button type="button" className="sim-ghost-btn" onClick={onErase}>
-        Erase everything this simulation has stored
-      </button>
+      <ArmedButton
+        label="Erase everything this simulation has stored"
+        consequence="This removes every saved run, every branch and the run in progress from this device. What you have read elsewhere on the site, and the reading preferences, are separate and stay."
+        onConfirm={onErase}
+        className="sim-ghost-btn"
+        wrapperClassName="sim-armed"
+        noticeClassName="sim-panel-note"
+      />
     </section>
   );
 }
@@ -826,19 +982,85 @@ const WEIGHT_WORDS = ["not this", "some", "a lot", "most"];
    Briefing
    ========================================================================= */
 
+/**
+ * N-194 — THE REPEAT-LAST-SEASON PROPOSAL.
+ *
+ * The previous season's committed allocation, offered back AS AN ORDERED SET. The
+ * order is load-bearing: §7.6 resolves committed actions in allocation order, so a
+ * "repeat" that rebuilt the set from ids would be a different season wearing the
+ * same name. Only the occurrence ordinals are recomputed, because they are a pure
+ * function of the ledger and this is a new occurrence of each action.
+ *
+ * An entry whose action is no longer available or affordable this season is
+ * DROPPED and named, never silently substituted — the compressed flow may not
+ * quietly commit something the player did not choose.
+ */
+function repeatProposal(run: SimState): { proposal: CommittedAllocation[]; dropped: string[] } | null {
+  const last = run.committed[run.committed.length - 1];
+  if (!last || !last.allocations.length) return null;
+  const remaining = budgetFor(run);
+  const entries = menu(run, remaining);
+  const proposal: CommittedAllocation[] = [];
+  const dropped: string[] = [];
+  const seen = new Map<string, number>();
+  for (const a of last.allocations) {
+    const entry = entries.find((m) => m.action.id === a.actionId);
+    const already = seen.get(a.actionId) ?? 0;
+    if (!entry?.available || !entry.action.options.some((o) => o.id === a.optionId)) {
+      dropped.push(ACTION_BY_ID[a.actionId]?.label ?? a.actionId);
+      continue;
+    }
+    seen.set(a.actionId, already + 1);
+    proposal.push({ actionId: a.actionId, instanceOrdinal: nextOrdinal(run, proposal, a.actionId), optionId: a.optionId });
+  }
+  if (!proposal.length) return null;
+  // Affordability of the WHOLE set, checked once against the season's budget.
+  const spent = spentOf(proposal);
+  const budget = budgetFor(run);
+  if (spent.timeStructure > budget.timeStructure || spent.energy > budget.energy || spent.money > budget.money) return null;
+  return { proposal, dropped };
+}
+
+/** Gauge movement since the last resolved season, in words. Never a number. */
+function gaugeDelta(now: SimState["gauges"], before: SimState["gauges"] | null): string[] {
+  if (!before) return [];
+  // Reviewer amendment (batch 3): the band words come from the published order, not a copy.
+  const WORDS = GAUGE_BAND_ORDER;
+  const NAMES: Record<string, string> = { money: "money", healthEnergy: "energy", connection: "connection", timeStructure: "time" };
+  const out: string[] = [];
+  for (const k of Object.keys(NAMES) as (keyof SimState["gauges"])[]) {
+    if (now[k] === before[k]) continue;
+    out.push(`${NAMES[k as string]} is ${WORDS[now[k]]}, and was ${WORDS[before[k]]}`);
+  }
+  return out;
+}
+
 function BriefingScreen({
   run,
+  previousGauges,
   onAllocate,
   onRevise,
   onFork,
+  onRepeatLast,
 }: {
   run: SimState;
+  previousGauges: SimState["gauges"] | null;
   onAllocate: () => void;
   onRevise: (p: PrioritySet) => void;
   onFork: () => void;
+  onRepeatLast: (proposal: CommittedAllocation[]) => void;
 }) {
   const b = computeBriefing(run);
   const [adapting, setAdapting] = useState(false);
+  // N-194. The compressed flow is offered only where its own signal says the
+  // season is quiet AND there is a previous allocation that is still takeable.
+  // Twenty-four full briefings is the single biggest threat to "smooth and fun",
+  // and the flag that says which of them is worth reading has been computed since
+  // 4.0 and rendered as a title change.
+  const repeat = b.quiet ? repeatProposal(run) : null;
+  const [showFull, setShowFull] = useState(false);
+  const compressed = Boolean(repeat) && !showFull;
+  const moved = gaugeDelta(run.gauges, previousGauges);
   const marks: TimelineMark[] = run.committed.map((c) => ({
     seasonIndex: c.seasonIndex,
     kind: c.forkPoint ? "branch" : "played",
@@ -854,7 +1076,57 @@ function BriefingScreen({
         </p>
         <h1 className="sim-season-title">{b.quiet ? "A quiet season" : "Where things stand"}</h1>
 
-        <div className="sim-briefing-grid">
+        {compressed && repeat ? (
+          <section className="sim-panel sim-briefing-delta" aria-label="What changed since last season">
+            <h4 className="sim-instrument-title">What changed</h4>
+            <ul className="sim-plain-list">
+              <li>Nothing new arrived, and nothing you set going earlier is due this season.</li>
+              {moved.length ? (
+                moved.map((m, i) => <li key={`g${i}`}>{m}</li>)
+              ) : previousGauges ? (
+                <li>Nothing moved in what you have to spend from.</li>
+              ) : (
+                <li>This run was picked back up, so what moved since the last season is not recorded here.</li>
+              )}
+              {b.pressures.map((p, i) => (
+                <li key={`p${i}`}>{p}</li>
+              ))}
+              {b.needs.map((n, i) => (
+                <li key={`n${i}`}>{n}</li>
+              ))}
+            </ul>
+            <p className="sim-panel-note">
+              This is the difference, not the whole standing. The full briefing is one press away and nothing
+              is hidden behind this.
+            </p>
+            <div className="sim-season-nav">
+              <button
+                type="button"
+                className="sim-primary-btn"
+                data-sim-repeat-last
+                onClick={() => onRepeatLast(repeat.proposal)}
+              >
+                Repeat last season
+              </button>
+              <button type="button" className="sim-ghost-btn" onClick={onAllocate}>
+                Allocate the season instead
+              </button>
+              <button type="button" className="sim-ghost-btn" onClick={() => setShowFull(true)}>
+                Show the full briefing
+              </button>
+            </div>
+            <p className="sim-panel-note">
+              Repeating commits the same things, in the same order, through the same path as a season you
+              build by hand:{" "}
+              {repeat.proposal.map((a) => ACTION_BY_ID[a.actionId]?.label ?? a.actionId).join(", ")}.
+              {repeat.dropped.length
+                ? ` ${repeat.dropped.join(", ")} ${repeat.dropped.length === 1 ? "is" : "are"} not available this season and would be left out rather than swapped for something you did not pick.`
+                : ""}
+            </p>
+          </section>
+        ) : null}
+
+        <div className="sim-briefing-grid" hidden={compressed}>
           <section className="sim-panel" aria-label="Pressures and needs">
             <h4 className="sim-instrument-title">What is pressing</h4>
             {b.pressures.length || b.needs.length ? (
@@ -875,19 +1147,23 @@ function BriefingScreen({
             )}
           </section>
 
-          <Queue queue={run.queue} seasonIndex={run.seasonIndex} />
+          <div data-sim-state-field="queue">
+            <Queue queue={run.queue} seasonIndex={run.seasonIndex} />
+          </div>
 
           <BudgetInstrument budget={b.budget} />
         </div>
 
-        <Timeline
-          seasonCount={SEASON_COUNT}
-          seasonIndex={run.seasonIndex}
-          marks={marks}
-          milestones={milestonesFor(run)}
-        />
+        <div hidden={compressed} data-sim-state-field="committed">
+          <Timeline
+            seasonCount={SEASON_COUNT}
+            seasonIndex={run.seasonIndex}
+            marks={marks}
+            milestones={milestonesFor(run)}
+          />
+        </div>
 
-        <div className="sim-season-nav">
+        <div className="sim-season-nav" hidden={compressed}>
           <button type="button" className="sim-primary-btn" onClick={onAllocate}>
             Allocate the season
           </button>
@@ -911,10 +1187,15 @@ function BriefingScreen({
         ) : null}
       </div>
 
+      {/* C-23. The rail's instruments are the mid-run surface for the state
+          fields they render; the attribute is on the wrapper so the gate can find
+          them without the instruments needing to know about the gate. */}
       <aside className="sim-rail" aria-label="Where you stand">
-        <Gauges gauges={run.gauges} slack={deriveSlack(run.gauges, isHighLoad(run.conditions))} relevantOnly={relevantGauges(run)} />
+        <div data-sim-state-field="gauges">
+          <Gauges gauges={run.gauges} slack={deriveSlack(run.gauges, isHighLoad(run.conditions))} relevantOnly={relevantGauges(run)} />
+        </div>
         {run.standing.length ? (
-          <section className="sim-panel">
+          <section className="sim-panel" data-sim-state-field="standing">
             <h4 className="sim-instrument-title">Standing commitments</h4>
             <ul className="sim-standing-list">
               {run.standing.map((s, i) => (
@@ -1096,6 +1377,8 @@ function ActionCard({
   onChoose: (optionId: string) => void;
 }) {
   const a = entry.action;
+  const [preview, setPreview] = useState<string | null>(null);
+  const onPreview = (id: string | null) => setPreview(id);
   return (
     <li>
       <CardFace family={a.family} title={a.label} selected={chosen} eyebrow={costWords(entry)} as="div">
@@ -1126,53 +1409,125 @@ function ActionCard({
           {chosen ? "Committed" : open ? "Close" : "How you would do it"}
         </button>
         {open ? (
-          <ul className="sim-option-list">
-            {a.options.map((o) => {
-              const { segments, shift } = strip(o, run, { highLoad: isHighLoad(run.conditions) });
-              return (
-                <li key={o.id} className="sim-option">
-                  <h4 className="sim-option-label">{o.label}</h4>
-                  <ul className="sim-chip-row">
-                    {o.chips.costs.map((c, i) => (
-                      <li key={i} className="sim-chip" data-kind="cost">
-                        {c}
-                      </li>
-                    ))}
-                    <li className="sim-chip" data-kind="variance">
-                      {o.chips.variance}
-                    </li>
-                    <li className="sim-chip" data-kind="rev">
-                      {o.chips.reversibility}
-                    </li>
-                    {(o.flags ?? []).includes("recovery") ? (
-                      <li className="sim-chip" data-kind="recovery">
-                        a way back
-                      </li>
-                    ) : null}
-                    {(o.chips.positionNotes ?? [])
-                      .filter((p) => run.flags.includes(p.when))
-                      .map((p, i) => (
-                        <li key={`pn${i}`} className="sim-chip" data-kind="position">
-                          {p.text}
+          <>
+            <ul className="sim-option-list">
+              {a.options.map((o) => {
+                const { segments, shift } = strip(o, run, { highLoad: isHighLoad(run.conditions) });
+                return (
+                  <li
+                    key={o.id}
+                    className="sim-option"
+                    data-sim-option={o.id}
+                    onMouseEnter={() => onPreview(o.id)}
+                    onMouseLeave={() => onPreview(null)}
+                    onFocus={() => onPreview(o.id)}
+                    onBlur={() => onPreview(null)}
+                  >
+                    <h4 className="sim-option-label">{o.label}</h4>
+                    <ul className="sim-chip-row">
+                      {o.chips.costs.map((c, i) => (
+                        <li key={i} className="sim-chip" data-kind="cost">
+                          {c}
                         </li>
                       ))}
-                  </ul>
-                  <Strip segments={segments} shift={shift} caption="The range this move sets, from where you stand." />
-                  {o.supportLink ? (
-                    <p className="sim-option-support">
-                      <Link href={o.supportLink}>If this is the one, here is the route it names.</Link>
-                    </p>
-                  ) : null}
-                  <button type="button" className="sim-primary-btn" onClick={() => onChoose(o.id)}>
-                    Commit this
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                      <li className="sim-chip" data-kind="variance">
+                        {o.chips.variance}
+                      </li>
+                      <li className="sim-chip" data-kind="rev">
+                        {o.chips.reversibility}
+                      </li>
+                      {(o.flags ?? []).includes("recovery") ? (
+                        <li className="sim-chip" data-kind="recovery">
+                          a way back
+                        </li>
+                      ) : null}
+                      {(o.chips.positionNotes ?? [])
+                        .filter((p) => run.flags.includes(p.when))
+                        .map((p, i) => (
+                          <li key={`pn${i}`} className="sim-chip" data-kind="position">
+                            {p.text}
+                          </li>
+                        ))}
+                    </ul>
+                    <ResponseContract record={a} option={o} run={run} />
+                    <Strip segments={segments} shift={shift} caption="The range this move sets, from where you stand." />
+                    {o.supportLink ? (
+                      <p className="sim-option-support">
+                        <Link href={o.supportLink}>If this is the one, here is the route it names.</Link>
+                      </p>
+                    ) : null}
+                    <button type="button" className="sim-primary-btn" onClick={() => onChoose(o.id)}>
+                      Commit this
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            <PreviewPane run={run} optionId={preview} />
+          </>
         ) : null}
       </CardFace>
     </li>
+  );
+}
+
+/* =========================================================================
+   N-211 — THE FIVE-FIELD RESPONSE CONTRACT, compact on the card.
+   =========================================================================
+   Five names, fixed (§11 LITERAL); the layout is the executor's. Compact here,
+   because the card is where a decision is made and a wall of prose is not a
+   decision aid — the explain drawer already carries the long form of the
+   attribution and the failure modes, and the option's own strip carries the
+   range. Nothing below is authored content: every value is read off a record
+   that already carried it (lib/sim/season.ts's `responseContract`).
+   ========================================================================= */
+function ResponseContract({ record, option, run }: { record: SimAction | SimEvent; option: SimOption; run: SimState }) {
+  return (
+    <dl className="sim-contract">
+      {responseContract(record, option, run).map((f) => (
+        <div key={f.name} className="sim-contract-row" data-sim-contract-field={f.name}>
+          <dt className="sim-contract-name">{f.name}</dt>
+          <dd className="sim-contract-value">{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/* =========================================================================
+   N-212 — THE PURE PREVIEW PANE.
+   =========================================================================
+   One live region per open card, updated on focus or hover of an option. It says
+   what the option would touch and whether it sets anything going — and then says,
+   in the same breath, that reading it changed nothing. That sentence is a claim
+   about the code, so C-16 is what makes it true: `previewAction` is byte-identical
+   state in, byte-identical state out, it reaches no storage, and it consumes no
+   draw. The pane is `aria-live="polite"` and stays mounted while the card is open,
+   so a screen reader hears the change rather than a region appearing.
+   ========================================================================= */
+function PreviewPane({ run, optionId }: { run: SimState; optionId: string | null }) {
+  const preview: Preview | null = optionId ? previewAction(run, optionId) : null;
+  return (
+    <div className="sim-preview" aria-live="polite" data-sim-preview>
+      {preview ? (
+        <>
+          <p className="sim-preview-line">
+            <span className="sim-preview-label">what this would touch</span>{" "}
+            {preview.domains.length ? preview.domains.join(" · ") : "nothing the ten priorities name"}
+          </p>
+          <p className="sim-preview-line">
+            <span className="sim-preview-label">what would be waiting</span>{" "}
+            {preview.queues ? preview.waits.join(" · ") : "nothing set going for a later season"}
+          </p>
+          <p className="sim-preview-note">Previewing changes nothing.</p>
+        </>
+      ) : (
+        <p className="sim-preview-note">
+          Move to an option, or tab onto one, to read what it would touch before committing it. Previewing
+          changes nothing.
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -1191,7 +1546,7 @@ function EventScreen({ run, event, onChoose }: { run: SimState; event: SimEvent;
             {event.options.map((o) => {
               const { segments, shift } = strip(o, run, { highLoad: isHighLoad(run.conditions) });
               return (
-                <li key={o.id} className="sim-option">
+                <li key={o.id} className="sim-option" data-sim-option={o.id}>
                   <h4 className="sim-option-label">{o.label}</h4>
                   <ul className="sim-chip-row">
                     {o.chips.costs.map((c, i) => (
@@ -1206,6 +1561,10 @@ function EventScreen({ run, event, onChoose }: { run: SimState; event: SimEvent;
                       {o.chips.reversibility}
                     </li>
                   </ul>
+                  {/* N-211. The contract is on EVERY response, not only the ones
+                      taken under a budget: an arrival is the moment a reader most
+                      needs to know what the way back is before answering. */}
+                  <ResponseContract record={event} option={o} run={run} />
                   <Strip segments={segments} shift={shift} caption="The range this response sets." />
                   {o.supportLink ? (
                     <p className="sim-option-support">
@@ -1325,6 +1684,10 @@ const KIND_WORD: Record<ResolvedItem["kind"], string> = {
 const DOOR_GROUPS = [
   ["opened", "What opened"],
   ["closed", "What closed"],
+  // N-214. Between shut and still-there: the doors that are getting harder. Its
+  // heading says the motion, not a verdict, and its token is the neutral one
+  // (C-18) — painting it with the open colour is the plant that proves the gate.
+  ["narrowing", "What is getting harder"],
   ["still recoverable", "Still there"],
 ] as const;
 
@@ -1483,6 +1846,30 @@ function ExplainDrawer({
    Parse
    ========================================================================= */
 
+/* =========================================================================
+   N-355 (C-25) — the look-back declares which of the three each panel is.
+   =========================================================================
+   Same three words and the same reasons as the Life Arc's parse
+   (components/play/Parse.tsx): recorded is what the run's own record holds,
+   interpreted is a reading built on it, unknowable is what no record of a life
+   holds. A panel that is navigation rather than a finding — the bridge, the way
+   out — declares `data-parse-controls` instead of borrowing one of the three.
+   ========================================================================= */
+type ParseKind = "recorded" | "interpreted" | "unknowable";
+const PARSE_KIND_NOTE: Record<ParseKind, string> = {
+  recorded: "what the run itself holds",
+  interpreted: "a reading built on that record",
+  unknowable: "what no record of a life holds",
+};
+function KindLabel({ kind }: { kind: ParseKind }) {
+  return (
+    <p className="sim-parse-kind" data-kind={kind}>
+      <span className="sim-parse-kind-word">{kind}</span>
+      <span className="sim-parse-kind-note">{PARSE_KIND_NOTE[kind]}</span>
+    </p>
+  );
+}
+
 function ParseScreen({ run }: { run: SimState }) {
   const parse = useMemo(() => computeParse(run), [run]);
   const render = profileRender(parse.profile);
@@ -1494,8 +1881,9 @@ function ParseScreen({ run }: { run: SimState }) {
         Not a score and not a verdict. What these years cost, what they bought, and what is still open.
       </p>
 
-      <section className="sim-panel">
+      <section className="sim-panel" data-parse-kind="recorded">
         <h4 className="sim-instrument-title">Where you started</h4>
+        <KindLabel kind="recorded" />
         <ul className="sim-profile-lines">
           {render.lines.map((l) => (
             <li key={l.axis} className="sim-profile-line">
@@ -1507,23 +1895,48 @@ function ParseScreen({ run }: { run: SimState }) {
         <p className="sim-worth-guard">{render.worthGuard}</p>
       </section>
 
-      <section className="sim-panel">
+      {/* N-216 (C-20). THE LIVING RECORD. Every other fact on this screen is
+          re-derived from the ledger, which is what makes the model checkable — and
+          also what would let a content edit quietly replace the sentence a reader
+          met at twenty-two with one they never saw. Each season here reopens the
+          explanation STORED when it resolved, with the content version that
+          produced it beside it; the recomputation is used only for a season that
+          predates the record (a run saved before this version), and says so. */}
+      <section className="sim-panel" data-parse-kind="recorded">
         <h4 className="sim-instrument-title">The years, in order</h4>
+        <KindLabel kind="recorded" />
         <ol className="sim-parse-seasons" data-scroll-region="y" tabIndex={0}>
-          {parse.seasons.map((s) => (
-            <li key={s.seasonIndex} data-band={s.band}>
-              <span className="sim-parse-age">
-                {s.age}, {s.half}
-              </span>
-              <span className="sim-parse-headline">{s.headline}</span>
-            </li>
-          ))}
+          {parse.seasons.map((s) => {
+            const stored = storedExplanationFor(run, s.seasonIndex);
+            const lines = stored ? stored.explanation.split("\n") : [s.headline];
+            return (
+              <li key={s.seasonIndex} data-band={s.band} data-sim-season-record={stored ? "stored" : "recomputed"}>
+                <span className="sim-parse-age">
+                  {s.age}, {s.half}
+                </span>
+                <span className="sim-parse-headline">{lines[0]}</span>
+                {lines.length > 1 ? (
+                  <span className="sim-parse-rest">{lines.slice(1).join(" ")}</span>
+                ) : null}
+                <span className="sim-save-meta">
+                  {stored
+                    ? `read at the time, kept as it was · content ${stored.contentVersion}`
+                    : "rebuilt from the ledger — this season was played before explanations were kept"}
+                </span>
+              </li>
+            );
+          })}
         </ol>
+        <p className="sim-panel-note">
+          These are the sentences this run actually showed you, preserved rather than recalculated. A later
+          change to the content does not reach back into them.
+        </p>
       </section>
 
       {parse.maintained.length ? (
-        <section className="sim-panel">
+        <section className="sim-panel" data-parse-kind="recorded">
           <h4 className="sim-instrument-title">What you kept up</h4>
+          <KindLabel kind="recorded" />
           <ul className="sim-plain-list">
             {parse.maintained.map((m, i) => (
               <li key={i}>{m}</li>
@@ -1532,8 +1945,9 @@ function ParseScreen({ run }: { run: SimState }) {
         </section>
       ) : null}
 
-      <section className="sim-panel">
+      <section className="sim-panel" data-parse-kind="interpreted">
         <h4 className="sim-instrument-title">What these years contained</h4>
+        <KindLabel kind="interpreted" />
         <ul className="sim-plain-list">
           {parse.achievements.map((a, i) => (
             <li key={i}>{a}</li>
@@ -1542,8 +1956,9 @@ function ParseScreen({ run }: { run: SimState }) {
       </section>
 
       {parse.costs.length ? (
-        <section className="sim-panel">
+        <section className="sim-panel" data-parse-kind="interpreted">
           <h4 className="sim-instrument-title">What they cost</h4>
+          <KindLabel kind="interpreted" />
           <ul className="sim-plain-list">
             {parse.costs.map((c, i) => (
               <li key={i}>{c}</li>
@@ -1552,8 +1967,18 @@ function ParseScreen({ run }: { run: SimState }) {
         </section>
       ) : null}
 
-      <section className="sim-panel">
+      <section className="sim-panel" data-parse-kind="recorded">
         <h4 className="sim-instrument-title">Where it came from</h4>
+        <KindLabel kind="recorded" />
+        {/* N-222. The moment a per-season split is AGGREGATED across a run it
+            starts reading as a verdict — "other people: most of it" becomes a
+            finding about who is to blame for a life. The computation is honest
+            (S-12 asserts every rendered category is a nonzero tagged component);
+            what it is not is a moral ledger, and one sentence above it is what
+            stops the reader supplying that reading themselves. */}
+        <p className="sim-panel-note" data-sim-attribution-disclaimer>
+          Counts show how often a source appeared in explanations, not how much blame or credit it deserves.
+        </p>
         <ul className="sim-attribution">
           {parse.attribution.map((a, i) => (
             <li key={i} data-category={a.category}>
@@ -1565,8 +1990,9 @@ function ParseScreen({ run }: { run: SimState }) {
       </section>
 
       {parse.priorities.length ? (
-        <section className="sim-panel">
+        <section className="sim-panel" data-parse-kind="interpreted">
           <h4 className="sim-instrument-title">Read against what you said mattered</h4>
+          <KindLabel kind="interpreted" />
           <ul className="sim-plain-list">
             {parse.priorities.map((p) => (
               <li key={p.key}>
@@ -1583,7 +2009,8 @@ function ParseScreen({ run }: { run: SimState }) {
       ) : null}
 
       {parse.beatNotes.length ? (
-        <section className="sim-panel">
+        <section className="sim-panel" data-parse-kind="recorded">
+          <KindLabel kind="recorded" />
           <ul className="sim-plain-list sim-beat-notes">
             {parse.beatNotes.map((b, i) => (
               <li key={i}>{b}</li>
@@ -1592,8 +2019,9 @@ function ParseScreen({ run }: { run: SimState }) {
         </section>
       ) : null}
 
-      <section className="sim-panel">
+      <section className="sim-panel" data-parse-kind="interpreted">
         <h4 className="sim-instrument-title">Doors</h4>
+        <KindLabel kind="interpreted" />
         {/* Grouped by state. A flat top-ten list could contain nothing but
             openings and silently drop every closing, which is exactly what the
             old one did — §3.9 asks for all three states and the build showed
@@ -1619,8 +2047,9 @@ function ParseScreen({ run }: { run: SimState }) {
         })}
       </section>
 
-      <section className="sim-panel">
+      <section className="sim-panel" data-parse-kind="interpreted">
         <h4 className="sim-instrument-title">The other lines</h4>
+        <KindLabel kind="interpreted" />
         <ul className="sim-plain-list">
           {parse.counterfactuals.map((c, i) => (
             <li key={i}>{c}</li>
@@ -1628,7 +2057,18 @@ function ParseScreen({ run }: { run: SimState }) {
         </ul>
       </section>
 
-      <section className="sim-bridge">
+      {/* N-355. The third kind, named once. */}
+      <section className="sim-panel" data-parse-kind="unknowable">
+        <h4 className="sim-instrument-title">What this cannot know</h4>
+        <KindLabel kind="unknowable" />
+        <p className="sim-panel-note">
+          What it felt like to live these years. Nothing above is a stand-in for it — not the bands, not the
+          doors, not the reading against what you said mattered. It is named here so that it is not simply
+          missing from the account.
+        </p>
+      </section>
+
+      <section className="sim-bridge" data-parse-controls>
         <p className="sim-bridge-frame">{BRIDGE_FRAME}</p>
         <p className="sim-bridge-line">{parse.bridge.line}</p>
         <Link href={parse.bridge.href} className="sim-primary-btn">

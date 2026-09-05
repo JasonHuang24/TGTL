@@ -7,6 +7,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 
 export const metadata: Metadata = {
@@ -122,6 +123,10 @@ export default function HealthPage() {
         <NextStep href="/situations/depression">If the drop is in mood rather than the body.</NextStep>
         <NextStep href="/character/logs">The upkeep you are currently not doing — worth knowing, even undone.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/campaign">the campaign prices capacity the way this page describes it, and lets you spend it.</TryInPlay>
 
       <EvidenceDrawer
         record={{

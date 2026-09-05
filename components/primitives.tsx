@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Term } from "@/components/Term";
 import {
   STATUS_LABEL,
   STATUS_MEANING,
@@ -191,6 +192,36 @@ export function NextStep({ href, children }: { href: string; children: React.Rea
     <li>
       <Link href={href}>{children}</Link>
     </li>
+  );
+}
+
+/**
+ * N-235 (C-24) — THE READING-TO-PLAY ENTRY.
+ *
+ * The trunk's play layer is reachable from the entrance and from itself. Nothing
+ * goes the other way: a reader who has just read the credential decision, or the
+ * money guide, has nowhere to go and try it, and the two halves of the site stay
+ * two sites. This is the cheapest thing that joins them.
+ *
+ * WHAT IT IS NOT. It is a link, not a nudge — no button, no primary treatment, no
+ * "ready to play?", and never above the fold: it belongs at the end of a reading
+ * route, where somebody has finished reading. The label comes through `<Term>`, so
+ * the Standard edition says "Try this as a decision" and never a game word, and
+ * gate 2's generated set-down lint covers it automatically.
+ *
+ * WHERE IT MAY NEVER GO. Any set-down route, and above all the five sensitive
+ * pages. A grief page does not invite play; that is the same rule that keeps Play
+ * out of the set-down nav. C-24 asserts it over the exported HTML, and the marker
+ * below is what it looks for.
+ */
+export function TryInPlay({ href, children }: { href: string; children?: React.ReactNode }) {
+  return (
+    <p className="try-in-play" data-try-in-play>
+      <Link href={href}>
+        <Term k="tryInPlay" />
+      </Link>
+      {children ? <span className="try-in-play-note"> — {children}</span> : null}
+    </p>
   );
 }
 

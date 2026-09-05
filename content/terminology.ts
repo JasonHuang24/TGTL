@@ -61,6 +61,7 @@ export type TermKey =
   | "namedSave"
   | "playDoor"
   | "arc"
+  | "tryInPlay"
   /* 5.0 §3.9 — the timeline's vocabulary. Entering the map means gate 2's
      GENERATED set-down lint covers these automatically, so a game label can never
      reach a set-down page or a sensitive segment without the gate noticing. */
@@ -351,6 +352,22 @@ export const TERMS: Record<TermKey, TermRecord> = {
     standard: "a whole life, fast",
     game: "the life arc",
     define: "the short mode: the whole shape of a life in eight acts",
+  },
+
+  /* ---- 6.0 §3.9 (N-235): the reading-to-play entry ---------------------
+     The trunk's play layer is reachable from the entrance and from itself; a
+     reader who has just read the credential decision has nowhere to go and try
+     it. This is that link's label, and it enters the map for the usual reason:
+     gate 2's GENERATED set-down lint then covers it automatically, so the entry
+     can never reach a set-down route without the gate noticing. It is a link and
+     never a nudge — `allowedAtSetDown: false` is the default and is written out
+     here because on this key it is the whole point. */
+  tryInPlay: {
+    key: "tryInPlay",
+    standard: "Try this as a decision",
+    game: "Try this in Play",
+    define: "the same question, taken into the simulator as one decision you can fork and compare",
+    allowedAtSetDown: false,
   },
 
   /* ---- 5.0 §3.9: the timeline ----------------------------------------

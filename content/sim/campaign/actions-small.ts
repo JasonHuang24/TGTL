@@ -646,4 +646,140 @@ export const SMALL_ACTIONS: SimAction[] = [
       },
     ],
   },
+
+  /* ======================================================================
+     UPKEEP — the standing option (N-213, 6.0 §3.9).
+     ======================================================================
+     Food, rest, transport, paperwork and the trip out that has to be made: the
+     part of a week that is not a project and never finishes. Every other card in
+     this pool is something you decide to do. This is the one that is already
+     there, every season, whether or not you pick it — so skipping it is a visible
+     choice with a visible cost rather than an oversight the interface never named.
+
+     WHY IT IS PRICED THE WAY IT IS. It is not a floor action: floor actions cost
+     nothing and are guaranteed by `availability()` itself. This sits one tier
+     above the floor, at the small-move tier's one pip — and in TIME, not money.
+     That is the load-bearing detail: `deriveBudget` reserves the last pip of time
+     and the last pip of energy against the maintenance-debt drag and against
+     standing upkeep, and deliberately reserves NOTHING of money, because money
+     genuinely runs out. An upkeep option priced in money would be unaffordable in
+     precisely the seasons a life most needs it. C-17 walks every season of every
+     preset in the worst envelope — every gauge depleted, the backlog past its
+     ceiling, money at zero pips — and requires this card to be there and payable.
+
+     THE REFERENT STAYS UNNAMED (AUTHORING.md, N-273). One strand of this is the
+     journey out to an appointment somebody else has to keep. Nothing here says who
+     it is for and nothing names a condition: the objects are the bus, the fare,
+     the form, the hours. That is what keeps required care travel inside the
+     boundary rather than loss-tier setup.
+     ====================================================================== */
+  {
+    id: "act-small-upkeep",
+    family: "home",
+    domains: ["maintenance", "logistics", "home", "capacity"],
+    label: "Keep the week running",
+    scene:
+      "Food in the house, the wash done, the pass topped up, the form that has a date on it, the trip out and back that somebody has to make. None of it is progress. All of it is what the rest of the season stands on.",
+    contract: {
+      // Written out rather than taken from `smallContract`, so the one line that
+      // decides whether upkeep is affordable at the bottom of the economy is
+      // visible, and so C-17's probe has something to raise.
+      costs: { timeStructure: 1 },
+      reversibility: "reversible",
+      variance: "narrow",
+      evidenceLabel: "illustrative",
+      opportunityNote: "Hours that produce nothing you could point at, and are not optional.",
+      switchingCost: "Skipping a season of it does not cost anything this season. It costs the season after.",
+    },
+    readRef: "/topics/health",
+    seasonBands: [[1, 24]],
+    repeatable: true,
+    // No band here is a `failure`: skipping upkeep is a cost that arrives later
+    // through the maintenance backlog, not a thing that fails in the season you
+    // did it. So there is nothing for `failureModes` to diagnose, and the tie
+    // below is the ordinary one every small move carries.
+    recoveryRefs: ["act-rest-maintain"],
+    outcomeVariants: {
+      solid: [
+        "Nothing memorable. The fridge has food in it, the wash is done, and the week does not ambush you once.",
+        "You go out on the Saturday and come back with the boring things. On the Wednesday you are glad you did.",
+        "The pass is topped up, the form is posted, the trip out happens on the day it is supposed to happen.",
+        "You do it all in one unglamorous morning with the radio on, and the rest of the season has room in it.",
+        "It takes the hours it always takes. Nothing goes wrong, which is what those hours are for.",
+      ],
+      mixed: [
+        "Most of it gets done. One thing with a date on it slides to the following month, and you know which one.",
+        "The food and the wash happen; the paperwork sits by the door in its envelope, looking at you.",
+        "You keep the journey and let the rest go. The journey was the part that could not move.",
+        "Half a round. It holds, and you can feel where it is thin.",
+        "You get through it in pieces on four separate evenings, which costs more evenings than doing it once would have.",
+      ],
+    },
+    options: [
+      {
+        id: "opt-small-upkeep-full-round",
+        label: "Do the whole round",
+        chips: {
+          costs: ["a morning and most of an evening", "the thing you would rather have spent them on"],
+          variance: "narrow",
+          reversibility: "reversible",
+        },
+        flags: ["recovery"],
+        sensitivity: { capability: "execution", strength: 0.35 },
+        bands: [
+          {
+            name: "solid",
+            weight: 3,
+            outcome: {
+              line: "You do the lot in one go. The backlog is gone and the week stops making small demands you had stopped noticing.",
+              effects: { maintenanceDebt: -2, capability: { regulation: 1 } },
+            },
+          },
+          {
+            name: "mixed",
+            weight: 2,
+            outcome: {
+              line: "You do the lot, and the lot turns out to be bigger than a season's worth. Some of it clears.",
+              effects: { maintenanceDebt: -1 },
+            },
+          },
+        ],
+      },
+      {
+        id: "opt-small-upkeep-what-cannot-wait",
+        label: "Only the parts that cannot wait",
+        chips: {
+          costs: ["the backlog, which keeps its place in the queue"],
+          variance: "narrow",
+          reversibility: "reversible",
+        },
+        sensitivity: { capability: "adaptability", strength: 0.3 },
+        bands: [
+          {
+            name: "solid",
+            weight: 3,
+            outcome: {
+              line: "You keep the things with dates on them and let the rest sit. It holds, and the hours you did not spend go somewhere else.",
+              effects: { maintenanceDebt: -1, gauge: { timeStructure: 1 } },
+            },
+          },
+          {
+            name: "mixed",
+            weight: 2,
+            outcome: {
+              line: "The dated things get done. What is left is still left, and it is a little larger than it was.",
+              effects: { gauge: { timeStructure: 1 } },
+            },
+          },
+        ],
+      },
+    ],
+  },
 ];
+
+/**
+ * N-213 — the standing upkeep option, named once so the engine harness, the
+ * season menu and C-17 all point at the same record rather than at a string
+ * copied into three places.
+ */
+export const UPKEEP_ACTION_ID = "act-small-upkeep";

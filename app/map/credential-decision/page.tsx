@@ -6,6 +6,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 import { CredentialFilter } from "@/components/CredentialFilter";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
@@ -97,6 +98,10 @@ export default function CredentialDecisionPage() {
         <NextStep href="/topics/work">Education and career — credentials, standing, and changing direction.</NextStep>
         <NextStep href="/guidance">Choosing a path — lay out your own version of this decision.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/lab">the Decision Lab forks exactly this one and shows what separated the two branches.</TryInPlay>
 
       <EvidenceDrawer
         record={{

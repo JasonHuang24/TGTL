@@ -6,6 +6,8 @@
  * branch open their own deep pages; the other stages show these short cards.
  */
 
+import type { AgencyKind } from "@/content/play/acts";
+
 export type Stage = {
   id: string;
   label: string;
@@ -15,6 +17,15 @@ export type Stage = {
   card: string[];
   /** If set, selecting this stage routes to a deep page instead of showing a card. */
   deepLink?: { href: string; label: string };
+  /**
+   * N-366 (6.0 §3.9) — what kind of agency a person has in this stretch:
+   * happens to · decided for · decided with · decided by. Set on the EARLY
+   * stages, where the map is most at risk of reading as a set of choices a child
+   * was offered and did not take. It is deliberately absent from the later
+   * stages: by then the answer is "decided by" everywhere the map goes, and
+   * stamping it on every card would turn a correction into decoration.
+   */
+  agency?: AgencyKind;
 };
 
 export type Domain = {
@@ -42,6 +53,7 @@ export const STAGES: Stage[] = [
     label: "Birth and dependency",
     gameLabel: "The opening",
     short: "carried entirely",
+    agency: "happens to",
     card: [
       "You arrive able to signal need and almost nothing else, and the entire stretch is carried by other people. Nothing here is chosen and nearly everything here matters later: whether the care was reliable enough that the world came to feel safe, whether there was enough of what a body needs, whether the people holding you had any margin of their own.",
       "This is the clearest case on the whole map of a position that is assigned rather than earned. What happens here shapes the baseline a person launches from, and it is the part of a life for which no one can be given credit or blame. What tends to change from here is that signalling slowly becomes doing — the first small conversions of need into action.",
@@ -53,6 +65,7 @@ export const STAGES: Stage[] = [
     label: "Early childhood",
     gameLabel: "Early game",
     short: "the rules go in first",
+    agency: "decided for",
     card: [
       "Language arrives, and with it the strange fact that the world can be named before it can be questioned. The rules of how things work — what is normal, who is safe, what happens when you reach — are absorbed long before there is any apparatus to examine them, which is why they later feel less like beliefs than like weather.",
       "Play is the real work of the stage: it is how a person runs cheap experiments on a world whose costs are still mostly borne by someone else. Attachment and safety do most of the load-bearing; competence is being assembled underneath, unevenly and out of sight.",
@@ -64,6 +77,7 @@ export const STAGES: Stage[] = [
     label: "The tutorial years",
     gameLabel: "The tutorial",
     short: "taught, and sorted",
+    agency: "decided with",
     card: [
       "Formal systems begin — a school, a set of expectations, the first institutions that will rate a person against others. Two things arrive together and are easily confused: being taught, and being sorted. A great deal of what feels like a verdict on ability at this stage is really the system doing its filing.",
       "Competence and comparison show up hand in hand. A person learns that they can get better at things, and simultaneously that there is a ladder and a place on it — and the second lesson often lands harder than the first, especially where the ladder was steeper for some children than others before any of them arrived.",
@@ -75,6 +89,7 @@ export const STAGES: Stage[] = [
     label: "Adolescence",
     gameLabel: "Mid-tutorial",
     short: "the self becomes a project",
+    agency: "decided with",
     card: [
       "The self stops being a given and becomes something to be worked on, tested, and argued about. Peers move to the centre of the reference frame and often outweigh parents there, which is developmentally ordinary rather than a betrayal. Identity gets built by trying versions on, which requires room to be wrong.",
       "Judgement is under construction while the stakes and the freedoms both rise, so risk is not a malfunction here; it is the cost of the experiments the stage exists to run. The body and the social rules are both changing faster than the equipment for reading them, which is exhausting from the inside and easy to mistake for a character flaw.",

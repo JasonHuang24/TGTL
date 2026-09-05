@@ -12,12 +12,12 @@
  * Output format is `[PASS|FAIL|N/A] Gate C-N: name` so a probe can name a gate
  * without colliding with the static or T-suite numbering.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { ROOT, OUT_DIR, containsPhrase, textOf } from "./util.ts";
 import { HOTLINE_GROUPS, NATIONS, UK_NATIONS, hotlineRegions, ALL_HOTLINES } from "../content/hotlines.ts";
-import { SETDOWN_FORBIDDEN_TERMS } from "../content/terminology.ts";
+import { SETDOWN_FORBIDDEN_TERMS, TERMS } from "../content/terminology.ts";
 import { STATUS_LABEL } from "../content/evidence.ts";
 import { SETDOWN_ROUTES } from "../content/routes.ts";
 
@@ -784,6 +784,703 @@ function c10(): CGateResult | null {
   };
 }
 
+
+/* =========================================================================
+   BATCH 3 (group H, the play layer) — C-11 … C-25.
+   =========================================================================
+   THE ENGINE HARNESS. Five of these gates have engine behaviour as their subject
+   and this file cannot reach the engine: it runs under `node
+   --experimental-strip-types`, which resolves relative specifiers only, and every
+   module under lib/sim imports through the `@/` alias. So the engine halves live
+   in `tests/consolidation-sim-harness.ts`, run once under tsx, and this file reads
+   its output — the same shape C-1 (batch 1) uses for the save-status harness,
+   extended to eight assertions so the suite pays for one spawn rather than eight.
+   ========================================================================= */
+
+type HarnessLine = { gate: string; pass: boolean; detail: string };
+let HARNESS: HarnessLine[] | null | undefined;
+
+function harness(): HarnessLine[] | null {
+  if (HARNESS !== undefined) return HARNESS;
+  const r = spawnSync("npx", ["tsx", "tests/consolidation-sim-harness.ts"], {
+    cwd: ROOT,
+    encoding: "utf8",
+    shell: true,
+  });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  const lines = [...out.matchAll(/^\[(C-\d+)\] (PASS|FAIL) · (.*)$/gm)].map((m) => ({
+    gate: m[1],
+    pass: m[2] === "PASS",
+    detail: m[3],
+  }));
+  if (!lines.length) {
+    HARNESS = null;
+    // Not silent: a harness that will not run is a suite of gates that cannot
+    // fail, which is the exact defect the falsify discipline exists to catch.
+    console.error("tests/consolidation-sim-harness.ts produced no gate lines:\n" + out.split("\n").slice(-12).join("\n"));
+    return null;
+  }
+  HARNESS = lines;
+  return lines;
+}
+
+/** One gate's result out of the harness, or null when it reported nothing. */
+function fromHarness(gate: string, extra?: () => { fails: string[]; details: string[] }): CGateResult | null {
+  const all = harness();
+  if (!all) return { pass: false, details: [`the engine harness did not run, so ${gate} proved nothing`] };
+  const mine = all.filter((l) => l.gate === gate);
+  if (!mine.length) return null;
+  const local = extra ? extra() : { fails: [], details: [] };
+  const fails = [...mine.filter((l) => !l.pass).map((l) => l.detail), ...local.fails];
+  if (fails.length) return { pass: false, details: fails };
+  return { pass: true, details: [...mine.map((l) => l.detail), ...local.details] };
+}
+
+/* =========================================================================
+   C-11 (N-192) — at least one shipped draw-vary pair renders the same-outcome
+   reading. Entirely the harness's: the subject is what `compare()` returns.
+   Plant: reseed the pair to one that separates.
+   ========================================================================= */
+const c11 = (): CGateResult | null => fromHarness("C-11");
+
+/* =========================================================================
+   C-12 (N-194) — Repeat-last-season commits an ordered set through the
+   hand-allocation path and the run still replays byte-identically.
+   =========================================================================
+   The harness proves the engine half. The half a harness cannot see is that the
+   CONTROL uses that path: `repeatProposal` copies the previous season's
+   allocations in order (not rebuilt from a set of ids), and the button hands its
+   proposal to the same `commitAllocations` the allocate screen's Resolve calls.
+   ========================================================================= */
+function c12(): CGateResult | null {
+  return fromHarness("C-12", () => {
+    const src = read("components/sim/CampaignApp.tsx");
+    const fails: string[] = [];
+    if (!/data-sim-repeat-last/.test(src)) return { fails: ["components/sim/CampaignApp.tsx: no repeat-last control renders at all"], details: [] };
+    // ONE commit path. Both the Resolve button and the repeat control must reach
+    // `commitAllocations`; a second inline path is how the two would drift.
+    const calls = [...src.matchAll(/commitAllocations\(/g)].length;
+    if (calls < 3)
+      fails.push(
+        `components/sim/CampaignApp.tsx: commitAllocations appears ${calls} time(s) — the declaration plus a call from the allocate screen plus a call from the repeat control is the minimum, and fewer means one of them commits by another route`,
+      );
+    // ORDER. A proposal built by iterating the previous allocations in order is
+    // the thing being asserted; a proposal built from a Set or a map of ids is
+    // the defect, and §7.6 resolves in allocation order so it would not be a repeat.
+    const proposal = src.slice(src.indexOf("function repeatProposal"), src.indexOf("function gaugeDelta"));
+    if (!/for \(const a of last\.allocations\)/.test(proposal))
+      fails.push("components/sim/CampaignApp.tsx: repeatProposal no longer walks the previous season's allocations in order");
+    if (/new Set\(/.test(proposal))
+      fails.push("components/sim/CampaignApp.tsx: repeatProposal builds its proposal through a Set, which does not preserve the allocation order §7.6 resolves in");
+    return { fails, details: ["the repeat control and the allocate screen commit through one shared path, and the proposal is copied in order"] };
+  });
+}
+
+/* =========================================================================
+   C-13 (N-195) — the rendered /methodology names the curation tool and both
+   criteria. Plant: delete the sentence.
+   ========================================================================= */
+function c13(): CGateResult | null {
+  const copy = read("content/sim/methodology-copy.ts");
+  if (!copy.includes("LAB_CURATION_TOOL")) return null;
+  const html = readOut("/methodology");
+  if (!html) return { pass: false, details: ["out/methodology/index.html not built"] };
+  const text = textOf(html).toLowerCase();
+  const fails: string[] = [];
+  const TOOL = "tools/curate-lab-seeds.ts";
+  if (!text.includes(TOOL))
+    fails.push(
+      `/methodology does not name ${TOOL}. The page publishes the economy, the resolution order, the pile-up physics and the attribution rule, and then omits the one place a thumb was put on which seed ships (N-195; DECISIONS.md "INVENTION: automated Lab seed curation").`,
+    );
+  // BOTH criteria, by their substance rather than by a sentence that could be
+  // reworded: one search is for seeds that SEPARATE, the other for one that
+  // lands the SAME. A disclosure naming only the first is the state this row
+  // exists to correct, so the gate must be able to come back red on that alone.
+  if (!/separat/.test(text)) fails.push("/methodology names the curation tool but not the criterion it originally searched on (alternate draws that SEPARATE)");
+  if (!/lands the same|land the same/.test(text))
+    fails.push("/methodology names the curation tool but not the second criterion (an alternate draw that lands the SAME), which is the half this version added");
+  if (!/curat/.test(text)) fails.push("/methodology carries no disclosure of the curation itself");
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/methodology names ${TOOL} and both criteria — the seeds that separate, and the one curated to land the same — with the limit stated (it chooses which fixed seed ships, not the physics)`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-14 (N-204) — every season screen carries its origin's face motif.
+   =========================================================================
+   A "record" gate: the campaign is client-only, so out/ carries no season screen
+   at all and the substance is the browser assertion in tests/browser-gates.mjs,
+   which samples three turns. The half asserted HERE is the one a browser walk
+   cannot state: that the motif is in the SHARED HEADER — which renders on every
+   stage except the prologue and the hand — rather than on one screen, and that
+   the header does not carry the preset's NAME, which is the spec's own test
+   (a screenshot must be attributable to its origin without it).
+   ========================================================================= */
+function c14(): CGateResult | null {
+  const src = read("components/sim/CampaignApp.tsx");
+  if (!/data-sim-origin-face/.test(src)) return null;
+  const fails: string[] = [];
+  const header = src.slice(src.indexOf("function CampaignHeader"), src.indexOf("Prologue and the hand"));
+  if (!/data-sim-origin-face/.test(header))
+    fails.push("components/sim/CampaignApp.tsx: the origin motif is not in CampaignHeader, so it renders on one screen rather than on every season step");
+  if (!/FamilyMotif/.test(header))
+    fails.push("components/sim/CampaignApp.tsx: the season chrome draws its own motif rather than reusing the card face's — two drawings that can drift apart");
+  if (!/originFace/.test(src)) fails.push("components/sim/CampaignApp.tsx: no origin-face derivation; a drawn hand would render nothing");
+  // The preset NAME must not be in the header: the spec's test is attribution
+  // WITHOUT it. `presetId` may appear in the derivation, never as rendered text.
+  if (/<dd>\{[^}]*preset[^}]*\.label/i.test(header))
+    fails.push("components/sim/CampaignApp.tsx: the header renders the preset's name, which is the thing the motif is supposed to make unnecessary");
+  // And the browser half exists and is armed.
+  const browser = read("tests/browser-gates.mjs");
+  if (!/data-sim-origin-face/.test(browser))
+    fails.push("tests/browser-gates.mjs: no browser assertion for the origin motif — C-14's substance is the rendered half and it is not being checked");
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "the origin motif renders from CampaignHeader, which is on every season step except the prologue and the hand; it reuses FamilyMotif, the one component that draws a family; a drawn hand falls back to the neutral inner face",
+      "the preset's name is not in the header — the spec's own test is that a screenshot is attributable to its origin without it",
+      "the rendered half is asserted at three sampled turns in tests/browser-gates.mjs (record gate; proven red by rendering the motif only on turn one)",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-15 (N-211) — no selectable response renders without all five contract
+   fields. Pool half in the harness; render half here.
+   ========================================================================= */
+function c15(): CGateResult | null {
+  const src = read("components/sim/CampaignApp.tsx");
+  if (!/data-sim-contract-field/.test(src)) return null;
+  return fromHarness("C-15", () => {
+    const fails: string[] = [];
+    const details: string[] = [];
+    // The five names come from lib/sim/season.ts's CONTRACT_FIELD_NAMES, and the
+    // renderer maps over them rather than writing five <dt>s that could drift.
+    const season = read("lib/sim/season.ts");
+    const NAMES = ["capacity", "what waits", "reversibility", "if it goes badly", "evidence"];
+    const declared = /CONTRACT_FIELD_NAMES = \[([^\]]*)\]/.exec(season);
+    const got = declared ? [...declared[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : [];
+    if (got.join("|") !== NAMES.join("|"))
+      fails.push(`lib/sim/season.ts: the contract is [${got.join(", ")}]; §3.9 fixes the five names as [${NAMES.join(", ")}]`);
+    const renderer = src.slice(src.indexOf("function ResponseContract"), src.indexOf("N-212 — THE PURE PREVIEW PANE"));
+    if (!/responseContract\(/.test(renderer))
+      fails.push("components/sim/CampaignApp.tsx: ResponseContract does not call the shared responseContract, so the card and the gate could be reading different fields");
+    if (!/data-sim-contract-field=\{f\.name\}/.test(renderer))
+      fails.push("components/sim/CampaignApp.tsx: the contract rows do not carry data-sim-contract-field, so nothing can assert their presence");
+    // EVERY selectable option is inside a contract. Every `data-sim-option` in
+    // the component must be a list item whose body renders <ResponseContract.
+    const optionBlocks = src.split("data-sim-option");
+    for (let i = 1; i < optionBlocks.length; i++) {
+      const body = optionBlocks[i].slice(0, 2600);
+      if (!/<ResponseContract/.test(body))
+        fails.push(
+          `components/sim/CampaignApp.tsx: a [data-sim-option] block (#${i}) renders no <ResponseContract> — an option a reader can commit without being shown what waits, what is reversible, or the way back`,
+        );
+    }
+    details.push(`${optionBlocks.length - 1} option-rendering sites, each wrapping a ResponseContract driven by the five fixed names`);
+    return { fails, details };
+  });
+}
+
+/* =========================================================================
+   C-16 (N-212) — previewAction is pure. Harness for the behaviour; here, the
+   two structural halves a purity run cannot see.
+   ========================================================================= */
+function c16(): CGateResult | null {
+  const season = read("lib/sim/season.ts");
+  if (!/export function previewAction/.test(season)) return null;
+  return fromHarness("C-16", () => {
+    const fails: string[] = [];
+    // (1) NO STORAGE. lib/sim/season.ts must not reach persistence at all — the
+    //     persisted active key is the thing "writes nothing" is about.
+    if (/from "@\/lib\/storage"|from "@\/lib\/sim\/persist"|localStorage/.test(season))
+      fails.push("lib/sim/season.ts reaches storage — a preview in this module could write the persisted active key");
+    // (2) NO RANDOMNESS inside previewAction. A preview that consumed a draw would
+    //     move what the next commit resolves to, which is the subtlest way this
+    //     could write. The harness proves the consequence; this proves the cause.
+    const body = season.slice(season.indexOf("export function previewAction"), season.indexOf("function dueWord"));
+    for (const call of ["drawFor(", "selectionDraw(", "freshSeed(", "hashToUnit(", "weightedIndex("])
+      if (body.includes(call)) fails.push(`lib/sim/season.ts: previewAction calls ${call} — a preview that consumes randomness is not a preview`);
+    // (3) The rendered promise. The pane says previewing changes nothing; the
+    //     sentence is only allowed to be there because of this gate.
+    const app = read("components/sim/CampaignApp.tsx");
+    if (!/Previewing changes nothing\./.test(app))
+      fails.push("components/sim/CampaignApp.tsx: the preview pane no longer states that previewing changes nothing");
+    if (!/aria-live="polite"[\s\S]{0,200}data-sim-preview|data-sim-preview[\s\S]{0,200}aria-live="polite"/.test(app))
+      fails.push("components/sim/CampaignApp.tsx: the preview pane is not an aria-live region, so a keyboard reader gets nothing from it");
+    return { fails, details: ["lib/sim/season.ts reaches no storage and previewAction consumes no draw; the pane is an aria-live region and states the claim the gate makes true"] };
+  });
+}
+
+/* =========================================================================
+   C-17 (N-213) — upkeep present and affordable in the worst envelope.
+   Plant: raise its cost above the floor.
+   ========================================================================= */
+const c17 = (): CGateResult | null => fromHarness("C-17");
+
+/* =========================================================================
+   C-18 (N-214) — the `narrowing` door state never renders in the open state's
+   token. Plant: map it to the open token.
+   =========================================================================
+   The three-state panel's original defect was that "opened" is tinted with the
+   good-outcome colour and everything unlisted fell into it, so job loss read as
+   a green door. The fourth state is the same trap one step further along: a door
+   that is getting harder painted as one that opened. This reads the rules the
+   door group headings actually use out of the stylesheets — never a hardcoded
+   list — and requires narrowing's token to differ from opened's.
+   ========================================================================= */
+const SIM_SHEETS = ["app/sim.css", "app/sim-surfaces.css", "app/sim-instruments.css"];
+
+/** Every `--sim-*` token a rule whose selector matches `test` sets a colour from. */
+function tokensForSelector(test: RegExp): { selector: string; tokens: string[] }[] {
+  const out: { selector: string; tokens: string[] }[] = [];
+  for (const sheet of SIM_SHEETS) {
+    const css = read(sheet).replace(/\/\*[\s\S]*?\*\//g, " ");
+    for (const block of css.split("}")) {
+      const open = block.indexOf("{");
+      if (open === -1) continue;
+      const selector = block.slice(0, open).trim();
+      if (!test.test(selector)) continue;
+      const tokens = [...block.slice(open).matchAll(/var\((--sim-[\w-]+)\)/g)].map((m) => m[1]);
+      if (tokens.length) out.push({ selector, tokens });
+    }
+  }
+  return out;
+}
+
+function c18(): CGateResult | null {
+  const doors = read("content/sim/campaign/doors.ts");
+  if (!/"narrowing"/.test(doors)) return null;
+  const fails: string[] = [];
+  const opened = tokensForSelector(/data-state="opened"/).flatMap((r) => r.tokens);
+  const narrowing = tokensForSelector(/data-state="narrowing"/).flatMap((r) => r.tokens);
+  if (!opened.length) fails.push("no rule paints the open door state, so C-18 has nothing to compare against");
+  if (!narrowing.length)
+    fails.push(
+      'no rule declares the "narrowing" door state\'s colour. Left to inherit, it is correct today and one cascade change from being wrong, and the gate has no subject to plant into.',
+    );
+  for (const t of narrowing)
+    if (opened.includes(t))
+      fails.push(
+        `the "narrowing" door state renders in ${t}, which is the OPEN state's token. A door that is getting harder every season it goes unused is not a door that opened, and painting it as one is the three-state panel's own defect (job loss rendered green) one state further along.`,
+      );
+  // And the state is actually reachable: declared on at least one door and
+  // rendered as its own group rather than folded into another.
+  const declared = [...doors.matchAll(/state: "narrowing"/g)].length;
+  if (!declared) fails.push('content/sim/campaign/doors.ts declares the "narrowing" state on no door, so it can never render');
+  const app = read("components/sim/CampaignApp.tsx");
+  if (!/\["narrowing", /.test(app)) fails.push("components/sim/CampaignApp.tsx: the doors panel has no narrowing group, so the state would be computed and dropped");
+  const note = read("content/sim/campaign/doors.ts");
+  if (!/narrowing:\s*\n?\s*"/.test(note) && !/narrowing:\s*"/.test(note))
+    fails.push("content/sim/campaign/doors.ts: DOOR_NOTE carries no line for the narrowing state");
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `"narrowing" is declared on ${declared} doors, renders as its own group, and is painted with [${[...new Set(narrowing)].join(", ")}] — never the open state's [${[...new Set(opened)].join(", ")}]`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-19 (N-233) — no sim token pair encodes valence as green/red across a
+   resolution; no Game Guide string carries a forbidden-register term.
+   =========================================================================
+   THE COLOUR HALF, and why it is measured the way it is. The no-worth-score wall
+   is enforced in words, in numbers and in totals. Colour is the one channel
+   nothing linted, and a saturated green on `strong` against a saturated red on
+   `failure` would put the verdict back on the screen without a word of it being
+   written. The shipped palette refuses that deliberately: --sim-good is a muted
+   sage and --sim-poor a terracotta, both well under signal strength.
+   The rule this asserts is therefore NOT "no green and no red hue" — that would
+   fail on the shipped terracotta, which sits at a red hue and is not a signal
+   red — but "not a green and a red AT SIGNAL STRENGTH on the two ends of one
+   resolution". Chroma (the distance from grey) is the measure, the threshold is
+   published below with the shipped values beside it, and the margin is wide:
+   the band tokens sit around a third of full chroma against a line at a half.
+   A traffic-light colour on either end trips it.
+   ========================================================================= */
+const SIGNAL_CHROMA = 0.5;
+
+function hexOfToken(token: string): string | null {
+  const css = read("app/sim.css");
+  const m = new RegExp(`${token}\\s*:\\s*(#[0-9a-fA-F]{3,8})`).exec(css);
+  return m ? m[1] : null;
+}
+function rgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h.slice(0, 6);
+  return [parseInt(full.slice(0, 2), 16), parseInt(full.slice(2, 4), 16), parseInt(full.slice(4, 6), 16)];
+}
+/** Hue in degrees, and chroma as a fraction of full (max-min over 255). */
+function hueChroma(hex: string): { hue: number; chroma: number } {
+  const [r, g, b] = rgb(hex);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let hue = 0;
+  if (d !== 0) {
+    if (max === r) hue = 60 * (((g - b) / d) % 6);
+    else if (max === g) hue = 60 * ((b - r) / d + 2);
+    else hue = 60 * ((r - g) / d + 4);
+  }
+  if (hue < 0) hue += 360;
+  return { hue, chroma: d / 255 };
+}
+const isGreenHue = (h: number) => h >= 75 && h <= 170;
+const isRedHue = (h: number) => h >= 340 || h <= 20;
+
+function c19(): CGateResult | null {
+  const cfgPath = join(ROOT, "content/terminology.json");
+  if (!existsSync(cfgPath)) return null;
+  const cfg = JSON.parse(readFileSync(cfgPath, "utf8")) as Record<string, unknown>;
+  if (!Array.isArray(cfg.forbiddenRegister)) return null;
+
+  const fails: string[] = [];
+  const details: string[] = [];
+
+  /* ---- (a) the colour rule, over the tokens the band classes actually use ---- */
+  const bandRules = tokensForSelector(/data-band=/);
+  if (!bandRules.length) fails.push("no rule in the sim stylesheets paints an outcome band, so the colour half of C-19 has no subject");
+  const POSITIVE = ["strong", "solid"];
+  const NEGATIVE = ["poor", "failure"];
+  const tokensFor = (bands: string[]) =>
+    [
+      ...new Set(
+        bandRules.filter((r) => bands.some((b) => r.selector.includes(`data-band="${b}"`))).flatMap((r) => r.tokens),
+      ),
+    ];
+  const good = tokensFor(POSITIVE);
+  const bad = tokensFor(NEGATIVE);
+  const measured: string[] = [];
+  for (const gt of good) {
+    const gh = hexOfToken(gt);
+    if (!gh) continue;
+    const g = hueChroma(gh);
+    measured.push(`${gt} ${gh} hue ${Math.round(g.hue)}°, chroma ${g.chroma.toFixed(2)}`);
+    for (const bt of bad) {
+      const bh = hexOfToken(bt);
+      if (!bh) continue;
+      const b = hueChroma(bh);
+      if (isGreenHue(g.hue) && isRedHue(b.hue) && Math.max(g.chroma, b.chroma) >= SIGNAL_CHROMA)
+        fails.push(
+          `the outcome bands put ${gt} (${gh}, hue ${Math.round(g.hue)}°, chroma ${g.chroma.toFixed(2)}) against ${bt} (${bh}, hue ${Math.round(b.hue)}°, chroma ${b.chroma.toFixed(2)}) — a green and a red at signal strength on the two ends of one resolution. That is a verdict on the character, rendered in the one channel the no-score wall does not read (N-233).`,
+        );
+    }
+  }
+  for (const bt of bad) {
+    const bh = hexOfToken(bt);
+    if (bh) measured.push(`${bt} ${bh} hue ${Math.round(hueChroma(bh).hue)}°, chroma ${hueChroma(bh).chroma.toFixed(2)}`);
+  }
+  if (!measured.length) fails.push("none of the outcome-band tokens resolved to a colour in app/sim.css, so the colour rule was not actually measured");
+
+  /* ---- (b) the forbidden register, over the EDITION VOCABULARY ---- */
+  const forbidden = (cfg.forbiddenRegister as string[]).map((w) => w.toLowerCase());
+  let labels = 0;
+  for (const t of Object.values(TERMS)) {
+    for (const [field, value] of [
+      ["game", t.game],
+      ["define", t.define],
+      ["standard", t.standard],
+    ] as [string, string | undefined][]) {
+      if (!value) continue;
+      if (field === "game") labels++;
+      for (const w of forbidden)
+        if (containsPhrase(value.toLowerCase(), w))
+          fails.push(
+            `content/terminology.ts: the ${field} label for "${t.key}" is "${value}", which carries the combat-skin term "${w}". The Game Guide is a vocabulary for a life, not a genre — swords, health bars, enemies and boss fights import a frame in which a person has hit points and a hard year is a fight they lost (N-233).`,
+          );
+    }
+  }
+  // The JSON's own game labels, which is where the row says the list lives.
+  for (const [key, rec] of Object.entries(cfg)) {
+    if (!rec || typeof rec !== "object" || Array.isArray(rec)) continue;
+    const game = (rec as { game?: string }).game;
+    if (!game) continue;
+    for (const w of forbidden)
+      if (containsPhrase(game.toLowerCase(), w))
+        fails.push(`content/terminology.json: the game label for "${key}" is "${game}", which carries the combat-skin term "${w}"`);
+  }
+  if (!Array.isArray(cfg.forbiddenRegisterPlaySurfaces))
+    fails.push("content/terminology.json declares no forbiddenRegisterPlaySurfaces subset, so the play-surface half of the lint is unarmed");
+  if (!Array.isArray(cfg.forbiddenRegisterNote) || !(cfg.forbiddenRegisterNote as string[]).length)
+    fails.push("content/terminology.json: the forbidden register carries no statement of what it is for or why it has two scopes");
+  // The rule is written where the tokens are, so the next author meets it.
+  if (!/no token pair encodes outcome valence as green\/red|COLOUR RULE/i.test(read("app/sim.css")))
+    fails.push("app/sim.css: the token set carries no statement of the colour rule, so the next person to pick a colour will not meet it");
+
+  const play = harness()?.filter((l) => l.gate === "C-19") ?? [];
+  for (const l of play) if (!l.pass) fails.push(l.detail);
+
+  if (fails.length) return { pass: false, details: fails };
+  details.push(`outcome-band tokens measured: ${measured.join(" · ")} — no green/red pair at or above ${SIGNAL_CHROMA} chroma`);
+  details.push(`${forbidden.length} forbidden-register terms linted against ${labels} Game Guide labels and every term gloss`);
+  for (const l of play) details.push(l.detail);
+  return { pass: true, details };
+}
+
+/* =========================================================================
+   C-20 (N-216) — a reopened season renders its stored explanation.
+   Harness for the behaviour; here, that the SEASON LIST reads it.
+   ========================================================================= */
+function c20(): CGateResult | null {
+  const persist = read("lib/sim/persist.ts");
+  if (!/recordExplanations/.test(persist)) return null;
+  return fromHarness("C-20", () => {
+    const fails: string[] = [];
+    const app = read("components/sim/CampaignApp.tsx");
+    if (!/storedExplanationFor\(run, s\.seasonIndex\)/.test(app))
+      fails.push("components/sim/CampaignApp.tsx: the look-back's season list does not reopen the stored explanation, so a content change still rewrites what a reader met");
+    if (!/recordExplanations\(outcome\.state, outcome\.result\)/.test(app))
+      fails.push("components/sim/CampaignApp.tsx: nothing stores a season's explanation when it resolves, so there is never anything to reopen");
+    if (!/data-sim-season-record/.test(app))
+      fails.push("components/sim/CampaignApp.tsx: the season list does not declare whether a row is the stored text or a recomputation");
+    // The stamp travels with the text, and is not re-read off the live version.
+    const persistSrc = read("lib/sim/persist.ts");
+    if (!/contentVersion: CONTENT_VERSION/.test(persistSrc))
+      fails.push("lib/sim/persist.ts: a stored explanation is not stamped with the content version that produced it");
+    return { fails, details: ["the look-back reopens the stored text with its own stamp, and marks a pre-6.0 season as a recomputation rather than passing it off as a record"] };
+  });
+}
+
+/* =========================================================================
+   C-21 (N-218) — the Queue's empty state says uncertainty has not disappeared.
+   Plant: delete the second sentence.
+   =========================================================================
+   The queue instrument is client-only, so the exported HTML never carries it and
+   the subject is the component. Both sentences are required, and the SECOND one
+   is the row: an empty queue is the moment a simulation most tempts a reader into
+   reading "nothing is pending" as "nothing is coming", and the first sentence
+   alone is the reassuring half of a true thing.
+   ========================================================================= */
+function c21(): CGateResult | null {
+  const src = read("components/sim/instruments/Instruments.tsx");
+  if (!/data-sim-queue-empty/.test(src)) return null;
+  const fails: string[] = [];
+  const block = src.slice(src.indexOf("if (!queue.length)"), src.indexOf("return (\n    <section className=\"sim-queue\""));
+  const FIRST = "No known delayed consequence is pending.";
+  const SECOND = "Uncertainty has not disappeared.";
+  if (!block.includes(FIRST)) fails.push(`the Queue's empty state does not say "${FIRST}"`);
+  if (!block.includes(SECOND))
+    fails.push(
+      `the Queue's empty state does not say "${SECOND}". Without it the panel reads as "nothing is coming", which is the false clearance an empty queue most invites — the queue holds what has ALREADY been set going, and genuinely uncertain things are absent because they are not decided, not because they do not exist (N-218).`,
+    );
+  if (fails.length) return { pass: false, details: fails };
+  return { pass: true, details: ["the Queue's empty state carries both sentences: nothing is pending, and uncertainty has not disappeared"] };
+}
+
+/* =========================================================================
+   C-22 (N-225) — every Lab situation declares an unknown, rendered BEFORE the
+   branches. Content half in the harness; order half here.
+   ========================================================================= */
+function c22(): CGateResult | null {
+  const app = read("components/sim/LabApp.tsx");
+  if (!/data-sim-lab-unknown/.test(app)) return null;
+  return fromHarness("C-22", () => {
+    const fails: string[] = [];
+    // ORDER IS THE ROW. After the columns is too late: by then the screen has
+    // already made its case. So the unknowns block must come before the branch
+    // columns in the rendered source, not merely exist somewhere on the page.
+    const unknowns = app.indexOf("data-sim-lab-unknown");
+    const columns = app.indexOf("sim-lab-columns");
+    const diff = app.indexOf("What actually differs");
+    if (unknowns < 0 || columns < 0) fails.push("components/sim/LabApp.tsx: could not locate the unknowns block or the branch columns");
+    else if (unknowns > columns)
+      fails.push(
+        "components/sim/LabApp.tsx: the unknowns render AFTER the branch columns. Naming what the fork cannot resolve is the counterweight to a comparison screen that looks decisive, and after the comparison it is a footnote.",
+      );
+    if (diff > 0 && unknowns > diff) fails.push("components/sim/LabApp.tsx: the unknowns render after the differences panel");
+    return { fails, details: ["the unknowns render above the branch columns, under their own heading"] };
+  });
+}
+
+/* =========================================================================
+   C-23 (N-228) — every SimState field the engine reads has a mid-run surface.
+   Plant: remove one field's surface.
+   =========================================================================
+   The list is DERIVED, never written down here: the gate reads the field accesses
+   out of lib/sim/season.ts, intersects them with SimState's declared fields, and
+   requires a `data-sim-state-field` for each somewhere under components/sim. So
+   adding a read to the engine forces a surface, and this cannot go stale.
+
+   ONE DECLARED EXEMPTION, with its reason: `beatsPlayed`. Beats are not state a
+   player inspects. §5.1 keeps them off every forward-looking screen, out of the
+   queue, out of the items list and out of the milestone list, and a skipped beat
+   stays skipped on every surface; putting the beat channel into the run's chrome
+   would be the one place that rule is broken, by a gate written to enforce a
+   different rule. It is named here rather than quietly filtered.
+   ========================================================================= */
+const STATE_FIELD_EXEMPT: Record<string, string> = {
+  beatsPlayed:
+    "the beat channel is not state a player inspects (§5.1): beats are kept off every forward-looking surface and a skipped beat stays skipped, so a mid-run panel listing them would break that rule rather than satisfy this one",
+};
+
+function c23(): CGateResult | null {
+  const rail = join(ROOT, "components/sim/StateRail.tsx");
+  if (!existsSync(rail)) return null;
+  const schema = read("content/sim/schema.ts");
+  const season = read("lib/sim/season.ts");
+
+  // SimState's declared fields, read out of the type.
+  const typeBody = schema.slice(schema.indexOf("export type SimState = {"));
+  const decl = typeBody.slice(0, typeBody.indexOf("\n};"));
+  const declared = new Set(
+    [...decl.replace(/\/\*[\s\S]*?\*\//g, " ").matchAll(/^\s{2}(\w+)\??:/gm)].map((m) => m[1]),
+  );
+  // What the engine actually reads.
+  const readByEngine = new Set(
+    [...season.replace(/\/\*[\s\S]*?\*\//g, " ").matchAll(/\b(?:state|s|next)\.(\w+)/g)]
+      .map((m) => m[1])
+      .filter((f) => declared.has(f)),
+  );
+
+  // Every surface marker under components/sim.
+  const surfaces = new Set<string>();
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) walk(full);
+      else if (/\.tsx?$/.test(entry))
+        for (const m of readFileSync(full, "utf8").matchAll(/data-sim-state-field(?:-also)?="(\w+)"/g)) surfaces.add(m[1]);
+    }
+  };
+  walk(join(ROOT, "components/sim"));
+
+  const fails: string[] = [];
+  const exempted: string[] = [];
+  for (const field of [...readByEngine].sort()) {
+    if (STATE_FIELD_EXEMPT[field]) {
+      exempted.push(`${field} (${STATE_FIELD_EXEMPT[field]})`);
+      continue;
+    }
+    if (!surfaces.has(field))
+      fails.push(
+        `SimState.${field} is read by the engine and has no mid-run surface. A player spends twenty-four seasons building something the interface never shows them, which is the named trust defect this row exists to close (N-228): mark a surface with data-sim-state-field="${field}".`,
+      );
+  }
+  // And the rail is reachable from every season step, not from one screen.
+  const app = read("components/sim/CampaignApp.tsx");
+  if (!/<StateRail run=\{run\} \/>/.test(app)) fails.push("components/sim/CampaignApp.tsx: the state rail is never rendered");
+  if (!/onToggleRail/.test(app.slice(app.indexOf("function CampaignHeader"), app.indexOf("Prologue and the hand"))))
+    fails.push(
+      "components/sim/CampaignApp.tsx: the state rail is not opened from the header, so it is reachable from the screens that happen to have an aside rather than from every season step",
+    );
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${readByEngine.size} SimState fields are read by lib/sim/season.ts; ${readByEngine.size - exempted.length} of them carry a data-sim-state-field surface under components/sim, reachable from every season step through the header`,
+      `derived, not listed: ${[...readByEngine].sort().join(", ")}`,
+      ...(exempted.length ? [`declared exemption — ${exempted.join("; ")}`] : []),
+    ],
+  };
+}
+
+/* =========================================================================
+   C-24 (N-235) — no Try-in-Play entry on any set-down route.
+   Plant: put one on /triage.
+   =========================================================================
+   Gate 2 already lints set-down routes for game vocabulary and would catch the
+   Game Guide label. This is the other half and the one that matters most: the
+   LINK itself. A reader on a set-down route may be at the end of a very bad day,
+   and an invitation to go and play a simulation of it is the wrong thing on the
+   page whatever word it is wearing. Asserted over the exported HTML, so a link
+   that reaches the page through chrome, a shared component or a nav subset is
+   caught as readily as one written into the route.
+   ========================================================================= */
+function c24(): CGateResult | null {
+  const prim = read("components/primitives.tsx");
+  if (!/data-try-in-play/.test(prim)) return null;
+  const fails: string[] = [];
+  const walked: string[] = [];
+  for (const route of SETDOWN_ROUTES) {
+    const html = readOut(route);
+    if (!html) {
+      fails.push(`${route}: not built, so the gate proved nothing about it`);
+      continue;
+    }
+    walked.push(route);
+    if (html.includes("data-try-in-play"))
+      fails.push(
+        `${route} renders a Try-in-Play entry. A set-down route carries no invitation into the play layer (6.0 §5.3): a reader here may be at the end of a very bad day, and the register of the offer is wrong whatever word it wears.`,
+      );
+    for (const m of html.matchAll(/href="(\/play[^"]*)"/g))
+      fails.push(`${route} links to ${m[1]} — a set-down route carries no Play entry, in the nav or in the page`);
+  }
+  // And it IS on the routes the row names, or the row shipped nothing.
+  const PLACED = ["/topics/money", "/topics/health", "/topics/relationships", "/topics/work", "/map/credential-decision", "/situations/job-loss"];
+  const missing = PLACED.filter((r) => !(readOut(r) ?? "").includes("data-try-in-play"));
+  if (missing.length === PLACED.length)
+    fails.push("the Try-in-Play entry renders on none of the routes N-235 names, so the gate is asserting the absence of something that does not exist");
+  else if (missing.length) fails.push(`the Try-in-Play entry is missing from ${missing.join(", ")}`);
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${walked.length} set-down routes carry no Try-in-Play marker and no /play link: ${walked.join(", ")}`,
+      `the entry renders on all ${PLACED.length} routes the row names, through <Term> so the Standard edition never sees a game word`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-25 (N-355) — every parse panel declares recorded · interpreted · unknowable.
+   Plant: strip a declaration.
+   =========================================================================
+   Both parses. The arc's uses `sim-parse-section`; the campaign's look-back uses
+   `sim-panel` inside `.sim-parse`. A panel that is NAVIGATION rather than a
+   finding declares `data-parse-controls` instead — giving the replay block or the
+   bridge one of the three words would be the first small lie on a screen whose
+   whole purpose is telling the reader which kind of claim they are reading.
+   ========================================================================= */
+const PARSE_KINDS = ["recorded", "interpreted", "unknowable"];
+
+function c25(): CGateResult | null {
+  const arc = read("components/play/Parse.tsx");
+  if (!/data-parse-kind/.test(arc)) return null;
+  const fails: string[] = [];
+  const counted: string[] = [];
+
+  const check = (file: string, src: string, opener: RegExp) => {
+    let n = 0;
+    for (const m of src.matchAll(opener)) {
+      n++;
+      const tag = m[0];
+      const kind = /data-parse-kind="(\w+)"/.exec(tag)?.[1];
+      const controls = /data-parse-controls/.test(tag);
+      // Name the section by the heading that follows it, so a failure says which.
+      const after = src.slice(m.index ?? 0, (m.index ?? 0) + 400);
+      const heading = /<h[234][^>]*>([^<]{2,60})/.exec(after)?.[1]?.trim() ?? `section #${n}`;
+      if (controls) continue;
+      if (!kind)
+        fails.push(
+          `${file}: the parse panel "${heading}" declares neither a kind nor data-parse-controls. Every panel that reports something about the run says which of recorded · interpreted · unknowable it is; a panel that is navigation says so instead (N-355).`,
+        );
+      else if (!PARSE_KINDS.includes(kind)) fails.push(`${file}: the panel "${heading}" declares data-parse-kind="${kind}", which is not one of the three`);
+    }
+    counted.push(`${file}: ${n} panels`);
+  };
+
+  check("components/play/Parse.tsx", arc, /<section className="sim-parse-section[^"]*"[^>]*>/g);
+  const camp = read("components/sim/CampaignApp.tsx");
+  const parseScreen = camp.slice(camp.indexOf("function ParseScreen"));
+  check("components/sim/CampaignApp.tsx (the look-back)", parseScreen, /<section className="sim-(?:panel|bridge)"[^>]*>/g);
+
+  // The unknowable kind must actually be used somewhere, or the third category is
+  // a word in a type rather than a thing the reader is told.
+  if (!/data-parse-kind="unknowable"/.test(arc) || !/data-parse-kind="unknowable"/.test(parseScreen))
+    fails.push(
+      'neither parse names anything as "unknowable". The category exists because the most important parts of a life get scored by omission on a screen like this; declaring only the two comfortable kinds is the omission.',
+    );
+  if (fails.length) return { pass: false, details: fails };
+  return { pass: true, details: [`every parse panel declares its kind or declares itself navigation (${counted.join("; ")})`] };
+}
+
 export const GATES: CGate[] = [
   { id: 1, row: "N-226", name: "A failed or unverified write never reports saved", proof: "record", run: c1 },
   { id: 2, row: "N-190", name: "A rendered failure mode carries its tied recovery route", proof: "probe", run: c2 },
@@ -795,21 +1492,21 @@ export const GATES: CGate[] = [
   { id: 8, row: "N-268", name: "The safety check precedes every ordering", proof: "probe", run: c8 },
   { id: 9, row: "N-272", name: "Set-down lint carries no evidence-label word", proof: "probe", run: c9 },
   { id: 10, row: "N-273", name: "No caring-duty record names a companion or condition", proof: "probe", run: c10 },
-  { id: 11, row: "N-192", name: "One draw-vary pair renders the same-outcome reading", proof: "probe", run: NA },
-  { id: 12, row: "N-194", name: "Repeat-last-season commits an ordered set and replays byte-identical", proof: "record", run: NA },
-  { id: 13, row: "N-195", name: "Methodology names the Lab seed curation tool and criterion", proof: "probe", run: NA },
-  { id: 14, row: "N-204", name: "Every season screen carries its origin motif", proof: "record", run: NA },
-  { id: 15, row: "N-211", name: "No option renders without the five contract fields", proof: "probe", run: NA },
-  { id: 16, row: "N-212", name: "previewAction is pure", proof: "probe", run: NA },
-  { id: 17, row: "N-213", name: "Upkeep is present and affordable in the worst envelope", proof: "probe", run: NA },
-  { id: 18, row: "N-214", name: "The narrowing door state never uses the open token", proof: "probe", run: NA },
-  { id: 19, row: "N-233", name: "No valence colour pair; no forbidden-register term in Game Guide", proof: "probe", run: NA },
-  { id: 20, row: "N-216", name: "A reopened season renders its stored explanation", proof: "record", run: NA },
-  { id: 21, row: "N-218", name: "The empty queue states that uncertainty remains", proof: "probe", run: NA },
-  { id: 22, row: "N-225", name: "Every Lab situation declares an unknown before the branches", proof: "probe", run: NA },
-  { id: 23, row: "N-228", name: "Every SimState field the engine reads has a mid-run surface", proof: "probe", run: NA },
-  { id: 24, row: "N-235", name: "No Try-in-Play link on a set-down route", proof: "probe", run: NA },
-  { id: 25, row: "N-355", name: "Every parse panel declares recorded / interpreted / unknowable", proof: "probe", run: NA },
+  { id: 11, row: "N-192", name: "One draw-vary pair renders the same-outcome reading", proof: "probe", run: c11 },
+  { id: 12, row: "N-194", name: "Repeat-last-season commits an ordered set and replays byte-identical", proof: "record", run: c12 },
+  { id: 13, row: "N-195", name: "Methodology names the Lab seed curation tool and criterion", proof: "probe", run: c13 },
+  { id: 14, row: "N-204", name: "Every season screen carries its origin motif", proof: "record", run: c14 },
+  { id: 15, row: "N-211", name: "No option renders without the five contract fields", proof: "probe", run: c15 },
+  { id: 16, row: "N-212", name: "previewAction is pure", proof: "probe", run: c16 },
+  { id: 17, row: "N-213", name: "Upkeep is present and affordable in the worst envelope", proof: "probe", run: c17 },
+  { id: 18, row: "N-214", name: "The narrowing door state never uses the open token", proof: "probe", run: c18 },
+  { id: 19, row: "N-233", name: "No valence colour pair; no forbidden-register term in Game Guide", proof: "probe", run: c19 },
+  { id: 20, row: "N-216", name: "A reopened season renders its stored explanation", proof: "record", run: c20 },
+  { id: 21, row: "N-218", name: "The empty queue states that uncertainty remains", proof: "probe", run: c21 },
+  { id: 22, row: "N-225", name: "Every Lab situation declares an unknown before the branches", proof: "probe", run: c22 },
+  { id: 23, row: "N-228", name: "Every SimState field the engine reads has a mid-run surface", proof: "probe", run: c23 },
+  { id: 24, row: "N-235", name: "No Try-in-Play link on a set-down route", proof: "probe", run: c24 },
+  { id: 25, row: "N-355", name: "Every parse panel declares recorded / interpreted / unknowable", proof: "probe", run: c25 },
   { id: 26, row: "N-001", name: "/orientation renders JS-off with no game term in Standard", proof: "probe", run: NA },
   { id: 27, row: "N-012", name: "Every route and milestone page is in the search index; anchors resolve", proof: "probe", run: NA },
   { id: 28, row: "N-023", name: "Getting-through-today: no analytical framing, no instrument link above the fold", proof: "probe", run: NA },

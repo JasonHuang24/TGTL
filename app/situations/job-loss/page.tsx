@@ -8,6 +8,7 @@ import {
   EvidenceDrawer,
   NextSteps,
   NextStep,
+  TryInPlay,
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
@@ -211,6 +212,10 @@ export default function JobLossPage() {
         <NextStep href="/guidance">Choosing a path — if the next move is a real decision.</NextStep>
         <NextStep href="/character/logs">Keep a record of what you knew, before the outcome arrives.</NextStep>
       </NextSteps>
+
+      {/* N-235. A link at the end of the page, never above the fold and never
+          a nudge. Never on a set-down route (C-24). */}
+      <TryInPlay href="/play/lab">the Decision Lab has a run at getting hired, forked and compared.</TryInPlay>
 
       <EvidenceDrawer
         record={{

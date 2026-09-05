@@ -219,7 +219,16 @@ export function Queue({
     return (
       <section className="sim-queue sim-queue-empty" aria-label={title}>
         <h4 className="sim-instrument-title">{title}</h4>
-        <p className="sim-queue-none">Nothing is pending. What happens next season has not been decided yet.</p>
+        {/* N-218 (C-21). An empty queue is the moment a simulation most tempts a
+            reader into reading "nothing is pending" as "nothing is coming". The
+            queue holds what has already been set going; genuinely uncertain things
+            are not listed here BECAUSE they are not decided, which is the opposite
+            of their not existing. The second sentence is the whole of the fix and
+            the gate requires it: without it the panel says the reassuring half of
+            a true thing. */}
+        <p className="sim-queue-none" data-sim-queue-empty>
+          No known delayed consequence is pending. Uncertainty has not disappeared.
+        </p>
       </section>
     );
   return (

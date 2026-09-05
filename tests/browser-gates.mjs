@@ -23,6 +23,14 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SHOTS = join(ROOT, "screenshots");
 /** A finished 24-season run, so the closing screen can be captured and audited. */
 const FINISHED_CAMPAIGN = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/finished-campaign.json"), "utf8"));
+/**
+ * A run PAUSED ON A QUIET SEASON (tools/make-quiet-season-fixture.ts), so N-194's
+ * compressed flow can be reached. The control renders only where the briefing's
+ * own `quiet` flag is true and there is a previous allocation to offer back;
+ * whether a hand-driven walk arrives at one depends on the seeds, so the state is
+ * built by the engine and loaded like any resumed run.
+ */
+const QUIET_SEASON = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/quiet-season.json"), "utf8"));
 mkdirSync(SHOTS, { recursive: true });
 
 /** The 31 reader routes (stubs /orientation and /roadmap excluded from the walk). */
@@ -311,8 +319,14 @@ async function labTo(page, opts = {}) {
   } else details.push("campaign: a run in progress is offered back, never silently resumed or lost");
 
   await page.goto(BASE + "/methodology", { waitUntil: "networkidle" });
-  await page.locator('button:has-text("Reset everything this site remembers")').first().click();
+  // N-227: the reset control ARMS on the first press and erases on the second.
+  // Gate 6 pressed once and asserted the keys were gone, so it would have gone
+  // red on the arm-then-confirm the row adds; the extension is here, and the
+  // assertion that ONE press does NOT erase is gate 127's.
+  await page.locator(".reset-button").first().click();
   await sleep(160);
+  await page.locator(".reset-button").first().click();
+  await sleep(200);
   const leftover = await page.evaluate(() =>
     Object.keys(localStorage).filter((k) => /board|logs|guidance|roadmap|credential|daily|play/.test(k)),
   );
@@ -781,6 +795,224 @@ async function labTo(page, opts = {}) {
       `double-Escape leaves all ${SETDOWN.length} set-down routes (${SETDOWN.join(", ")}) and does not fire on /topics`,
     );
   record(106, "C-6 (N-263): double-Escape exits every set-down route", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-14 (N-204): every season screen carries its origin's face motif.
+   ============================================================
+   Each preset declares a distinct `face` and it was used at exactly one place —
+   the selection card. After `startPreset` the origin never appeared again, not
+   even its label, so five unequal starting positions converged into one screen by
+   season two, and the campaign's central doctrine (position is not something the
+   character did) had nothing on screen to carry it.
+
+   THE SPEC'S OWN TEST is that a screenshot is attributable to its origin WITHOUT
+   the preset name in the header, so this asserts both halves: the motif is there
+   at every sampled turn and carries the right face, and the preset's name is not.
+
+   Sampled at three DIFFERENT turns, plus the allocate screen and the look-back,
+   because "renders on turn one" is exactly the defect. Proven red by rendering it
+   only on turn one — the run with that plant is in DECISIONS.md §8 under batch 3.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  // The face the first preset declares, read out of the content rather than
+  // written here, so a content change cannot leave the gate asserting a stale one.
+  const presetsSrc = readFileSync(join(ROOT, "content/sim/campaign/presets.ts"), "utf8");
+  const expectedFace = /face:\s*"(\w+)"/.exec(presetsSrc)?.[1] ?? null;
+  const presetLabel = /label:\s*"([^"]+)"/.exec(presetsSrc)?.[1] ?? null;
+  if (!expectedFace) problems.push("content/sim/campaign/presets.ts: could not read the first preset's face, so the gate has nothing to compare against");
+
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await campaignTo(page, "briefing");
+
+  const seen = [];
+  for (let turn = 1; turn <= 3; turn++) {
+    const motif = page.locator("[data-sim-origin-face]").first();
+    if (!(await motif.count())) {
+      problems.push(`season ${turn}: the season chrome carries no origin motif — after the selection card the origin disappears and every start looks the same`);
+      break;
+    }
+    const face = await motif.getAttribute("data-sim-origin-face");
+    const svg = await motif.locator("svg").count();
+    const season = (await page.locator(".sim-header-facts").innerText().catch(() => "")).replace(/\s+/g, " ");
+    seen.push(`turn ${turn}: face "${face}", ${svg} motif drawn`);
+    if (face !== expectedFace) problems.push(`season ${turn}: the chrome renders the "${face}" face where this origin declares "${expectedFace}"`);
+    if (!svg) problems.push(`season ${turn}: the origin element is present but draws nothing`);
+    if (presetLabel && season.includes(presetLabel))
+      problems.push(`season ${turn}: the header prints the preset name "${presetLabel}" — the motif exists so that it does not have to`);
+    if (turn === 3) break;
+    // Advance a season: allocate one thing, resolve, answer whatever arrives.
+    await click(page, "Allocate the season");
+    const onAllocate = await page.locator("[data-sim-origin-face]").count();
+    if (turn === 1 && !onAllocate) problems.push("the allocate screen carries no origin motif");
+    await click(page, "How you would do it", ".sim-action-grid");
+    await click(page, "Commit this", ".sim-option-list");
+    await click(page, "Resolve the season");
+    for (let i = 0; i < 8; i++) {
+      if (await page.locator(".sim-result-list").count()) break;
+      if (await page.locator(".sim-beat-inner").count()) {
+        await click(page, "Go on", ".sim-beat-inner");
+        continue;
+      }
+      if (!(await click(page, "Do this", ".sim-option-list"))) break;
+    }
+    if (!(await click(page, "On to the next season"))) {
+      problems.push(`could not advance past season ${turn}, so fewer than three turns were sampled`);
+      break;
+    }
+    await sleep(200);
+  }
+  if (seen.length < 3) problems.push(`only ${seen.length} turn(s) sampled; the assertion is about turns AFTER the first`);
+
+  // And the look-back at the end of the run, which is a season screen too.
+  await campaignParseTo(page);
+  if (!(await page.locator("[data-sim-origin-face]").count())) problems.push("the look-back carries no origin motif");
+  await ctx.close();
+  if (!problems.length) details.push(`${seen.join(" · ")}; the allocate screen and the look-back carry it too, and the preset's name is nowhere in the header`);
+  record(114, "C-14 (N-204): every season screen carries its origin motif", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   C-12 / S-4 extension (N-194): the compressed season flow is a real control,
+   reachable and operable by keyboard, and it commits.
+   ============================================================
+   S-4 requires the campaign's control vocabulary to be keyboard-complete. The
+   repeat control joins it: it is a real <button>, it can be focused and activated
+   by Enter, and doing so COMMITS the season rather than opening a confirmation
+   somewhere else. The delta briefing that goes with it must also be a delta —
+   the full briefing is offered, not imposed, and nothing is hidden behind it.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/play/campaign", { waitUntil: "domcontentloaded" });
+  await sleep(220);
+  await clearPlayState(page);
+  await page.evaluate((f) => {
+    try {
+      localStorage.setItem(f.key, f.value);
+    } catch {}
+  }, QUIET_SEASON);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await sleep(400);
+  if (await page.locator(".sim-gate").count()) await click(page, "Pick it back up", ".sim-gate");
+  await sleep(300);
+
+  const control = page.locator("[data-sim-repeat-last]").first();
+  if (!(await control.count())) {
+    problems.push(
+      "a quiet season with a previous allocation offers no [data-sim-repeat-last] control — §3.4b's compressed flow is the answer to twenty-four full briefings and it is not on the screen",
+    );
+  } else {
+    const tag = await control.evaluate((el) => el.tagName);
+    if (tag !== "BUTTON") problems.push(`the repeat control is a <${tag.toLowerCase()}>, so it is not in the keyboard order as a control`);
+    if (!(await page.locator(".sim-briefing-delta").count())) problems.push("the compressed briefing renders no delta panel");
+    const fullShown = await page.locator(".sim-briefing-grid:not([hidden])").count();
+    if (fullShown) problems.push("the compressed briefing still renders the full briefing grid, so nothing was compressed");
+    if (!(await page.locator(".sim-briefing-delta button", { hasText: "Show the full briefing" }).count()))
+      problems.push("the compressed briefing offers no way back to the full one — the delta must be an offer, not a removal");
+
+    const before = await page.locator(".sim-header-facts").innerText();
+    await control.focus();
+    const focused = await page.evaluate(() => document.activeElement?.tagName);
+    if (focused !== "BUTTON") problems.push("the repeat control could not take keyboard focus");
+    await page.keyboard.press("Enter");
+    await sleep(400);
+    // The season must actually have gone somewhere: either straight to its
+    // consequences, or to an arrival or a beat on the way, exactly as a
+    // hand-built allocation would.
+    for (let i = 0; i < 8; i++) {
+      if (await page.locator(".sim-result-list").count()) break;
+      if (await page.locator(".sim-beat-inner").count()) {
+        await click(page, "Go on", ".sim-beat-inner");
+        continue;
+      }
+      if (!(await click(page, "Do this", ".sim-option-list"))) break;
+    }
+    const resolved = await page.locator(".sim-result-list > li").count();
+    if (!resolved) problems.push("activating the repeat control by keyboard did not resolve the season");
+    const after = await page.locator(".sim-header-facts").innerText();
+    if (before === after && resolved) problems.push("the season resolved but the header did not advance");
+    if (resolved) details.push(`the repeat control took focus, activated on Enter, and committed a season of ${resolved} outcome(s) through the same path as a hand allocation`);
+  }
+  await ctx.close();
+  record(112, "C-12 / S-4 (N-194): the repeat-last-season control is keyboard-reachable and commits", problems.length === 0, problems.length ? problems : details);
+}
+
+/* ============================================================
+   The erase-control gate, extended (N-227): arm, then confirm.
+   ============================================================
+   A single press that erases everything is a mis-tap away from a loss the site
+   cannot undo, and the reader was never told what survives. Both halves are
+   asserted: ONE press must NOT erase, and the armed state must say what is about
+   to go, what is not, and that this cannot be undone by the Guidebook.
+   ============================================================ */
+{
+  const details = [];
+  const problems = [];
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+
+  // (a) The site-wide reset on /methodology.
+  await page.goto(BASE + "/guidance", { waitUntil: "networkidle" });
+  await page.locator(".weight-buttons").first().locator("button").nth(3).click();
+  await page.goto(BASE + "/methodology", { waitUntil: "networkidle" });
+  // By class, not by text: the label CHANGES when the control arms, which is the
+  // thing being asserted, so a text-matched locator stops matching the element it
+  // is about half way through the assertion.
+  const reset = page.locator(".reset-button").first();
+  await reset.click();
+  await sleep(160);
+  const stillThere = await page.evaluate(() => Object.keys(localStorage).filter((k) => /guidance/.test(k)).length);
+  if (!stillThere) problems.push("/methodology: ONE press of the reset control erased. Arm-then-confirm exists because that press is a mis-tap away from a loss the site cannot undo (N-227).");
+  const armedText = (await page.locator("[data-sim-armed-consequence]").innerText().catch(() => "")) || "";
+  if (!armedText.includes("cannot be undone by the Guidebook"))
+    problems.push('/methodology: the armed state does not say "This cannot be undone by the Guidebook." — the precise, non-overclaiming phrasing the row names');
+  if (armedText.length < 60) problems.push("/methodology: the armed state does not say what is about to go and what survives");
+  const label = await reset.innerText();
+  if (!/press again/i.test(label)) problems.push(`/methodology: the armed control still reads "${label.trim()}" rather than telling the reader a second press is what erases`);
+  await reset.click();
+  await sleep(200);
+  const cleared = await page.evaluate(() => Object.keys(localStorage).filter((k) => /guidance|board|logs|daily/.test(k)).length);
+  if (cleared) problems.push(`/methodology: the second press did not erase (${cleared} keys left)`);
+  else details.push("/methodology: one press arms and says what goes, what survives, and that this cannot be undone by the Guidebook; the second press erases");
+
+  // (b) The campaign's branch delete, which carries the sibling-branch line.
+  await campaignTo(page, "briefing");
+  await click(page, "Branch from here");
+  await sleep(200);
+  await page.goto(BASE + "/play/campaign", { waitUntil: "domcontentloaded" });
+  await sleep(300);
+  if (await page.locator(".sim-gate").count()) await click(page, "Start a different one", ".sim-gate");
+  await click(page, "Take a starting position");
+  await sleep(200);
+  // The FORKS list specifically. The parent save is labelled "…, before
+  // branching", so a text match on "branch" finds the save and asserts the wrong
+  // control's wording — which is what it did on the first run of this gate.
+  const branchDelete = page
+    .locator(".sim-save-list li", { hasText: "a branch of another line" })
+    .locator("button", { hasText: "Delete" })
+    .first();
+  if (!(await branchDelete.count())) {
+    details.push("no branch was listed on this walk, so the sibling-branch wording was checked in source only");
+    const src = readFileSync(join(ROOT, "components/sim/CampaignApp.tsx"), "utf8");
+    if (!src.includes("SIBLING_BRANCH_LINE")) problems.push("components/sim/CampaignApp.tsx: the branch delete does not carry the sibling-branch line");
+  } else {
+    await branchDelete.click();
+    await sleep(160);
+    const t = (await page.locator("[data-sim-armed-consequence]").first().innerText().catch(() => "")) || "";
+    if (!t.includes("parent or sibling branches remain separate"))
+      problems.push("the branch delete's armed state does not say that the parent or sibling branches remain separate");
+    if (!t.includes("cannot be undone by the Guidebook")) problems.push("the branch delete's armed state does not carry the cannot-be-undone line");
+    if (!problems.length) details.push("the branch delete arms and states that the parent or sibling branches remain separate");
+  }
+  await ctx.close();
+  record(127, "C / N-227: erasing arms first, and the armed state says what survives", problems.length === 0, problems.length ? problems : details);
 }
 
 /* ---- T-14: the timeline's browser walk (5.0 §8) ---- */
