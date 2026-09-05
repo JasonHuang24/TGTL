@@ -51,7 +51,9 @@ imported the set-down notice, so N-265's reassurance does not reach it; adding i
 to a frozen page. Found in batch 3: the content-version drift notice (N-223) is built and cannot currently render,
 because a save from a different content version is declared unresumable (4.0 §2.4) — whether to
 let a mixed record resume is the owner's; and the Life Arc's per-save delete does not yet arm the
-way the campaign's does (N-227), a candidate for the register. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
+way the campaign's does (N-227), a candidate for the register. Found in batch 4: the search index jumps to a heading only where the page's source carries an
+id (sixty-four of the hundred and fifteen headings indexed); the five frozen pages cannot gain
+ids, so the rest land at the top of their page and the result says so. The owner-decisions register (N-308) is opened in batch 6 as §0.E.
 
 ---
 

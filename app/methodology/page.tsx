@@ -42,6 +42,23 @@ export default function MethodologyPage() {
         intro="It describes life using the vocabulary of a game. That is not a claim that life is a game. It is a way of seeing — and, like any instrument, it is fairly judged by what it lets you notice and do, not by how closely it resembles its subject."
       />
 
+      {/* N-434 — the clearest one-line statement of what this site is for, said
+          with the disavowal that was written in the same breath. The promise
+          without the disavowal would be the thing this whole page exists to
+          refuse. */}
+      <Callout tone="warm" title="What this is trying to be">
+        <p>
+          The mentor you never had. What that means, exactly: we will show you what other people
+          learned, what the evidence suggests where there is any, what the trade-offs are, and where
+          the advice may fail.
+        </p>
+        <p>
+          What it explicitly does <em>not</em> mean: that we know the correct way to live. Nobody here
+          has that, the question is not the kind that has one answer, and a site that behaved as though
+          it did would be doing something other than what it says on this page.
+        </p>
+      </Callout>
+
       <p>
         A map projection distorts the globe; you choose the projection for the journey you are making and
         you keep track of the distortion. This is the same. The game frame makes some things visible that
@@ -81,6 +98,32 @@ export default function MethodologyPage() {
         protects them; withholding it would protect the register at the reader&rsquo;s expense.
         Applying the rule to the five pages under clinical and specialist review waits for that
         review &mdash; those pages are unchanged, and nothing was labelled on them here.
+      </p>
+      {/* N-329 (C-35) — the register policy, published where a reader can see it.
+          Stating the rule in public is what makes the humour safe rather than
+          risky; a site that is funny without a stated boundary is one bad page
+          away from being funny in the wrong room. */}
+      <h3 id="comic-register">Where this site is allowed to be funny</h3>
+      <p>
+        Some things really are absurd, and writing about them with a straight face is its own kind of
+        dishonesty. Renewing a passport, contesting a parking notice, and the average telephone menu are
+        not tragedies, and a page that pretends otherwise is not being respectful — it is being
+        inaccurate.
+      </p>
+      <p>
+        So a comic register is <strong>permitted on bureaucracy-shaped pages</strong>: guides to
+        processes, forms and queues, where the comedy is aimed at the process and never at the person
+        stuck in it. And it is <strong>banned on every set-down route and every loss-adjacent one</strong>{" "}
+        — a bereavement, a death, low mood, being hurt, the help-now page, the page for a day with
+        nothing left in it, and{" "}
+        <Link href="/situations/breakup">the page about a relationship ending</Link>, which is not set
+        down but is read by someone who has just lost something. The rule is declared per page in the
+        route inventory, not left to whoever is writing; the build checks that nothing declared comic is
+        set down or loss-adjacent, and refuses if it is.
+      </p>
+      <p>
+        No page in this version is flagged comic. The rule and its check ship first, so that the first
+        bureaucracy guide inherits a boundary rather than negotiating one.
       </p>
 
       <h2>The model underneath, in one screen</h2>

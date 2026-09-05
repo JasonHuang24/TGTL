@@ -129,6 +129,27 @@ export const PLANS: Plan[] = [
   },
 ];
 
+/**
+ * N-036 (6.0 §3.3) — A NAMED PLAN SHAPE, not a plan.
+ *
+ * "Waiting on somebody else's decision" is not one of the ranked options: it is
+ * not chosen, it competes with nothing, and ranking it against a bounded pilot
+ * would be a category error. It is a SHAPE the situation has, and the shape
+ * carries its own short list of moves. It renders as a note under the plans, and
+ * the full version — including the four things that reliably do not work — is a
+ * section on /situations, which is the single home for it (G-06).
+ */
+export const WAITING_SHAPE = {
+  id: "waiting",
+  title: "If you are waiting on someone else's decision",
+  body:
+    "None of the options above quite fits a stretch where the thing that decides it is being decided by somebody who is not you. That is a shape rather than a choice, and it has its own moves: find the real timescale from someone who knows, do the work neither answer would undo, prepare the worse answer once in writing and then stop, and set a date on which you chase or act as though the answer were no.",
+  note:
+    "Waiting is not free time; it is time with a background process running, which is why these stretches are exhausting despite looking idle.",
+  href: "/situations#waiting-on-a-slow-decider",
+  linkLabel: "The whole shape, including the four things that reliably do not work",
+} as const;
+
 export const OBJECTIVES = [
   { id: "stability", label: "Stability", note: "a floor you can count on" },
   { id: "autonomy", label: "Autonomy", note: "control over your own time and direction" },

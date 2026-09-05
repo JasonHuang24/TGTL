@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ReadingPage, PageHeader } from "@/components/primitives";
 import { Search } from "@/components/Search";
 import { ROUTES } from "@/content/routes";
+import { SingleHomeNote } from "@/components/SingleHomeNote";
 
 export const metadata: Metadata = {
   title: "Topics",
@@ -29,7 +30,7 @@ export default function TopicsIndexPage() {
 
       <Search />
 
-      <h2>The four guides</h2>
+      <h2 id="the-four-guides">The four guides</h2>
       <ul className="topic-cards">
         {TOPIC_CARDS.map((t) => (
           <li key={t.href}>
@@ -41,12 +42,24 @@ export default function TopicsIndexPage() {
         ))}
       </ul>
 
+      {/* N-111 — the cross-reference over the four guides. It owns no mechanism;
+          every cell links the guide that does. */}
+      <p className="topics-concepts-link">
+        The same mechanism turns up in more than one of them, wearing a different name each time.{" "}
+        <Link href="/topics/concepts">Ten ideas, tracked across all four</Link> — one line each, and a
+        door into the guide that owns it.
+      </p>
+
       <p className="topics-timeline-link">
         Looking for what happens at a particular age?{" "}
         <Link href="/timeline">The timeline</Link> goes year by year from birth to one hundred.
       </p>
 
-      <h2>Everything on the site</h2>
+      {/* N-321 — the invariant, said to the reader on the index and on every
+          guide, as something reportable rather than as a description. */}
+      <SingleHomeNote />
+
+      <h2 id="everything-on-the-site">Everything on the site</h2>
       <p className="topic-browse-note">
         In case search is not what you want — every page, grouped roughly by what it is for.
       </p>

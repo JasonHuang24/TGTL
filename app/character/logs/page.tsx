@@ -75,8 +75,8 @@ export default function LogsPage() {
       </div>
 
       <NextSteps>
-        <NextStep href="/guidance/daily-plan">A worked daily plan — where the upkeep gets a day.</NextStep>
-        <NextStep href="/character/board">The board — lay out the whole situation first.</NextStep>
+        <NextStep href="/guidance/daily-plan" relation="unlocks" why="The upkeep list is where a maintenance lane on a real Tuesday gets its content.">A worked daily plan — where the upkeep gets a day.</NextStep>
+        <NextStep href="/character/board" relation="precedes" why="If you cannot yet say what is worth recording, laying the situation out comes first.">The board — lay out the whole situation first.</NextStep>
       </NextSteps>
     </InstrumentPage>
   );

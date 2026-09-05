@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReadingPage, PageHeader, Callout } from "@/components/primitives";
+import { Term } from "@/components/Term";
 import { WalkthroughMechanics } from "@/components/reference/WalkthroughMechanics";
 
 export const metadata: Metadata = {
@@ -27,6 +28,12 @@ export default function WalkthroughPage() {
       {/* ---- Basics ---- */}
       <section className="wt-tier" id="basics">
         <h2>Basics</h2>
+        {/* N-001 — the reading edition of the same opening argument, for anyone
+            who would rather read about a life than play one. */}
+        <p>
+          If you have not read it, <Link href="/orientation">The Human Package</Link> says what every
+          life is already inside, in about five minutes and with no game vocabulary in it at all.
+        </p>
         <p>
           There are three ways to play, and they run on one engine. <strong>A Whole Life</strong> is the
           short one: a single life from before its start to its close, in eight acts, in about twenty
@@ -129,8 +136,14 @@ export default function WalkthroughPage() {
             <strong>Adapt</strong> — revise what you are aiming at, at any turn boundary. (Campaign.)
           </li>
           <li>
-            <strong>Branch</strong> — fork from here into a second line. The run you branched from is
-            untouched and still playable. (Campaign and Lab.)
+            {/* N-327 — the control name goes through the term map, so a Standard
+                reader sees "decision branch" and a Game Guide reader sees "branch".
+                It printed the game word in both editions until now. */}
+            <strong>
+              <Term k="branch" define />
+            </strong>{" "}
+            — fork from here into a second line. The run you branched from is untouched and still
+            playable. (Campaign and Lab.)
           </li>
           <li>
             <strong>Inspect</strong> — look at what is pending and at the years walked so far. (Campaign.)
@@ -160,6 +173,29 @@ export default function WalkthroughPage() {
           full. The topic page is always the real home — this is the one-screen version.
         </p>
         <WalkthroughMechanics />
+
+        {/* N-358 — five words the site had been using as if they were two. The
+            reason this is worth a paragraph rather than a glossary line: the
+            unsorted version quietly tells a reader that a passion they never
+            turned into anything was a failure of follow-through. */}
+        <h3 id="five-words">Five words that are not synonyms</h3>
+        <p>
+          <Term k="passion" define /> is something you are drawn to for its own sake, whether or not you
+          ever do anything with it. <Term k="project" define /> is something you have actually
+          undertaken, with work in it and an end you could describe. Those two come apart in both
+          directions: a passion may never become a project, and a project may be pursued with no passion
+          in it at all — most of the useful ones are. <Term k="quest" define /> is narrower still: a
+          project you are currently spending on, with a next move you could name today.{" "}
+          <Term k="questline" define /> is several of those that only make sense in order, where
+          finishing one is what opens the next. And <Term k="purpose" define /> is the answer to what the
+          whole thing is for, which nobody supplies for you and which is allowed to stay unsettled for
+          years without that being a problem.
+        </p>
+        <p>
+          When one of these is called a <em>side</em> anything, that is a statement about priority — what
+          is getting the spending this year — and never a statement about value. The smaller thing is
+          often the one a person turns out to have meant.
+        </p>
       </section>
 
       {/* ---- Advanced ---- */}

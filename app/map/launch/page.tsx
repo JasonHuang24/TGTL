@@ -135,9 +135,9 @@ export default function LaunchPage() {
       </MentorNote>
 
       <NextSteps>
-        <NextStep href="/map/credential-decision">The credential decision — the first big fork, with a position filter.</NextStep>
-        <NextStep href="/topics/money">Money and slack — why the floor question is really about the buffer.</NextStep>
-        <NextStep href="/guidance">Choosing a path — if you are standing at the fork now.</NextStep>
+        <NextStep href="/map/credential-decision" relation="unlocks" why="The first big fork of this stage, with a position filter that re-resolves its costs.">The credential decision — the first big fork, with a position filter.</NextStep>
+        <NextStep href="/topics/money" relation="explains" why="Why the floor question is really a question about the buffer underneath it.">Money and slack — why the floor question is really about the buffer.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="If you are standing at the fork now rather than reading about it.">Choosing a path — if you are standing at the fork now.</NextStep>
       </NextSteps>
 
       <EvidenceDrawer

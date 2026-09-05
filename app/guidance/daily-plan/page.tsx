@@ -33,7 +33,7 @@ export default function DailyPlanPage() {
         status="illustrative"
       />
 
-      <h2>The lanes</h2>
+      <h2 id="the-lanes">The lanes</h2>
       <p>
         A day arranged only as a list becomes a race to the bottom of it. Arranged in lanes, each kind of
         thing gets protected from the others — the goal move does not get eaten by the urgent thing, and
@@ -54,6 +54,35 @@ export default function DailyPlanPage() {
           </div>
         ))}
       </div>
+      {/* N-127 — the distinction the lanes are actually enforcing, said out
+          loud: time and attention are not the same stat, and only one of them
+          can be scheduled. The time diary is named as EXTERNAL instrumentation
+          and is deliberately not something this site asks you to log here. */}
+      <h2 id="attention">Attention is the thing the lanes are protecting</h2>
+      <p>
+        Time and attention are not the same resource and the day goes wrong at the join. You can have
+        hours and nothing left to spend into them — ask anyone with a newborn, or anyone in the fortnight
+        after something bad. Money can be stored and time can at least be scheduled. Attention can be
+        neither: it exists only in the moment it is spent, so the only decision available is where it goes
+        next, and it cannot be saved up for the evening.
+      </p>
+      <p>
+        Two consequences run this page. Switching is not free, so a day made of fragments can spend the
+        whole allocation and produce nothing; two unbroken hours is more attention than twelve interrupted
+        ones. And every unfinished thing runs a background process — an open loop, an unresolved
+        disagreement, a decision you are waiting on — which is why a day with nothing much in it can still
+        end with none left. Lanes are a way of protecting whole pieces of attention rather than filling
+        hours.
+      </p>
+      <p>
+        The honest measurement problem is that you notice where attention went only once it comes back, so
+        introspection reports the day you intended rather than the day you had. The external check is a
+        time diary kept for a week, on paper or in whatever you already use — and it is worth saying
+        plainly that <strong>this site is not the place to keep it and will never ask you to</strong>.
+        Nothing you do here is recorded, and an instrument that measures how you spend yourself is exactly
+        the kind of thing that should live somewhere you control.
+      </p>
+
       <p className="lane-integration">
         The maintenance lane&rsquo;s contents are exactly the kind of thing your{" "}
         <Link href="/character/logs">upkeep list</Link> holds — a plan is where a list item finally gets a
@@ -86,9 +115,9 @@ export default function DailyPlanPage() {
       </p>
 
       <NextSteps>
-        <NextStep href="/character/logs">The upkeep list the maintenance lane draws from.</NextStep>
-        <NextStep href="/guidance">The guidance flow the primary-goal move comes from.</NextStep>
-        <NextStep href="/topics/health">Why the recovery lane protects everything else.</NextStep>
+        <NextStep href="/character/logs" relation="requires" why="The maintenance lane needs a list to draw from, and that is where the list is kept.">The upkeep list the maintenance lane draws from.</NextStep>
+        <NextStep href="/guidance" relation="precedes" why="The one important move on this day comes out of a decision made there first.">The guidance flow the primary-goal move comes from.</NextStep>
+        <NextStep href="/topics/health" relation="explains" why="Why the recovery lane is load-bearing rather than a reward for finishing the other two.">Why the recovery lane protects everything else.</NextStep>
       </NextSteps>
     </ReadingPage>
   );

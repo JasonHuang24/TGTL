@@ -456,6 +456,142 @@ c_probe "C-25 · a parse panel stops declaring its kind" "C-25" \
   '<section className="sim-parse-section sim-parse-hand">' \
   "The hand you were dealt"
 
+
+# ---- batch 4 (the reading layer, groups A, B, D, L): C-26 .. C-35 ----
+#
+# Every gate in this batch is a "probe" gate, so every one of them is planted
+# here; there are no record gates to paste. Several plant into out/ rather than
+# into source, because the gate they arm reads the EXPORTED page — which is the
+# artefact a reader actually receives, and the one a source plant would not
+# prove anything about. Same discipline either way: restored and sha256-compared.
+
+# C-26 (N-001), the JS-off half — the page's argument moved behind hydration.
+# This is the failure the row exists to prevent: /orientation is where the
+# entrance sends a first-time visitor, and a client-rendered version of it would
+# look identical in a browser and be an empty box to everyone else.
+c_probe "C-26 · /orientation becomes a client component" "C-26" \
+  "app/orientation/page.tsx" \
+  'import type { Metadata } from "next";' \
+  '"use client";
+import type { Metadata } from "next";' \
+  "the reading floor is the exported HTML"
+
+# C-26 again, the vocabulary half — a game term put on the page through the one
+# channel game vocabulary uses. The page offers the frame; it does not assume it.
+c_probe "C-26 · a game term on the orientation page" "C-26" \
+  "app/orientation/page.tsx" \
+  '<h2 id="nobody-here-is-scenery">Nobody here is scenery</h2>' \
+  '<h2 id="nobody-here-is-scenery">Nobody here is scenery</h2>
+      <p><Term k="party" /></p>' \
+  "calls <Term>"
+
+# C-27 (N-012) — a milestone route dropped from the generated index, which is
+# the exact state the trunk shipped in: twenty-four sourced pages that the site's
+# own search box could not find.
+c_probe "C-27 · a milestone route dropped from the search index" "C-27" \
+  "content/generated/search-index.json" \
+  '"/timeline/ms-age-of-majority"' \
+  '"/timeline/ms-age-of-majority-DROPPED"' \
+  "milestone route /timeline/ms-age-of-majority is missing"
+
+# C-27 again — an indexed anchor that no longer resolves. The silent one: a
+# heading id gets renamed and the index goes on pointing at the old one, which
+# fails by doing nothing at all in a browser.
+c_probe "C-27 · an indexed anchor that resolves to nothing" "C-27" \
+  "content/generated/search-index.json" \
+  '"/orientation#the-hand-was-dealt"' \
+  '"/orientation#the-hand-was-dealt-RENAMED"' \
+  "does not resolve"
+
+# C-28 (N-023) — an instrument link above the first heading. A page whose whole
+# content is "stop reading" that opens with somewhere else to go has not said it.
+c_probe "C-28 · an instrument link above the set-down page's first heading" "C-28" \
+  "out/situations/getting-through-today/index.html" \
+  '<h2 id="what-is-worth-doing"' \
+  '<a href="/guidance">lay the whole thing out</a><h2 id="what-is-worth-doing"' \
+  "above its first heading"
+
+# C-28 again — the register. Analytical vocabulary on the one page written for a
+# reader with nothing left to spend on thinking about their situation.
+c_probe "C-28 · analytical framing in register zero" "C-28" \
+  "out/situations/getting-through-today/index.html" \
+  'Unglamorous, and it changes the next few' \
+  'Your position is the binding constraint. Unglamorous, and it changes the next few' \
+  'uses the word "position"'
+
+# C-29 (N-025) — a construct attributed on a page with no source record. The
+# archive is full of these, and lifting one imports the authority and leaves the
+# source behind.
+c_probe "C-29 · a research construct named without an evidence record" "C-29" \
+  "app/situations/breakup/page.tsx" \
+  '<h2 id="common-mistakes">The three common mistakes</h2>' \
+  '<h2 id="common-mistakes">The three common mistakes (Maslach)</h2>' \
+  'names "Maslach"'
+
+# C-30 (N-041) — a recommendation on the one section whose only claim is that no
+# arrangement satisfies both. The predictable edit: a later hand, wanting to be
+# helpful, ends the paragraph with an answer.
+c_probe "C-30 · a recommendation in the not-solvable section" "C-30" \
+  "out/situations/index.html" \
+  'Naming the category is the substantive content.' \
+  'Naming the category is the substantive content. In the end you should pick the first one.' \
+  'contains "you should"'
+
+# C-31 (N-111) — a concept cell pointed at a route that does not own the
+# mechanism. The single-home rule's failure mode: a promise that the explanation
+# is over there, made to a page that has never heard of it.
+c_probe "C-31 · a concept cell pointing where the mechanism is not" "C-31" \
+  "content/concepts.ts" \
+  '        system: "/topics/relationships",
+        gloss: "Built slowly from kept promises' \
+  '        system: "/threshold",
+        gloss: "Built slowly from kept promises' \
+  'claims /threshold owns the mechanism'
+
+# C-32 (N-320) — a typed link with its why-line blanked: the relation survives
+# and the explanation does not, which is the decoration this row replaced.
+c_probe "C-32 · a Where-this-connects card with an empty why" "C-32" \
+  "out/topics/work/index.html" \
+  '>If the change of direction was not yours to make, the clocks come first.<' \
+  '><' \
+  "carries no why-line"
+
+# C-33 (N-321) — the invariant removed from one guide. It is only checkable by
+# readers where it is actually stated, so one page without it is one page where
+# the promise is not made.
+c_probe "C-33 · the single-home invariant missing from one topic route" "C-33" \
+  "out/topics/health/index.html" \
+  'data-single-home' \
+  'data-single-home-REMOVED' \
+  "/topics/health does not render the single-home invariant"
+
+# C-34 (N-326), the source half — the marker ungated from showGame, which is the
+# single expression that excludes the Standard edition, a set-down frame, and a
+# term with no game label at once.
+c_probe "C-34 · the term marker ungated from the edition check" "C-34" \
+  "components/Term.tsx" \
+  '  const showMarker = showGame && (marked ?? !define);' \
+  '  const showMarker = (marked ?? !define);' \
+  "the marker is not gated on showGame"
+
+# C-34 again, the rendered half — the marker escaping into Standard-edition
+# output, where the frame would be showing on a page nobody asked to see it on.
+c_probe "C-34 · the marker rendered in Standard-edition output" "C-34" \
+  "out/situations/job-loss/index.html" \
+  'class="term">Money and slack<' \
+  'class="term term--marked">Money and slack<' \
+  "renders term--marked in the Standard-edition export"
+
+# C-35 (N-329) — the comic register flagged on the loss-adjacent route the rule
+# names by name. Light intensity, steps and a tag row, and read by somebody who
+# has just lost something: exactly the room the boundary exists for.
+c_probe "C-35 · the comic register flagged on a loss-adjacent route" "C-35" \
+  "content/routes.ts" \
+  '    systems: ["party", "money", "time"],' \
+  '    systems: ["party", "money", "time"],
+    register: "comic",' \
+  "is flagged comic and is loss-adjacent"
+
 fi
 
 echo

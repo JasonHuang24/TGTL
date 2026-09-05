@@ -19,9 +19,9 @@ export default function HistoryPage() {
       />
       <History />
       <NextSteps>
-        <NextStep href="/topics/work">Dated advice as versioned documentation — the same idea, applied to careers.</NextStep>
-        <NextStep href="/topics/money">Why ownership compounds — the mechanism behind the era's largest gains.</NextStep>
-        <NextStep href="/methodology#known-breaks">Where this frame strains — including its lack of a collective subject.</NextStep>
+        <NextStep href="/topics/work" relation="see-also" why="The same idea at the scale of one career: inherited advice that is versioned rather than foolish.">Dated advice as versioned documentation — the same idea, applied to careers.</NextStep>
+        <NextStep href="/topics/money" relation="explains" why="The compounding mechanism behind the era&rsquo;s largest gains, explained where it lives.">Why ownership compounds — the mechanism behind the era's largest gains.</NextStep>
+        <NextStep href="/methodology#known-breaks" relation="explains" why="What this frame cannot see, listed rather than hidden — including its lack of a collective subject.">Where this frame strains — including its lack of a collective subject.</NextStep>
       </NextSteps>
       <EvidenceDrawer
         record={{

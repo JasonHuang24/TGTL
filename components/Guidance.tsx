@@ -9,6 +9,7 @@ import {
   OBJECTIVES,
   VETOES,
   NO_RECOMMENDATION,
+  WAITING_SHAPE,
   type Plan,
   type Availability,
 } from "@/content/guidance";
@@ -168,6 +169,13 @@ export function Guidance() {
             explicit, so you end up optimising a life you picked by default. Zero is a real answer here —
             it means &ldquo;not part of <em>this</em> decision,&rdquo; not &ldquo;worthless.&rdquo;
           </p>
+          {/* N-003 — the stake, beside the instruction. The trunk states the
+              mechanic (you set the objective) and never says why it matters. */}
+          <p className="guidance-teach">
+            It matters more than it looks. The most reliable source of misery is not losing; it is
+            spending years playing someone else&rsquo;s game without noticing that you never chose it.
+            Whatever you put here, put it here on purpose.
+          </p>
           {OBJECTIVES.map((o) => (
             <div key={o.id} className="weight-row">
               <label htmlFor={`w-${o.id}`}>
@@ -299,11 +307,32 @@ export function Guidance() {
                 <PlanCard key={p.id} plan={p} rank={`Ranked ${i + 1}`} avail={AVAIL_LABEL} />
               ))}
               <PlanCard plan={unlock} rank="Can reorder all of the above" avail={AVAIL_LABEL} />
+              {/* N-036 — a shape rather than an option. It is not ranked, because
+                  it is not chosen and competes with nothing. */}
+              <aside className="panel guidance-shape-note" data-plan-shape={WAITING_SHAPE.id}>
+                <h3>{WAITING_SHAPE.title}</h3>
+                <p>{WAITING_SHAPE.body}</p>
+                <p className="guidance-shape-cost">{WAITING_SHAPE.note}</p>
+                <p>
+                  <Link href={WAITING_SHAPE.href}>{WAITING_SHAPE.linkLabel}</Link>
+                </p>
+              </aside>
             </>
           )}
         </section>
       )}
 
+      {/* N-130 and N-124 — two one-line handoffs to mechanisms that belong on
+          the guides and change how these options get executed. */}
+      <p className="guidance-foot">
+        Two things worth knowing before executing any of these. Almost all of them involve asking
+        somebody for something, and{" "}
+        <Link href="/topics/relationships#asking-for-help">a specific ask is answered where a vague one
+        is not</Link> — the difference is whether the other person can finish it. And where an option
+        means learning something new,{" "}
+        <Link href="/topics/work#learning-curves">the shape of the curve sets what the first weeks
+        should feel like</Link>, which is what stops a threshold skill being abandoned in its flat part.
+      </p>
       <p className="guidance-foot">
         A pivot is a planned response, not proof of a failed person. To turn a chosen plan into a real
         day, see <Link href="/guidance/daily-plan">the worked daily plan</Link>.

@@ -67,7 +67,7 @@ export default function BoardPage() {
             destination. People improve their execution of a goal they would no longer choose, and
             experience the result as meaninglessness.
           </li>
-          <li>
+          <li id="conflict">
             <strong>Is the aim in conflict with another you also hold?</strong> If so, that conflict is
             the problem, and it will have been presenting itself as a time-management complaint. No
             calendar resolves a conflict between two things you both want.
@@ -98,9 +98,9 @@ export default function BoardPage() {
       </section>
 
       <NextSteps>
-        <NextStep href="/character/logs">Keep a record of what you knew, and the upkeep you're not doing.</NextStep>
-        <NextStep href="/guidance">Turn the binding row into a decision, with real options.</NextStep>
-        <NextStep href="/threshold">If a condition on the board is danger — the numbers.</NextStep>
+        <NextStep href="/character/logs" relation="see-also" why="A board is a snapshot; the record is what lets you check it against what actually happened.">Keep a record of what you knew, and the upkeep you're not doing.</NextStep>
+        <NextStep href="/guidance" relation="unlocks" why="Once you know which row is binding, the decision has a shape you can lay out.">Turn the binding row into a decision, with real options.</NextStep>
+        <NextStep href="/threshold" relation="protects" why="If a row on the board is danger rather than pressure, this page comes before every other one.">If a condition on the board is danger — the numbers.</NextStep>
       </NextSteps>
     </InstrumentPage>
   );

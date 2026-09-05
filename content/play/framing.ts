@@ -117,9 +117,9 @@ export const BRIEFING_POINTS: BriefingPoint[] = [
 
 export const WEIGHTS_INTRO: Dual = {
   standard:
-    "The package includes no definition of winning, so you supply one. Weight what actually matters to you — zero is a real answer, meaning 'not part of this'. You can revise it later; people do.",
+    "The package includes no definition of winning, so you supply one — and the commonest way a life goes wrong is not losing, but playing somebody else's game without noticing. Weight what actually matters to you — zero is a real answer, meaning 'not part of this'. You can revise it later; people do.",
   game:
-    "No victory condition ships with the run, so you set the objective. Put weight where it matters; zero means 'not scored in this build'. Editable at act boundaries — respecs are allowed.",
+    "No victory condition ships with the run, so you set the objective — the usual failure is not losing, it is running somebody else's objective without noticing. Put weight where it matters; zero means 'not scored in this build'. Editable at act boundaries — respecs are allowed.",
 };
 
 export const LEANING_INTRO: Dual = {

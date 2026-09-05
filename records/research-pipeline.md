@@ -1752,3 +1752,53 @@ fetched — the organisation that operates the line for the Welsh Government:
   nothing reads cannot contradict the fixture if anything ever reads it.
 - C-4 asserts both halves in `tests/consolidation-gates.ts`, and is proven red by a plant in
   `tests/falsify-walls.sh`.
+
+## Consolidation batch 4 (2026-09-05) — N-025 burnout construct
+
+The row: `/situations/burnout` describes burnout in three parts — exhaustion, mental
+distance or cynicism, and reduced efficacy. That description is a research construct, and
+**a name is the strongest claim a page can make short of a number**: it says somebody
+measured this. The archive carries the construct attributed and unsourced, which is a
+claim to re-source and never a source (blueprint §4, T-1). So the page had two permitted
+outcomes: attribute it with a page fetched during this build, or render the three words as
+the site's own description with nobody's name on them and say so. One page was fetched, so
+the first applies.
+
+*(The brief anticipated this section under the date 2026-09-04; the fetch happened on
+2026-09-05 and the heading carries the true retrieval date.)*
+
+### The retrieval
+
+| # | URL | Retrieved | What it establishes | Excerpt, verbatim (≤ 25 words) |
+|---|---|---|---|---|
+| 14 | https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases | 2026-09-05 | The World Health Organization's own description of burn-out in ICD-11, its three dimensions, and — the part the page leans on hardest — that it is classified as an **occupational phenomenon and not a medical condition**. | "Burn-out is a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully managed." (18 words) |
+
+The three dimensions as the same page states them: *"feelings of energy depletion or
+exhaustion"*; *"increased mental distance from one's job, or feelings of negativism or
+cynicism related to one's job"*; *"reduced professional efficacy"*. Each is under twenty-five
+words and each is quoted rather than paraphrased into an assertion of our own.
+
+### What the page does with it, and what it does not
+
+- `app/situations/burnout/page.tsx` attributes the description to the World Health
+  Organization **by name**, states the classification honestly (an occupational phenomenon,
+  not a medical condition, so the page identifies nothing about anybody), and carries an
+  `EvidenceDrawer` with `status: "researched"` naming this retrieval and its date.
+- **No digit appears anywhere on that page.** The onset is slow and the recovery is long, and
+  neither is given a number, because no number was read on a fetched page. The four root
+  causes in step three are the site's own carve and are labelled as such in the drawer, not
+  attributed to anyone.
+- One thing the source does not cover is stated as ours: sustained caring for someone
+  produces the same shape as reliably as paid work does, which an *occupational* framing has
+  nothing to say about. That sentence is the site's judgement standing beside the quotation,
+  and it is marked as such rather than folded in behind the attribution.
+
+### The gate this row leaves behind
+
+**C-29** reads every `app/situations/*/page.tsx` and refuses any of a closed list of construct
+attributions — `Maslach`, `MBI`, `ICD-11`, `ICD-10`, `DSM-5`, `DSM-IV`, `WHO`, the two
+spellings of *World Health Organization*, and both spellings of *Kübler-Ross* — unless the
+same page renders an evidence record whose status is `researched`. It is proven red by
+planting `Maslach` into the breakup page, which carries no such record. The list is short and
+extensible on purpose: a name that is not on it is not thereby allowed, it is only not yet
+caught, and the register is where one gets added.

@@ -41,6 +41,10 @@ const ROUTES = [
   "/situations/depression", "/situations/being-hurt", "/guidance", "/guidance/daily-plan",
   "/character", "/character/board", "/character/logs", "/topics", "/topics/money", "/topics/health",
   "/topics/relationships", "/topics/work", "/history", "/methodology", "/threshold",
+  // 6.0 §3.1 — the five routes the consolidation adds join the walk: console
+  // cleanliness, 320px, local-only and the keyboard path to Help-now.
+  "/orientation", "/situations/burnout", "/situations/breakup",
+  "/situations/getting-through-today", "/topics/concepts",
   "/threshold/supporting-someone",
   // 5.0 §8 — the timeline joins the route walk (console, 320px, local-only, keyboard).
   "/timeline",

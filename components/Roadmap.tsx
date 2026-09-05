@@ -166,8 +166,9 @@ export function Roadmap() {
         <section className="domain-tracks panel" aria-label="Parallel domains">
           <p className="eyebrow">Parallel tracks</p>
           <p className="domain-tracks-note">
-            A life is not a single ladder. These run at once and at different rates — one can climb while
-            another stalls. The bars are illustrative shape, not a schedule.
+            A life is not a single ladder. It is a map with weather: these run at once and at different
+            rates, one can climb while another stalls, and the part you can read is not the part you can
+            control. The bars are illustrative shape, not a schedule.
           </p>
           <ul>
             {DOMAINS.map((d, i) => (

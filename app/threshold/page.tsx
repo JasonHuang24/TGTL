@@ -24,6 +24,12 @@ export default function ThresholdPage() {
         This page has phone numbers on it and nothing else. There is no framework here, no analysis,
         and nothing to read first.
       </p>
+      {/* N-023 — one line, near the top and outside the number groups, for the
+          reader who is not in danger and simply has nothing left tonight. */}
+      <p className="threshold-today-line">
+        If it is not an emergency and you simply have nothing left today,{" "}
+        <Link href="/situations/getting-through-today">there is a short page for that</Link>.
+      </p>
 
       {HOTLINE_GROUPS.map((group) => (
         <section key={group.id} className="hotline-group" aria-labelledby={`h-${group.id}`}>

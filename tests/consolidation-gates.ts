@@ -19,7 +19,9 @@ import { ROOT, OUT_DIR, containsPhrase, textOf } from "./util.ts";
 import { HOTLINE_GROUPS, NATIONS, UK_NATIONS, hotlineRegions, ALL_HOTLINES } from "../content/hotlines.ts";
 import { SETDOWN_FORBIDDEN_TERMS, TERMS } from "../content/terminology.ts";
 import { STATUS_LABEL } from "../content/evidence.ts";
-import { SETDOWN_ROUTES } from "../content/routes.ts";
+import { ROUTES, SETDOWN_ROUTES, LOSS_ADJACENT_ROUTES } from "../content/routes.ts";
+import { CONCEPTS, CONCEPT_COLUMNS } from "../content/concepts.ts";
+import { TIMELINE_MILESTONE_ROUTES } from "../content/timeline/generated/routes.ts";
 
 export type CGateResult = { pass: boolean; details: string[] };
 
@@ -1481,6 +1483,648 @@ function c25(): CGateResult | null {
   return { pass: true, details: [`every parse panel declares its kind or declares itself navigation (${counted.join("; ")})`] };
 }
 
+/* =========================================================================
+   C-26 (N-001) — /orientation renders complete with JS off and carries no game
+   term in Standard.  Plant: put a game term on the page.
+   =========================================================================
+   The page a first-time visitor is sent to by the entrance's one non-committal
+   link, and the reading edition of an argument that until now lived only inside
+   a run. Two things have to be true of it and neither is self-evident from
+   looking at the page in a browser.
+
+   THE JS-OFF HALF. The exported HTML is what a reader with JavaScript off, a
+   slow connection, or a hostile network gets. So the assertion is made over
+   out/orientation/index.html: every heading the source writes is there, the
+   reading path's nine stops are there, and the page's own module carries no
+   "use client" and imports nothing that does. A page that renders its argument
+   from a client component would look identical in a browser and be empty here.
+
+   THE VOCABULARY HALF. Not a wall — /orientation is not a set-down route and is
+   allowed game vocabulary in the Game edition. It is a decision about THIS page:
+   it is the one that decides whether a reader trusts the site at all, and the
+   frame is a thing to be offered rather than assumed. So the page uses no <Term>
+   at all, and the exported Standard-edition HTML contains none of the generated
+   game-term list.
+   ========================================================================= */
+function c26(): CGateResult | null {
+  const src = read("app/orientation/page.tsx");
+  if (src.includes("RedirectStub")) return null; // still the stub; nothing to assert
+  const fails: string[] = [];
+  const html = readOut("/orientation");
+  if (!html) return { pass: false, details: ["/orientation is not in out/ — the gate proved nothing"] };
+
+  // 1. Server-rendered: the page module and everything it pulls in for the
+  //    argument itself must be server-safe.
+  if (/^\s*["']use client["']/m.test(src))
+    fails.push('app/orientation/page.tsx declares "use client" — the reading floor is the exported HTML, not the hydrated page');
+
+  // 2. Every heading in the source is in the exported HTML.
+  const text = textOf(html);
+  const headings = [...src.matchAll(/<h2 id="[^"]+">([^<]+)<\/h2>/g)].map((m) => m[1].trim());
+  if (headings.length < 7)
+    fails.push(`app/orientation/page.tsx writes ${headings.length} headed sections; N-001 asks for seven plus the reading path`);
+  for (const h of headings) {
+    const plain = h.replace(/&mdash;/g, "—").replace(/&rsquo;/g, "’");
+    if (!text.includes(plain)) fails.push(`/orientation: the heading "${plain}" is in the source and not in the exported HTML`);
+  }
+
+  // 3. The reading path (N-008) survives the export, with its stops and its
+  //    never-skip line. A list generated on the client would not. (The export
+  //    uses trailingSlash, so /x#y ships as /x/#y.)
+  const stops = [...src.matchAll(/href:\s*"([^"]+)"/g)].map((m) => m[1]);
+  const linked = (href: string): boolean => {
+    const [path, hash] = href.split("#");
+    const withSlash = path.endsWith("/") ? path : `${path}/`;
+    const forms = hash ? [`${path}#${hash}`, `${withSlash}#${hash}`] : [path, withSlash];
+    return forms.some((f) => html.includes(`href="${f}"`));
+  };
+  for (const href of stops)
+    if (!linked(href)) fails.push(`/orientation: the reading path names ${href} and the exported page does not link it`);
+  if (stops.length !== 9)
+    fails.push(`/orientation: the reading path has ${stops.length} stops; N-008 asks for nine`);
+  if (!containsPhrase(text.toLowerCase(), "triage"))
+    fails.push("/orientation: the skip list does not name triage, which is the one thing N-008 says may never be skipped");
+
+  /* 4. NO GAME VOCABULARY IN THE STANDARD-EDITION RENDER — asserted through the
+        channel game vocabulary actually uses, not through a phrase list.
+
+        A phrase check against the generated set-down list is the obvious
+        implementation and it is the wrong one here, for the reason batch 3
+        recorded against C-19: the generated list now contains ordinary English
+        words — "resources", "the map", "priority", "branch" — because those are
+        Game Guide labels for things the Standard edition calls something else.
+        Gate 2 can apply the list to set-down routes because those pages are
+        written around it. Applying it to nine hundred words of free prose
+        produces false positives on sentences like "gated by resources you did
+        not pick", which is not game vocabulary by any reading.
+
+        So the assertion is mechanical instead: every game label on this site
+        renders through <Term>, so a page that never calls <Term> and exports no
+        element carrying the term class can emit no game label in any edition.
+        That is stronger than the phrase list, not weaker: it holds for labels
+        added after this gate was written. */
+  if (/<Term\b/.test(src) || /from "@\/components\/Term"/.test(src))
+    fails.push(
+      "app/orientation/page.tsx calls <Term>. This page is the one that decides whether a reader trusts the site at all; the frame is offered here and never assumed, so it uses no edition vocabulary at all (N-001).",
+    );
+  if (/class="term(\s|"|-)/.test(html))
+    fails.push('/orientation exports an element with the term class, so a game label can render on it in the Game edition');
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/orientation: ${headings.length} headed sections and all ${stops.length} reading-path stops present in the exported HTML, with no client component in the page`,
+      "the page calls <Term> nowhere and exports no term element, so no game label can render on it in either edition",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-27 (N-012) — every searchable route and every generated milestone route is
+   in the search index, and every indexed anchor resolves in out/.
+   Plant: drop a milestone route from the generated index.
+   =========================================================================
+   The row's complaint was that the site's largest sourced content area — the
+   twenty-four milestone pages — was invisible to the site's own search box, and
+   that a reader typing a word that appears in an <h2> was told the guidance did
+   not exist. An index is only worth having if it is complete and if its links
+   land, so both halves are asserted, over the generated file and over out/.
+
+   The anchor half is the one that rots: a heading gets its id renamed and the
+   index keeps pointing at the old one, which fails silently in a browser. Every
+   `path#slug` in the index is resolved against an id in the exported page.
+   ========================================================================= */
+function c27(): CGateResult | null {
+  const file = join(ROOT, "content/generated/search-index.json");
+  if (!existsSync(file)) return null;
+  const index = JSON.parse(readFileSync(file, "utf8")) as {
+    entries: { kind: string; path: string; anchor?: string | null; title: string }[];
+  };
+  const fails: string[] = [];
+  const byKind = (k: string) => index.entries.filter((e) => e.kind === k);
+
+  // 1. Every searchable route.
+  const indexed = new Set(byKind("route").map((e) => e.path));
+  const searchable = ROUTES.filter((r) => r.searchable).map((r) => r.path);
+  for (const p of searchable)
+    if (!indexed.has(p)) fails.push(`search index: the searchable route ${p} is not in it — it cannot be found from the site's own search box`);
+
+  // 2. Every generated milestone route.
+  const msIndexed = new Set(byKind("milestone").map((e) => e.path));
+  for (const p of TIMELINE_MILESTONE_ROUTES)
+    if (!msIndexed.has(p))
+      fails.push(
+        `search index: the milestone route ${p} is missing. The timeline's generated pages are the largest sourced area on the site and are not in ROUTES, so nothing else would notice (N-012).`,
+      );
+
+  // 3. Headings actually reached — otherwise the index is the old one wearing a
+  //    new file name.
+  const headings = byKind("heading");
+  if (headings.length < 40)
+    fails.push(`search index: only ${headings.length} page headings indexed; the row exists because headings were not reachable at all`);
+
+  // 4. Every anchor resolves in the exported HTML.
+  let checked = 0;
+  for (const e of index.entries) {
+    if (!e.anchor) continue;
+    const [path, slug] = e.anchor.split("#");
+    const html = readOut(path);
+    if (!html) {
+      fails.push(`search index: ${e.anchor} points at ${path}, which is not in out/`);
+      continue;
+    }
+    checked++;
+    if (!new RegExp(`id="${slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`).test(html))
+      fails.push(`search index: the anchor ${e.anchor} does not resolve — no element with that id in the exported page`);
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `search index: ${indexed.size} searchable routes, ${msIndexed.size} milestone pages, ${headings.length} page headings`,
+      `all ${checked} indexed anchors resolve to an id in the exported HTML`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-28 (N-023) — the set-down "getting through today" route contains no
+   analytical framing word and no instrument link above its first heading.
+   Plant: put a /guidance link above the first heading.
+   =========================================================================
+   This page's whole content is that reading the rest of the site is not a use of
+   what a depleted reader has left. A page that says that and then offers six
+   more things to open has not said it. Two assertions, both scoped to the
+   ARTICLE rather than the whole document, because the chrome's nav and footer
+   are not the page and are governed by their own rules.
+
+   THE CLOSED WORD LIST IS PUBLISHED HERE, in the gate, as blueprint §11 requires
+   of the lists this batch chooses. These are not bad words. They are the
+   vocabulary of a page addressed to somebody with capacity to spend on thinking
+   about their situation, and this is the one page written for the evening when
+   there is none.
+   ========================================================================= */
+const REGISTER_ZERO_FORBIDDEN = [
+  "constraint",
+  "binding",
+  "position",
+  "instrument",
+  "framework",
+  "analysis",
+  "optimise",
+  "optimize",
+  "strategy",
+  "rank",
+  "trade-off",
+  "tradeoff",
+];
+
+/** Instruments: pages that ask a depleted reader to do something structured. */
+const INSTRUMENT_PREFIXES = ["/character", "/guidance", "/play", "/timeline", "/map", "/topics"];
+
+function c28(): CGateResult | null {
+  const route = "/situations/getting-through-today";
+  const html = readOut(route);
+  if (!html) return null;
+  const fails: string[] = [];
+
+  // Scope to the page's own article; the chrome is not the page.
+  const start = html.indexOf('<article class="prose-page');
+  const end = html.indexOf("</article>", start);
+  if (start < 0 || end < 0) return { pass: false, details: [`${route}: no reading article found in the export`] };
+  const article = html.slice(start, end);
+  const text = textOf(article).toLowerCase();
+
+  for (const w of REGISTER_ZERO_FORBIDDEN)
+    if (containsPhrase(text, w))
+      fails.push(
+        `${route} uses the word "${w}". This page is written for a reader with no capacity to spend on thinking about their situation, and analytical vocabulary is the register of the pages that are not for them tonight (N-023).`,
+      );
+
+  // Nothing above the first heading may send them to an instrument.
+  const firstH2 = article.indexOf("<h2");
+  const above = firstH2 < 0 ? article : article.slice(0, firstH2);
+  for (const m of above.matchAll(/href="([^"]+)"/g)) {
+    const href = m[1];
+    if (INSTRUMENT_PREFIXES.some((p) => href === p || href.startsWith(`${p}/`)))
+      fails.push(
+        `${route} links ${href} above its first heading. A page whose content is "stop reading" does not open with somewhere else to go (N-023).`,
+      );
+  }
+
+  // And the page really is the short one it claims to be.
+  const words = textOf(article).trim().split(/\s+/).length;
+  if (words > 320) fails.push(`${route} runs to ${words} words; register zero is under two hundred and fifty plus its heading chrome`);
+
+  // The apparatus that belongs on every other reading page belongs nowhere here.
+  if (article.includes("evidence-drawer")) fails.push(`${route} renders an evidence drawer`);
+  if (article.includes("next-steps")) fails.push(`${route} renders an onward-routing block`);
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${route}: ${words} words, none of the ${REGISTER_ZERO_FORBIDDEN.length} analytical words, no instrument link above the first heading`,
+      "no evidence drawer and no onward-routing block — the page is finished when it has been read",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-29 (N-025) — no situation page names a research construct's author or
+   authority without an evidence record that says a source was read.
+   Plant: add "Maslach" to the breakup page.
+   =========================================================================
+   A name is the strongest claim a page can make short of a number: it says
+   somebody measured this. The archive is full of attributed constructs carried
+   without a citation, and lifting one into the trunk would import the authority
+   without the source. So the rule is mechanical: over every situation page's
+   SOURCE, a name from the closed list below may appear only if the same page
+   renders an EvidenceDrawer whose status is "researched" — which the evidence
+   apparatus only permits where a source record exists.
+
+   The list is the constructs a page like this is most likely to reach for. It
+   is deliberately short and deliberately extensible: a name that is not on it is
+   not thereby allowed, it is simply not yet caught, and the register row is the
+   place to add one.
+   ========================================================================= */
+const CONSTRUCT_ATTRIBUTIONS = [
+  "Maslach",
+  "MBI",
+  "ICD-11",
+  "ICD-10",
+  "DSM-5",
+  "DSM-IV",
+  "WHO",
+  "World Health Organization",
+  "World Health Organisation",
+  "Kübler-Ross",
+  "Kubler-Ross",
+];
+
+function c29(): CGateResult | null {
+  const dir = join(ROOT, "app/situations");
+  if (!existsSync(dir)) return null;
+  const fails: string[] = [];
+  const checked: string[] = [];
+
+  const pages: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const page = join(dir, entry, "page.tsx");
+    if (statSync(join(dir, entry)).isDirectory() && existsSync(page)) pages.push(`app/situations/${entry}/page.tsx`);
+  }
+
+  for (const rel of pages) {
+    const src = read(rel);
+    const researched = /status:\s*"researched"/.test(src);
+    for (const name of CONSTRUCT_ATTRIBUTIONS) {
+      if (!new RegExp(`(^|[^A-Za-z0-9-])${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^A-Za-z0-9-]|$)`).test(src)) continue;
+      if (researched) {
+        checked.push(`${rel}: attributes "${name}" and carries a researched evidence record`);
+      } else {
+        fails.push(
+          `${rel} names "${name}" without an EvidenceDrawer whose status is "researched". A name is a claim that somebody measured this; carrying it without a fetched source imports the authority and leaves the source behind (N-025, T-1).`,
+        );
+      }
+    }
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${pages.length} situation pages checked against ${CONSTRUCT_ATTRIBUTIONS.length} construct attributions`,
+      checked.length ? checked.join("; ") : "no situation page attributes a research construct at all",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-30 (N-041) — the conflict-case section never terminates in a
+   recommendation.  Plant: add "you should" to it.
+   =========================================================================
+   The section names a class of situation where the no-recommendation state is
+   the CORRECT output rather than a fallback, and the failure mode is entirely
+   predictable: a later edit, wanting to be helpful, adds a sentence telling the
+   reader what to do — and the page then quietly asserts that the thing it just
+   said does not exist does exist after all.
+
+   THE CLOSED LIST IS PUBLISHED HERE. It is a list of ways of ending a paragraph
+   with an answer, not a list of words that are bad. The section is found by its
+   own marker in the export, so the gate reads exactly the block the row governs.
+   ========================================================================= */
+const RECOMMENDATION_PHRASES = [
+  "you should",
+  "you ought to",
+  "the answer is",
+  "the right choice",
+  "the right answer",
+  "the best option",
+  "the best choice",
+  "we recommend",
+  "what you must do",
+];
+
+function c30(): CGateResult | null {
+  const html = readOut("/situations");
+  if (!html || !html.includes("data-conflict-class")) return null;
+  const start = html.indexOf("<section", html.indexOf("data-conflict-class") - 400);
+  const end = html.indexOf("</section>", start);
+  if (start < 0 || end < 0) return { pass: false, details: ["/situations: the conflict-case section is marked but not delimited"] };
+  const text = textOf(html.slice(start, end)).toLowerCase();
+  const fails: string[] = [];
+
+  for (const phrase of RECOMMENDATION_PHRASES)
+    if (text.includes(phrase))
+      fails.push(
+        `/situations, the "not solvable, only navigable" section, contains "${phrase}". On this class of situation the honest output is a way through and not an answer; a recommendation here contradicts the only claim the section makes (N-041).`,
+      );
+
+  // And the section really does route to the two places the row names.
+  const block = html.slice(start, end);
+  for (const href of ["/character/board", "/guidance"])
+    if (!block.includes(`href="${href}`))
+      fails.push(`/situations: the conflict section does not link ${href}, so the no-recommendation state has nowhere to be seen`);
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `/situations: the conflict-case section carries none of the ${RECOMMENDATION_PHRASES.length} recommendation phrases`,
+      "and routes to the board's conflict step and to guidance's no-recommendation state",
+    ],
+  };
+}
+
+/* =========================================================================
+   C-31 (N-111) — every concept cell links a route that actually owns the
+   mechanism.  Plant: point a cell at a route that never mentions it.
+   =========================================================================
+   The concept index owns no explanation: every cell is one line and a door into
+   the guide that does. That makes it the single most rot-prone file on the site,
+   because a cell can go on pointing at a page long after the page has stopped
+   saying anything about the idea, and nothing in a browser would show it.
+
+   The assertion runs over the exported TEXT of the route a cell names — not the
+   HTML, so a class name containing the word does not count as an explanation —
+   and accepts the concept's own listed aliases, because a page that says
+   "buffer" twenty times and "slack" twice still owns slack. This is the
+   single-home rule (G-06) with a check on it.
+   ========================================================================= */
+function c31(): CGateResult | null {
+  const file = join(ROOT, "content/concepts.ts");
+  if (!existsSync(file)) return null;
+  const fails: string[] = [];
+  let cells = 0;
+
+  for (const concept of CONCEPTS) {
+    if (concept.cells.length === 0) fails.push(`content/concepts.ts: "${concept.name}" has no cells, so it is a row that teaches nothing`);
+    for (const cell of concept.cells) {
+      cells++;
+      const html = readOut(cell.system);
+      if (!html) {
+        fails.push(`content/concepts.ts: "${concept.name}" points at ${cell.system}, which is not an exported route`);
+        continue;
+      }
+      const text = textOf(html).toLowerCase();
+      const names = [concept.name, ...(concept.aliases ?? [])];
+      if (!names.some((n) => containsPhrase(text, n)))
+        fails.push(
+          `content/concepts.ts: "${concept.name}" claims ${cell.system} owns the mechanism, and that page never says "${names.join('" or "')}". A cell is a promise that the explanation is over there (N-111, G-06).`,
+        );
+    }
+  }
+
+  // Every column must be a real route, or the table has a header nothing can fill.
+  for (const col of CONCEPT_COLUMNS)
+    if (!ROUTES.some((r) => r.path === col.system)) fails.push(`content/concepts.ts: the column "${col.label}" names ${col.system}, which is not a route`);
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${CONCEPTS.length} concepts, ${cells} cells: every cell's route names the concept or one of its listed aliases in its exported text`,
+      `${CONCEPT_COLUMNS.length} table columns, all of them listed routes`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-32 (N-320) — every "Where this connects" card carries a relation from the
+   closed list and a non-empty why.  Plant: blank one.
+   =========================================================================
+   The point of the row is that a reader should know what a link will do for them
+   before spending the click. The type system already refuses a NextStep with no
+   relation; what it cannot refuse is a why-line that is present and empty, or a
+   relation invented on the spot as a string. So the check runs over the exported
+   HTML — where a card that renders wrong is visible — and over the closed list
+   the primitive publishes.
+   ========================================================================= */
+function c32(): CGateResult | null {
+  const prim = read("components/primitives.tsx");
+  if (!prim.includes("data-next-step-relation")) return null;
+  const fails: string[] = [];
+  // The closed list is READ FROM THE PRIMITIVE, never copied here: a gate that
+  // keeps its own copy of the vocabulary stops testing the vocabulary.
+  const listBlock = prim.slice(prim.indexOf("export const NEXT_STEP_RELATIONS"), prim.indexOf("] as const;"));
+  const allowed = new Set([...listBlock.matchAll(/"([a-z-]+)"/g)].map((m) => m[1]));
+  if (allowed.size !== 7)
+    fails.push(`components/primitives.tsx publishes ${allowed.size} link relations; the link grammar is a closed list of seven`);
+  let cards = 0;
+  const routesWithCards: string[] = [];
+
+  for (const r of ROUTES) {
+    const html = readOut(r.path);
+    if (!html || !html.includes("next-steps")) continue;
+    routesWithCards.push(r.path);
+    const nav = html.slice(html.indexOf('<nav class="next-steps"'));
+    const block = nav.slice(0, nav.indexOf("</nav>"));
+    for (const m of block.matchAll(/<li class="next-step">([\s\S]*?)<\/li>/g)) {
+      cards++;
+      const card = m[1];
+      const rel = /data-next-step-relation="([^"]*)"/.exec(card)?.[1];
+      const why = /data-next-step-why[^>]*>([^<]*)</.exec(card)?.[1]?.trim();
+      const label = textOf(card).trim().slice(0, 60);
+      if (!rel) fails.push(`${r.path}: a "Where this connects" card ("${label}") carries no relation`);
+      else if (!allowed.has(rel))
+        fails.push(`${r.path}: the card "${label}" declares the relation "${rel}", which is not one of the seven the link grammar allows`);
+      if (!why)
+        fails.push(
+          `${r.path}: the card "${label}" carries no why-line. A typed link with nothing said about it is the decoration this row replaced (N-320).`,
+        );
+    }
+  }
+  if (cards === 0) fails.push("no typed cross-link cards render anywhere, so the gate is asserting nothing");
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      `${cards} typed cross-links across ${routesWithCards.length} routes: every one carries a relation from the closed list of seven and a non-empty why`,
+      `the closed list, as the primitive publishes it: ${[...allowed].join(" · ")}`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-33 (N-321) — the single-home invariant renders on every topic route.
+   Plant: remove it from one.
+   =========================================================================
+   The rule was true before this row and was stated once, on the index, as a
+   description of how the site was built. Said on every guide as something a
+   reader can report a breach of, it becomes the only kind of maintenance that
+   scales — and a promise that nothing here is padding. Asserted over the
+   exported HTML of every /topics route, with the reporting route resolving,
+   because an invariant whose report button goes nowhere is decoration.
+   ========================================================================= */
+function c33(): CGateResult | null {
+  const file = join(ROOT, "components/SingleHomeNote.tsx");
+  if (!existsSync(file)) return null;
+  const fails: string[] = [];
+  const topicRoutes = ROUTES.filter((r) => r.path === "/topics" || r.path.startsWith("/topics/")).map((r) => r.path);
+  for (const route of topicRoutes) {
+    const html = readOut(route);
+    if (!html) {
+      fails.push(`${route}: not exported, so the gate proved nothing about it`);
+      continue;
+    }
+    // Matched on the attribute boundary, not as a substring: a renamed
+    // attribute is exactly how this note would disappear from a page.
+    if (!/data-single-home[=\s>]/.test(html))
+      fails.push(
+        `${route} does not render the single-home invariant. The rule is only checkable by readers if it is stated where they are (N-321).`,
+      );
+    else if (!/data-single-home[=\s>][\s\S]{0,600}?href="\/methodology\/?#corrections/.test(html))
+      fails.push(`${route}: the invariant renders without a route to report a breach on, which makes it a description again`);
+  }
+  if (topicRoutes.length < 5) fails.push(`only ${topicRoutes.length} topic routes found; the gate expects the four guides, the index and the concept table`);
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [`the invariant and its corrections route render on all ${topicRoutes.length} topic routes: ${topicRoutes.join(", ")}`],
+  };
+}
+
+/* =========================================================================
+   C-34 (N-326) — the game-vocabulary marker never appears in Standard-edition
+   output, and never on a set-down route.  Plant: emit it in Standard.
+   =========================================================================
+   The marker makes the frame legible AS a frame, which is the "model, not
+   metaphor" commitment made visible, and it is what lets a reader see where the
+   frame is in order to put it down. That only works while it is confined to the
+   edition that asked for it.
+
+   Two halves. The EXPORTED HTML is Standard-edition output — every page in out/
+   — so the class must appear in none of it. And the SOURCE decision must be
+   gated on the same expression that decides whether a game label renders at all,
+   so the class cannot escape into Standard or onto a set-down route through some
+   other path. The second half is what a plant in the first half proves.
+
+   The set-down clause of §5.3 rides along here: no set-down route carries a
+   system tag row either, since both are orientation chrome on a page whose
+   reader is not being asked to orient.
+   ========================================================================= */
+function c34(): CGateResult | null {
+  const src = read("components/Term.tsx");
+  if (!src.includes("term--marked")) return null;
+  const fails: string[] = [];
+
+  // 1. The source gate: the marker is decided by showGame and nothing else.
+  if (!/const showMarker = showGame && /.test(src))
+    fails.push(
+      "components/Term.tsx: the marker is not gated on showGame. showGame is the single expression that already excludes the Standard edition, a set-down frame, and a term with no game label; deciding the marker any other way opens all three (N-326).",
+    );
+
+  // 2. The exported HTML is Standard-edition output. The class appears nowhere.
+  for (const r of ROUTES) {
+    const html = readOut(r.path);
+    if (!html) continue;
+    if (html.includes("term--marked"))
+      fails.push(`${r.path} renders term--marked in the Standard-edition export. The marker belongs to the edition that asked for the frame (N-326).`);
+  }
+
+  // 3. §5.3's neighbours: a set-down route carries no system tag row either.
+  for (const route of SETDOWN_ROUTES) {
+    const rec = ROUTES.find((r) => r.path === route);
+    if (rec?.systems?.length)
+      fails.push(`content/routes.ts: ${route} is set down and declares system tags. A tag row is orientation chrome and this reader is not being asked to orient (6.0 §5.3).`);
+    const html = readOut(route);
+    if (html?.includes("data-system-tags"))
+      fails.push(`${route} renders a system tag row`);
+  }
+
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      "components/Term.tsx: the marker is gated on the same expression that gates the game label itself",
+      `no page in out/ carries term--marked, and none of the ${SETDOWN_ROUTES.length} set-down routes carries a system tag row`,
+    ],
+  };
+}
+
+/* =========================================================================
+   C-35 (N-329) — no route flagged with a comic register is set down or
+   loss-adjacent.  Plant: flag /situations/breakup.
+   =========================================================================
+   How a site gets to be funny without being funny in the wrong room. The rule is
+   declared per route rather than left to whoever is writing, and it is published
+   on /methodology where a reader can see it — which is what makes the humour
+   safe rather than risky.
+
+   NO ROUTE IS FLAGGED IN THIS VERSION. That is not a reason to skip the gate: it
+   is the reason to write it now, so the first bureaucracy guide inherits a wall
+   instead of negotiating one. The gate therefore also asserts that the rule is
+   actually published, because an unstated boundary is the thing this row exists
+   to replace.
+   ========================================================================= */
+function c35(): CGateResult | null {
+  const routesSrc = read("content/routes.ts");
+  if (!routesSrc.includes("LOSS_ADJACENT_ROUTES")) return null;
+  const fails: string[] = [];
+
+  for (const r of ROUTES) {
+    if (r.register !== "comic") continue;
+    if (r.intensity === "down")
+      fails.push(
+        `content/routes.ts: ${r.path} is flagged comic and is a set-down route. The comic register is permitted on bureaucracy-shaped pages and banned two doors down (N-329).`,
+      );
+    if (LOSS_ADJACENT_ROUTES.includes(r.path))
+      fails.push(
+        `content/routes.ts: ${r.path} is flagged comic and is loss-adjacent. It is read by somebody who has just lost something, whatever its intensity says (N-329).`,
+      );
+  }
+
+  // The loss-adjacent list is not empty and names the two routes the row does.
+  for (const path of ["/situations/breakup", "/situations/job-loss"])
+    if (!LOSS_ADJACENT_ROUTES.includes(path)) fails.push(`content/routes.ts: LOSS_ADJACENT_ROUTES does not contain ${path}`);
+  for (const path of LOSS_ADJACENT_ROUTES)
+    if (!ROUTES.some((r) => r.path === path)) fails.push(`content/routes.ts: LOSS_ADJACENT_ROUTES names ${path}, which is not a route`);
+
+  // The rule is published where a reader can see it.
+  const method = readOut("/methodology");
+  if (!method) fails.push("/methodology is not exported, so the register policy is not published anywhere");
+  else {
+    const text = textOf(method).toLowerCase();
+    if (!text.includes("comic register"))
+      fails.push("/methodology does not state the comic-register policy. A boundary that is not published is the thing this row replaces (N-329).");
+    if (!method.includes('href="/situations/breakup'))
+      fails.push("/methodology states the policy without naming the loss-adjacent route the row names");
+  }
+
+  const flagged = ROUTES.filter((r) => r.register === "comic").map((r) => r.path);
+  if (fails.length) return { pass: false, details: fails };
+  return {
+    pass: true,
+    details: [
+      flagged.length ? `routes flagged comic: ${flagged.join(", ")} — none set down, none loss-adjacent` : "no route is flagged comic in this version; the rule and its check ship first",
+      `loss-adjacent routes: ${LOSS_ADJACENT_ROUTES.join(", ")}`,
+      "/methodology publishes the policy and names the loss-adjacent route",
+    ],
+  };
+}
+
 export const GATES: CGate[] = [
   { id: 1, row: "N-226", name: "A failed or unverified write never reports saved", proof: "record", run: c1 },
   { id: 2, row: "N-190", name: "A rendered failure mode carries its tied recovery route", proof: "probe", run: c2 },
@@ -1507,16 +2151,16 @@ export const GATES: CGate[] = [
   { id: 23, row: "N-228", name: "Every SimState field the engine reads has a mid-run surface", proof: "probe", run: c23 },
   { id: 24, row: "N-235", name: "No Try-in-Play link on a set-down route", proof: "probe", run: c24 },
   { id: 25, row: "N-355", name: "Every parse panel declares recorded / interpreted / unknowable", proof: "probe", run: c25 },
-  { id: 26, row: "N-001", name: "/orientation renders JS-off with no game term in Standard", proof: "probe", run: NA },
-  { id: 27, row: "N-012", name: "Every route and milestone page is in the search index; anchors resolve", proof: "probe", run: NA },
-  { id: 28, row: "N-023", name: "Getting-through-today: no analytical framing, no instrument link above the fold", proof: "probe", run: NA },
-  { id: 29, row: "N-025", name: "No research construct attributed without an evidence record", proof: "probe", run: NA },
-  { id: 30, row: "N-041", name: "The conflict section carries no recommendation verb", proof: "probe", run: NA },
-  { id: 31, row: "N-111", name: "Every concept cell links the route that owns the mechanism", proof: "probe", run: NA },
-  { id: 32, row: "N-320", name: "Every NextStep carries a relation from the closed list and a why", proof: "probe", run: NA },
-  { id: 33, row: "N-321", name: "The single-home invariant renders on every topic route", proof: "probe", run: NA },
-  { id: 34, row: "N-326", name: "The term marker never renders in Standard or on set-down routes", proof: "probe", run: NA },
-  { id: 35, row: "N-329", name: "No comic-register route is set-down or loss-adjacent", proof: "probe", run: NA },
+  { id: 26, row: "N-001", name: "/orientation renders JS-off with no game term in Standard", proof: "probe", run: c26 },
+  { id: 27, row: "N-012", name: "Every route and milestone page is in the search index; anchors resolve", proof: "probe", run: c27 },
+  { id: 28, row: "N-023", name: "Getting-through-today: no analytical framing, no instrument link above the fold", proof: "probe", run: c28 },
+  { id: 29, row: "N-025", name: "No research construct attributed without an evidence record", proof: "probe", run: c29 },
+  { id: 30, row: "N-041", name: "The conflict section carries no recommendation verb", proof: "probe", run: c30 },
+  { id: 31, row: "N-111", name: "Every concept cell links the route that owns the mechanism", proof: "probe", run: c31 },
+  { id: 32, row: "N-320", name: "Every NextStep carries a relation from the closed list and a why", proof: "probe", run: c32 },
+  { id: 33, row: "N-321", name: "The single-home invariant renders on every topic route", proof: "probe", run: c33 },
+  { id: 34, row: "N-326", name: "The term marker never renders in Standard or on set-down routes", proof: "probe", run: c34 },
+  { id: 35, row: "N-329", name: "No comic-register route is set-down or loss-adjacent", proof: "probe", run: c35 },
   { id: 36, row: "N-072", name: "Every classifying surface offers a rejection honoured in rendering", proof: "probe", run: NA },
   { id: 37, row: "N-074", name: "The export path issues no network request", proof: "record", run: NA },
   { id: 38, row: "N-077", name: "Every planned task declares a stop condition", proof: "probe", run: NA },

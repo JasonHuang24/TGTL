@@ -3,8 +3,13 @@
  *
  * Drives: primary nav (§6.1), the six doors (§6.1), the set-down header subset,
  * per-route presentation intensity, the client-side search index, and the
- * automated gates. 27 reader routes + 2 sanctioned redirect stubs
- * (/orientation, /roadmap). Nothing ships that is not listed here.
+ * automated gates. 36 reader routes + 1 sanctioned redirect stub (/roadmap).
+ * Nothing ships that is not listed here.
+ *
+ * 6.0 §2.3.1 repeals 3.0 §6.1's designation of /orientation as a redirect stub:
+ * it is a real reading route again, "The Human Package" (N-001). /roadmap stays
+ * a stub. (The count in this comment also read 27 while the list held 31; the
+ * arithmetic is corrected here rather than carried forward.)
  *
  * THE SET-DOWN RULE (N-272, 6.0 §5.3), written where the routes are defined
  * because this is where `intensity: "down"` is decided:
@@ -29,6 +34,8 @@
  * label to them. The rule is written now so the review has something to review.
  */
 
+import type { TermKey } from "./terminology.ts";
+
 export type Intensity = "full" | "light" | "down";
 
 export type RouteRecord = {
@@ -43,6 +50,30 @@ export type RouteRecord = {
   searchable: boolean;
   /** A sanctioned redirect stub (§6.1): excluded from nav, doors, search, gate-5 walk. */
   stub?: boolean;
+  /**
+   * N-296 (6.0 §7.1) — the decision or orientation this page changes, in one
+   * sentence. Required on the routes 6.0 adds; optional on the ones it inherits,
+   * because retrofitting thirty-one of them is a separate pass. C-48 (batch 6)
+   * asserts it on the new routes.
+   */
+  changes?: string;
+  /**
+   * N-322 (6.0 §3.12, §7.1) — which parts of the model this page touches, shown
+   * as a tag row at the head of situation and topic pages, rendered through
+   * <Term> so the row obeys edition parity like every other label.
+   *
+   * A SET-DOWN ROUTE NEVER CARRIES ONE (6.0 §5.3). The tag row is orientation
+   * chrome, and a page a depleted reader lands on carries no chrome that asks to
+   * be read before the page is. C-34 walks the set-down routes for it.
+   */
+  systems?: TermKey[];
+  /**
+   * N-329 (6.0 §3.12) — a declared comic register, permitted on bureaucracy-
+   * shaped content only and excluded from every set-down and loss-adjacent route.
+   * NO ROUTE IS FLAGGED IN THIS VERSION: the rule and its gate (C-35) ship first,
+   * so the first bureaucracy guide inherits a wall rather than negotiating one.
+   */
+  register?: "comic";
 };
 
 export const ROUTES: RouteRecord[] = [
@@ -89,6 +120,23 @@ export const ROUTES: RouteRecord[] = [
       "Fork one decision, play both branches, and see what actually separated them: the decision, the draw, or the position you started from.",
     keywords: ["decision lab", "fork", "compare", "branch", "counterfactual", "what if"],
     searchable: true,
+  },
+  {
+    // 6.0 §2.3.1 / §3.1 (N-001) — the stub is repealed. The reader who will never
+    // play is the reader who most needs the Human Package, and until now it lived
+    // only as eight briefing bullets inside a run they were never going to start.
+    path: "/orientation",
+    title: "The Human Package",
+    intensity: "light",
+    summary:
+      "What every life begins inside: arriving dependent, a hand dealt before you sat down, other people everywhere, rules that change with the place and the year, a finite run, and no win condition supplied.",
+    keywords: [
+      "orientation", "what is this", "human package", "starting conditions", "dependence",
+      "unequal", "win condition", "about", "how to read this", "reading path", "where to start",
+    ],
+    searchable: true,
+    changes:
+      "Whether you read the rest of this site as instructions for living, or as a description of the conditions every life is already inside.",
   },
   {
     path: "/walkthrough",
@@ -171,6 +219,57 @@ export const ROUTES: RouteRecord[] = [
       "A decision sequence: the first days, stabilization, the search as a system, and recovery routes — with the clocks that actually matter found in week one.",
     keywords: ["job loss", "laid off", "layoff", "unemployed", "fired", "redundancy", "severance", "career"],
     searchable: true,
+    systems: ["money", "party", "work"],
+  },
+  {
+    // 6.0 §3.1 (N-025). Light intensity: burnout is exhausting, not a bereavement,
+    // and the reader here can still use a four-step sequence.
+    path: "/situations/burnout",
+    title: "Burning out",
+    intensity: "light",
+    summary:
+      "A four-step sequence: confirm what this is, stop the bleeding, find the root cause, and make the structural change — because rest alone returns you to the conditions that produced it.",
+    keywords: [
+      "burnout", "burning out", "burnt out", "burned out", "exhausted at work", "cynical",
+      "nothing left", "chronic exhaustion", "overwork", "can't recover",
+    ],
+    searchable: true,
+    changes:
+      "Whether the next move is more rest, or a change to the conditions that keep converting the rest back into exhaustion.",
+    systems: ["health", "work", "time"],
+  },
+  {
+    // 6.0 §3.1 (N-026). Loss-adjacent, and listed in LOSS_ADJACENT below: light
+    // intensity, tone graded at the bar the set-down pages set.
+    path: "/situations/breakup",
+    title: "When a relationship ends",
+    intensity: "light",
+    summary:
+      "Several parts of a life stop working on the same day — home, money, people, routine, the answer to who you are — which is why it hurts out of proportion to what anyone watching can see.",
+    keywords: [
+      "breakup", "break up", "broke up", "separation", "divorce", "relationship ended",
+      "partner left", "split up", "ex", "single again",
+    ],
+    searchable: true,
+    changes:
+      "What you rebuild first in the fortnight after a partnership ends, and which questions you are allowed to leave for later.",
+    systems: ["party", "money", "time"],
+  },
+  {
+    // 6.0 §3.1 (N-023). Intensity "down", so it joins SETDOWN_ROUTES by derivation
+    // and inherits the quiet nav, gate 2's vocabulary lint, N-263's double-Escape
+    // and N-235's no-play-entry rule without any of them being hand-listed.
+    path: "/situations/getting-through-today",
+    title: "Getting through today",
+    intensity: "down",
+    summary: "Six ordinary things, and permission to stop reading. Nothing else here is for you tonight.",
+    keywords: [
+      "getting through today", "no capacity", "can't cope", "nothing left", "too tired to think",
+      "just today", "overwhelmed", "stop",
+    ],
+    searchable: true,
+    changes:
+      "Whether you keep reading tonight, or stop and do six ordinary things instead.",
   },
   {
     path: "/situations/grief",
@@ -270,6 +369,7 @@ export const ROUTES: RouteRecord[] = [
       "Compounding in both directions, exchange rates and their asymmetry, and slack as the buffer that stops a shock becoming a cascade.",
     keywords: ["money", "slack", "compounding", "debt", "savings", "emergency fund", "inequality", "exchange rates"],
     searchable: true,
+    systems: ["money", "time"],
   },
   {
     path: "/topics/health",
@@ -279,6 +379,7 @@ export const ROUTES: RouteRecord[] = [
       "Health as the capacity that gates everything else, the maintenance-versus-recovery asymmetry, sleep debt, and when to stop reading a website and see a clinician.",
     keywords: ["health", "maintenance", "sleep", "energy", "recovery", "fitness", "clinician", "body"],
     searchable: true,
+    systems: ["health", "time"],
   },
   {
     path: "/topics/relationships",
@@ -288,6 +389,7 @@ export const ROUTES: RouteRecord[] = [
       "Trust built slowly and spent fast, repair that turns on changed behaviour, asking for help as a skill, and the load of care.",
     keywords: ["relationships", "party", "trust", "repair", "asking for help", "caregiving", "friends", "family"],
     searchable: true,
+    systems: ["party", "time"],
   },
   {
     path: "/topics/work",
@@ -297,6 +399,25 @@ export const ROUTES: RouteRecord[] = [
       "Credentials as access tokens, the unwritten local rules of a workplace, why popular strategies degrade by being popular, and what a mid-life change of direction actually costs.",
     keywords: ["work", "career", "education", "credentials", "job", "meta", "respec", "workplace", "readout"],
     searchable: true,
+    systems: ["work", "money", "party"],
+  },
+  {
+    // 6.0 §3.1 (N-111) — the concept index. Not a fifth guide: it owns no
+    // mechanism. It is the cross-reference that makes the four guides read as one
+    // system, and every cell points at the guide that does own the mechanism.
+    path: "/topics/concepts",
+    title: "One idea, several systems",
+    intensity: "light",
+    summary:
+      "Ten ideas that turn up in more than one place, with what each one means in each — compounding in money and in trust, slack in a budget and in a week, a floor under a decision and under a body.",
+    keywords: [
+      "concepts", "concept index", "one idea", "cross-reference", "compounding", "slack",
+      "exchange rates", "load", "trust", "reversibility", "position", "recovery", "the floor",
+      "the meta", "same mechanism",
+    ],
+    searchable: true,
+    changes:
+      "Which of the four guides you open, once you can see that the thing you are asking about is the same mechanism under a different name.",
   },
   {
     path: "/history",
@@ -338,14 +459,6 @@ export const ROUTES: RouteRecord[] = [
 
   /* ---- Sanctioned redirect stubs (§6.1): excluded from nav, doors, search, gate-5 walk ---- */
   {
-    path: "/orientation",
-    title: "Moved to the walkthrough",
-    intensity: "light",
-    summary: "Orientation moved into the walkthrough and the in-run briefing.",
-    searchable: false,
-    stub: true,
-  },
-  {
     path: "/roadmap",
     title: "Moved to the world map",
     intensity: "full",
@@ -370,6 +483,27 @@ export const SETDOWN_ROUTES: string[] = ROUTES.filter((r) => r.intensity === "do
 
 export function isSetDownRoute(path: string): boolean {
   return SETDOWN_ROUTES.includes(normalizePath(path));
+}
+
+/**
+ * N-329 (6.0 §3.12) — LOSS-ADJACENT ROUTES.
+ *
+ * Routes that are not set down, and where a comic register is still banned. The
+ * set-down list is derived from intensity; this one cannot be, because what makes
+ * a page loss-adjacent is its subject rather than its presentation. A breakup and
+ * a job loss are both written at full strength, with steps and tags and a
+ * decision sequence — and both are read by someone who has just lost something,
+ * which is the whole of the reason.
+ *
+ * The rule this list serves is published on /methodology, where a reader can see
+ * it: a comic register is permitted on bureaucracy-shaped pages and banned two
+ * doors down. C-35 asserts that nothing carrying `register: "comic"` is on this
+ * list or set down. No route is flagged comic in this version.
+ */
+export const LOSS_ADJACENT_ROUTES: string[] = ["/situations/breakup", "/situations/job-loss"];
+
+export function isLossAdjacentRoute(path: string): boolean {
+  return LOSS_ADJACENT_ROUTES.includes(normalizePath(path));
 }
 
 export function intensityForRoute(path: string): Intensity {

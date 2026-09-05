@@ -11,6 +11,8 @@ import {
 } from "@/components/primitives";
 import { Term } from "@/components/Term";
 import { MechanicAnchor } from "@/components/reference/MechanicAnchor";
+import { SingleHomeNote } from "@/components/SingleHomeNote";
+import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
   title: "Money and slack",
@@ -30,11 +32,12 @@ export default function MoneyPage() {
         eyebrow="Topic · money"
         title="Money and slack"
         intro="Two ideas do most of the work here, and neither is about being clever with money. One is a curve. The other is a buffer. Between them they explain a surprising amount of why two people making the same choices end up in different places."
+        systems={ROUTE_BY_PATH["/topics/money"]?.systems}
       />
 
       <MechanicAnchor ids={["slack", "compounding"]} />
 
-      <h2>One curve, two directions</h2>
+      <h2 id="compounding">One curve, two directions</h2>
       <p>
         Compounding is what happens when a process feeds its own gains back into its base: it grows by
         multiplication rather than addition, so it stays nearly flat for a long time and then bends
@@ -59,7 +62,7 @@ export default function MoneyPage() {
         compound in your favour, and urgent about the few running against you.
       </p>
 
-      <h2>Slack: the buffer that stops a cascade</h2>
+      <h2 id="slack">Slack: the buffer that stops a cascade</h2>
       <p>
         <Term k="slack" define /> is the uncommitted remainder of a resource — the amount by which you
         could absorb an unexpected demand without something else breaking. It is not a single thing; it
@@ -83,7 +86,7 @@ export default function MoneyPage() {
         deferred and later reads as bad luck.
       </p>
 
-      <h2>Exchange rates, and why they belong to your position</h2>
+      <h2 id="exchange-rates">Exchange rates, and why they belong to your position</h2>
       <p>
         Resources convert into one another, but never at equal rates. Money buys time reliably, by
         purchasing other people&rsquo;s hours — a cleaner, a direct flight, a faster process. Time buys
@@ -109,7 +112,7 @@ export default function MoneyPage() {
         </p>
       </MentorNote>
 
-      <h2>If you have no slack right now</h2>
+      <h2 id="no-slack">If you have no slack right now</h2>
       <p>
         Then &ldquo;protect your buffer&rdquo; is not advice; it is a restatement of the problem. The
         absence of slack is usually structural — wages, rents, care, illness, and the way small
@@ -130,14 +133,16 @@ export default function MoneyPage() {
       </Callout>
 
       <NextSteps>
-        <NextStep href="/topics/health">Health maintenance — where the same compounding runs on a body.</NextStep>
-        <NextStep href="/situations/job-loss">Losing a job — the runway arithmetic in a real shock.</NextStep>
-        <NextStep href="/character/board">Lay out where your slack actually is right now.</NextStep>
+        <NextStep href="/topics/health" relation="see-also" why="Where the same compounding runs on a body, with a ceiling that does not come back.">Health maintenance — where the same compounding runs on a body.</NextStep>
+        <NextStep href="/situations/job-loss" relation="see-also" why="The runway arithmetic in a real shock, running on somebody else&rsquo;s clock.">Losing a job — the runway arithmetic in a real shock.</NextStep>
+        <NextStep href="/character/board" relation="unlocks" why="Turns &ldquo;do I have any slack&rdquo; from a feeling into a row you can read.">Lay out where your slack actually is right now.</NextStep>
       </NextSteps>
 
       {/* N-235. A link at the end of the page, never above the fold and never
           a nudge. Never on a set-down route (C-24). */}
       <TryInPlay href="/play/campaign">the campaign puts a real budget behind the same tradeoff, season by season.</TryInPlay>
+
+      <SingleHomeNote />
 
       <EvidenceDrawer
         record={{

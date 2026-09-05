@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   ReadingPage,
   PageHeader,
@@ -9,6 +10,8 @@ import {
   NextStep,
   TryInPlay,
 } from "@/components/primitives";
+import { SingleHomeNote } from "@/components/SingleHomeNote";
+import { ROUTE_BY_PATH } from "@/content/routes";
 
 export const metadata: Metadata = {
   title: "Health maintenance",
@@ -29,9 +32,10 @@ export default function HealthPage() {
         eyebrow="Topic · health"
         title="Health maintenance"
         intro="Health is the capacity that quietly gates every other resource. When it is high you do not notice it. When it drops, it overrides everything — and no amount of money, time, skill, or good company compensates for a body that has stopped cooperating. This page is about the accounting, not the medicine: it explains, it does not treat."
+        systems={ROUTE_BY_PATH["/topics/health"]?.systems}
       />
 
-      <h2>Why prevention feels worthless</h2>
+      <h2 id="prevention">Why prevention feels worthless</h2>
       <p>
         Maintaining health is cheap; recovering it is expensive, often by a wide margin. The trouble is
         that the payoff from maintenance is a non-event — nothing bad happens — while its cost is
@@ -59,7 +63,7 @@ export default function HealthPage() {
         </p>
       </Callout>
 
-      <h2>Energy is the daily readout</h2>
+      <h2 id="energy">Energy is the daily readout</h2>
       <p>
         Energy is renewable, unlike time, but it cannot be stored, unlike money — and it is the factor
         that makes each hour productive or wasted. It comes in a few pools that regenerate at different
@@ -75,8 +79,32 @@ export default function HealthPage() {
         which enlarges the deficit. The cruel part is that chronic depletion degrades the very instrument
         that would tell you about it: you feel fine because feeling terrible has become the baseline.
       </p>
+      {/* N-128 — the inversion, and the house rule that follows from it. One rule
+          that costs nothing and prevents a whole category of self-inflicted
+          damage, with the hand-off stated as a route rather than a diagnosis. */}
+      <p>
+        The most useful thing to know about this stat is how it misreports. Depletion does not arrive
+        feeling like low energy. It arrives feeling like <em>the world got worse</em> — the work is
+        pointless, the person next to you is irritating, the next few years look grey. A drained body
+        experiences a drained world, and the ordinary response is to argue with the world rather than to
+        refill the tank, which is how a bad week turns into a decision somebody regrets for a decade.
+      </p>
+      <p>
+        <strong>So: never audit your life late at night, and before believing any dark conclusion, check
+        the stat first.</strong> Sleep, food, daylight, movement, and how long it has been since any of
+        them. Then re-run the conclusion. A good proportion of them do not survive lunch. This is not
+        positive thinking and it is not a claim that the conclusions are always wrong; it is that the
+        instrument reporting them is one you can check cheaply, and checking it first costs a day.
+      </p>
+      <p>
+        And the honest limit of the rule: when the grey does not lift with rest — when it is there on the
+        days off as much as the days on, and has been for weeks —{" "}
+        <Link href="/situations/depression">that is a different page</Link>, and going there is the move.
+        Nothing here identifies anything about you; that page does not either, and it says where the
+        outside reading comes from.
+      </p>
 
-      <h2>Two engines worth naming</h2>
+      <h2 id="two-engines">Two engines worth naming</h2>
       <p>
         <strong>Sleep debt</strong> has three unkind properties: it accrues but does not bank ahead, it
         is repayable only over several nights and not on demand, and it does not convert — no amount of
@@ -97,7 +125,29 @@ export default function HealthPage() {
         expensive over years.
       </p>
 
-      <h2>When to stop reading a website</h2>
+      {/* N-140 — the marked lens switch. Its home, because the clearest case is
+          here; /topics/work links to it for the employer version. */}
+      <h2 id="two-roles">The same institution, in two roles</h2>
+      <p>
+        A hospital is two things wearing one name, and the switch between them is unannounced. As a place
+        of care it is somewhere you go to be looked after, staffed by people who are on your side, and the
+        useful moves there are the ones any place has: arrive with your questions written down, because
+        working memory fails in an examination room; bring a second person to anything serious, because
+        they hear what you cannot; know which building you are in.
+      </p>
+      <p>
+        As a counterparty it is something else entirely — a billing department with its own incentives,
+        playing a game you are also in whether or not you noticed the transition. The moment the envelopes
+        start arriving you are in a negotiation. Bills are opening positions rather than statements of
+        fact; itemisation exists and is worth asking for; appeals exist because they sometimes work.
+        Neither description is a cynical one and neither is the whole truth. The point is that they are
+        different roles, that the switch is not announced, and that a page like this can at least say when
+        it happens — which is the single most useful orientation move available on a hospital, a landlord,
+        an insurer, or{" "}
+        <Link href="/topics/work#unwritten-local-rules">an employer</Link>.
+      </p>
+
+      <h2 id="when-to-stop-reading">When to stop reading a website</h2>
       <p>
         Many of the states that matter most — blood pressure, early metabolic trouble, several cancers —
         are silent until late, which means the correct move is an external measurement rather than a felt
@@ -119,14 +169,16 @@ export default function HealthPage() {
       </MentorNote>
 
       <NextSteps>
-        <NextStep href="/topics/money">Money and slack — the same compounding, on a different resource.</NextStep>
-        <NextStep href="/situations/depression">If the drop is in mood rather than the body.</NextStep>
-        <NextStep href="/character/logs">The upkeep you are currently not doing — worth knowing, even undone.</NextStep>
+        <NextStep href="/topics/money" relation="see-also" why="The same compounding, running on a balance instead of a body.">Money and slack — the same compounding, on a different resource.</NextStep>
+        <NextStep href="/situations/depression" relation="protects" why="If the grey does not lift with rest, that page is the right one and this is not.">If the drop is in mood rather than the body.</NextStep>
+        <NextStep href="/character/logs" relation="see-also" why="The recurring upkeep you are not doing, worth seeing even while it stays undone.">The upkeep you are currently not doing — worth knowing, even undone.</NextStep>
       </NextSteps>
 
       {/* N-235. A link at the end of the page, never above the fold and never
           a nudge. Never on a set-down route (C-24). */}
       <TryInPlay href="/play/campaign">the campaign prices capacity the way this page describes it, and lets you spend it.</TryInPlay>
+
+      <SingleHomeNote />
 
       <EvidenceDrawer
         record={{

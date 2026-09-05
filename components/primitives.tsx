@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Term } from "@/components/Term";
+import type { TermKey } from "@/content/terminology";
 import {
   STATUS_LABEL,
   STATUS_MEANING,
@@ -19,16 +20,34 @@ export function PageHeader({
   title,
   intro,
   status,
+  systems,
 }: {
   eyebrow?: string;
   title: string;
   intro?: string;
   status?: ContentStatus;
+  /**
+   * N-322 (6.0 §3.12) — the system tag row. Passed from the page's own
+   * `ROUTE_BY_PATH[...].systems` so the inventory stays the single source, and
+   * rendered through <Term> so a tag obeys edition parity like any other label.
+   * A SET-DOWN ROUTE NEVER PASSES ONE (§5.3); C-34 walks the set-down HTML for it.
+   */
+  systems?: TermKey[];
 }) {
   return (
     <header className="page-header">
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
+      {systems && systems.length > 0 && (
+        <p className="system-tags" data-system-tags>
+          <span className="system-tags-label">What this touches:</span>
+          {systems.map((k) => (
+            <span key={k} className="system-tag" data-system-tag={k}>
+              <Term k={k} />
+            </span>
+          ))}
+        </p>
+      )}
       {intro && <p className="page-intro">{intro}</p>}
       {status && <StatusLabel status={status} />}
     </header>
@@ -177,21 +196,127 @@ export function NextSteps({
   );
 }
 
-export function NextStep({ href, children }: { href: string; children: React.ReactNode }) {
+/**
+ * N-320 (C-32) — THE LINK GRAMMAR.
+ *
+ * The closed list of relations a cross-page link may declare. It is closed on
+ * purpose: an open vocabulary would let every link be "related to", which is what
+ * the row exists to stop. A reader should know what a link will do for them
+ * before spending the click — and a closed list also makes wrong-shelf content
+ * visible at build time, because a link that fits none of these usually means the
+ * material is filed in the wrong place.
+ *
+ *   requires  — you need what is over there before this makes sense
+ *   unlocks   — this opens something that was not available before
+ *   costs     — going there tells you what this will take
+ *   protects  — that page is what keeps this one's downside bounded
+ *   explains  — the mechanism under what you just read lives there
+ *   precedes  — that is the step before this one, in time
+ *   see-also  — genuinely adjacent, and honest about being no more than that
+ */
+export const NEXT_STEP_RELATIONS = [
+  "requires",
+  "unlocks",
+  "costs",
+  "protects",
+  "explains",
+  "precedes",
+  "see-also",
+] as const;
+
+export type NextStepRelation = (typeof NEXT_STEP_RELATIONS)[number];
+
+const RELATION_LABEL: Record<NextStepRelation, string> = {
+  requires: "Requires",
+  unlocks: "Unlocks",
+  costs: "Costs",
+  protects: "Protects",
+  explains: "Explains",
+  precedes: "Comes first",
+  "see-also": "See also",
+};
+
+export function NextStep({
+  href,
+  relation,
+  why,
+  children,
+}: {
+  href: string;
+  /** One of the seven; the type is the enforcement, C-32 is the proof. */
+  relation: NextStepRelation;
+  /** Why this link is worth the click, in one line. Never empty. */
+  why: string;
+  children: React.ReactNode;
+}) {
   const external = href.startsWith("http");
-  if (external) {
-    return (
-      <li>
+  const body = (
+    <>
+      <span className="next-step-relation" data-next-step-relation={relation}>
+        {RELATION_LABEL[relation]}
+      </span>
+      {external ? (
         <a href={href} rel="noopener noreferrer">
           {children}
         </a>
-      </li>
-    );
-  }
+      ) : (
+        <Link href={href}>{children}</Link>
+      )}
+      <span className="next-step-why" data-next-step-why>
+        {why}
+      </span>
+    </>
+  );
+  return <li className="next-step">{body}</li>;
+}
+
+/**
+ * N-045 (6.0 §3.3) — ONE STEP OF A DECISION SEQUENCE, WITH ITS PRIMARY SYSTEM.
+ *
+ * A reader partway through a bad week cannot hold the whole map at once. What
+ * they can hold is "this step is a money question; the next one is a people
+ * question" — which is the difference between a pathway that can be followed one
+ * move at a time and a list of good advice that has to be absorbed whole.
+ *
+ * The system label goes through <Term>, so the Standard edition never meets a
+ * game word here and gate 2's generated lint covers the label automatically.
+ * SET-DOWN ROUTES RENDER NO STEP CHROME AT ALL — they do not use this primitive,
+ * and a numbered sequence is exactly the wrong shape for a page whose content is
+ * "nothing here is for you right now".
+ */
+export function PathwayStep({
+  n,
+  title,
+  primary,
+  id: explicitId,
+  children,
+}: {
+  n: number;
+  title: string;
+  primary: TermKey;
+  /** A short, stable anchor where something links to this step (triage does). */
+  id?: string;
+  children: React.ReactNode;
+}) {
+  const id =
+    explicitId ??
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
   return (
-    <li>
-      <Link href={href}>{children}</Link>
-    </li>
+    <section className="pathway-step" data-pathway-step={n}>
+      <h2 id={id}>
+        <span className="pathway-step-num" aria-hidden="true">
+          {n}
+        </span>
+        {title}
+      </h2>
+      <p className="pathway-step-primary">
+        <span className="pathway-step-primary-label">Primary system:</span> <Term k={primary} />
+      </p>
+      {children}
+    </section>
   );
 }
 

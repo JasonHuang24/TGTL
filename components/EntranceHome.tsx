@@ -97,9 +97,25 @@ export function EntranceHome() {
           </button>
         </div>
         <p className="entrance-subtitle">You can switch any time — you&rsquo;ll keep your place.</p>
+        {/* N-005 — the non-committal question. Every door below is a commitment;
+            a first-time visitor who does not yet know whether this is a game, a
+            self-help site or a joke has no small link that answers it. This is
+            NOT a door: it is not in the DOORS registry, carries no door class,
+            and gate 0 still counts exactly six. */}
+        <Link className="entrance-what" href="/orientation">
+          What is this?
+        </Link>
       </section>
 
       <section className="doors-section" aria-labelledby="doors-title">
+        {/* N-002 — the stance, above the doors instead of under them. It was true
+            before and it was chrome microcopy in small grey type below the fold;
+            a promise a reader has to scroll past the whole page to find is not
+            doing the work of a promise. The footer keeps its own line. */}
+        <p className="doors-privacy">
+          <strong>A guidebook, not an app.</strong> No account, no analytics, no score. Anything you
+          choose to write stays in this browser.
+        </p>
         <h2 id="doors-title" className="doors-title">
           Where would you like to start?
         </h2>
@@ -130,9 +146,6 @@ export function EntranceHome() {
             </li>
           ))}
         </ul>
-        <p className="doors-privacy">
-          No account, no analytics, no score. Anything you choose to write stays in this browser.
-        </p>
       </section>
     </div>
   );

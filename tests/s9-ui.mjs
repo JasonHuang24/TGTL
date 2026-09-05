@@ -54,7 +54,17 @@ const PLAY_ROOT = ".sim-play-app, .play-app, .sim-campaign, .sim-lab, .sim-door"
  * contrast, tap targets) is surface-agnostic and applies unchanged.
  */
 const TIMELINE_ROOT = ".tl-page";
-const rootFor = (name) => (name.startsWith("timeline-") ? TIMELINE_ROOT : PLAY_ROOT);
+/**
+ * 6.0 §6 — the same argument one family further out. The four reading routes this
+ * version adds and the concept table are reading surfaces, whose root is the
+ * article wrapper ; they carry no play root and no timeline root.
+ * The audit — clipping, contrast, tap targets, horizontal overflow — is
+ * surface-agnostic and applies to them unchanged, and it matters most on the
+ * set-down one, where the reader has the least to spend on a page that fights them.
+ */
+const READING_ROOT = ".prose-page";
+const rootFor = (name) =>
+  name.startsWith("timeline-") ? TIMELINE_ROOT : name.startsWith("reading-") ? READING_ROOT : PLAY_ROOT;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* ============================ the in-page audit ============================ */
@@ -522,6 +532,19 @@ SURFACES.push(
       }
     },
   },
+  // 6.0 §6 — the reading surfaces this version adds, audited at three viewports
+  // x both themes like every other surface. The set-down one is here for the
+  // same reason the sensitive timeline segment is: a page a depleted reader
+  // lands on is the last place a clipped line or a small tap target is
+  // acceptable.
+  { name: "reading-orientation", async setup(page) { await freshAt(page, "/orientation"); } },
+  { name: "reading-burnout", async setup(page) { await freshAt(page, "/situations/burnout"); } },
+  { name: "reading-breakup", async setup(page) { await freshAt(page, "/situations/breakup"); } },
+  {
+    name: "reading-getting-through-today",
+    async setup(page) { await freshAt(page, "/situations/getting-through-today"); },
+  },
+  { name: "reading-concepts", async setup(page) { await freshAt(page, "/topics/concepts"); } },
   { name: "play-door", async setup(page) { await freshAt(page, "/play"); } },
   { name: "campaign-prologue", async setup(page) { await campaignTo(page, "prologue"); } },
   { name: "campaign-hand", async setup(page) { await campaignTo(page, "hand"); } },

@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node --experimental-strip-types tools/build-search-index.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -21,6 +22,7 @@
     "gates:balance": "tsx tests/s10-balance.ts",
     "gates:pileup": "tsx tests/s13-pileup.ts",
     "content": "node tools/build-content.mjs",
+    "content:search": "node --experimental-strip-types tools/build-search-index.mjs",
     "content:timeline": "node --experimental-strip-types tools/timeline-build-content.mjs",
     "gates:timeline": "node --experimental-strip-types tests/timeline-gates.ts",
     "known-limits:timeline": "node --experimental-strip-types tools/timeline-known-limitations.mjs",

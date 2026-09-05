@@ -676,10 +676,14 @@ main {
 .mentor-note-body p:first-child {
   margin-top: 0;
 }
+/* S-9 (6.0): --muted on the note's sunk background measures 4.37:1, under the
+   4.5:1 floor. The reading surfaces were outside S-9's browser half until 6.0
+   added them, which is how a live contrast defect on every mentor note stayed
+   invisible. --ink-soft on the same background clears it. */
 .mentor-note-provenance {
   margin: 0.6rem 0 0;
   font-size: 0.78rem;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-style: italic;
 }
 
@@ -706,6 +710,248 @@ main {
   font-size: 1.05rem;
 }
 
+/* ---- N-036: a plan SHAPE rendered as a note under the plans. Not ranked,
+   because it is not chosen and competes with nothing. ---- */
+.guidance-shape-note h3 {
+  margin-top: 0;
+}
+.guidance-shape-cost {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---- N-320: typed cross-links. The relation reads before the link text, the
+   why-line under it, so a reader knows what a click will do for them first. ---- */
+.next-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.55rem;
+  row-gap: 0.1rem;
+}
+.next-step-relation {
+  grid-row: 1;
+  align-self: baseline;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.12rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-sunk);
+  white-space: nowrap;
+}
+.next-step > a {
+  grid-row: 1;
+  grid-column: 2;
+}
+.next-step-why {
+  grid-row: 2;
+  grid-column: 2;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---- N-322: the system tag row at the head of a situation or topic page.
+   Never rendered on a set-down route (the route record carries no `systems`). ---- */
+.system-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+}
+.system-tags-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.system-tag {
+  padding: 0.14rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+}
+
+/* ---- N-045: one step of a decision sequence, with the system it belongs to. ---- */
+.pathway-step {
+  margin: 2rem 0 0;
+}
+.pathway-step > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.pathway-step-num {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.pathway-step-primary {
+  margin: -0.2rem 0 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.pathway-step-primary-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+}
+
+/* ---- N-326: the game-vocabulary marker. Game Guide only, and never on a
+   set-down route — both decided in components/Term.tsx, not here. ---- */
+.term--marked {
+  font-family: var(--sans);
+  font-variant: small-caps;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--accent-deep);
+}
+
+/* ---- N-005: the quiet "What is this?" line under the book pair. Not a door:
+   no card, no border, no arrow — every door is a commitment and this is not. ---- */
+.entrance-what {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--atlas-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.entrance-what:hover,
+.entrance-what:focus-visible {
+  color: var(--atlas-ink);
+}
+
+/* ---- N-111: the concept index table. Scrolls inside its own box so the page
+   body never scrolls sideways (the 320px gate). ---- */
+.concept-table-wrap {
+  overflow-x: auto;
+  margin: 1.4rem 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+.concept-table {
+  border-collapse: collapse;
+  min-width: 42rem;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+}
+.concept-table th,
+.concept-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+.concept-table thead th {
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  position: sticky;
+  top: 0;
+}
+.concept-table tbody th {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  white-space: nowrap;
+}
+.concept-cell-gloss {
+  display: block;
+  color: var(--ink-soft);
+  margin-top: 0.15rem;
+}
+.concept-cell-empty {
+  color: var(--muted);
+}
+
+/* ---- N-321: the single-home invariant, said to the reader on every topic
+   route rather than only enforced in the build. ---- */
+.single-home-note {
+  margin: 2.2rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---- N-023: the set-down "getting through today" list. Plain, roomy, and
+   carrying no analytical chrome at all. ---- */
+.today-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0;
+  display: grid;
+  gap: 1rem;
+}
+.today-list li {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+.today-list strong {
+  display: block;
+}
+
+/* ---- N-046 / N-047: the horizon ladder and the worked board example. ---- */
+.horizon-ladder,
+.worked-board {
+  margin: 1.2rem 0;
+}
+.horizon-ladder dt,
+.worked-board dt {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.9rem;
+}
+.horizon-ladder dd,
+.worked-board dd {
+  margin: 0.25rem 0 0;
+}
+
+/* ---- N-008: the ordered reading path at the foot of /orientation. ---- */
+.reading-path {
+  margin: 1.2rem 0;
+  padding-left: 1.4rem;
+}
+.reading-path li {
+  margin: 0.7rem 0;
+}
+.reading-path-why {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 .crisis-note {
   margin: 1.4rem 0;
   padding: 0.9rem 1.1rem;
@@ -720,6 +966,13 @@ main {
   color: var(--muted);
   font-size: 0.95rem;
   font-style: italic;
+}
+/* N-023: the quiet line under triage's two questions, for the reader who has
+   nothing left to spend on answering either of them. */
+.triage-nothing-left {
+  margin: 0.6rem 0 1.2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 /* ---- Set-down calm treatment (§4.2) ---- */
@@ -771,6 +1024,13 @@ main {
 }
 
 /* ---- Threshold / hotlines (§5.1) ---- */
+/* N-023: one quiet line for the reader who is not in danger and simply has
+   nothing left today. Outside the number groups, above them. */
+.threshold-today-line {
+  margin: -1rem 0 2rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
 .threshold-lede {
   font-family: var(--serif);
   font-size: 1.24rem;
@@ -1115,8 +1375,9 @@ main {
 .door-help .door-go {
   color: var(--help);
 }
+/* N-002: the stance now sits ABOVE the doors title rather than under the grid. */
 .doors-privacy {
-  margin: 1.4rem 0 0;
+  margin: 0 0 1.2rem;
   text-align: center;
   color: var(--muted);
   font-size: 0.86rem;
@@ -1245,6 +1506,23 @@ main {
   display: block;
   color: var(--muted);
   font-size: 0.9rem;
+}
+/* N-012: a result says what kind of thing it is — a whole page, a section
+   inside one, or one of the timeline's milestone pages. */
+.search-kind {
+  display: inline-block;
+  margin-right: 0.45rem;
+  padding: 0.08rem 0.36rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
 }
 .search-empty {
   color: var(--muted);
@@ -2722,7 +3000,8 @@ legend {
   color: var(--muted);
 }
 
-.topics-timeline-link {
+.topics-timeline-link,
+.topics-concepts-link {
   margin-block: 1.25rem;
   color: var(--ink-soft);
 }
