@@ -1,4 +1,4 @@
-# The Guidebook to Life — 5.0 (The Timeline)
+# The Guidebook to Life — 6.0 (The Consolidation)
 
 A guidebook you can read and a life you can play, on one engine — and now a
 **timeline**: every year from birth to one hundred, with the milestones and
@@ -8,9 +8,22 @@ while this build was made.
 The character is played. **The reader never is.** The timeline never takes your age,
 or a child's age, and tells you anything about yourself.
 
-This build evolves the shipped 4.0 build (`../tgtl-claude-4.0/`, kept read-only)
-per `blueprint_TGTL_5.0.md`. The 4.0 playable layer is untouched and isolated: no
-timeline content reaches a play surface, and the full 4.0 gate roster is green.
+**6.0 is the consolidation.** Every idea worth having from the nine archived
+prototypes, ChatGPT Sol's two lanes and four specs, and the master brief was harvested
+into a register of three hundred and fifty-seven rows (`records/consolidation-register.md`),
+the owner triaged it, and the hundred and thirty accepted rows were built into this
+site's own architecture under `blueprint_TGTL_6.0.md` — in six reviewed batches, each with
+its gates proven red before green, each recorded in `DECISIONS.md` §8. Nothing was ported
+as a foreign subsystem; nothing closed a human review.
+
+What the site is trying to be, in the owner's words: the mentor you never had — we show
+you what others learned, what the evidence suggests, what the tradeoffs are, and where
+the advice may fail. What it is not: a claim to know the correct way to live.
+
+This build evolved the shipped 4.0 build per `blueprint_TGTL_5.0.md` (the timeline) and
+then per `blueprint_TGTL_6.0.md` (the consolidation). The playable layer's engine is as
+4.0 shipped it plus the 6.0 instruments listed below; no timeline content reaches a play
+surface, and every gate from every version is green.
 
 ## Preview status
 
@@ -18,14 +31,17 @@ timeline content reaches a play surface, and the full 4.0 gate roster is green.
 criticised. The blueprints make certain human reviews release blockers, and not all
 of them have happened; until they have, the foot of every page says *preview*, the
 pages carry `noindex`, and `/methodology#preview-status` lists what is open. As of
-2026-09-04 that is: pediatric review of the timeline's child-development and puberty
+2026-09-05 (6.0 adds ideas and closes no review) that is: pediatric review of the timeline's child-development and puberty
 records; clinical review of its fertility, later-health and dying records and the
 life-expectancy note; clinical and specialist review of the five sensitive pages and
 the scripted loss beats; the owner's read of the cultural-expectation records and the
 not-yet-sourced list; the stage-rail art checkpoint; and an independent acceptance
-review of the 4.0 play layer. The full list, with what each gate is and why, is
-`KNOWN_LIMITATIONS.md` §0.1 and §1. **Closed on 2026-09-04:** hotline verification
-(`content/hotlines.ts`, every number checked against its official source).
+review of the 4.0 play layer; and, new in 6.0, specialist review of `/situations/breakup`
+and `/situations/getting-through-today`. The full list, with what each gate is and why,
+is `KNOWN_LIMITATIONS.md` §0.1 and §1, and every open owner decision is numbered in §0.E.
+**Closed on 2026-09-04:** hotline verification (`content/hotlines.ts`, every number
+checked against its official source; the England-only correction and the four nations'
+own lines followed in 6.0, each fetched — `SAFETY_SOURCES.md` is the standing record).
 
 Hosted as a GitHub Pages project site under the owner's domain:
 **https://jasonhchronicles.com/TGTL/** (repository `TGTL`; deployed by
@@ -142,11 +158,65 @@ What makes it different from every other "life milestones" page:
   material appears nowhere on the timeline.
 - **Recovery beside every cost**, and "never" rendered as a path rather than a failure.
 
+### The consolidation (6.0) — what the harvest landed, by area
+
+- **Entrance and orientation:** `/orientation` is a real reading page again — The Human
+  Package, seven facts every life begins inside, with a nine-stop reading path and a
+  stated skip list; a "What is this?" door; the anti-app stance above the doors; search
+  that reaches page headings and every timeline milestone page from a build-time index.
+- **Situations:** `/situations/burnout` (the WHO construct fetched and attributed),
+  `/situations/breakup` (written at the sensitive bar), and the set-down route
+  `/situations/getting-through-today` (six things, then stop); triage's demand branch
+  routed by the structure of the demand; pathway steps that name their primary system;
+  the three-horizon ladder and a worked board on job-loss; the slow-decider moves and
+  "not solvable, only navigable".
+- **Topics:** the concept index `/topics/concepts` (one idea across the four guides);
+  twelve mechanism sections — reputation as a cache, reciprocity, learning-curve shapes,
+  attention as unstorable, the eleven-o'clock rule, the ask-craft, the love carve, reading a
+  room, the school's rules, the unwritten-rules payload, the marked lens switch; typed
+  cross-links with a why-line on every card; the single-home rule stated as a reportable
+  bug; system tags; the game-vocabulary marker in Game Guide only.
+- **The board, logs and guidance:** the wall-or-door procedure; scheduling versus horizon
+  conflict; "this does not fit" honoured in the rendering; a borderline value; copy-out and
+  print for the decision record; a stop condition on every task; the disclosure of
+  objectives, constraints and the ruleset's horizon above any ranking; the three moves in
+  the no-recommendation state; the reversibility rule and the opportunity-cost shut-off;
+  whose scorecard this is; the character sheet's five layers with a reference population
+  on every band and the four composites decomposed; conditional self-worth examined and
+  never scored.
+- **Position:** set once, from the existing key, and every position note on five pages
+  re-resolves — never a rank, never in a URL, never in the play layer.
+- **The play layer:** the seventy-two authored failure modes and forty-three switching
+  costs finally rendered; honest save status with readback-verified writes and quarantine;
+  the five-field response contract on every option; a pure preview that provably writes
+  nothing; a standing upkeep option affordable in the worst envelope; "narrowing" as a
+  fourth door state; the living record — each season's explanation kept with the content
+  version that produced it; repeat-last-season on quiet seasons; the origin's motif on
+  every turn; the state rail; arm-then-confirm on every erase; a draw-vary pair that lands
+  the same; declared unknowns in every Lab situation; the arc closing where it opened;
+  recorded · interpreted · unknowable on every parse panel; four agency words per act.
+- **Safety:** the England-only helpline correction with one sourced line per nation and
+  Ireland; monitored-device honesty; double-Escape as a keyboard quick exit on every
+  set-down route; the footer naming what is stored and what the site cannot see; the
+  safety-before-ordering rule with the board's own ordering corrected; "keep the referent
+  unnamed" as authoring law; the owner's three safety charters published.
+- **History:** the tier board's objective is switchable (era power · autonomy · security),
+  the ruleset header sits above every letter, autonomy's top tier is empty on purpose, and
+  the patch note's rules, effects and rollout sit side by side.
+- **Methodology and records:** the disanalogy register (eleven numbered breaks, cited from
+  the pages that inherit them); a retractions register published empty; the no-silent-fix
+  rule; the admission test with "what this page changes" on every route; the design-
+  hypothesis label; perishable pages with a review date; planned cards generated from the
+  one what's-coming list, ordered to the owner's research priorities; the nine ways "best"
+  can differ; the readiness rule, the owner-override form, the structural-findings section,
+  the seven-defect table and the numbered owner-decisions register.
+
 ### The reading layer
 
-30 reader routes + 2 sanctioned redirect stubs, each at full depth. The entrance,
-the walkthrough, the map, the topics, the situation pages, the threshold, the
-guidance flow, the methodology page. The complete list is `content/routes.ts`.
+36 reader routes + 1 sanctioned redirect stub, each at full depth. The entrance, the
+orientation, the walkthrough, the map, the topics and the concept index, the situation
+pages, the threshold, the guidance flow, the methodology page. The complete list is
+`content/routes.ts`, and every route records the decision or orientation it changes.
 
 ### The doctrine, in the parts you can check
 
@@ -203,7 +273,9 @@ lib/sim/                    the v2 engine — season, economy, effects, resolve,
 tests/                      the gate suite
 tools/                      the content compiler, the Lab seed curator, the
                             acceptance-evidence generator
-records/                    the build record: gate proofs, pipeline, invention checks
+records/                    the build record: gate proofs, pipeline, invention checks,
+                            the consolidation register and its evidence screenshots
+SAFETY_SOURCES.md           the standing record behind every help-now number, with its maintenance rule
 screenshots/                every play surface, both themes, both viewports
 DECISIONS.md                every underdetermined call, dated, with the inventions
 KNOWN_LIMITATIONS.md        the honest deferred list and the owner's launch gates
@@ -238,8 +310,16 @@ npm run gates:timeline # the T suite (blueprint 5.0 §8):
                        #  T-16 the export is current (a stale out/ cannot certify a build)
                        # T-14 (the browser walk) runs inside tests/browser-gates.mjs
 
-npm run gates:falsify  # proves the doctrine-wall lints can actually FAIL — now nine
-                       # probes: the three inherited, plus T-1, T-3, T-4, T-6, T-7, T-8
+npm run gates:consolidation  # the C suite (blueprint 6.0 §8): C-1..C-51, one gate per new
+                             # 6.0 assertion — save status, the hotline coverage label, the
+                             # crisis gate before every ranking, the pure preview, the upkeep
+                             # floor, the colour rule, the set-down clauses, the search index,
+                             # the concept index, typed links, position never in a URL, the
+                             # tier board's objectives, the disanalogy register, and the rest
+
+npm run gates:falsify  # proves the doctrine-wall lints can actually FAIL — now seventy-five
+                       # probes: the three inherited, eight timeline, and sixty-four for the
+                       # C suite, each required to go red on its plant and restore byte-identical
 ```
 
 The browser gates and S-9's browser half need the built site served:
@@ -251,8 +331,13 @@ node tests/browser-gates.mjs           # in another — console, state, 320px, k
                                        #   screenshots, and T-14 (the timeline walk)
 node tests/timeline-screenshots.mjs    # the timeline art checkpoint: nine scenes x
                                        #   two themes x desktop and 320px
-node tests/s9-ui.mjs                   # S-9: clip / contrast / tap-target, 17 surfaces x 2 themes x 3 viewports
+node tests/s9-ui.mjs                   # S-9: clip / contrast / tap-target, 25 surfaces x 2 themes x 3 viewports
+                                       #   (the five 6.0 reading routes joined the play and timeline surfaces)
 ```
+
+Both browser suites snapshot every `tgtl:` key before they clear anything and restore
+it afterwards (`tests/lib-preserve.mjs`, proven on a seeded library by gate 151), so
+running them against a real browser profile no longer erases a reader's saved runs.
 
 `records/s9-failing-then-green.txt` holds S-9 run against the shipped 3.0 build
 (207 violations, including the owner's two defects) and against this one (clean).
@@ -281,6 +366,7 @@ fails the build with its id named rather than being silently dropped:
 ```bash
 node tools/build-content.mjs <batch-dir>   # compile authored JSON batches into the pool
 npm run content:timeline                   # compile content/timeline/batches/*.json
+npm run content:search                     # rebuild content/generated/search-index.json (also runs as prebuild)
 npm run known-limits:timeline              # regenerate the research-required list
 node tools/variant-hygiene.mjs <files>     # strip base-line copies out of variant pools
 node tools/localize-us.mjs [--apply]       # the US-English pass over campaign + Lab prose

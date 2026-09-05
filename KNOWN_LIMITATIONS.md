@@ -1,4 +1,4 @@
-# KNOWN_LIMITATIONS.md — TGTL 5.0 (The Timeline)
+# KNOWN_LIMITATIONS.md — TGTL 6.0 (The Consolidation)
 
 The honest list. Everything the build does not do, does not know, or defers — plus
 every gate the owner still has to close before this is shown to the public.
@@ -238,7 +238,7 @@ All are listed in §1 below and none was touched by 5.0. **Hotline verification,
 carried, was CLOSED on 2026-09-04** (§1.1).
 
 **0.1.8 How this ships while the gates are open (publish pass, 2026-09-04).** As a
-labelled preview: the footer of every page says "TGTL 5.0 preview", links to
+labelled preview: the footer of every page says "TGTL 6.0 preview" (5.0's stamp until 2026-09-05), links to
 `/methodology#preview-status` where the open gates are listed, and every page carries
 `noindex`. It is a GitHub Pages project site at https://jasonhchronicles.com/TGTL/.
 The label comes off only when the owner closes the gates above; nothing in the publish

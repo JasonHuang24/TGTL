@@ -220,7 +220,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         {/* Publish pass (2026-09-04): the stamp names the version and says this is a
             preview behind human review gates; the gates are listed on /methodology. */}
         <p className="footer-version">
-          TGTL 5.0 preview — The Timeline ·{" "}
+          TGTL 6.0 preview — The Consolidation ·{" "}
           <Link href="/methodology#preview-status">what is still unreviewed</Link>
         </p>
       </footer>

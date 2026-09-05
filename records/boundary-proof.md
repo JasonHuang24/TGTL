@@ -12,12 +12,39 @@ Build began: 2026-09-04T04:53:15.000Z
 
 ## Sibling folders
 
-- `.claude/` — 1 files, **none modified since this build began**.
-- `gol-chatgptsol5-6/` — 131 files, **none modified since this build began**.
+- `.claude/` — 1 files, **1 MODIFIED**:
+    - `.claude/launch.json`
+      - mtime: 2026-09-05T02:10:30.418Z
+      - sha256: `77fbb2fb6658e4768de5224e9d80adb427e165d39bc25fa3fc81966f23c77722`
+- `gol-chatgptsol5-6/` — 131 files, **7 MODIFIED**:
+    - `gol-chatgptsol5-6/.vinext/dev/lock.json`
+      - mtime: 2026-09-05T01:15:37.954Z
+      - sha256: `914d36dbb53e83e076732e590ac3e1e6d322a8229400090651860b57d378d7b3`
+    - `gol-chatgptsol5-6/.wrangler/registry/guidebook-to-life-prototype-candidate-01`
+      - mtime: 2026-09-05T01:17:04.717Z
+      - sha256: `800d669028ab144ca4d49fc46ad9628df0e7c0e05ead46536382b71c16a98ec5`
+    - `gol-chatgptsol5-6/.wrangler/registry/__asset-worker__`
+      - mtime: 2026-09-05T01:17:04.717Z
+      - sha256: `970b7dda4c22934fbb80827605fb02eb96c8151cc2c0cd89d56c7858e397c0fe`
+    - `gol-chatgptsol5-6/.wrangler/registry/__router-worker__`
+      - mtime: 2026-09-05T01:17:04.716Z
+      - sha256: `34bd4b747a01f4568e9c30ce6fa5b5c5e26fb4f2b9173dc083f79922aac473c3`
+    - `gol-chatgptsol5-6/.wrangler/registry/__vite_proxy_worker__`
+      - mtime: 2026-09-05T01:17:04.717Z
+      - sha256: `d232c33f741e6f9791c3f517959d5fff8dddccee7ce725ba24c22dade627c491`
+    - `gol-chatgptsol5-6/.wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite`
+      - mtime: 2026-09-05T01:15:34.605Z
+      - sha256: `4c34b48e33536be849e9810707c97ff2b5625bb5cbf1637dbe384cfffdda3b9d`
+    - `gol-chatgptsol5-6/.wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite-shm`
+      - mtime: 2026-09-05T01:15:34.663Z
+      - sha256: `902d88cd9d2f45aec1e62de41da460b4f7e20d142511633f1bc0f210ff5621a2`
 - `gol-claudefamily/` — 130 files, **none modified since this build began**.
 - `gol-fable5/` — 70 files, **none modified since this build began**.
 - `gol-opus4-6/` — 44 files, **none modified since this build began**.
-- `gol-opus5/` — 124 files, **none modified since this build began**.
+- `gol-opus5/` — 125 files, **1 MODIFIED**:
+    - `gol-opus5/grep.exe.stackdump`
+      - mtime: 2026-09-05T01:21:37.615Z
+      - sha256: `a971d2ba0650860b8473fcdadade412031ce0fa422a61247cdb6f144699db111`
 - `tgtl-chatgptsol5-6-2.0/` — 4753 files, **none modified since this build began**.
 - `tgtl-claude-2.0/` — 100 files, **none modified since this build began**.
 - `tgtl-claude-3.0/` — 146 files, **none modified since this build began**.
@@ -45,6 +72,8 @@ this build, not that nothing outside it ever changed.
 - **MODIFIED** `blueprint_TGTL_5.0.md` — mtime 2026-09-04T08:44:08.031Z, sha256 `d9a734ed8358b2391668cda4720257f29449211acbd04810bcfc745a85e51031`
 - **MODIFIED** `TGTL_5.0_FIX_HANDOFF_PROMPT.md` — mtime 2026-09-04T09:14:22.965Z, sha256 `64da012a95fba2a06e18df2ada98d921333f0bf0c2025fdfe825bc0a7e32ea7a`
 - **MODIFIED** `TGTL_5.0_MVP_AUDIT_HANDOFF_PROMPT.md` — mtime 2026-09-04T21:41:38.642Z, sha256 `11fee2eea53dc6df484393acc022aca85383e4eca8c9c80e51092ca02b9dd0a5`
+- **MODIFIED** `TGTL_6.0_BUILD_HANDOFF_PROMPT.md` — mtime 2026-09-05T01:53:25.297Z, sha256 `5861826ae5a32e967fd12c0bf9eff3aaf00ff5695957b0c3556a200a42ec5d9f`
+- **MODIFIED** `TGTL_6.0_CONSOLIDATION_HANDOFF_PROMPT.md` — mtime 2026-09-05T01:01:39.328Z, sha256 `8786b850e23cea1947783aab528b73ccaa2dded8ba4da428794064daa58eea9b`
 
 ## The 4.0 sequencing fact, re-checked
 
@@ -73,4 +102,4 @@ back to 4.0 — it is a live trap for anyone who copies that folder again.
 
 ---
 
-**Result: 4 file(s) outside the build folder carry a later mtime; each is listed above with its hash.**
+**Result: 15 file(s) outside the build folder carry a later mtime; each is listed above with its hash.**
