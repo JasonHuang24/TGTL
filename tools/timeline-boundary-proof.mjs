@@ -9,13 +9,16 @@
  * Usage: node --experimental-strip-types tools/timeline-boundary-proof.mjs
  */
 import { readdirSync, statSync, writeFileSync, readFileSync, existsSync } from "node:fs";
-import { join, dirname, relative } from "node:path";
+import { join, dirname, relative, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WORKSPACE = join(ROOT, "..");
-const BUILD_DIR = "tgtl-claude-5.0";
+// The build folder is whatever this repository is called on disk (it shipped as
+// `tgtl-claude-5.0/` and was renamed `The Guidebook To Life Website/` on 2026-09-04
+// after publishing); deriving it keeps the proof honest across renames.
+const BUILD_DIR = basename(ROOT);
 
 /**
  * This build's FIRST WRITE: the robocopy that created tgtl-claude-5.0/, at
